@@ -19,7 +19,7 @@
     "koa-webpack-dev-middleware": "^1.1.0",
     "koa-webpack-hot-middleware": "^1.0.3",
     "pg": "^4.4.3",
-    "radium": "^0.15.3",
+    "radium": "^0.16.0",
     "react": "^0.14.1",
     "react-dom": "^0.14.1",
     "winston": "^2.1.0"
