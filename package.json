@@ -41,7 +41,7 @@
     "babel-preset-stage-1": "^6.3.13",
     "eslint": "^1.10.3",
     "eslint-loader": "^1.1.1",
-    "eslint-plugin-react": "^3.15.0",
+    "eslint-plugin-react": "^3.16.0",
     "flow-bin": "^0.19.1",
     "jest-cli": "^0.8.1",
     "json-loader": "^0.5.4",
