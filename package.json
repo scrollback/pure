@@ -24,6 +24,7 @@
     "pg": "^4.4.4",
     "radium": "^0.16.5",
     "react": "^0.14.7",
+	"nodemailer": "^2.0.0",
     "react-dom": "^0.14.7",
     "sbcache": "../sbcache",
     "shallowequal": "^0.2.2",
