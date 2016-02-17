@@ -5,7 +5,7 @@
   "main": "server.js",
   "private": true,
   "dependencies": {
-    "big-integer": "^1.6.11",
+    "big-integer": "^1.6.12",
     "casual": "^1.5.1",
     "ebus": "^0.12.0",
     "engine.io": "^1.6.8",
