@@ -56,7 +56,7 @@
     "eslint-plugin-import": "^1.0.0-beta.0",
     "eslint-plugin-react": "^4.0.0-rc.1",
     "eslint-plugin-react-native": "^1.0.0",
-    "flow-bin": "^0.21.0",
+    "flow-bin": "^0.22.0",
     "jest-cli": "^0.8.2",
     "json-loader": "^0.5.4",
     "jsonop": "^2.0.5",
