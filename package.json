@@ -24,7 +24,7 @@
     "koa-webpack-hot-middleware": "^1.0.3",
     "lodash": "^4.5.0",
     "node-uuid": "^1.4.7",
-    "nodemailer": "0.7.1",
+    "nodemailer": "2.2.1",
     "opn": "^4.0.0",
     "pg": "^4.4.6",
     "radium": "^0.16.6",
