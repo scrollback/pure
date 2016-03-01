@@ -37,7 +37,7 @@
     "sbcache": "../sbcache",
     "shallowequal": "^0.2.2",
     "source-map-support": "^0.4.0",
-    "stringpack": "^1.1.0",
+    "stringpack": "^1.2.0",
     "winston": "^2.2.0"
   },
   "devDependencies": {
