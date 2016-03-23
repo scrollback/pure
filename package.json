@@ -5,7 +5,7 @@
   "main": "server.js",
   "private": true,
   "dependencies": {
-    "babel-polyfill": "^6.6.1",
+    "babel-polyfill": "^6.7.2",
     "big-integer": "^1.6.12",
     "casual": "^1.5.1",
     "core-js": "^2.1.4",
