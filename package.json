@@ -33,7 +33,7 @@
     "nodemailer": "0.7.1",
     "opn": "^4.0.1",
     "pg": "^4.5.1",
-    "radium": "^0.16.6",
+    "radium": "^0.17.1",
     "react": "^0.14.7",
     "react-dom": "^0.14.7",
     "react-native": "git://github.com/satya164/react-native.git#0.22-stable",
