@@ -48,7 +48,7 @@
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-eslint": "^5.0.0",
-    "babel-jest": "^9.0.2",
+    "babel-jest": "^10.0.1",
     "babel-loader": "^6.2.4",
     "babel-plugin-transform-es2015-function-name": "^6.5.0",
     "babel-plugin-transform-react-constant-elements": "^6.5.0",
