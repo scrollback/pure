@@ -70,7 +70,7 @@
     "flow-bin": "^0.22.1",
     "jest-cli": "^0.10.0",
     "json-loader": "^0.5.4",
-    "jsonop": "^2.0.6",
+    "jsonop": "^2.0.8",
     "node-fetch": "^1.4.1",
     "react-addons-test-utils": "^0.14.8",
     "secure-random": "^1.1.1",
