@@ -73,7 +73,7 @@
     "json-loader": "^0.5.4",
     "jsonop": "^2.0.6",
     "node-fetch": "^1.4.1",
-    "react-addons-test-utils": "^0.14.8",
+    "react-addons-test-utils": "^15.0.0",
     "secure-random": "^1.1.1",
     "webpack": "^2.1.0-beta.4",
     "xmlhttprequest": "^1.8.0"
