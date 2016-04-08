@@ -33,7 +33,7 @@
     "nodemailer": "2.3.0",
     "nodemailer-smtp-transport": "2.4.1",
     "opn": "^4.0.1",
-    "pg": "^4.5.2",
+    "pg": "^4.5.3",
     "radium": "^0.17.1",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
