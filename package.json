@@ -6,7 +6,7 @@
   "private": true,
   "dependencies": {
     "babel-polyfill": "^6.7.4",
-    "big-integer": "^1.6.13",
+    "big-integer": "^1.6.15",
     "casual": "^1.5.2",
     "core-js": "^2.2.1",
     "ebus": "^0.12.0",
