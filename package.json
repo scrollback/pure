@@ -35,7 +35,7 @@
     "opn": "^4.0.1",
     "pg": "^4.5.3",
     "radium": "^0.17.1",
-    "react": "^0.14.8",
+    "react": "^15.0.1",
     "react-dom": "^0.14.8",
     "react-native": "git://github.com/satya164/react-native.git#0.23-stable",
     "react-native-image-chooser": "^1.0.3",
