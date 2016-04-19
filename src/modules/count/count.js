@@ -3,7 +3,7 @@
 import { TABLES, ROLES } from '../../lib/schema';
 import { Constants, bus } from '../../core-server';
 import log from 'winston';
-import User from '../../models/user';
+import { user as User, thread as Thread, room as Room } from '../../models/models';
 // import ThreadRel from '../../models/threadrel';
 // import RoomRel from '../../models/roomrel';
 
@@ -21,7 +21,11 @@ bus.on('change', (changes, next) => {
 			entity.type === Constants.TYPE_TEXT ||
 			entity.type === Constants.TYPE_THREAD
 		) {
-			if (!entity.createTime || entity.createTime !== entity.updateTime || (!entity.parents || !entity.parents.length)) {
+			if (
+				!entity.createTime ||
+				entity.createTime !== entity.updateTime ||
+				(!entity.parents || !entity.parents.length)
+			) {
 				continue;
 			}
 			let inc;
@@ -33,7 +37,7 @@ bus.on('change', (changes, next) => {
 				inc = -1;
 			}
 
-			const parent = changes.entities[entity.parents[0]] || {};
+			let parent = changes.entities[entity.parents[0]] || {};
 			parent.counts = parent.counts ? parent.counts : {};
 			parent.counts = {
 				children: 1,
@@ -41,15 +45,20 @@ bus.on('change', (changes, next) => {
 					children: 'inc'
 				}
 			};
+			// parent.counts.children = 1;
 			parent.id = entity.parents[0];
 			parent.type = (entity.type === Constants.TYPE_TEXT) ?
 				Constants.TYPE_THREAD : Constants.TYPE_ROOM;
 
-			// if (entity.type === Constants.TYPE_TEXT) {
-			//
-			// }
+			if (entity.type === Constants.TYPE_TEXT) {
+				parent.type = Constants.TYPE_THREAD;
+				parent = new Thread(parent);
+			} else if (entity.type === Constants.TYPE_THREAD) {
+				parent.type = Constants.TYPE_ROOM;
+				parent = new Room(parent);
+			}
 			// console.log("parents count module: ", parent);
-			changes.entities[entity.parents[0]] = parent;
+			changes.entities[parent.id] = parent;
 
 			// 2. Increment text/thread count of user
 
@@ -57,7 +66,11 @@ bus.on('change', (changes, next) => {
 
 			user.counts = user.counts || {};
 			user.counts[TABLES[entity.type]] = inc;
+			user.counts.__op__ = {};
+			user.counts.__op__[TABLES[entity.type]] = 'inc';
+
 			user.id = entity.creator;
+			// console.log('user created  item count module: ', user)
 			changes.entities[entity.creator] = user;
 		}
 
@@ -70,6 +83,13 @@ bus.on('change', (changes, next) => {
 			entity.type === Constants.TYPE_PRIVREL ||
 			entity.type === Constants.TYPE_TOPICREL
 		) {
+			// console.log("count module on threadrel: ", entity);
+			if (entity.createTime !== entity.updateTime) {
+				if (!entity.createdByRel) {
+					continue;
+				}
+			}
+			delete entity.createdByRel;
 			const item = changes.entities[entity.item] || {};
 
 			item.counts = item.counts || {};
@@ -80,14 +100,19 @@ bus.on('change', (changes, next) => {
 				rem.forEach((role) => {
 					if (ROLES[role]) {
 						item.counts[ROLES[role]] = -1;
+						item.counts.__op__ = {};
+						item.counts.__op__[ROLES[role]] = 'inc';
 					}
 				});
 			}
 
 			if (entity.roles) {
+				// console.log('entity.roles: ', entity.roles)
 				entity.roles.forEach((role) => {
 					if (ROLES[role]) {
 						item.counts[ROLES[role]] = 1;
+						item.counts.__op__ = {};
+						item.counts.__op__[ROLES[role]] = 'inc';
 					}
 				});
 			}
@@ -111,6 +136,7 @@ bus.on('change', (changes, next) => {
 				item.type = Constants.TYPE_TOPIC;
 				break;
 			}
+			// console.log("count module item: ", item)
 			changes.entities[entity.item] = item;
 		}
 	}

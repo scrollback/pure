@@ -112,7 +112,7 @@ bus.on('change', (changes, next) => {
 						roles: role,
 					};
 					const relation = new threadrel(threadRel);
-
+					relation.createdByRel = true;
 					log.info('create relation on text: ', relation, relation.id);
 					resolve(relation);
 				});
