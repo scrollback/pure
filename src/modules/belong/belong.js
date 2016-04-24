@@ -9,6 +9,7 @@ import uuid from 'node-uuid';
 import * as pg from '../../lib/pg';
 import type { User } from './../../lib/schemaTypes';
 
+const placesRoles = [ constants.ROLE_WORK, constants.ROLE_HOME, constants.ROLE_HOMETOWN ];
 // postgres mock, because jest is acting up.
 
 // const pg = {
@@ -25,29 +26,58 @@ import type { User } from './../../lib/schemaTypes';
 
 // */
 
+function typeStringToNumber(type) {
+	switch (type) {
+	case 'home':
+		return constants.ROLE_HOME;
+	case 'work':
+		return constants.ROLE_WORK;
+	case 'hometown':
+		return constants.ROLE_HOMETOWN;
+	}
+	return 0;
+}
 
-function addRooms(change, addable) {
+function addRooms(change, addable, all) {
+	const identityIdMap = {};
+
+	for (const stub of all) {
+		if (stub.id) {
+			identityIdMap[stub.identity] = stub;
+			 continue; /* already in db */
+		 }
+	}
+
 	for (const stub of addable) {
-		if (stub.id) { /* already in db */ continue; }
+		if (stub.id) {
+			 continue; /* already in db */
+		 }
 
 		stub.id = uuid.v4();
-
+		identityIdMap[stub.identity] = stub;
+		stub.parents = stub.parents.map(e => identityIdMap[e].id);
+		stub.parents.filter(e => e); // filter out rooms that with no parents.
 		change[stub.id] = new Room({
 			id: stub.id,
 			name: stub.name,
 			tags: [ stub.type ],
-			identities: [ stub.identity ]
+			identities: [ stub.identity ],
+			parents: stub.parents.reverse()
 		});
 	}
 }
 
-function addRels(change, user:any, resources, addable) {
+function addRels(change, user, resources, addable) {
 	for (const stub of addable) {
-		if (stub.exists) continue;
+		if (stub.exists && !stub.doUpdate) continue;
+
 		const rel = new RoomRel({
 			user: user.id,
 			item: stub.id,
-			roles: [ ...stub.rels, constants.ROLE_FOLLOWER ],
+			roles: [ ...stub.rels, constants.ROLE_FOLLOWER ].reduce((prev, curr) => {
+				if (prev.indexOf(curr) < 0) prev.push(curr);
+				return prev;
+			}, []),
 			resources
 		});
 
@@ -55,20 +85,40 @@ function addRels(change, user:any, resources, addable) {
 	}
 }
 
+function updateRels(change, user, updateable) {
+	for (const stub of updateable) {
+		if (stub.id && stub.doUpdate) {
+			const rel = new RoomRel({
+				user: user.id,
+				item: stub.id,
+				roles: [ ...stub.rels, constants.ROLE_FOLLOWER ].reduce((prev, curr) => {
+					if (prev.indexOf(curr) < 0) prev.push(curr);
+					return prev;
+				}, [])
+			});
+
+			change[rel.id] = rel;
+		}
+	}
+}
+
 function removeRels(change, removable) {
 	for (const rel of removable) {
-		change[rel.id] = new RoomRel({ roles: [] });
+		change[rel.id] = new RoomRel({ id: rel.id, roles: [], item: rel.item, user: rel.user });
 	}
 }
 
 function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 	const stubs = {}, changedRels = {},
-		all = [], addable = [], removable = [],
+		all = [], addable = [], removable = [], updateable = [],
 		change = {};
+
+	deletedRels = deletedRels.map(typeStringToNumber);
 
 	for (const stubset of stubsets) {
 		changedRels[stubset.rel] = true;
 
+		// console.log("Changed rels:", stubset.rel);
 		for (const stub of stubset.stubs) {
 			stub.rels = [ stubset.rel ];
 			if (!stubs[stub.identity]) {
@@ -80,20 +130,51 @@ function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 	}
 
 	for (const relRoom of relRooms) {
+		if (!relRoom.room || !relRoom.room.identities) continue;
 		const identity = relRoom.room.identities.filter(
 			ident => ident.substr(0, 6) === 'place:'
 		)[0];
 
 		if (stubs[identity]) {
 			stubs[identity].exists = true;
+			stubs[identity].rels = stubs[identity].rels.concat(relRoom.roomrel.roles);
+			if (stubs[identity].rels.length !== relRoom.roomrel.roles) {
+				stubs[identity].doUpdate = true;
+				updateable.push(stubs[identity]);
+			}
 		} else {
-			const type = relRoom.roomrel.roles.filter(role =>
+			const types = relRoom.roomrel.roles.filter(role =>
 				role >= constants.ROLE_HOME &&
-				role <= constants.ROLE_HOMETOWN
-			)[0];
+				role <= constants.ROLE_HOMETOWN &&
+				deletedRels.indexOf(role) > -1
+			);
 
-			if (changedRels[type] || deletedRels[type]) {
-				removable.push(relRoom.roomrel);
+			if (types.length === 0) continue;
+			const type = types[0];
+			if (changedRels[type] || deletedRels.indexOf(type) >= 0) {
+				let shouldRemove = true;
+
+				for (const role of placesRoles.filter(e => e !== type)) {
+					if (relRoom.roomrel.roles.indexOf(role) >= 0) {
+						shouldRemove = false;
+						break;
+					}
+				}
+
+				if (shouldRemove) {
+					removable.push(relRoom.roomrel);
+				} else {
+					relRoom.roomrel.roles.splice(relRoom.roomrel.roles.indexOf(type), 1);
+
+					const newStub = {
+						identity,
+						rels: relRoom.roomrel.roles,
+						doUpdate: true
+					};
+					updateable.push(newStub);
+					stubs[identity] = newStub;
+				}
+
 			} else {
 				all.push({ identity, type, name: relRoom.room.name });
 			}
@@ -109,7 +190,7 @@ function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 
 	pg.read(config.connStr, {
 		$: 'SELECT * FROM "rooms" WHERE identities && &{idents}',
-		idents: addable.map(a => a.identity)
+		idents: all.map(a => a.identity)
 	}, (err, rooms) => {
 		if (err) { winston.error(err); return; }
 		for (let room of rooms) {
@@ -122,8 +203,9 @@ function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 			if (stub) stub.id = room.id;
 		}
 
-		addRooms(change, addable);
+		addRooms(change, addable, all);
 		addRels(change, user, resources, addable);
+		updateRels(change, user, updateable);
 		removeRels(change, removable);
 
 		bus.emit('change', { entities: change, source: 'belong' });

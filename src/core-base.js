@@ -41,6 +41,8 @@ export const cache = new Know({
 			return entity.type === Constants.TYPE_TOPICREL;
 		case 'userrel':
 			return entity.type === Constants.TYPE_USERREL;
+		case 'roomrel':
+			return entity.type === Constants.TYPE_ROOMREL;
 		}
 
 		return false;

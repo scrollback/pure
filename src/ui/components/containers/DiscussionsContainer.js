@@ -16,14 +16,14 @@ class DiscussionsContainerInner extends Component<void, any, void> {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		me: PropTypes.shape({
-			tags: PropTypes.arrayOf(PropTypes.number)
+			tags: PropTypes.arrayOf(PropTypes.number),
 		}).isRequired,
 	};
 
 	render() {
 		const {
 			data,
-			me
+			me,
 		} = this.props;
 
 		return <Discussions {...this.props} data={transformThreads(data, me)} />;
@@ -68,14 +68,14 @@ class DiscussionsContainer extends Component<void, any, State> {
 			range: {
 				...range,
 				before: before && before > (count + 10) ? before : count + 20,
-			}
+			},
 		});
 	};
 
 	render() {
 		const {
 			range,
-			defer
+			defer,
 		} = this.state;
 
 		return (
@@ -86,19 +86,19 @@ class DiscussionsContainer extends Component<void, any, State> {
 							slice: {
 								type: 'thread',
 								filter: {
-									parents_cts: [ this.props.room ]
+									parents_cts: [ this.props.room ],
 								},
-								order: 'createTime'
+								order: 'createTime',
 							},
-							range
+							range,
 						},
 						defer,
 					},
 					me: {
 						key: {
 							type: 'entity',
-							id: this.props.user
-						}
+							id: this.props.user,
+						},
 					},
 				}}
 				passProps={{ ...this.props, loadMore: count => this._loadMore(count) }}

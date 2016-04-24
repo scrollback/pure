@@ -32,4 +32,7 @@ export default class Note {
 		return [ data ];
 	}
 
+	getId() {
+		return this.user + '_' + this.event + '_' + this.group;
+	}
 }

@@ -28,7 +28,7 @@ CREATE TABLE users (
 	deletetime bigint,
 	tags smallint[], -- e.g. admin, manager
 	locale smallint,
-	counts jsonb,
+	counts jsonb default '{}',
 	meta jsonb,
 	params jsonb, -- user-private information
 	presence smallint, -- foreground/background/none
@@ -54,7 +54,7 @@ CREATE TABLE items (
 	terms tsvector,
 	updater text,
 	updatetime bigint,
-	counts jsonb
+	counts jsonb default '{}'
 );
 
 CREATE TABLE rooms (
@@ -114,13 +114,16 @@ CREATE TABLE jobs (
 INSERT INTO jobs VALUES (1), (2), (3);
 CREATE EXTENSION plv8;
 
+INSERT INTO rooms (id, name) VALUES ('e8d0a3b8-6c00-4871-84ad-1078b1265c08', 'Support');
+
 DROP FUNCTION IF EXISTS jsonop(jsonb, jsonb,jsonb);
 CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	function j(oa, ob, oop) {
 		var el = { _: oa },
-			stack = [{ a: el, b: { _: ob }, op: { _: oop } }];
+		    stack = [{ a: el, b: { _: ob }, op: { _: oop } }];
 
 		var opfn = {
 			keep: function keep(a) {
@@ -141,10 +144,23 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 			mavg: function mavg(a, b, params) {
 				return (a * (params[0] - 1) + b) / params[0];
 			},
-			union: function union(a, b, params) {
+			union: function union(a, b, p) {
+				var arr = Array.isArray(b) ? a.concat(b) : a,
+				    result = [],
+				    map = {},
+				    params = p || [];
+
+				arr.forEach(function (e) {
+					if (!map[e] && params.indexOf(e) < 0) result.push(e);
+					map[e] = true;
+				});
+
+				return result;
+			},
+			inter: function inter(a, b, params) {
 				var map = {};
 
-				for (var _iterator = a, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+				for (var _iterator = b, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
 					var _ref;
 
 					if (_isArray) {
@@ -156,77 +172,31 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 						_ref = _i.value;
 					}
 
-					var i = _ref;
-					map[i] = true;
-				}
-				for (var _iterator2 = params, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
-					var _ref2;
-
-					if (_isArray2) {
-						if (_i2 >= _iterator2.length) break;
-						_ref2 = _iterator2[_i2++];
-					} else {
-						_i2 = _iterator2.next();
-						if (_i2.done) break;
-						_ref2 = _i2.value;
-					}
-
-					var i = _ref2;
-					delete map[i];
-				}
-				for (var _iterator3 = b, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
-					var _ref3;
-
-					if (_isArray3) {
-						if (_i3 >= _iterator3.length) break;
-						_ref3 = _iterator3[_i3++];
-					} else {
-						_i3 = _iterator3.next();
-						if (_i3.done) break;
-						_ref3 = _i3.value;
-					}
-
-					var i = _ref3;
-					map[i] = true;
-				}
-
-				return Object.keys(map);
-			},
-			inter: function inter(a, b, params) {
-				var map = {};
-
-				for (var _iterator4 = b, _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
-					var _ref4;
-
-					if (_isArray4) {
-						if (_i4 >= _iterator4.length) break;
-						_ref4 = _iterator4[_i4++];
-					} else {
-						_i4 = _iterator4.next();
-						if (_i4.done) break;
-						_ref4 = _i4.value;
-					}
-
-					var i = _ref4;
-					if (i in a) {
-						map[i] = true;
+					var _i2 = _ref;
+					if (_i2 in a) {
+						map[_i2] = true;
 					}
 				}
-				for (var i in params) {
+				if (params) for (var i in params) {
 					map[i] = true;
 				}
 
 				return Object.keys(map);
 			},
 			splice: function splice(a, b, params) {
-				if (params.length >= 2) {
-					a.splice.apply(a, [params[0] === null ? Infinity : params[0], params[1]].concat(b));
+				if (!params || !params.length) {
+					return a.concat(b);
 				}
+
 				if (params.length >= 4) {
 					return a.slice(params[2] === null ? Infinity : params[2], params[3] === null ? Infinity : params[3]);
-				} else {
-					return a;
 				}
+
+				if (params.length >= 2) {
+					return a.splice.apply(a, [params[0] === null ? Infinity : params[0], params[1]].concat(b));
+				}
+
+				return a;
 			},
 			replace: function replace(a, b) {
 				return b;
@@ -271,12 +241,16 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 			return obj;
 		}
 
+		function isOp(op) {
+			return typeof op === "string" || Array.isArray(op);
+		}
+
 		function opval(a, b, i, op, stack) {
 			if (op === "delete" || op && op[0] === "delete") {
 				delete a[i];
-			} else if (op && (typeof op === "string" || Array.isArray(op)) && op !== "merge" && op[0] !== "merge") {
+			} else if (typeof a[i] !== "undefined" && op && isOp(op) && op !== "merge" && op[0] !== "merge") {
 				if (Array.isArray(op)) {
-					a[i] = deleteOps(opfn[op.shift()](a[i], b[i], op));
+					a[i] = deleteOps(opfn[op[0]](a[i], b[i], op.slice(1)));
 				} else {
 					a[i] = deleteOps(opfn[op](a[i], b[i]));
 				}
@@ -294,13 +268,13 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 		var count = 0;
 		do {
 			var frame = stack.pop(),
-				a = frame.a,
-				b = frame.b;
-			var op = undefined,
-				map = undefined;
+			    a = frame.a,
+			    b = frame.b;
+			var op = void 0,
+			    map = void 0;
+
 			count++;
 			if (count > 1000) {
-				console.log(oa, ob);
 				throw Error('Cycle?');
 			}
 			if (frame.op && b.__op__) {
@@ -308,6 +282,7 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 			} else {
 				op = b.__op__ || frame.op;
 			}
+
 			map = op ? {} : b;
 
 			if (op) {
@@ -318,26 +293,27 @@ CREATE FUNCTION jsonop(oa jsonb, ob jsonb, oop jsonb) RETURNS jsonb AS $$
 				}
 
 				if (op.__all__) {
-					for (var i in a) {
-						map[i] = true;
+					for (var _i3 in a) {
+						map[_i3] = true;
 					}
 				} else {
-					for (var i in op) {
-						map[i] = true;
+					for (var _i4 in op) {
+						map[_i4] = true;
 					}
 				}
 			}
 
-			for (var i in map) {
-				opval(a, b, i, op && (op[i] || op.__all__), stack);
+			for (var _i5 in map) {
+				opval(a, b, _i5, b[_i5] && isOp(b[_i5].__op__) ? b[_i5].__op__ : op && (op[_i5] || op.__all__), stack);
 			}
 		} while (stack.length);
 
-		return JSON.stringify(el._);
+		return el._;
 	}
 
-	if(typeof oa !== 'object') oa = JSON.parse(oa);
-	if(typeof ob !== 'object') ob = JSON.parse(ob);
-	if(typeof oop !== 'object') oop = JSON.parse(oop);
-	return j(oa, ob, oop);
+	if (typeof oa !== 'object') oa = JSON.parse(oa);
+	if (typeof ob !== 'object') ob = JSON.parse(ob);
+	if (typeof oop !== 'object') oop = JSON.parse(oop);
+
+	return JSON.stringify(j(oa, ob, oop));
 $$ LANGUAGE plv8 IMMUTABLE;

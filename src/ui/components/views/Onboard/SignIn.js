@@ -14,7 +14,7 @@ const {
 	StyleSheet,
 	View,
 	ToastAndroid,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -22,52 +22,52 @@ const styles = StyleSheet.create({
 		flex: 1,
 		flexDirection: 'row',
 		alignItems: 'stretch',
-		backgroundColor: Colors.primary
+		backgroundColor: Colors.primary,
 	},
 	cover: {
 		flex: 1,
 		width: null,
-		height: null
+		height: null,
 	},
 	overlay: {
 		flex: 1,
 		alignItems: 'stretch',
 		padding: 32,
-		backgroundColor: Colors.fadedBlack
+		backgroundColor: Colors.fadedBlack,
 	},
 	image: {
 		resizeMode: 'contain',
-		margin: 8
+		margin: 8,
 	},
 	imageLogo: {
 		height: 39,
-		width: 72
+		width: 72,
 	},
 	imageLogoType: {
 		height: 23,
-		width: 146
+		width: 146,
 	},
 	logoContainer: {
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-		margin: 16
+		margin: 16,
 	},
 	tip: {
 		color: Colors.white,
 		textAlign: 'center',
 		paddingHorizontal: 4,
-		marginVertical: 8
+		marginVertical: 8,
 	},
 	buttonContainer: {
-		alignItems: 'stretch'
+		alignItems: 'stretch',
 	},
 	facebook: {
-		backgroundColor: Colors.facebook
+		backgroundColor: Colors.facebook,
 	},
 	google: {
-		backgroundColor: Colors.google
-	}
+		backgroundColor: Colors.google,
+	},
 });
 
 const PROVIDER_GOOGLE = 'google';
@@ -86,12 +86,12 @@ type State = {
 
 export default class SignIn extends Component<void, Props, State> {
 	static propTypes = {
-		signIn: PropTypes.func.isRequired
+		signIn: PropTypes.func.isRequired,
 	};
 
 	state: State = {
 		googleLoading: false,
-		facebookLoading: false
+		facebookLoading: false,
 	};
 
 	_onSignInSuccess: Function = (provider: string, auth: { accessToken: string; } | { idToken: string; }) => {
@@ -113,12 +113,12 @@ export default class SignIn extends Component<void, Props, State> {
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			this.setState({
-				googleLoading: false
+				googleLoading: false,
 			});
 			break;
 		case PROVIDER_FACEBOOK:
 			this.setState({
-				facebookLoading: false
+				facebookLoading: false,
 			});
 			break;
 		}
@@ -127,12 +127,12 @@ export default class SignIn extends Component<void, Props, State> {
 	_signInWithFacebook: Function = async (): Promise => {
 		try {
 			const result = await Facebook.logInWithReadPermissions([
-				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL
+				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL,
 			]);
 
 			const {
 				permissions_granted,
-				access_token
+				access_token,
 			} = result;
 
 			if (
@@ -170,7 +170,7 @@ export default class SignIn extends Component<void, Props, State> {
 
 	_handleFacebookPress: Function = (): void => global.requestAnimationFrame(() => {
 		this.setState({
-			facebookLoading: true
+			facebookLoading: true,
 		});
 
 		this._signInWithFacebook();
@@ -178,7 +178,7 @@ export default class SignIn extends Component<void, Props, State> {
 
 	_handleGooglePress: Function = (): void => global.requestAnimationFrame(() => {
 		this.setState({
-			googleLoading: true
+			googleLoading: true,
 		});
 
 		this._signInWithGoogle();
@@ -191,7 +191,9 @@ export default class SignIn extends Component<void, Props, State> {
 					<View style={styles.overlay}>
 						<View style={styles.logoContainer}>
 							<Image source={require('../../../../../assets/logo.png')} style={[ styles.image, styles.imageLogo ]} />
-							<Image source={require('../../../../../assets/logotype.png')} style={[ styles.image, styles.imageLogoType ]} />
+							{/*
+								<Image source={require('../../../../../assets/logotype.png')} style={[ styles.image, styles.imageLogoType ]} />
+							*/}
 						</View>
 						<View style={styles.buttonContainer}>
 							<AppText style={styles.tip}>SIGN IN OR SIGN UP WITH</AppText>

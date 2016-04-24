@@ -8,27 +8,35 @@
     {
       "client_info": {
         "mobilesdk_app_id": "1:949615022713:android:68efb474d8f51b11",
-        "client_id": "android:co.babil.braavos",
+        "client_id": "android:chat.belong.hello",
         "client_type": 1,
         "android_client_info": {
-          "package_name": "co.babil.braavos",
+          "package_name": "chat.belong.hello",
           "certificate_hash": []
         }
       },
       "oauth_client": [
         {
-          "client_id": "949615022713-f8s3ej2egr1brd6qfsenia2t8h5hdat8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "io.scrollback.neighborhoods",
-            "certificate_hash": "B04495E72551E801A8BFB765684869A5D6175725"
-          }
+            "client_id": "949615022713-f8s3ej2egr1brd6qfsenia2t8h5hdat8.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+                "package_name": "io.scrollback.neighborhoods",
+                "certificate_hash": "E6DE3B7094086C66834EB19E854FD672F4911A96"
+            }
+        },
+        {
+            "client_id": "949615022713-f8s3ej2egr1brd6qfsenia2t8h5hdat8.apps.googleusercontent.com",
+            "client_type": 1,
+            "android_info": {
+                "package_name": "io.scrollback.neighborhoods",
+                "certificate_hash": "B04495E72551E801A8BFB765684869A5D6175725"
+            }
         },
         {
           "client_id": "949615022713-71pbh16crv526j0hmc4der6oefnkf616.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "co.babil.braavos",
+            "package_name": "chat.belong.hello",
             "certificate_hash": "5BD5425F5BADDCAE50FC718E9C09AAB94DAB48AF"
           }
         },
@@ -36,7 +44,7 @@
           "client_id": "949615022713-lej7459cdjrsof4insccr0fbuvvnb2nt.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "co.babil.braavos",
+            "package_name": "chat.belong.hello",
             "certificate_hash": "A79B322EF656B440DC64E77054A28BF273F49C86"
           }
         },

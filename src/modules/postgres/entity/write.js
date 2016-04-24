@@ -59,6 +59,15 @@ export default function (entity) {
 						$: `&{${name}}`,
 						[name]: Date.now()
 					};
+				case 'meta':
+				case 'params':
+				case 'data':
+				case 'resources':
+				case 'counts':
+					return {
+						$: `jsonop('{}'::jsonb, &{${name}}, '{}'::jsonb)`,
+						[name]: entity[name],
+					};
 				default:
 					return {
 						$: `&{${name}}`,

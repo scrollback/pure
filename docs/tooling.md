@@ -103,7 +103,7 @@ module.exports = function multiply(a, b) {
 ```js
 // lib/__tests__/multiply-test.js
 
-jest.dontMock("../multiply");
+jest.unmock("../multiply");
 
 describe("lib", function() {
 	it("multiplies 2 numbers", function() {
@@ -119,7 +119,7 @@ Now you can either run the test by using the `jest` command, or use `--watch` to
 **NOTES:**
 
 1. You can also use the `assert` library if you want.
-2. You need to require the module after the `jest.dontMock(...)` statement. ES2015 imports are hoisted to the top, so cannot use them.
+2. You need to require the module after the `jest.unmock(...)` statement. ES2015 imports are hoisted to the top, so cannot use them.
 3. To turn off auto-mocking modules, use `jest.autoMockOff()`.
 
 ### Setup

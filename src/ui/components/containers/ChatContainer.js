@@ -10,8 +10,8 @@ const mapActionsToProps = {
 	sendMessage: (store, result, props) => (id, body, meta) => store.dispatch(sendMessage({
 		body,
 		meta,
-		parents: [ props.thread ].concat(result.parents),
-		creator: props.user
+		parents: [ props.thread, props.room ],
+		creator: props.user,
 	})),
 };
 
@@ -23,10 +23,10 @@ const ChatContainer = (props: any) => (
 			parents: {
 				key: {
 					type: 'entity',
-					id: props.thread
+					id: props.thread,
 				},
-				transform: transformThreadToParents
-			}
+				transform: transformThreadToParents,
+			},
 		}}
 		mapActionsToProps={mapActionsToProps}
 		passProps={props}

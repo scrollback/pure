@@ -73,7 +73,6 @@ function sessionHandler(changes, n) {
 
 bus.on('change', sessionHandler, Constants.APP_PRIORITIES.AUTHENTICATION_SESSION);
 bus.on('change', (changes, next) => {
-	console.log("SESSION:", changes);
 	if (changes.response && changes.response.state && changes.response.state.user) {
 		generateSession(changes.response.state.user).then((session) => {
 			changes.response.state.session = session;

@@ -61,7 +61,7 @@ log.i('Found React Native version', metadata.react_native_version);
 metadata.timestamp = Date.now();
 
 // Create the bundles directory and copy the bundle
-const assetsPath = path.normalize(__dirname + '/../../hey-neighbor-bundles/android/' + metadata.version_name); // Path to output directory, synced to the server
+const assetsPath = path.normalize(__dirname + '/../../belong-bundles/android/' + metadata.version_name); // Path to output directory, synced to the server
 
 log.i('Creating new directory', assetsPath);
 

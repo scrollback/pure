@@ -4,7 +4,11 @@ import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import PeopleList from '../views/PeopleList';
 
-const filterInvalidRels = data => data.filter(result => typeof result.type === 'string' || result.user && result.rel);
+const filterInvalidRels = data => data.filter(result => (
+	typeof result.type === 'string' ||
+	(result.user && typeof result.user.type !== 'string') &&
+	(result.rel && typeof result.rel.type !== 'string')
+));
 
 const PeopleListContainer = (props: any) => (
 	<Connect

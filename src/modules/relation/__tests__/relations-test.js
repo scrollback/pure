@@ -1,10 +1,11 @@
+/* eslint: env jest */
 'use strict';
 
 jest.autoMockOff();
 
 let { Constants, bus, cache } = require('../../../core-server');
 
-require('../relations');
+require('../relation');
 describe('create relation on reply to a thread', () => {
 	bus.emit('change', {
 		entities: {

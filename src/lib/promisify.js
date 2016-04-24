@@ -4,23 +4,20 @@
  * @flow
  */
 
-type NodeStyleFunction = (options: any, callback: (error: Error, value: any) => void) => any;
-type PromisifiedFunction = (options: any) => Promise<any>;
+type NodeStyleFunction = (...args: any) => any;
+type PromisifiedFunction = (...args: any) => Promise<any>;
 
-export default function promisify(func: NodeStyleFunction): PromisifiedFunction {
-	const promisifiedFunction = (options) => {
+export default function promisify(fn: NodeStyleFunction): PromisifiedFunction {
+	return function(...args) {
 		return new Promise((resolve, reject) => {
-			func(options, (error, value) => {
+			args.push((error, result) => {
 				if (error) {
 					reject(error);
 				} else {
-					resolve(value);
+					resolve(result);
 				}
 			});
+			fn(...args);
 		});
 	};
-
-	promisifiedFunction.name = func.name + 'Async';
-
-	return promisifiedFunction;
 }

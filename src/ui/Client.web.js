@@ -1,6 +1,6 @@
 /* @flow */
 
-import '../modules/client/client';
+import './Client-base';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Home from './components/views/Home.web';

@@ -31,7 +31,7 @@ function initMailSending(cUserRel) {
 			token: jwt.sign({ email: mailId.substring(8, emailAdd.length) }, conf.secret, { expiresIn: '2 days' })
 		});
 
-		send(conf.from, emailAdd, 'Welcome to ' + config.app_id, emailHtml, (e) => {
+		send(conf.from, emailAdd, 'Welcome to ' + config.app_name, emailHtml, (e) => {
 			if (e) {
 				log.error('Error in sending email');
 				counter.err(e);

@@ -333,8 +333,8 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 	};
 
 	_postDiscussion: Function = () => {
-		const SHORT_TITLE_MESSAGE = 'Name needs be at least 2 words';
-		const LONG_TITLE_MESSAGE = 'Name needs be less than 10 words';
+		const SHORT_TITLE_MESSAGE = 'Title needs be at least 2 words';
+		const LONG_TITLE_MESSAGE = 'Title needs be less than 10 words';
 		const NO_TITLE_MESSAGE = 'Enter a title in 2 to 10 words';
 		const NO_SUMMARY_MESSAGE = 'Enter a short summary';
 

@@ -44,7 +44,7 @@ class StartDiscussionContainer extends Component<void, Props, State> {
 							name,
 							body,
 							meta,
-							parents: [ props.room ].concat(result.parents),
+							parents: [ props.room ],
 							creator: props.user
 						});
 

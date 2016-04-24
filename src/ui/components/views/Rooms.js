@@ -121,7 +121,7 @@ export default class Rooms extends Component<void, Props, State> {
 		this.props.onNavigation(new NavigationActions.Push({
 			name: 'room',
 			props: {
-				room: 'support',
+				room: 'e8d0a3b8-6c00-4871-84ad-1078b1265c08',
 			},
 		}));
 	};

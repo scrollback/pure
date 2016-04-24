@@ -1,6 +1,6 @@
 /* @flow */
 
-import '../modules/client/client';
+import './Client-base';
 import React, { Component } from 'react';
 import ReactNative from 'react-native';
 import AppContainer from './components/containers/AppContainer';
@@ -8,10 +8,10 @@ import Provider from '../modules/store/Provider';
 import * as store from '../modules/store/store';
 
 const {
-	AppRegistry
+	AppRegistry,
 } = ReactNative;
 
-export default class HeyNeighbor extends Component {
+export default class Belong extends Component {
 	render() {
 		return (
 			<Provider store={store}>
@@ -21,4 +21,4 @@ export default class HeyNeighbor extends Component {
 	}
 }
 
-AppRegistry.registerComponent('HeyNeighbor', () => HeyNeighbor);
+AppRegistry.registerComponent('Belong', () => Belong);

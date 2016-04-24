@@ -15,6 +15,12 @@ ROLES[Constants.ROLE_NONE] = 'none';
 ROLES[Constants.ROLE_VISITOR] = 'visitor';
 ROLES[Constants.ROLE_MODERATOR] = 'moderator';
 ROLES[Constants.ROLE_OWNER] = 'owner';
+ROLES[Constants.ROLE_HOME] = 'home';
+ROLES[Constants.ROLE_LIKE] = 'like';
+ROLES[Constants.ROLE_MUTE] = 'mute';
+ROLES[Constants.ROLE_WORK] = 'work';
+ROLES[Constants.ROLE_HOMETOWN] = 'hometown';
+ROLES[Constants.ROLE_FLAG] = 'flag';
 
 TABLES[Constants.TYPE_ITEM] = 'items';
 TABLES[Constants.TYPE_ROOM] = 'rooms';

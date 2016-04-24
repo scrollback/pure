@@ -20,7 +20,7 @@ describe('convertURLToRoute', () => {
 			},
 		};
 
-		expect(result).toEqual(convertURLToRoute('https://heyneighbor.chat/someroom/all/all-messages'));
+		expect(result).toEqual(convertURLToRoute('https://belong.chat/someroom/all/all-messages'));
 		expect(result).toEqual(convertURLToRoute('http://localhost:7528/someroom/all/all-messages'));
 		expect(result).toEqual(convertURLToRoute('//localhost:7528/someroom/all/all-messages'));
 		expect(result).toEqual(convertURLToRoute('/someroom/all/all-messages'));

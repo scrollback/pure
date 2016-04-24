@@ -5,7 +5,6 @@ import webpack from 'webpack';
 import webpackDevMiddleware from 'koa-webpack-dev-middleware';
 import webpackHotMiddleware from 'koa-webpack-hot-middleware';
 import webpackConfig from '../../../webpack.config';
-import routes from './routes';
 
 export default function(): Function {
 	const middlewares = [];
@@ -22,9 +21,6 @@ export default function(): Function {
 		// Enable Hot reloading
 		middlewares.push(webpackHotMiddleware(compiler));
 	}
-
-	// Serve files according to route
-	middlewares.push(routes());
 
 	return compose(middlewares);
 }

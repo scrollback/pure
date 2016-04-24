@@ -81,8 +81,8 @@
   },
   "scripts": {
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run start:prod; else npm run start:dev; fi",
-    "start:dev": "babel-node src/start/heyneighbor-server.dev",
-    "start:prod": "node build/start/heyneighbor-server.prod",
+    "start:dev": "babel-node src/start/belong-server.dev",
+    "start:prod": "node build/start/belong-server.prod",
     "prestart:prod": "npm run build:server",
     "packager": "node node_modules/react-native/local-cli/cli.js start",
     "test": "jest",

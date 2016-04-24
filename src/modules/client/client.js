@@ -1,5 +1,8 @@
 /* @flow */
 
-// $FlowFixMe: Flow cannot find ignored modules
-import 'babel-polyfill';
-import './client-base';
+import client from '../client/middleware';
+import { bus } from '../../core-server';
+
+bus.on('http/init', app => {
+	app.use(client());
+});

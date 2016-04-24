@@ -7,7 +7,7 @@ import NotificationCenter from '../views/NotificationCenter';
 import { dismissNote } from '../../../modules/store/actions';
 
 const mapActionsToProps = {
-	dismissNote: store => id => store.dispatch(dismissNote(id))
+	dismissNote: store => id => store.dispatch(dismissNote(id)),
 };
 
 const NotificationCenterContainer = (props: any) => (
@@ -18,17 +18,17 @@ const NotificationCenterContainer = (props: any) => (
 					slice: {
 						type: 'note',
 						filter: {
-							user: props.user
+							user: props.user,
 						},
-						order: 'updateTime'
+						order: 'updateTime',
 					},
 					range: {
 						start: Infinity,
 						before: 100,
-						after: 0
-					}
-				}
-			}
+						after: 0,
+					},
+				},
+			},
 		}}
 		mapActionsToProps={mapActionsToProps}
 		passProps={props}
@@ -37,7 +37,7 @@ const NotificationCenterContainer = (props: any) => (
 );
 
 NotificationCenterContainer.propTypes = {
-	user: PropTypes.string
+	user: PropTypes.string,
 };
 
 export default PassUserProp(NotificationCenterContainer);

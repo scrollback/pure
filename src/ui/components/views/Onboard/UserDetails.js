@@ -12,6 +12,7 @@ import OnboardError from './OnboardError';
 import Icon from '../Icon';
 import VersionCodes from '../../../modules/VersionCodes';
 import Colors from '../../../Colors';
+import { config } from '../../../../core-client';
 
 const {
 	View,
@@ -25,18 +26,18 @@ const {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.white
+		backgroundColor: Colors.white,
 	},
 
 	inner: {
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 
 	avatar: {
 		height: 96,
 		width: 96,
-		borderRadius: 48
+		borderRadius: 48,
 	},
 
 	avatarContainer: {
@@ -44,7 +45,7 @@ const styles = StyleSheet.create({
 		height: 96,
 		width: 96,
 		borderRadius: 48,
-		backgroundColor: Colors.placeholder
+		backgroundColor: Colors.placeholder,
 	},
 
 	inputContainer: {
@@ -53,17 +54,17 @@ const styles = StyleSheet.create({
 	},
 
 	closeButtonContainer: {
-		alignSelf: 'flex-start'
+		alignSelf: 'flex-start',
 	},
 
 	closeButton: {
 		margin: 16,
-		color: Colors.fadedBlack
+		color: Colors.fadedBlack,
 	},
 
 	input: {
-		textAlign: 'center'
-	}
+		textAlign: 'center',
+	},
 });
 
 type Props = {
@@ -87,12 +88,12 @@ export default class UserDetails extends Component<void, Props, void> {
 		fields: PropTypes.objectOf(PropTypes.shape({
 			nick: PropTypes.shape({
 				value: PropTypes.string,
-				error: PropTypes.instanceOf(Error)
+				error: PropTypes.instanceOf(Error),
 			}),
 			name: PropTypes.shape({
 				value: PropTypes.string,
-				error: PropTypes.instanceOf(Error)
-			})
+				error: PropTypes.instanceOf(Error),
+			}),
 		})).isRequired,
 	};
 
@@ -109,7 +110,7 @@ export default class UserDetails extends Component<void, Props, void> {
 		const {
 			nick,
 			name,
-			picture
+			picture,
 		} = fields;
 
 		let nickColor, nameColor;
@@ -169,7 +170,7 @@ export default class UserDetails extends Component<void, Props, void> {
 					</View>
 
 					<OnboardError
-						hint='People on Hey, Neighbor! will know you by your username.'
+						hint={`People on ${config.app_name}! will know you by your username.`}
 						message={nick.error || name.error || null}
 					/>
 

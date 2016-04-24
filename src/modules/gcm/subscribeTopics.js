@@ -90,10 +90,10 @@ function unsubscribeTopics (data, cb) {
 }
 
 export function subscribe (userRel: Object) {
-	const gcm = userRel.params.gcm;
-	const userName = userRel.params['facebook'].name || userRel.params['google'].name;
+	const gcm = userRel.params ? userRel.params.gcm : null;
+
 	function register () {
-		const	tokens = values(gcm);
+		const tokens = values(gcm);
 
 		log.info('tokens: ', tokens);
 		tokens.forEach(token => {
@@ -119,7 +119,6 @@ export function subscribe (userRel: Object) {
 					log.error(body, userRel.topic);
 					// console.log(options);
 				} else {
-					log.info(userName, 'succefully subscribed to: ' + userRel.topic, body);
 					// getIIDInfo(token, (e, r, b) => {
 					// 	log.info(b);
 					// 	// return;

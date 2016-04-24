@@ -5,7 +5,6 @@ import mount from 'koa-mount';
 import serve from 'koa-static';
 import koabody from 'koa-body-parser';
 import opn from 'opn';
-import client from '../client/middleware';
 import { config, bus } from '../../core-server';
 
 const app = koa();
@@ -13,7 +12,6 @@ const httpServer = http.createServer(app.callback()).listen(config.server.port);
 
 app.use(koabody());
 app.use(logger());
-app.use(client());
 
 // Serve files under static/ for any requests to /static/
 app.use(mount('/static/', serve('static/'), { defer: true }));

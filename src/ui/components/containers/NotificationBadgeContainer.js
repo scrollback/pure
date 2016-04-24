@@ -25,18 +25,18 @@ const NotificationBadgeContainer = (props: any) => (
 					slice: {
 						type: 'note',
 						filter: {
-							user: props.user
+							user: props.user,
 						},
-						order: 'updateTime'
+						order: 'updateTime',
 					},
 					range: {
 						start: Infinity,
 						before: 100,
-						after: 0
-					}
+						after: 0,
+					},
 				},
-				transform: transformNotesToCount
-			}
+				transform: transformNotesToCount,
+			},
 		}}
 		passProps={props}
 		component={NotificationBadge}
@@ -44,7 +44,7 @@ const NotificationBadgeContainer = (props: any) => (
 );
 
 NotificationBadgeContainer.propTypes = {
-	user: PropTypes.string.isRequired
+	user: PropTypes.string.isRequired,
 };
 
 export default PassUserProp(NotificationBadgeContainer);

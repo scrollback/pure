@@ -38,6 +38,8 @@ settings.json
 # Java class files
 *.class
 
+*.iml
+
 # Generated files
 bin/
 gen/
