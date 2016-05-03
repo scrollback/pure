@@ -43,6 +43,18 @@
 		"packageName": ""
 	},
 
+	"s3": {
+		"accessKey": "",
+		"secretKey": "",
+		"region": "",
+		"bucket": "belong",
+		"acl": "public-read",
+		"service": "s3",
+		"signatureVersion": "aws4_request",
+		"algorithm": "AWS4-HMAC-SHA256",
+		"validity": 600000
+	},
+
 	"connStr": "pg://scrollback:@localhost/pure",
 	"open_in_browser": false
 }

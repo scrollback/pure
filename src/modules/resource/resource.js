@@ -1,4 +1,5 @@
-import { bus, Constants, cache } from '../../core-server';
+import { bus, cache } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 
 const resourceMap = {};
 

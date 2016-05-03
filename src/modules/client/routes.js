@@ -69,7 +69,7 @@ bus.on('http/init', app => {
 							radiumConfig={{ userAgent: this.headers['user-agent'] }}
 						/>
 					)}
-					image={`${this.request.origin}/assets/thumbnail.png`}
+					image={`${this.request.origin}/s/assets/thumbnail.png`}
 					permalink={this.request.href}
 				/>
 			);

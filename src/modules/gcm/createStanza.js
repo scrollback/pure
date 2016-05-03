@@ -1,6 +1,8 @@
-import uid from '../../lib/uid-server';
-import { Constants } from '../../core-server';
-export default function (pushData) {
+/* @flow */
+
+import * as Constants from '../../lib/Constants';
+
+export default function createStanza(pushData: Object, id: string) {
 	let topic;
 
 	if (pushData.type === Constants.TYPE_THREAD) {
@@ -12,15 +14,16 @@ export default function (pushData) {
 	if (pushData.type === Constants.TYPE_NOTE) {
 		topic = 'user-' + pushData.user;
 	}
-	const stanza = `<message>
+	const stanza = `
+	<message>
 	<gcm xmlns="google:mobile:data">
 	{
 		"to": "/topics/${topic}",
-		"message_id": "${uid()}",
+		"message_id": "${id}",
 		"data": ${JSON.stringify(pushData)}
 	}
 	</gcm>
-	</message>`;
-	console.log("stanza created: ", stanza);
-	return (stanza);
+	</message>
+	`;
+	return stanza;
 }

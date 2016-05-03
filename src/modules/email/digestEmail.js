@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks: 0 */
 import getMailObj from './buildMailObj';
-import { Constants, config } from '../../core-server';
+import { config } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 import log from 'winston';
 import fs from 'fs';
 import handlebars from 'handlebars';
@@ -15,11 +16,10 @@ const DIGEST_INTERVAL = 60 * 60 * 1000, DIGEST_DELAY = 24 * 60 * 60 * 1000,
 let lastEmailSent, end;
 
 
-function getSubject(rels) {
-	const counts = rels.length - 1;
-	// console.log(rels[0])
-	const heading = '[' + rels[0].room + '] ' + rels[0].threads[0].threadTitle + ' +' + counts + ' more';
-	// console.log(heading)
+function getSubject() {
+	// const counts = rels.length - 1;
+	// const heading = '[' + rels[0].room + '] ' + rels[0].threads[0].threadTitle + ' +' + counts + ' more';
+	const heading = 'Updates from ' + config.app_name;
 	return heading;
 }
 
@@ -36,7 +36,7 @@ export function initMailSending (userRel) {
 		const emailAdd = mailId.slice(7),
 			emailHtml = template({
 				token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
-				domain: conf.domain,
+				domain: config.server.protocol + '//' + config.server.host + ':' + config.server.port,
 				rooms: rels
 			}),
 			emailSub = getSubject(rels);
@@ -71,7 +71,7 @@ function sendDigestEmail () {
 	function getTimezone(hour) {
 		const UtcHrs = new Date().getUTCHours(),
 			c = UtcHrs > 12 ? 24 - UtcHrs : UtcHrs,
-			d = c > hour ? c - hour : hour - c,
+			d = hour - c,
 			tz = d * 60,
 			tzMin = tz - 30,
 			tzMax = tz + 30;
@@ -87,7 +87,7 @@ function sendDigestEmail () {
 	}
 
 	pg.readStream(config.connStr, {
-		$: 'with urel as (select rrls.presencetime ptime, users.name uname, * from users join roomrels rrls on users.id=rrls.user where roles @> \'{3}\' and rrls.presencetime >= &{start} and rrls.presencetime < &{end} and timezone >= &{min} and timezone < &{max}) select threads.counts, urel.params, urel.tags, threads.createtime tctime, threads.id threadId, * from urel join threads on threads.parents[1]=urel.item order by urel.id', // where threads.createtime > urel.ptime
+		$: 'with urel as (select rrls.presencetime ptime, users.name uname, * from users join roomrels rrls on users.id=rrls.user where NOT(params  @> \'{"email":{"frequency": "never", "notifications": false}}\') and roles @> \'{3}\' and rrls.presencetime >= &{start} and rrls.presencetime < &{end} and timezone >= &{min} and timezone < &{max}) select threads.counts, urel.params, urel.tags, threads.createtime tctime, threads.id threadId, * from urel join threads on threads.parents[1]=urel.item order by urel.id', // where threads.createtime > urel.ptime
 		start,
 		end,
 		follower: Constants.ROLE_FOLLOWER,
@@ -118,7 +118,7 @@ function sendDigestEmail () {
 			});
 		});
 	}).on('end', () => {
-		log.info('ended');
+		log.info('ended digest email');
 	});
 }
 

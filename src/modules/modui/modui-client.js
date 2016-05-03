@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TodoList from './TodoList';
-import config from '../../../config/modui.json';
+import config from './config';
 
 const eio = require('engine.io-client'); // eslint-disable-line import/no-commonjs
 
@@ -12,7 +12,9 @@ if (localStorage && localStorage.todos) {
 		todos = JSON.parse(localStorage.todos);
 		console.log("Got todos:", todos.length);
 		if (todos[0] !== "separator") todos.unshift("separator");
-	} catch (e) {}
+	} catch (e) {
+		// ignore
+	}
 }
 
 const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
@@ -31,4 +33,3 @@ client.on('message', (message) => { // eslint-disable-line
 });
 
 rerender();
-

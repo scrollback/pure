@@ -35,7 +35,10 @@ import java.util.Set;
 
 public class FacebookModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    private static final String ACTIVITY_DOES_NOT_EXIST_ERROR = "Activity doesn't exist";
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST = "Activity doesn't exist";
+    private static final String ERR_MULTIPLE_CALLBACKS = "Cannot register multiple callbacks";
+    private static final String ERR_GETTING_ACCESS_TOKEN = "Failed to get access token";
+    private static final String ERR_SIGNIN_CANCELLED = "Signin was cancelled";
 
     private CallbackManager mCallbackManager;
     private Promise mTokenPromise;
@@ -66,7 +69,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     @Override
                     public void onCancel() {
                         if (mTokenPromise != null) {
-                            rejectPromise("Login was cancelled");
+                            rejectPromise("ERR_SIGNIN_CANCELLED", ERR_SIGNIN_CANCELLED);
                         }
                     }
 
@@ -86,9 +89,9 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
         }
     }
 
-    private void rejectPromise(String reason) {
+    private void rejectPromise(String code, String reason) {
         if (mTokenPromise != null) {
-            mTokenPromise.reject(reason);
+            mTokenPromise.reject(code, reason);
             mTokenPromise = null;
         }
     }
@@ -137,7 +140,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
 
     public void registerPermissionCallback(final Promise promise) {
         if (mTokenPromise != null) {
-            rejectPromise("Cannot register multiple callbacks");
+            rejectPromise("ERR_MULTIPLE_CALLBACKS", ERR_MULTIPLE_CALLBACKS);
         } else {
             mTokenPromise = promise;
         }
@@ -154,7 +157,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     currentActivity,
                     readableArrayToStringList(permissions));
         } else {
-            promise.reject(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            promise.reject("ERR_ACTIVITY_DOES_NOT_EXIST", ERR_ACTIVITY_DOES_NOT_EXIST);
         }
     }
 
@@ -169,7 +172,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     currentActivity,
                     readableArrayToStringList(permissions));
         } else {
-            promise.reject(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            promise.reject("ERR_ACTIVITY_DOES_NOT_EXIST", ERR_ACTIVITY_DOES_NOT_EXIST);
         }
     }
 
@@ -192,7 +195,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
 
             promise.resolve(map);
         } else {
-            promise.reject("Failed to get current access token");
+            promise.reject("ERR_GETTING_ACCESS_TOKEN", ERR_GETTING_ACCESS_TOKEN);
         }
     }
 

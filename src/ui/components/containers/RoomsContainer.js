@@ -6,11 +6,42 @@ import PassUserProp from '../../../modules/store/PassUserProp';
 import Rooms from '../views/Rooms';
 import { ROLE_FOLLOWER } from '../../../lib/Constants';
 
-const filterInvalidRels = data => data.filter(result => (
-	typeof result.type === 'string' ||
-	(result.room && typeof result.room.type !== 'string') &&
-	(result.roomrel && typeof result.roomrel.type !== 'string')
-));
+const ITEM_LOADING = { type: 'loading' };
+
+const filterInvalidRels = data => data.map(result => {
+	if (!result.room || typeof result.room.type === 'string') {
+		return ITEM_LOADING;
+	}
+
+	if (!result.roomrel || typeof result.roomrel.type === 'string') {
+		return ITEM_LOADING;
+	}
+
+	return result;
+});
+
+const sortPlacesByTag = data => data.slice().sort((a, b) => {
+	if (a.room && a.room.tags && b.room && b.room.tags) {
+		const aTag = a.room.tags[0];
+		const bTag = b.room.tags[0];
+
+		if (aTag === bTag) {
+			return 0;
+		}
+
+		if (aTag > bTag) {
+			return -1;
+		}
+
+		if (aTag < bTag) {
+			return 1;
+		}
+	}
+
+	return -1;
+});
+
+const transformResults = data => sortPlacesByTag(filterInvalidRels(data));
 
 class RoomsContainer extends Component {
 	static propTypes = {
@@ -41,7 +72,7 @@ class RoomsContainer extends Component {
 								end: Infinity,
 							},
 						},
-						transform: filterInvalidRels,
+						transform: transformResults,
 					},
 				}}
 				passProps={this.props}

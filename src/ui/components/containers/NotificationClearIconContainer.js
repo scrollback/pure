@@ -6,7 +6,7 @@ import NotificationClearIcon from '../views/NotificationClearIcon';
 import { dismissAllNotes } from '../../../modules/store/actions';
 
 const mapActionsToProps = {
-	dismissAllNotes: store => () => store.dispatch(dismissAllNotes())
+	dismissAllNotes: store => () => store.dispatch(dismissAllNotes()),
 };
 
 const NotificationClearIconContainer = (props: any) => (

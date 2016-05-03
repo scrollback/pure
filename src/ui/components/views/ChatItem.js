@@ -21,37 +21,37 @@ const {
 	PixelRatio,
 	StyleSheet,
 	TouchableOpacity,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		marginHorizontal: 8,
-		marginVertical: 4
+		marginVertical: 4,
 	},
 	chat: {
 		flex: 0,
 		flexDirection: 'column',
-		alignItems: 'flex-end'
+		alignItems: 'flex-end',
 	},
 	received: {
 		alignItems: 'flex-start',
-		marginLeft: 44
+		marginLeft: 44,
 	},
 	timestamp: {
 		flexDirection: 'row',
-		marginTop: 4
+		marginTop: 4,
 	},
 	timestampLeft: {
-		marginLeft: 52
+		marginLeft: 52,
 	},
 	timestampRight: {
-		alignSelf: 'flex-end'
+		alignSelf: 'flex-end',
 	},
 	timestampIcon: {
 		color: Colors.black,
 		marginVertical: 2,
-		opacity: 0.3
+		opacity: 0.3,
 	},
 	timestampText: {
 		color: Colors.black,
@@ -59,16 +59,16 @@ const styles = StyleSheet.create({
 		lineHeight: 18,
 		marginHorizontal: 6,
 		paddingHorizontal: 8,
-		opacity: 0.3
+		opacity: 0.3,
 	},
 	avatar: {
 		position: 'absolute',
 		top: 0,
 		left: -36,
-		alignSelf: 'flex-end'
+		alignSelf: 'flex-end',
 	},
 	thumbnail: {
-		marginVertical: 4
+		marginVertical: 4,
 	},
 	embed: {
 		borderColor: 'rgba(0, 0, 0, .24)',
@@ -78,17 +78,17 @@ const styles = StyleSheet.create({
 		borderRadius: 2,
 	},
 	embedThumbnail: {
-		marginBottom: 8
+		marginBottom: 8,
 	},
 	bubbleReceived: {
-		marginRight: 8
+		marginRight: 8,
 	},
 	bubbleSent: {
-		marginLeft: 8
+		marginLeft: 8,
 	},
 	hidden: {
-		opacity: 0.3
-	}
+		opacity: 0.3,
+	},
 });
 
 type Props = {
@@ -100,7 +100,6 @@ type Props = {
 	quoteMessage: Function;
 	replyToMessage: Function;
 	isUserAdmin: boolean;
-	// isCreatorBanned: boolean;
 	hideText: Function;
 	unhideText: Function;
 	banUser: Function;
@@ -127,12 +126,11 @@ export default class ChatItem extends Component<void, Props, void> {
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
 		isUserAdmin: PropTypes.bool.isRequired,
-		// isCreatorBanned: PropTypes.bool.isRequired,
 		hideText: PropTypes.func.isRequired,
 		unhideText: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -169,14 +167,6 @@ export default class ChatItem extends Component<void, Props, void> {
 			} else {
 				menu['Hide message'] = () => this.props.hideText();
 			}
-
-			// if (text.creator !== this.props.user) {
-			// 	if (this.props.isCreatorBanned) {
-			// 		menu['Unban ' + text.creator] = () => this.props.unbanUser();
-			// 	} else {
-			// 		menu['Ban ' + text.creator] = () => this.props.banUser();
-			// 	}
-			// }
 		}
 
 		Modal.showActionSheetWithItems(menu);
@@ -187,7 +177,7 @@ export default class ChatItem extends Component<void, Props, void> {
 			text,
 			previousText,
 			isLast,
-			user
+			user,
 		} = this.props;
 
 		const hidden = text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1;

@@ -30,7 +30,6 @@ public class Note {
     private static final String PROP_DATA = "data";
     private static final String PROP_TITLE = "title";
     private static final String PROP_BODY = "body";
-    private static final String PROP_AUTHOR = "creator";
     private static final String PROP_LINK = "link";
     private static final String PROP_PICTURE = "picture";
 
@@ -38,7 +37,6 @@ public class Note {
 
     public final String title;
     public final String summary;
-    public final String author;
     public final String link;
     @Nullable
     public final Bitmap picture;
@@ -56,7 +54,6 @@ public class Note {
 
         title = data.getString(PROP_TITLE);
         summary = data.getString(PROP_BODY);
-        author = data.getString(PROP_AUTHOR);
         link = data.getString(PROP_LINK);
 
         if (data.has(PROP_PICTURE)) {

@@ -18,13 +18,13 @@ const {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.lightGrey
+		backgroundColor: Colors.lightGrey,
 	},
 
 	poweredBy: {
 		borderTopColor: Colors.separator,
 		borderTopWidth: StyleSheet.hairlineWidth,
-		alignSelf: 'stretch'
+		alignSelf: 'stretch',
 	},
 });
 
@@ -43,7 +43,7 @@ export default class PlacesSelector extends Component<void, Props, void> {
 	static propTypes = {
 		location: PropTypes.shape({
 			latitude: PropTypes.number,
-			longitude: PropTypes.number
+			longitude: PropTypes.number,
 		}),
 		onSelectPlace: PropTypes.func.isRequired,
 		onCancel: PropTypes.func,
@@ -52,7 +52,7 @@ export default class PlacesSelector extends Component<void, Props, void> {
 	};
 
 	_getResults: Function = (query: string) => GooglePlaces.getAutoCompletePredictions(
-		query, [ this.props.location ], [ GooglePlaces.TYPE_FILTER_GEOCODE ]
+		query, [ this.props.location ], []
 	);
 
 	_renderRow: Function = place => <LocationItem place={place} onPress={() => this.props.onSelectPlace(place)} />;
@@ -67,7 +67,6 @@ export default class PlacesSelector extends Component<void, Props, void> {
 					renderBlankslate={this.props.renderBlankslate}
 					onCancel={this.props.onCancel}
 					searchHint={this.props.searchHint}
-					autoFocus
 				/>
 				<KeyboardSpacer offset={36} />
 				<PoweredByGoogle style={styles.poweredBy} />

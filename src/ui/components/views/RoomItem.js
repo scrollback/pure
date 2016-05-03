@@ -15,29 +15,29 @@ import { config } from '../../../core-client';
 const {
 	StyleSheet,
 	TouchableOpacity,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	item: {
 		flex: 1,
 		justifyContent: 'center',
-		paddingHorizontal: 16
+		paddingHorizontal: 16,
 	},
 	title: {
 		color: Colors.darkGrey,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
 	},
 	expand: {
 		margin: 20,
-		color: Colors.fadedBlack
-	}
+		color: Colors.fadedBlack,
+	},
 });
 
 type Props = {
 	room: {
-		id: string,
-		name: string,
+		id: string;
+		name: string;
 	};
 	onSelect: Function;
 }
@@ -66,8 +66,8 @@ export default class RoomItem extends Component<void, Props, void> {
 			Share.shareItem('Share group', config.server.protocol + '//' + config.server.host + convertRouteToURL({
 				name: 'room',
 				props: {
-					room: room.id
-				}
+					room: room.id,
+				},
 			}));
 		});
 
@@ -86,7 +86,7 @@ export default class RoomItem extends Component<void, Props, void> {
 		return (
 			<ListItem {...this.props} onPress={this._handlePress}>
 				<View style={styles.item}>
-					<AppText style={styles.title}>{room.name || room.id}</AppText>
+					<AppText style={styles.title}>{room.name || 'Loading…'}</AppText>
 				</View>
 
 				<TouchableOpacity onPress={this._handleShowMenu}>

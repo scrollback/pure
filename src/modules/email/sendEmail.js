@@ -4,6 +4,7 @@ import smtpTransport from 'nodemailer-smtp-transport';
 import log from 'winston';
 const transport = nodemailer.createTransport(smtpTransport({
 	host: 'email-smtp.us-west-2.amazonaws.com',
+	protocol: 'smtp',
 	secureConnection: true,
 	port: 465,
 	auth: config && config.email && config.email.auth

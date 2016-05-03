@@ -17,77 +17,77 @@ const {
 	StyleSheet,
 	View,
 	TouchableHighlight,
-	PixelRatio
+	PixelRatio,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	item: {
 		backgroundColor: Colors.white,
 		borderColor: Colors.separator,
-		borderBottomWidth: 1 / PixelRatio.get()
+		borderBottomWidth: 1 / PixelRatio.get(),
 	},
 	note: {
-		flexDirection: 'row'
+		flexDirection: 'row',
 	},
 	avatarContainer: {
-		margin: 16
+		margin: 16,
 	},
 	content: {
 		flex: 1,
-		marginVertical: 12
+		marginVertical: 12,
 	},
 	title: {
-		color: Colors.grey
+		color: Colors.grey,
 	},
 	summary: {
 		fontSize: 12,
 		lineHeight: 18,
-		color: Colors.grey
+		color: Colors.grey,
 	},
 	strong: {
-		color: Colors.darkGrey
+		color: Colors.darkGrey,
 	},
 	timestampContainer: {
 		flexDirection: 'row',
-		marginTop: 4
+		marginTop: 4,
 	},
 	timestamp: {
 		fontSize: 11,
 		color: Colors.black,
 		marginLeft: 4,
 		paddingHorizontal: 4,
-		opacity: 0.3
+		opacity: 0.3,
 	},
 	icon: {
 		color: Colors.black,
-		opacity: 0.3
+		opacity: 0.3,
 	},
 	metaIcon: {
-		marginVertical: 2
+		marginVertical: 2,
 	},
 	close: {
-		margin: 14
+		margin: 14,
 	},
 	closeButton: {
 		borderRadius: 22,
-		margin: 2
+		margin: 2,
 	},
 	badge: {
 		position: 'absolute',
 		alignItems: 'center',
-		bottom: -1,
+		top: 23,
 		right: -1,
 		height: 15,
 		width: 15,
 		borderRadius: 8,
 		borderColor: Colors.white,
-		borderWidth: 1
+		borderWidth: 1,
 	},
 	badgeIcon: {
 		marginVertical: 1,
 		textAlign: 'center',
-		color: Colors.white
-	}
+		color: Colors.white,
+	},
 });
 
 type Props = {
@@ -106,13 +106,12 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			createTime: PropTypes.number,
 			updateTime: PropTypes.number,
 			group: PropTypes.string.isRequired,
-			id: PropTypes.string.isRequired,
-			readTime: PropTypes.number.isRequired,
+			readTime: PropTypes.number,
 			score: PropTypes.number,
 			user: PropTypes.string,
 		}).isRequired,
 		dismissNote: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -121,6 +120,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 
 	_getSummary: Function = note => {
 		const { data, event, count } = note;
+		const { room, thread } = data;
 
 		const summary = [];
 
@@ -132,12 +132,12 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' mentioned you in');
 			}
 
-			if (data.title) {
-				summary.push(' ', <AppText key={2} style={styles.strong}>{data.title}</AppText>);
+			if (thread && thread.name) {
+				summary.push(' ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
 			}
 
-			if (data.room) {
-				summary.push(' - ', <AppText key={3} style={styles.strong}>{data.room}</AppText>);
+			if (room && room.name) {
+				summary.push(' - ', <AppText key={3} style={styles.strong}>{room.name}</AppText>);
 			}
 
 			break;
@@ -148,12 +148,12 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' replied');
 			}
 
-			if (data.title) {
-				summary.push(' to ', <AppText key={2} style={styles.strong}>{data.title}</AppText>);
+			if (thread && thread.name) {
+				summary.push(' to ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
 			}
 
-			if (data.room) {
-				summary.push(' in ', <AppText key={3} style={styles.strong}>{data.room}</AppText>);
+			if (room && room.name) {
+				summary.push(' in ', <AppText key={3} style={styles.strong}>{room.name}</AppText>);
 			}
 
 			break;
@@ -163,12 +163,12 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			} else {
 				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' started a discussion');
 
-				if (data.title) {
-					summary.push(' on ', <AppText key={2} style={styles.strong}>{data.title}</AppText>);
+				if (thread && thread.name) {
+					summary.push(' on ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
 				}
 			}
-			if (data.room) {
-				summary.push(' in ', <AppText key={3} style={styles.strong}>{data.room}</AppText>);
+			if (room && room.name) {
+				summary.push(' in ', <AppText key={3} style={styles.strong}>{room.name}</AppText>);
 			}
 
 			break;
@@ -179,8 +179,8 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 				summary.push('New notification from ', <AppText key={1} style={styles.strong}>{data.creator}</AppText>);
 			}
 
-			if (data.room) {
-				summary.push(' in ', <AppText key={2} style={styles.strong}>{data.room}</AppText>);
+			if (room && room.name) {
+				summary.push(' in ', <AppText key={2} style={styles.strong}>{room.name}</AppText>);
 			}
 		}
 
@@ -228,9 +228,9 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			onNavigation(new NavigationActions.Push({
 				name: 'chat',
 				props: {
-					thread: data.thread,
-					room: data.room,
-				}
+					thread: data.thread ? data.thread.id : null,
+					room: data.room ? data.room.id : null,
+				},
 			}));
 
 			break;
@@ -239,16 +239,16 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 				onNavigation(new NavigationActions.Push({
 					name: 'room',
 					props: {
-						room: data.room,
-					}
+						room: data.room ? data.room.id : null,
+					},
 				}));
 			} else {
 				onNavigation(new NavigationActions.Push({
 					name: 'chat',
 					props: {
-						thread: data.thread,
-						room: data.room
-					}
+						thread: data.thread ? data.thread.id : null,
+						room: data.room ? data.room.id : null,
+					},
 				}));
 			}
 
@@ -257,8 +257,8 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			onNavigation(new NavigationActions.Push({
 				name: 'room',
 				props: {
-					room: data.room
-				}
+					room: data.room ? data.room.id : null,
+				},
 			}));
 		}
 	};

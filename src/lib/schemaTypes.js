@@ -19,22 +19,22 @@ export type User = Entity & {
 	params?: {
 		gcm?: {
 			[key: string]: string;
-		},
+		};
 		google?: {
 			name?: string;
 			picture?: string;
 			verified?: boolean;
-		},
+		};
 		facebook?: {
 			name?: string;
 			picture?: string;
 			verified?: boolean;
-		},
+		};
 		places?: {
-			home?: { id: string, title: string, description: string };
-			work?: { id: string, title: string, description: string };
-			hometown?: { id: string, title: string, description: string };
-		},
+			home?: { id: string; title: string; description: string };
+			work?: { id: string; title: string; description: string };
+			hometown?: { id: string; title: string; description: string };
+		};
 		email?: {
 			notifications?: boolean;
 			frequency?: 'daily' | 'never';
@@ -106,17 +106,22 @@ export type Note = {
 		id: string;
 		link: string;
 		picture?: string;
-		room?: string;
-		thread?: string;
+		room?: {
+			id: string;
+			name?: string;
+		};
+		thread?: {
+			id: string;
+			name?: string;
+		};
 		title: string;
-		type: 'reply' | 'mention' | 'thread';
 	};
 	createTime: number;
-	dismissTime: number;
+	dismissTime?: number;
 	event: number;
 	group: string;
 	id: string;
-	readTime: number;
+	readTime?: number;
 	score: number;
 	type: number;
 	updateTime: number;

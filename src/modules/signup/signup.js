@@ -1,7 +1,8 @@
 /* @flow */
 
 import EnhancedError from '../../lib/EnhancedError';
-import { bus, cache, config, Constants } from '../../core-server';
+import { bus, cache, config } from '../../core-server';
+import { TYPE_USER, APP_PRIORITIES, ERRORS } from '../../lib/Constants';
 import jwt from 'jsonwebtoken';
 import merge from 'lodash/merge';
 import winston from 'winston';
@@ -60,8 +61,8 @@ function signuphandler(changes, n) {
 
 			cache.getEntity(changes.auth.signup.id, (err, entity) => {
 				if (err && next) return next(err);
-				if (entity && next) return next(new EnhancedError(Constants.ERRORS.ERR_USER_NAME_TAKEN, 'ERR_USER_NAME_TAKEN'));
-				changes.auth.user  = changes.auth.signup.id;
+				if (entity && next) return next(new EnhancedError(ERRORS.ERR_USER_NAME_TAKEN, 'ERR_USER_NAME_TAKEN'));
+				changes.auth.user = changes.auth.signup.id;
 
 				changes.response = changes.response || {};
 				changes.response.state = changes.response.state || {};
@@ -69,7 +70,7 @@ function signuphandler(changes, n) {
 				changes.response.state.signup = null;
 				const user = (changes.entities = changes.entities || {})[changes.auth.signup.id] = changes.auth.signup;
 
-				user.type = Constants.TYPE_USER;
+				user.type = TYPE_USER;
 				user.createTime = Date.now();
 				user.resources = changes.auth.signup.resources || {};
 				user.presence = changes.auth.signup.resources[changes.auth.resource] = 1;
@@ -99,5 +100,5 @@ function signuphandler(changes, n) {
 	}
 }
 
-bus.on('change', signuphandler, Constants.APP_PRIORITIES.AUTHENTICATION_SIGNUP);
+bus.on('change', signuphandler, APP_PRIORITIES.AUTHENTICATION_SIGNUP);
 winston.info('Signup module ready.');

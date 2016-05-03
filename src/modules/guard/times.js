@@ -1,4 +1,5 @@
-import { bus, Constants, cache } from '../../core-base';
+import { bus, cache } from '../../core-base';
+import * as Constants from '../../lib/Constants';
 import Counter from '../../lib/counter';
 
 function validateTime(changes, next) {

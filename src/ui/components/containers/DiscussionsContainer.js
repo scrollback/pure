@@ -8,9 +8,19 @@ import Discussions from '../views/Discussions';
 import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
 import type { SubscriptionRange } from '../../../modules/store/ConnectTypes';
 
-const transformThreads = (results, me) => me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(item => {
-	return !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
-}).reverse();
+const CTA = { type: 'cta' };
+
+const transformThreads = (results, me) => {
+	const data = me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(item => {
+		return !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
+	}).reverse();
+
+	if (data.length > 3) {
+		data.splice(3, 0, CTA);
+	}
+
+	return data;
+};
 
 class DiscussionsContainerInner extends Component<void, any, void> {
 	static propTypes = {

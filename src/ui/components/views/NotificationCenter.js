@@ -37,13 +37,13 @@ export default class NotificationCenter extends Component<void, Props, State> {
 
 	componentWillMount() {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(/* this.props.data*/[]),
+			dataSource: this.state.dataSource.cloneWithRows(this.props.data),
 		});
 	}
 
-	componentWillReceiveProps(/* nextProps: Props */) {
+	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(/* nextProps.data*/[]),
+			dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
 		});
 	}
 

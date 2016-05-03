@@ -37,7 +37,7 @@ subscribe({ type: 'me', source: 'sessionswitcher' }, async user => {
 	}
 
 	if (user.tags && user.tags.indexOf(TAG_USER_CONTENT) > -1) {
-		const res = await fetch(`${protocol}//${host}/static/session_list.json`);
+		const res = await fetch(`${protocol}//${host}/s/session_list.json`);
 
 		try {
 			const list = await res.json();

@@ -1,6 +1,6 @@
 /* @flow */
 
-import { bus, config } from '../../core-client.js';
+import { bus, config } from '../../core-client';
 import packer from './../../lib/packer';
 import uuid from 'node-uuid';
 

@@ -1,7 +1,8 @@
 /* @flow */
 import jwt from 'jsonwebtoken';
-import { bus, config, Constants } from '../../core-server';
 import winston from 'winston';
+import { bus, config } from '../../core-server';
+import { APP_PRIORITIES } from '../../lib/Constants';
 
 // sign with default (HMAC SHA256)
 const TOKEN_VALIDITY = 604800; // default seven days.
@@ -71,7 +72,7 @@ function sessionHandler(changes, n) {
 	}
 }
 
-bus.on('change', sessionHandler, Constants.APP_PRIORITIES.AUTHENTICATION_SESSION);
+bus.on('change', sessionHandler, APP_PRIORITIES.AUTHENTICATION_SESSION);
 bus.on('change', (changes, next) => {
 	if (changes.response && changes.response.state && changes.response.state.user) {
 		generateSession(changes.response.state.user).then((session) => {
@@ -83,6 +84,6 @@ bus.on('change', (changes, next) => {
 	}
 
 	return null;
-}, Constants.APP_PRIORITIES.AUTHENTICATION_SESSION_2);
+}, APP_PRIORITIES.AUTHENTICATION_SESSION_2);
 
 winston.info('Session module ready.');

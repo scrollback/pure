@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 import DiscussionItemContainer from '../containers/DiscussionItemContainer';
+import CTACardContainerRoom from '../containers/CTACardContainerRoom';
 import PageEmpty from './PageEmpty';
 import PageLoading from './PageLoading';
 import LoadingItem from './LoadingItem';
@@ -95,18 +96,25 @@ export default class Discussions extends Component<void, Props, State> {
 	};
 
 	_renderRow: Function = thread => {
-		if (thread && thread.type === 'loading') {
-			return <LoadingItem />;
+		if (!thread) {
+			return null;
 		}
 
-		return (
-			<DiscussionItemContainer
-				key={thread.id}
-				thread={thread.id}
-				onNavigation={this.props.onNavigation}
-				style={Dimensions.get('window').width > 400 ? styles.gridItem : styles.columnItem}
-			/>
-		);
+		switch (thread.type) {
+		case 'loading':
+			return <LoadingItem />;
+		case 'cta':
+			return <CTACardContainerRoom room={this.props.room} />;
+		default:
+			return (
+				<DiscussionItemContainer
+					key={thread.id}
+					thread={thread.id}
+					onNavigation={this.props.onNavigation}
+					style={Dimensions.get('window').width > 400 ? styles.gridItem : styles.columnItem}
+				/>
+			);
+		}
 	};
 
 	render() {

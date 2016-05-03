@@ -1,6 +1,7 @@
 /* eslint max-nested-callbacks: 0 */
 /* eslint quotes: 0*/
-import { Constants, config } from '../../core-server';
+import { config } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 import Counter from '../../lib/counter';
 import log from 'winston';
 import fs from 'fs';

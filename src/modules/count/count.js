@@ -1,7 +1,8 @@
 /* @flow */
 
 import { TABLES, ROLES } from '../../lib/schema';
-import { Constants, bus, cache } from '../../core-server';
+import { bus, cache } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 import log from 'winston';
 import User from '../../models/user';
 import Counter from '../../lib/counter';

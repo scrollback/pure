@@ -11,9 +11,6 @@
     "node/node.d.ts": {
       "commit": "f4b1797c1201b6c575668f5d7ea12d9b1ab21846"
     },
-    "jest/jest.d.ts": {
-      "commit": "f4b1797c1201b6c575668f5d7ea12d9b1ab21846"
-    },
     "koa/koa.d.ts": {
       "commit": "f4b1797c1201b6c575668f5d7ea12d9b1ab21846"
     },

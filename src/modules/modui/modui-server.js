@@ -1,4 +1,5 @@
-import { bus, Constants } from '../../core-base';
+import { bus } from '../../core-base';
+import { TYPE_TEXT, TYPE_THREAD } from '../../lib/Constants';
 import engine from 'engine.io';
 import http from 'http';
 import fs from 'fs';
@@ -35,8 +36,8 @@ bus.on('change', (change) => {
 		for (const id in change.entities) {
 			const entity = change.entities[id];
 			if (
-				entity.type !== Constants.TYPE_THREAD &&
-				entity.type !== Constants.TYPE_TEXT ||
+				entity.type !== TYPE_THREAD &&
+				entity.type !== TYPE_TEXT ||
 				typeof entity.createTime === 'undefined' ||
 				typeof entity.updateTime !== 'undefined' &&
 				entity.createTime !== entity.updateTime

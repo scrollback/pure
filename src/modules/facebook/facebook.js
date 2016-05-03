@@ -4,9 +4,10 @@
 	https://developers.facebook.com/tools/explorer/
  */
 
+import * as Constants from '../../lib/Constants';
 import EnhancedError from '../../lib/EnhancedError';
 import route from 'koa-route';
-import { bus, config, Constants } from '../../core-server';
+import { bus, config } from '../../core-server';
 import winston from 'winston';
 import request from 'request';
 import fs from 'fs';

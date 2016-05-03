@@ -7,7 +7,7 @@ const LOADING = Object.freeze({ type: 'loading' });
 const LOADING_ITEMS = Object.freeze([ LOADING ]);
 
 export const subscribe = (options: SubscriptionOptions, callback: Function): Subscription => {
-	let unWatch;
+	let unWatch, unWatchMe, unWatchUser;
 
 	switch (options.type) {
 	case 'state':
@@ -25,9 +25,7 @@ export const subscribe = (options: SubscriptionOptions, callback: Function): Sub
 		unWatch = cache.watchEntity(options.id, data => data && data.type === 'loading' ? callback(LOADING) : callback(data || null));
 		break;
 	case 'me':
-		let unWatchMe;
-
-		const unWatchUser = cache.watchState('user', user => {
+		unWatchUser = cache.watchState('user', user => {
 			if (unWatchMe) {
 				unWatchMe();
 			}

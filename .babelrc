@@ -1,8 +1,5 @@
 {
   "presets": [
     "react-native"
-  ],
-  "plugins": [
-    "transform-es2015-function-name"
   ]
 }

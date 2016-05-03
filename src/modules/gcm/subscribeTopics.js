@@ -1,6 +1,7 @@
 /* @flow */
 /* eslint dot-notation: 0*/
-import { config, bus, Constants, cache } from '../../core-server';
+import { config, bus, cache } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 import Counter from '../../lib/counter';
 import log from 'winston';
 import values from 'lodash/values';

@@ -1,17 +1,15 @@
 /* @flow */
 
-import React from 'react-native';
+import PersistentStorage from '../../lib/PersistentStorage';
 import type { Embed } from './oEmbedTypes';
 
-const {
-	AsyncStorage
-} = React;
+const oEmbedStorage = new PersistentStorage('oembed');
 
 let data;
 
 export default {
 	async _readData(): Promise<void> {
-		const dataString = await AsyncStorage.getItem('oembed_storage');
+		const dataString = await oEmbedStorage.getItem('data');
 
 		if (dataString) {
 			data = JSON.parse(dataString);
@@ -46,7 +44,7 @@ export default {
 			data.splice(0, 10);
 		}
 
-		return AsyncStorage.setItem('oembed_storage', JSON.stringify(data));
+		return oEmbedStorage.setItem('data', JSON.stringify(data));
 	},
 
 	async get(url: string): Promise<?Embed> {

@@ -1,8 +1,10 @@
 /* eslint no-use-before-define: 0 */
 /* @flow */
 import log from 'winston';
-import { config, bus } from '../../core-server';
+import { config, bus, cache } from '../../core-server';
+import { ROLE_FOLLOWER } from '../../lib/Constants';
 import { subscribe, getIIDInfo } from './subscribeTopics';
+
 // import util from 'util';
 let client;
 const sessionAndtokens = {};
@@ -76,16 +78,20 @@ export function updateUser(u, cb) {
 							log.e('Error getting old subscribed topics: ', error);
 							return;
 						}
-
-						Object.keys(JSON.parse(body).rel.topics).forEach(topic => {
-							log.info('subscribing to new topic: ', topic);
-							subscribe({
-								params: {
-									gcm: { new: u.data.token }
-								},
-								topic
+						if (body && JSON.parse(body) && JSON.parse(body).rel) {
+							Object.keys(JSON.parse(body).rel.topics).forEach(topic => {
+								log.info('subscribing to new topic: ', topic);
+								subscribe({
+									params: {
+										gcm: { new: u.data.token }
+									},
+									topic
+								});
 							});
-						});
+						} else {
+							log.debug('body: ', body);
+							log.info('Not found previous subscribed topics.');
+						}
 					});
 				}
 			}
@@ -100,6 +106,7 @@ export function updateUser(u, cb) {
 					log.debug('error on saving token: ', e);
 					if (cb) cb(e);
 				} else {
+					subscribeAll(user.id);
 					sendDownstreamMessage(u, 'ACK', () => {
 						log.info('subscribing user: ', user.id, 'for mention');
 						subscribe({
@@ -118,6 +125,7 @@ export function updateUser(u, cb) {
 		}
 	});
 }
+
 function handleStanza(stanza) {
 	log.info('stanza received');
 	const st = stanza.toJSON();
@@ -138,4 +146,25 @@ function handleStanza(stanza) {
 export default function(c) {
 	client = c;
 	client.on('stanza', handleStanza);
+}
+
+/* Remove this function later: */
+function subscribeAll(id) {
+	cache.getEntity(id, (err, user) => {
+		if (err) return;
+
+		cache.query({
+			type: 'roomrel',
+			filter: { user: user.id, roles_cts: [ ROLE_FOLLOWER ] },
+			order: 'createTime'
+		}, [ -Infinity, Infinity ], (error, rels) => {
+			if (err) { return; }
+			for (const i of rels) {
+				subscribe({
+					params: user.params,
+					topic: 'room-' + i.item
+				});
+			}
+		});
+	});
 }

@@ -11,4 +11,4 @@ check_file() {
 }
 
 # `npm install` and `npm prune` if the `package.json` file gets changed
-check_file "package.json" "npm install && npm prune"
+check_file "package.json" "npm install && npm prune && npm dedupe"

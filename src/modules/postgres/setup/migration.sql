@@ -61,6 +61,22 @@ CREATE FUNCTION getMetadata(t text) RETURNS jsonb AS $$
 $$ LANGUAGE plv8 IMMUTABLE;
 
 
+
+\echo 'table for updating identities in rooms.'
+DROP TABLE IF EXISTS place_map;
+
+CREATE TABLE place_map (
+	room_id text,
+	room_name text,
+	place_id text,
+	room_type integer
+);
+
+\copy place_map(room_id, room_name, place_id, room_type) from './location.csv' CSV HEADER delimiter ','
+
+-- UPDATE rooms SET identities = ARRAY((SELECT 'place:' || placeid FROM placeid_map WHERE room_name = rooms.name))::text[];
+
+
 \echo 'Connecting to pure'
 \c aravind aravind localhost
 --\c pure localhost
@@ -92,10 +108,10 @@ INSERT
 	SELECT *
 	FROM dblink ('SELECT '
 			'(SELECT newid FROM id_map WHERE oldid = entities.id) AS id, '
-			'guides->>''displayName'' AS name, '
+			'room_name AS name, '
 			'description AS body, '
 			'NULL AS parents, '
-			'NULL AS tags, '
+			'ARRAY[room_type] AS tags, '
 			'ROUND(EXTRACT(EPOCH FROM current_timestamp)*1000) AS createtime, '
 			'NULL AS creator, '
 			'ROUND(EXTRACT(EPOCH FROM deletetime)*1000) AS deletetime, '
@@ -110,8 +126,16 @@ INSERT
 			'NULL AS updater, '
 			'ROUND(EXTRACT(EPOCH FROM current_timestamp)*1000) AS updatetime, '
 			'NULL AS counts, '
-			'NULL AS identities '
-		'FROM entities WHERE type=''room''')
+			'place_ids AS identities '
+		'FROM entities LEFT OUTER JOIN ('
+			'SELECT room_id,
+			min(room_name) as room_name,
+			min(room_type) as room_type,
+			array_agg(''place:'' || place_id) as place_ids
+			FROM place_map
+			GROUP BY room_id'
+		') places ON entities.id = places.room_id '
+		'WHERE type=''room''')
 	AS t(
 		id uuid,
 		name text,
@@ -320,19 +344,5 @@ INSERT
 		terms tsvector,
 		updater text,
 		updatetime bigint,
-		counts jsonb);
-
-
-\echo 'table for updating identities in rooms.'
-DROP TABLE IF EXISTS placeid_map;
-
-CREATE TABLE placeid_map (
-	room_name text,
-	placeid text
-);
-
-\copy placeid_map(room_name, placeid) from './location.csv' CSV HEADER delimiter ','
-
-UPDATE rooms SET identities = ARRAY((SELECT 'place:' || placeid FROM placeid_map WHERE room_name = rooms.name))::text[];
-
-DELETE FROM texts WHERE body IS NULL;
+		counts jsonb)
+	WHERE body IS NOT NULL;

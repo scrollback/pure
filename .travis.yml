@@ -1,7 +1,14 @@
-language: node_js
 sudo: false
-services: redis-server
-
+language: node_js
 notifications:
- email:
-  "devs@scrollback.io"
+  email: "devs@scrollback.io"
+cache:
+  directories:
+    - node_modules
+node_js:
+  - 'stable'
+  - '5'
+before_install:
+  - npm i -g quik@latest
+before_script:
+  - npm run build

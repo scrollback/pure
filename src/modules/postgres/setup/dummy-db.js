@@ -4,14 +4,15 @@ import * as pg from '../../../lib/pg';
 import casual from 'casual';
 import uid from 'node-uuid';
 import log from 'winston';
-import { Constants, config } from '../../../core-server';
+import { config } from '../../../core-server';
+import * as Constants from '../../../lib/Constants';
 
 const connstr = config.connStr,
 	users = [], rooms = [], threads = [], texts = [],
 	numUsers = 5, numRooms = 5, numThreads = 10, numTexts = 50;
 
 function getId() {
-	const u = casual.username.toLowerCase().replace(/\_|\./g, '-');
+	const u = casual.username.toLowerCase().replace(/_|\./g, '-');
 
 	if (users.indexOf(u) > -1) return u + '-' + users.length;
 	else return u;

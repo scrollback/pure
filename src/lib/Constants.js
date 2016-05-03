@@ -43,9 +43,9 @@ export const TRANSIT_INVITE = 2;
 export const TRANSIT_RESTORE = 3;
 
 export const TAG_POST_HIDDEN = -1;
-export const TAG_POST_IMAGE = 3;
 export const TAG_POST_STICKY = 1;
 export const TAG_POST_PHOTO = 3;
+
 export const TAG_USER_GUEST = 10;
 export const TAG_USER_CONTENT = 11;
 export const TAG_USER_ADMIN = 12;
@@ -56,9 +56,10 @@ export const TAG_USER_TWITTER = 16;
 export const TAG_USER_GCM = 17;
 export const TAG_USER_APN = 18;
 export const TAG_USER_WNS = 19;
-export const TAG_ROOM_CITY = 31;
-export const TAG_ROOM_AREA = 32;
-export const TAG_ROOM_SPOT = 33;
+
+export const TAG_ROOM_CITY = 21;
+export const TAG_ROOM_AREA = 22;
+export const TAG_ROOM_SPOT = 23;
 
 export const PRESENCE_FOREGROUND = 2;
 export const PRESENCE_BACKGROUND = 1;

@@ -75,8 +75,10 @@ const PROVIDER_FACEBOOK = 'facebook';
 const PERMISSION_PUBLIC_PROFILE = 'public_profile';
 const PERMISSION_EMAIL = 'email';
 
+type Token = { accessToken: string; } | { idToken: string; };
+
 type Props = {
-	signIn: (provider: string, token: string) => void
+	signIn: (provider: string, token: Token) => void
 }
 
 type State = {
@@ -94,7 +96,11 @@ export default class SignIn extends Component<void, Props, State> {
 		facebookLoading: false,
 	};
 
-	_onSignInSuccess: Function = (provider: string, auth: { accessToken: string; } | { idToken: string; }) => {
+	_showFailureMessage: Function = () => {
+		ToastAndroid.show('Failed to sign in', ToastAndroid.SHORT);
+	};
+
+	_onSignInSuccess: Function = (provider: string, auth: Token) => {
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			ToastAndroid.show('Signing in with Google', ToastAndroid.SHORT);
@@ -108,8 +114,6 @@ export default class SignIn extends Component<void, Props, State> {
 	};
 
 	_onSignInFailure: Function = (provider: string) => {
-		ToastAndroid.show('Failed to sign in', ToastAndroid.SHORT);
-
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			this.setState({
@@ -150,6 +154,10 @@ export default class SignIn extends Component<void, Props, State> {
 				this._onSignInFailure(PROVIDER_FACEBOOK);
 			}
 		} catch (e) {
+			if (e.code !== 'ERR_SIGNIN_CANCELLED') {
+				this._showFailureMessage();
+			}
+
 			this._onSignInFailure(PROVIDER_FACEBOOK);
 		}
 	};
@@ -164,6 +172,10 @@ export default class SignIn extends Component<void, Props, State> {
 				this._onSignInFailure(PROVIDER_GOOGLE);
 			}
 		} catch (e) {
+			if (e.code !== 'ERR_SIGNIN_CANCELLED') {
+				this._showFailureMessage();
+			}
+
 			this._onSignInFailure(PROVIDER_GOOGLE);
 		}
 	};

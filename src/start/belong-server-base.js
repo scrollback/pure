@@ -20,6 +20,7 @@ import '../modules/score/score';
 import '../modules/gcm/gcm-server';
 import '../modules/postgres/postgres';
 import '../modules/image-upload/image-upload';
+import '../modules/email/unsubscribe';
 import '../modules/contacts/contacts';
 import '../modules/avatar/avatar';
 import '../modules/client/client';

@@ -1,5 +1,6 @@
 /* @flow */
-import { bus, cache, Constants, config } from '../../core-server';
+import { bus, cache, config } from '../../core-server';
+import { APP_PRIORITIES } from '../../lib/Constants';
 import winston from 'winston';
 import * as pg from '../../lib/pg';
 import EnhancedError from '../../lib/EnhancedError';
@@ -86,5 +87,5 @@ function signinhandler(changes, n) {
 	return null;
 }
 
-bus.on('change', signinhandler, Constants.APP_PRIORITIES.AUTHENTICATION_SIGNIN);
+bus.on('change', signinhandler, APP_PRIORITIES.AUTHENTICATION_SIGNIN);
 winston.info('Signin module ready.');

@@ -3,6 +3,9 @@
 Improve simplicity and efficiency of the Scrollback codebase. Make it better
 suited for scaling up HeyNeighbor and other similar apps.
 
+[![build status](https://travis-ci.org/scrollback/pure.svg?branch=master)](https://travis-ci.org/scrollback/pure)
+[![dependencies](https://david-dm.org/scrollback/pure.svg)](https://david-dm.org/scrollback/pure)
+
 ## Key changes and business benefits
 
 ### Architectural improvements

@@ -1,12 +1,14 @@
-import { bus, config, Constants } from '../../core-server';
 import crypto from 'crypto';
 import winston from 'winston';
 import EnhancedError from './../../lib/EnhancedError';
+import { APP_PRIORITIES } from '../../lib/Constants';
+import { bus, config } from '../../core-server';
+
 function getDate(long) {
 	const date = new Date();
 
 	if (long) {
-		return date.toISOString().replace(/[\-\:]/g, '').replace(/\.\d+/g, '');
+		return date.toISOString().replace(/[\-:]/g, '').replace(/\.\d+/g, '');
 	} else {
 		return date.getUTCFullYear().toString() +
 		('0' + date.getUTCMonth().toString()).substr(-2) +
@@ -88,11 +90,11 @@ if (!config.s3) {
 		policyReq.response = {};
 		policyReq.response.error = new EnhancedError('Image upload is temporarily disabled', 'NO_CONFIG_FOUND_FO_S3');
 		next();
-	}, Constants.APP_PRIORITIES.IMAGE_UPLOAD);
+	}, APP_PRIORITIES.IMAGE_UPLOAD);
 } else {
 	bus.on('s3/getPolicy', (policyReq, next) => {
 		getResponse(policyReq);
 		next();
-	}, Constants.APP_PRIORITIES.IMAGE_UPLOAD);
+	}, APP_PRIORITIES.IMAGE_UPLOAD);
 	winston.info('Image upload is ready');
 }

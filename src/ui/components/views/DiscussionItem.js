@@ -24,34 +24,34 @@ const {
 	ToastAndroid,
 	StyleSheet,
 	TouchableOpacity,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	item: {
-		marginHorizontal: 16
+		marginHorizontal: 16,
 	},
 	footer: {
-		marginVertical: 12
+		marginVertical: 12,
 	},
 	topArea: {
-		flexDirection: 'row'
+		flexDirection: 'row',
 	},
 	title: {
 		flex: 1,
-		marginTop: 16
+		marginTop: 16,
 	},
 	badge: {
-		margin: 12
+		margin: 12,
 	},
 	expand: {
 		marginHorizontal: 16,
 		marginVertical: 12,
-		color: Colors.fadedBlack
+		color: Colors.fadedBlack,
 	},
 	hidden: {
-		opacity: 0.3
-	}
+		opacity: 0.3,
+	},
 });
 
 type Props = {
@@ -71,16 +71,14 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			name: PropTypes.string.isRequired,
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
-			parents: PropTypes.arrayOf(PropTypes.string).isRequired
+			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
 		onNavigation: PropTypes.func.isRequired,
-		// user: PropTypes.string.isRequired,
-		isUserAdmin: PropTypes.bool.isRequired,
-		// isCreatorBanned: PropTypes.bool.isRequired,
+		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,
 		unhideThread: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
-		unbanUser: PropTypes.func.isRequired
+		unbanUser: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -113,8 +111,8 @@ export default class DiscussionItem extends Component<void, Props, void> {
 				props: {
 					room: thread.parents[0],
 					thread: thread.id,
-					title: thread.name
-				}
+					title: thread.name,
+				},
 			}));
 		};
 
@@ -124,14 +122,6 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			} else {
 				menu['Hide discussion'] = () => this.props.hideThread();
 			}
-
-			// if (thread.creator !== this.props.user) {
-			// 	if (this.props.isCreatorBanned) {
-			// 		menu['Unban ' + thread.creator] = () => this.props.unbanUser();
-			// 	} else {
-			// 		menu['Ban ' + thread.creator] = () => this.props.banUser();
-			// 	}
-			// }
 		}
 
 		Modal.showActionSheetWithItems(menu);
@@ -144,14 +134,14 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			name: 'chat',
 			props: {
 				thread: thread.id,
-				room: thread.parents[0]
-			}
+				room: thread.parents[0],
+			},
 		}));
 	};
 
 	render() {
 		const {
-			thread
+			thread,
 		} = this.props;
 
 		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;

@@ -2,7 +2,6 @@
 
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
-import at from 'lodash/at';
 import NextButton from './NextButton';
 import StatusbarWrapper from '../StatusbarWrapper';
 import OnboardTitle from './OnboardTitle';
@@ -57,8 +56,8 @@ const styles = StyleSheet.create({
 	},
 
 	inviteText: {
-		color: Colors.darkGrey
-	}
+		color: Colors.darkGrey,
+	},
 });
 
 type Props = {
@@ -80,14 +79,14 @@ export default class GetStarted extends Component<void, Props, void> {
 		submitGetStarted: PropTypes.func.isRequired,
 		fields: PropTypes.shape({
 			invite: PropTypes.shape({
-				value: PropTypes.bool
-			})
+				value: PropTypes.bool,
+			}),
 		}).isRequired,
 		user: PropTypes.shape({
 			profile: PropTypes.shape({
-				places: PropTypes.arrayOf(PropTypes.string)
-			})
-		})
+				places: PropTypes.arrayOf(PropTypes.string),
+			}),
+		}),
 	};
 
 	_handleInvitePress: Function = () => {
@@ -96,30 +95,20 @@ export default class GetStarted extends Component<void, Props, void> {
 
 	render() {
 		const {
-			invite
+			invite,
 		} = this.props.fields;
-		const places = at(this.props, [ 'user.params.places' ])[0];
-		const completed = places ? Object.keys(places).length !== 0 : false;
 
 		return (
 			<View style={styles.container}>
 				<StatusbarWrapper />
 				<View style={[ styles.container, styles.inner ]}>
 					<OnboardTitle style={styles.text}>
-						{
-							completed ?
-							'You are all set!' :
-							'Join the Open House'
-						}
+						You are all set!
 					</OnboardTitle>
-					<Image style={styles.image} source={require('../../../../../assets/open-door.png')} />
 					<OnboardParagraph style={styles.text}>
-						{
-							completed ?
-							'Have fun and help make your neighbourhood better.' :
-							'We are coming to your city soon! Stay connected by joining the open house group.'
-						}
+						You're now connected to your
 					</OnboardParagraph>
+					<Image style={styles.image} source={require('../../../../../assets/connected-world.png')} />
 					<View style={styles.invite}>
 						<TouchFeedback onPress={this._handleInvitePress} borderless>
 							<View style={styles.checkboxContainer}>

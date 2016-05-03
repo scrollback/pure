@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as Constants from '../../lib/Constants';
-import config from '../../../config/modui.json';
+import config from './config';
 
 const styles = {
 	row: {

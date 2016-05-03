@@ -12,7 +12,6 @@ export type Bus = {
 	setDebug(level: number): void;
 }
 
-export { Constants };
 export const bus: Bus = new Ebus();
 
 export const cache = new Know({

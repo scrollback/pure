@@ -1,6 +1,7 @@
 /* @flow */
 
-import { Constants, bus, cache } from '../../core-server';
+import { bus, cache } from '../../core-server';
+import * as Constants from '../../lib/Constants';
 import { textrel, threadrel } from '../../models/models';
 import Counter from '../../lib/counter';
 import log from 'winston';

@@ -65,7 +65,7 @@ public class MainActivity extends ReactActivity {
                 .setMetadataName("metadata.json")
                 .setRequestPath(
                         getString(R.string.app_protocol) + "//" +
-                        getString(R.string.app_host) + "/static/bundles/android/" + BuildConfig.VERSION_NAME)
+                        getString(R.string.app_host) + "/s/bundles/android/" + BuildConfig.VERSION_NAME)
                 .setCacheDir(getCacheDir())
                 .setAssetManager(getAssets())
                 .setEnabled(!BuildConfig.DEBUG)
