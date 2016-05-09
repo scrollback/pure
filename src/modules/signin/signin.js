@@ -9,7 +9,7 @@ import { user } from '../../models/models';
 function getEntityByIdentity(identities, callback) {
 	pg.read(config.connStr, {
 		$: 'select *  from users where identities && &{identities}',
-		identities
+		identities,
 	}, (err, results) => {
 		if (err) {
 			winston.error(err.message);

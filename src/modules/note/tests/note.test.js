@@ -8,7 +8,7 @@ import {
 import {
 	isMentioned,
 	createMention,
-	getRolesFromChanges
+	getRolesFromChanges,
 } from '../note';
 
 test('should detect if relation is a mention', t => {
@@ -48,14 +48,14 @@ test('should get roles from changes', t => {
 			item: {
 				id: 'someid',
 				creator: 'john',
-				body: 'The answer is 42'
+				body: 'The answer is 42',
 			},
 			relation: {
 				item: 'someid',
 				type: TYPE_TEXTREL,
-				roles: [ ROLE_MENTIONED ]
-			}
-		}
+				roles: [ ROLE_MENTIONED ],
+			},
+		},
 	]);
 });
 
@@ -80,15 +80,15 @@ test('should create mention', t => {
 			picture: 'http://localhost/i/picture?user=john&size=128',
 			room: {
 				id: 'efghi',
-				name: 'Hell bent'
+				name: 'Hell bent',
 			},
 			thread: {
 				id: 'ijklm',
-				name: 'The little mermaid'
+				name: 'The little mermaid',
 			},
 			link: 'http://localhost/efghi/ijklm/',
 			title: 'Hell bent: john mentioned you in The little mermaid',
-			body: 'The answer is 42'
+			body: 'The answer is 42',
 		},
 		event: NOTE_MENTION,
 		createTime: time,
@@ -96,6 +96,6 @@ test('should create mention', t => {
 		group: 'ijklm',
 		score: 50,
 		type: TYPE_NOTE,
-		user: 'jane'
+		user: 'jane',
 	});
 });

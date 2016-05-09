@@ -12,24 +12,24 @@ import type { Thread } from '../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	footer: {
 		flexDirection: 'row',
-		marginTop: 6
+		marginTop: 6,
 	},
 	left: {
-		flex: 1
+		flex: 1,
 	},
 	right: {
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	info: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	label: {
 		color: Colors.black,
@@ -37,14 +37,14 @@ const styles = StyleSheet.create({
 		lineHeight: 18,
 		marginLeft: 8,
 		marginRight: 16,
-		paddingHorizontal: 4
+		paddingHorizontal: 4,
 	},
 	icon: {
-		color: Colors.black
+		color: Colors.black,
 	},
 	faded: {
-		opacity: 0.3
-	}
+		opacity: 0.3,
+	},
 });
 
 type Props = {
@@ -58,10 +58,10 @@ export default class DiscussionFooter extends Component<void, Props, void> {
 			updateTime: PropTypes.number.isRequired,
 			creator: PropTypes.string.isRequired,
 			counts: PropTypes.shape({
-				children: PropTypes.number
-			})
+				children: PropTypes.number,
+			}),
 		}).isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -70,7 +70,7 @@ export default class DiscussionFooter extends Component<void, Props, void> {
 
 	render() {
 		const {
-			thread
+			thread,
 		} = this.props;
 
 		return (

@@ -6,21 +6,23 @@ import shallowEqual from 'shallowequal';
 import Colors from '../../Colors';
 import AppText from './AppText';
 import AvatarRound from './AvatarRound';
+import type { User } from '../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
 	PixelRatio,
 	TouchableHighlight,
 	ScrollView,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	inverted: {
 		transform: [
-			{ scaleY: -1 }
-		]
+			{ scaleY: -1 },
+		],
 	},
+
 	item: {
 		backgroundColor: Colors.white,
 		borderColor: Colors.separator,
@@ -28,44 +30,65 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		paddingHorizontal: 16,
-		height: 40
+		height: 40,
 	},
+
 	user: {
-		color: Colors.darkGrey,
+		flexDirection: 'row',
+		justifyContent: 'center',
+		alignItems: 'center',
 		marginHorizontal: 12,
-		paddingHorizontal: 4
-	}
+		paddingHorizontal: 4,
+	},
+
+	id: {
+		color: Colors.darkGrey,
+		fontWeight: 'bold',
+	},
+
+	name: {
+		fontSize: 12,
+		lineHeight: 18,
+		color: Colors.fadedBlack,
+		marginHorizontal: 12,
+	},
 });
 
 type Props = {
-	data: Array<string>;
+	data: Array<User>;
 	onSelect: Function;
 	style?: any;
 }
 
 export default class ChatSuggestions extends Component<void, Props, void> {
 	static propTypes = {
-		data: PropTypes.arrayOf(PropTypes.string),
+		data: PropTypes.arrayOf(PropTypes.object),
 		onSelect: PropTypes.func.isRequired,
-		style: ScrollView.propTypes.style
+		style: ScrollView.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
 		return !shallowEqual(this.props, nextProps);
 	}
 
-	_renderUser: Function = (user: string) => (
+	_renderUser: Function = (user: User) => (
 		<TouchableHighlight
-			key={user}
+			key={user.id}
 			underlayColor={Colors.underlay}
 			onPress={() => this.props.onSelect(user)}
 		>
 			<View style={[ styles.item, styles.inverted ]}>
 				<AvatarRound
-					user={user}
+					user={user.id}
 					size={24}
 				/>
-				<AppText style={styles.user}>{user}</AppText>
+				<View style={styles.user}>
+					<AppText style={styles.id}>{user.id}</AppText>
+					{user.name ?
+						<AppText style={styles.name}>({user.name})</AppText> :
+						null
+					}
+				</View>
 			</View>
 		</TouchableHighlight>
 	);

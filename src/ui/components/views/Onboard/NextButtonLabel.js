@@ -8,19 +8,19 @@ import Colors from '../../../Colors';
 
 const {
 	View,
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	label: {
 		color: Colors.white,
 		fontWeight: 'bold',
-		margin: 16
+		margin: 16,
 	},
 
 	icon: {
-		color: Colors.fadedBlack
-	}
+		color: Colors.fadedBlack,
+	},
 });
 
 type Props = {
@@ -31,7 +31,7 @@ type Props = {
 export default class NextButtonLabel extends Component<void, Props, void> {
 	static propTypes = {
 		label: PropTypes.string.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	setNativeProps(nativeProps: any) {

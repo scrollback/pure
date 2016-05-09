@@ -6,14 +6,14 @@ import shallowEqual from 'shallowequal';
 
 const {
 	StyleSheet,
-	TextInput
+	TextInput,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	text: {
 		fontSize: 14,
-		lineHeight: 21
-	}
+		lineHeight: 21,
+	},
 });
 
 type Props = {
@@ -22,7 +22,7 @@ type Props = {
 
 export default class AppTextInput extends Component<void, Props, void> {
 	static propTypes = {
-		style: TextInput.propTypes.style
+		style: TextInput.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

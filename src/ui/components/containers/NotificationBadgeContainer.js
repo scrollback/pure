@@ -5,16 +5,18 @@ import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
 import NotificationBadge from '../views/NotificationBadge';
 
-const transformNotesToCount = data => {
-	if (data && data.length) {
-		if (data.length === 1 && data[0] && data[0].type === 'loading') {
-			return 0;
-		} else {
-			return data.length;
-		}
-	} else {
-		return 0;
-	}
+const transformNotesToCount = (/* data */) => {
+	// TODO: handle notifications properly
+	// if (data && data.length) {
+	// 	if (data.length === 1 && data[0] && data[0].type === 'loading') {
+	// 		return 0;
+	// 	} else {
+	// 		return data.length;
+	// 	}
+	// } else {
+	// 	return 0;
+	// }
+	return 0;
 };
 
 const NotificationBadgeContainer = (props: any) => (

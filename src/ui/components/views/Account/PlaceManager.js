@@ -10,7 +10,7 @@ import Modal from '../Modal';
 
 const {
 	View,
-	InteractionManager
+	InteractionManager,
 } = ReactNative;
 
 const TYPES = [
@@ -19,27 +19,27 @@ const TYPES = [
 		title: 'Home',
 		label: 'Add where you live',
 		search: 'Search for your apartment',
-		hint: 'Join your neighborhood group'
+		hint: 'Join your neighborhood group',
 	},
 	{
 		type: 'work',
 		title: 'Work',
 		label: 'Add where you work or study',
 		search: 'Search for your office or college',
-		hint: 'Join your office or campus group'
+		hint: 'Join your office or campus group',
 	},
 	{
 		type: 'hometown',
 		title: 'Hometown',
 		label: 'Add your hometown',
 		search: 'Search for your hometown',
-		hint: 'Join people from your hometown in the city'
-	}
+		hint: 'Join people from your hometown in the city',
+	},
 ];
 
 type Props = {
-	onPlaceAdded: Function,
-	onPlaceRemoved: Function,
+	onPlaceAdded: Function;
+	onPlaceRemoved: Function;
 	places: {
 		[key: string]: {
 			id: string;
@@ -53,7 +53,7 @@ export default class PlaceManager extends Component<void, Props, void> {
 	static propTypes = {
 		onPlaceAdded: PropTypes.func.isRequired,
 		onPlaceRemoved: PropTypes.func.isRequired,
-		places: PropTypes.objectOf(PropTypes.object).isRequired
+		places: PropTypes.objectOf(PropTypes.object).isRequired,
 	};
 
 	_handleDismissModal: Function = () => {

@@ -7,18 +7,19 @@ import Colors from '../../Colors';
 import AvatarContainer from '../containers/AvatarContainer';
 
 const {
+	PixelRatio,
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	avatar: {
-		backgroundColor: Colors.placeholder
+		backgroundColor: Colors.placeholder,
 	},
 	image: {
 		flex: 1,
-		resizeMode: 'cover'
-	}
+		resizeMode: 'cover',
+	},
 });
 
 type Props = {
@@ -31,7 +32,7 @@ export default class AvatarRound extends Component<void, Props, void> {
 	static propTypes = {
 		size: PropTypes.number.isRequired,
 		user: PropTypes.string.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -44,7 +45,7 @@ export default class AvatarRound extends Component<void, Props, void> {
 		return (
 			<View {...this.props} style={[ styles.avatar, { height: size, width: size, borderRadius: size / 2 }, this.props.style ]}>
 				<AvatarContainer
-					size={this.props.size}
+					size={this.props.size * PixelRatio.get()}
 					user={this.props.user}
 					style={[ styles.image, { borderRadius: size / 2 } ]}
 				/>

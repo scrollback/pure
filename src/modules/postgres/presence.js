@@ -6,12 +6,12 @@ function wherePart(entity, isRel) {
 		'WHERE',
 		entity.id && !isRel ? {
 			$: '"id" = &{id}',
-			id: entity.id
+			id: entity.id,
 		} : {
 			$: '"user" = &{user} AND "item" = &{item}',
 			user: entity.user,
-			item: entity.item
-		}
+			item: entity.item,
+		},
 	]);
 }
 
@@ -21,7 +21,7 @@ function selectSubQuery(entity, isRel) {
 		'FROM "' + TABLES[entity.type] + '",' +
 		'jsonb_each_text("' + TABLES[entity.type] + '".resources) ',
 		wherePart(entity, isRel),
-		')'
+		')',
 	]);
 }
 
@@ -34,6 +34,6 @@ export default function(entity) {
 		'UPDATE "' + TABLES[entity.type] + '" SET ',
 		'presence = ',
 		selectSubQuery(entity, isRel),
-		wherePart(entity, isRel)
+		wherePart(entity, isRel),
 	]);
 }

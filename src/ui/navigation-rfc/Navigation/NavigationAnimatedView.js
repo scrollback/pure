@@ -11,13 +11,15 @@
  */
 'use strict';
 
+var React = require('react');
+var ReactNative = require('react-native');
 var NavigationState = require('./NavigationState');
 var NavigationContainer = require('./NavigationContainer');
-var React = require('react-native');
+
 var {
   Animated,
   View,
-} = React;
+} = ReactNative;
 
 var immutable = require('immutable');
 

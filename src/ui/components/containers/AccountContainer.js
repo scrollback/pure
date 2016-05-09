@@ -14,8 +14,8 @@ const mapActionsToProps = {
 
 const mapSubscriptionToProps = {
 	user: {
-		key: 'me'
-	}
+		key: 'me',
+	},
 };
 
 const AccountContainer = (props: any) => (

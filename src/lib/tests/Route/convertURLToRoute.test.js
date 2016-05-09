@@ -79,8 +79,8 @@ test('should parse url with /roomname/threadid/some-thread-title', t => {
 		name: 'chat',
 		props: {
 			room: 'someroom',
-			thread: 'abc456def'
-		}
+			thread: 'abc456def',
+		},
 	}, convertURLToRoute('/someroom/abc456def/awesome-thread-is-this'));
 });
 
@@ -89,8 +89,8 @@ test('should parse url with /roomname?time=1214340045721', t => {
 		name: 'room',
 		props: {
 			room: 'someroom',
-			time: 1214340045721
-		}
+			time: 1214340045721,
+		},
 	}, convertURLToRoute('/someroom?time=1214340045721'));
 });
 
@@ -99,8 +99,8 @@ test('should parse url with /roomname/all/all-messages?time=1214340045721', t =>
 		name: 'room',
 		props: {
 			room: 'someroom',
-			time: 1214340045721
-		}
+			time: 1214340045721,
+		},
 	}, convertURLToRoute('/someroom/all/all-messages?time=1214340045721'));
 });
 
@@ -110,8 +110,8 @@ test('should parse url with /roomname/threadid?time=1214340045721', t => {
 		props: {
 			room: 'someroom',
 			thread: 'abc456def',
-			time: 1214340045721
-		}
+			time: 1214340045721,
+		},
 	}, convertURLToRoute('/someroom/abc456def?time=1214340045721'));
 });
 
@@ -121,8 +121,8 @@ test('should parse url with /roomname/threadid/some-thread-title?t=1214340045721
 		props: {
 			room: 'someroom',
 			thread: 'abc456def',
-			time: 1214340045721
-		}
+			time: 1214340045721,
+		},
 	}, convertURLToRoute('/someroom/abc456def/awesome-thread-is-this?time=1214340045721'));
 });
 
@@ -140,8 +140,8 @@ test('should parse url with /:room?room=roomname', t => {
 	t.deepEqual({
 		name: 'room',
 		props: {
-			room: 'someroom'
-		}
+			room: 'someroom',
+		},
 	}, convertURLToRoute('/:room?room=someroom'));
 });
 
@@ -150,21 +150,21 @@ test('should parse url with /:chat/?room=roomname&thread=threadid', t => {
 		name: 'chat',
 		props: {
 			room: 'someroom',
-			thread: 'abc456def'
-		}
+			thread: 'abc456def',
+		},
 	}, convertURLToRoute('/:chat/?room=someroom&thread=abc456def'));
 });
 
 test('should parse url with /:notes', t => {
 	t.deepEqual({
 		name: 'notes',
-		props: {}
+		props: {},
 	}, convertURLToRoute('/:notes'));
 });
 
 test('should parse url with /:account/', t => {
 	t.deepEqual({
 		name: 'account',
-		props: {}
+		props: {},
 	}, convertURLToRoute('/:account/'));
 });

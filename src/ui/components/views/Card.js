@@ -8,7 +8,7 @@ import Colors from '../../Colors';
 const {
 	StyleSheet,
 	View,
-	PixelRatio
+	PixelRatio,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -17,8 +17,8 @@ const styles = StyleSheet.create({
 		borderColor: Colors.separator,
 		borderTopWidth: 1 / PixelRatio.get(),
 		borderBottomWidth: 1 / PixelRatio.get(),
-		marginVertical: 4
-	}
+		marginVertical: 4,
+	},
 });
 
 type Props = {
@@ -29,7 +29,7 @@ type Props = {
 export default class Card extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

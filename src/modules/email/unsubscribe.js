@@ -19,7 +19,7 @@ function *handleRequest() {
 	} catch (e) {
 		log.i('Invalid unsubscribe JWT: ' + this.request.query.email);
 		this.body = template({
-			message: 'You were not unsubscribed because the unsubscribe link has expired. Please click the link on a newer email.'
+			message: 'You were not unsubscribed because the unsubscribe link has expired. Please click the link on a newer email.',
 		});
 	}
 
@@ -28,12 +28,12 @@ function *handleRequest() {
 		const results = yield queryAsync({
 			type: 'user',
 			filter: { identities_cts: [ 'mailto:' + decoded.email ] },
-			order: 'createTime'
+			order: 'createTime',
 		}, [ -Infinity, Infinity ]);
 
 		if (!results.arr || !results.arr.length) {
 			this.body = template({
-				message: 'User does not exist.'
+				message: 'User does not exist.',
 			});
 			return;
 		}
@@ -49,8 +49,8 @@ function *handleRequest() {
 			// Saving the saved settings back into the database.
 			bus.emit('change', {
 				entities: {
-					[user.id]: user
-				}
+					[user.id]: user,
+				},
 			}, (e) => {
 				if (e) {
 					reject(e);
@@ -62,11 +62,11 @@ function *handleRequest() {
 
 		this.body =	template({
 			message: 'You have been unsubscribed.',
-			message2: 'You can again subscribe from "My account" page.'
+			message2: 'You can again subscribe from "My account" page.',
 		});
 	} catch (err) {
 		this.body = template({
-			message: 'Sorry, an internal server error prevented you from being unsubscribed.'
+			message: 'Sorry, an internal server error prevented you from being unsubscribed.',
 		});
 	}
 }

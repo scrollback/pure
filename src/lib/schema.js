@@ -86,7 +86,7 @@ export const RELATION_TYPES = [
 	Constants.TYPE_THREADREL,
 	Constants.TYPE_TOPICREL,
 	Constants.TYPE_PRIVREL,
-	Constants.TYPE_USERREL
+	Constants.TYPE_USERREL,
 ];
 
 COLUMNS[Constants.TYPE_USER] = [

@@ -9,7 +9,7 @@ import Icon from './Icon';
 const {
 	StyleSheet,
 	TouchableHighlight,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -20,18 +20,18 @@ const styles = StyleSheet.create({
 		height: 56,
 		width: 56,
 		borderRadius: 28,
-		elevation: 6
+		elevation: 6,
 	},
 	fab: {
 		backgroundColor: Colors.accent,
 		height: 56,
 		width: 56,
-		borderRadius: 28
+		borderRadius: 28,
 	},
 	icon: {
 		margin: 16,
-		color: Colors.fadedBlack
-	}
+		color: Colors.white,
+	},
 });
 
 type Props = {
@@ -40,7 +40,7 @@ type Props = {
 
 export default class FloatingActionButton extends Component<void, Props, void> {
 	static propTypes = {
-		icon: PropTypes.string.isRequired
+		icon: PropTypes.string.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

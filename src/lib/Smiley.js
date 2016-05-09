@@ -60,7 +60,7 @@ const smileyMap = {
 	'😖': ':-p~~',
 
 	// Arrow
-	'😒': [ '>.>', '>_>' ]
+	'😒': [ '>.>', '>_>' ],
 };
 
 let smileyIndex;

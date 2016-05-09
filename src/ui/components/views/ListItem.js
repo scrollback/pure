@@ -9,7 +9,7 @@ import Colors from '../../Colors';
 const {
 	StyleSheet,
 	PixelRatio,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 		borderColor: Colors.separator,
 		borderBottomWidth: 1 / PixelRatio.get(),
-		height: 64
+		height: 64,
 	},
 });
 
@@ -31,7 +31,7 @@ type Props = {
 export default class ListItem extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		containerStyle: View.propTypes.style
+		containerStyle: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

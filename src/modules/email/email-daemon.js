@@ -20,7 +20,7 @@ if (!conf.auth.user && !conf.auth.pass) {
 	winston.info('Email module ready.');
 	pg.read(connString, {
 		$: 'SELECT * FROM jobs WHERE id in (&(ids))',
-		ids: [ JOB_EMAIL_WELCOME, /* JOB_EMAIL_MENTION, */ JOB_EMAIL_DIGEST ]
+		ids: [ JOB_EMAIL_WELCOME, /* JOB_EMAIL_MENTION, */ JOB_EMAIL_DIGEST ],
 	}, (err, results) => {
 		if (err) return;
 		winston.info('Results: ', results);

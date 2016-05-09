@@ -30,7 +30,7 @@ const PersistentNavigator = (props: Object): Element => (
 
 PersistentNavigator.propTypes = {
 	initialState: PropTypes.any.isRequired,
-	persistenceKey: PropTypes.string
+	persistenceKey: PropTypes.string,
 };
 
 export default PersistentNavigator;

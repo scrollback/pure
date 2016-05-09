@@ -7,13 +7,13 @@ import Colors from '../../Colors';
 import RichText from './RichText';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	summary: {
-		color: Colors.grey
-	}
+		color: Colors.grey,
+	},
 });
 
 type Props = {
@@ -24,7 +24,7 @@ type Props = {
 export default class TextSummary extends Component<void, Props, void> {
 	static propTypes = {
 		text: PropTypes.string.isRequired,
-		style: RichText.propTypes.style
+		style: RichText.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

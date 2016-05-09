@@ -32,10 +32,10 @@ class StartDiscussionContainer extends Component<void, Props, State> {
 					parents: {
 						key: {
 							type: 'entity',
-							id: this.props.room
+							id: this.props.room,
 						},
-						transform: room => room && room.parents ? room.parents : []
-					}
+						transform: room => room && room.parents ? room.parents : [],
+					},
 				}}
 				mapActionsToProps={{
 					startThread: (store, result, props) => (id, name, body, meta) => {
@@ -45,16 +45,16 @@ class StartDiscussionContainer extends Component<void, Props, State> {
 							body,
 							meta,
 							parents: [ props.room ],
-							creator: props.user
+							creator: props.user,
 						});
 
 						store.dispatch(changes);
 
 						// FIXME: This should be simpler
 						this.setState({
-							thread: Object.keys(changes.entities)[0]
+							thread: Object.keys(changes.entities)[0],
 						});
-					}
+					},
 				}}
 				passProps={{ ...this.props, thread: this.state.thread }}
 				component={StartDiscussion}

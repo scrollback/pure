@@ -111,5 +111,5 @@ export const ERRORS = {
 	INVALID_GOOGLE_KEY: 'Google api is invalid',
 	INVALID_GOOGLE_TOKEN: 'Google auth failed',
 
-	ERR_USER_NAME_TAKEN: 'This username is taken, please try something else'
+	ERR_USER_NAME_TAKEN: 'This username is taken, please try something else',
 };

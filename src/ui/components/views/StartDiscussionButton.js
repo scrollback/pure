@@ -16,7 +16,7 @@ export default class StartDiscussionButton extends Component<void, Props, void> 
 	static propTypes = {
 		room: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
-		onNavigation: PropTypes.func.isRequired
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

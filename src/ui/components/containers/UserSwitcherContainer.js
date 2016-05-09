@@ -9,7 +9,7 @@ import { initializeSession } from '../../../modules/store/actions';
 
 type Props = {
 	user: string;
-	data: ?Array<{ user: string, session: string }>;
+	data: ?Array<{ user: string; session: string }>;
 	switchUser: Function;
 }
 

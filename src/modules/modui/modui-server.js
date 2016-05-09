@@ -6,7 +6,6 @@ import fs from 'fs';
 import path from 'path';
 
 const httpServer = http.createServer((req, res) => {
-	console.log(req);	// eslint-disable-line
 	switch (req.url) {
 	case '/':
 		fs.createReadStream(path.join(__dirname, '../../../static/dist/modui.html')).pipe(res);

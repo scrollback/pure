@@ -9,7 +9,7 @@ import Colors from '../../../Colors';
 const {
 	View,
 	TouchableOpacity,
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 	},
 
 	icon: {
-		color: Colors.fadedBlack
+		color: Colors.fadedBlack,
 	},
 
 	closeContainer: {
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 	},
 
 	nameContainer: {
-		flex: 1
+		flex: 1,
 	},
 });
 
@@ -78,10 +78,10 @@ type Props = {
 export default class PlaceItem extends Component<void, Props, void> {
 	static propTypes = {
 		place: PropTypes.shape({
-			title: PropTypes.string.isRequired
+			title: PropTypes.string.isRequired,
 		}),
 		type: PropTypes.string.isRequired,
-		onRemove: PropTypes.func.isRequired
+		onRemove: PropTypes.func.isRequired,
 	};
 
 	_handleRemove: Function = () => {
@@ -98,7 +98,7 @@ export default class PlaceItem extends Component<void, Props, void> {
 	render() {
 		const {
 			place,
-			type
+			type,
 		} = this.props;
 
 		return (

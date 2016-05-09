@@ -20,10 +20,10 @@ const RoomTitleContainer = (props: any) => (
 			title: {
 				key: {
 					type: 'entity',
-					id: props.room
+					id: props.room,
 				},
-				transform: transformTitle
-			}
+				transform: transformTitle,
+			},
 		}}
 		passProps={props}
 		component={AppbarTitle}
@@ -31,7 +31,7 @@ const RoomTitleContainer = (props: any) => (
 );
 
 RoomTitleContainer.propTypes = {
-	room: PropTypes.string.isRequired
+	room: PropTypes.string.isRequired,
 };
 
 export default RoomTitleContainer;

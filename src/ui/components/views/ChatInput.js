@@ -15,7 +15,7 @@ import ImageUploadChat from './ImageUploadChat';
 const {
 	StyleSheet,
 	View,
-	PixelRatio
+	PixelRatio,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 		borderColor: Colors.underlay,
 		borderTopWidth: 1 / PixelRatio.get(),
-		elevation: 4
+		elevation: 4,
 	},
 	inputContainer: {
 		flex: 1,
@@ -39,12 +39,12 @@ const styles = StyleSheet.create({
 	},
 	iconContainer: {
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	icon: {
 		color: Colors.fadedBlack,
-		margin: 17
-	}
+		margin: 17,
+	},
 });
 
 type Props = {
@@ -71,7 +71,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		room: PropTypes.string.isRequired,
 		thread: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
-		sendMessage: PropTypes.func.isRequired
+		sendMessage: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -87,13 +87,13 @@ export default class ChatInput extends Component<void, Props, State> {
 	setQuotedText: Function = (text) => {
 		this._computeAndSetText({
 			replyTo: text.creator,
-			quotedText: text.body
+			quotedText: text.body,
 		});
 	};
 
 	setReplyTo: Function = (text) => {
 		this._computeAndSetText({
-			replyTo: text.creator
+			replyTo: text.creator,
 		});
 	};
 
@@ -103,20 +103,20 @@ export default class ChatInput extends Component<void, Props, State> {
 		this.props.sendMessage(null, this.state.text);
 
 		this.setState({
-			text: ''
+			text: '',
 		});
 	};
 
 	_handleUploadImage: Function = async () => {
 		try {
 			this.setState({
-				photo: null
+				photo: null,
 			});
 
 			const photo = await ImageChooser.pickImage();
 
 			this.setState({
-				photo
+				photo,
 			});
 		} catch (e) {
 			// Do nothing
@@ -145,7 +145,7 @@ export default class ChatInput extends Component<void, Props, State> {
 				thumbnail_width: Math.min(480, width),
 				thumbnail_url: result.thumbnail,
 				type: 'photo',
-			}
+			},
 		});
 
 		setTimeout(() => this._handleUploadClose(), 500);
@@ -157,19 +157,19 @@ export default class ChatInput extends Component<void, Props, State> {
 		});
 	};
 
-	_handleSuggestionSelect: Function = nick => {
+	_handleSuggestionSelect: Function = (user: { id: string }) => {
 		this.setState({
-			text: '@' + nick + ' ',
-			query: ''
+			text: '@' + user.id + ' ',
+			query: '',
 		});
 	};
 
 	_handleChangeText: Function = text => {
-		const query = /^@[a-z0-9]*$/.test(text) ? text : '';
+		const query = /^@[a-z0-9]*$/.test(text) ? text.replace(/^@/, '') : '';
 
 		this.setState({
 			text,
-			query
+			query,
 		});
 	};
 
@@ -193,7 +193,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		}
 
 		this.setState({
-			text: newValue
+			text: newValue,
 		}, () => this._input.focusKeyboard());
 	};
 
@@ -201,10 +201,8 @@ export default class ChatInput extends Component<void, Props, State> {
 		return (
 			<View {...this.props}>
 				<ChatSuggestionsContainer
-					room={this.props.room}
-					thread={this.props.thread}
 					user={this.props.user}
-					text={this.state.query}
+					prefix={this.state.query}
 					style={styles.suggestions}
 					onSelect={this._handleSuggestionSelect}
 				/>

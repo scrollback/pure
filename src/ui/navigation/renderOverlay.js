@@ -21,7 +21,7 @@ const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 
 const styles = StyleSheet.create({
 	header: {
-		backgroundColor: Colors.primary
+		backgroundColor: Colors.primary,
 	},
 
 	title: {
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		alignItems: 'center',
 		height: APPBAR_HEIGHT,
-		marginHorizontal: 16
+		marginHorizontal: 16,
 	},
 
 	titleText: {
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
-	}
+	},
 });
 
 const _renderTitleComponent = (route, index, onNavigation) => {

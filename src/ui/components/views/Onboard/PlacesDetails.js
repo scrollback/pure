@@ -12,13 +12,13 @@ type Props = {
 }
 
 const {
-	InteractionManager
+	InteractionManager,
 } = ReactNative;
 
 export default class PlacesDetails extends Component<void, Props, void> {
 	static propTypes = {
 		onChangeField: PropTypes.func.isRequired,
-		submitPlaceDetails: PropTypes.func.isRequired
+		submitPlaceDetails: PropTypes.func.isRequired,
 	};
 
 	componentDidMount() {

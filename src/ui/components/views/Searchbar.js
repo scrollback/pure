@@ -10,7 +10,7 @@ import AppbarTouchable from './AppbarTouchable';
 import AppbarIcon from './AppbarIcon';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -19,11 +19,11 @@ const styles = StyleSheet.create({
 		fontSize: 16,
 		lineHeight: 24,
 		color: Colors.black,
-		backgroundColor: 'transparent'
+		backgroundColor: 'transparent',
 	},
 	icon: {
-		color: Colors.fadedBlack
-	}
+		color: Colors.fadedBlack,
+	},
 });
 
 type Props = {
@@ -46,7 +46,7 @@ export default class SearchBar extends Component<void, Props, State> {
 		onBlur: PropTypes.func,
 		onCancel: PropTypes.func,
 		placeholder: PropTypes.string,
-		autoFocus: PropTypes.bool
+		autoFocus: PropTypes.bool,
 	};
 
 	state: State = {
@@ -59,7 +59,7 @@ export default class SearchBar extends Component<void, Props, State> {
 
 	_handleChange: Function = query => {
 		this.setState({
-			query
+			query,
 		});
 
 		this.props.onChangeSearch(query);
@@ -67,7 +67,7 @@ export default class SearchBar extends Component<void, Props, State> {
 
 	_handleClearInput: Function = () => {
 		this.setState({
-			query: ''
+			query: '',
 		});
 
 		this.props.onChangeSearch('');

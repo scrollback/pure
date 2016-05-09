@@ -10,7 +10,7 @@ function userFromUserRel(user) {
 		createTime: user.createTime,
 		params: user.params,
 		tags: user.tags,
-		timezone: user.timezone
+		timezone: user.timezone,
 	};
 }
 
@@ -31,7 +31,7 @@ function relFromUserRel(rel) {
 		room: rel.roomName,
 		roomId: rel.roomId,
 		count: rel.textCount || rel.counts.children,
-		displayTime: short(rel.threadTime || rel.tctime)
+		displayTime: short(rel.threadTime || rel.tctime),
 	};
 }
 
@@ -45,7 +45,7 @@ function buildMailObj(userRel) {
 		if (currentU) {
 			cUserRel = {
 				currentUser: currentU,
-				currentRels: currentR
+				currentRels: currentR,
 			};
 		}
 		currentU = user;
@@ -54,8 +54,8 @@ function buildMailObj(userRel) {
 				id: rel.roomId,
 				room: rel.room ? rel.room : rel.parent,
 				threads: [ rel ],
-				domain: config.server.protocol + '//' + config.server.host
-			}
+				domain: config.server.protocol + '//' + config.server.host,
+			},
 		];
 	} else {
 		let sameRoom = false;
@@ -74,7 +74,7 @@ function buildMailObj(userRel) {
 				id: rel.roomId,
 				room: rel.room ? rel.room : rel.parent,
 				threads: [ rel ],
-				domain: config.server.protocol + '//' + config.server.host
+				domain: config.server.protocol + '//' + config.server.host,
 			});
 		}
 
@@ -107,7 +107,7 @@ export default function (userRel) {
 		currentR = false;
 		return {
 			currentUser: cu,
-			currentRels: cr
+			currentRels: cr,
 		};
 	}
 	const emailObj = buildMailObj(userRel);

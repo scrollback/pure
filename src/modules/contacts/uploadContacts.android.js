@@ -5,7 +5,7 @@ import Contacts from '../../ui/modules/Contacts';
 
 const {
 	protocol,
-	host
+	host,
 } = config.server;
 const endpoint = `${protocol}//${host}/x/contacts`;
 
@@ -15,8 +15,8 @@ export default function uploadContacts() {
 	if (session) {
 		Contacts.sendContacts(endpoint, {
 			auth: {
-				session
-			}
+				session,
+			},
 		});
 	}
 }

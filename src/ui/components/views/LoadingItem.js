@@ -7,14 +7,14 @@ import LoadingFancy from './LoadingFancy';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		alignSelf: 'stretch',
-		alignItems: 'center'
-	}
+		alignItems: 'center',
+	},
 });
 
 type Props = {
@@ -23,7 +23,7 @@ type Props = {
 
 export default class LoadingItem extends Component<void, Props, void> {
 	static propTypes = {
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

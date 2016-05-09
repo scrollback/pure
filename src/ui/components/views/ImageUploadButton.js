@@ -10,7 +10,7 @@ import Loading from './Loading';
 const {
 	StyleSheet,
 	TouchableHighlight,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -18,38 +18,38 @@ const styles = StyleSheet.create({
 		height: 56,
 		width: 56,
 		borderRadius: 32,
-		margin: 8
+		margin: 8,
 	},
 	iconContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		height: 56,
 		width: 56,
-		borderRadius: 32
+		borderRadius: 32,
 	},
 	idleIconContainer: {
-		backgroundColor: Colors.accent
+		backgroundColor: Colors.accent,
 	},
 	closeIconContainer: {
-		backgroundColor: Colors.fadedBlack
+		backgroundColor: Colors.fadedBlack,
 	},
 	doneIconContainer: {
-		backgroundColor: Colors.success
+		backgroundColor: Colors.success,
 	},
 	errorIconContainer: {
-		backgroundColor: Colors.error
+		backgroundColor: Colors.error,
 	},
 	icon: {
 		color: Colors.white,
-		margin: 16
+		margin: 16,
 	},
 	loading: {
 		position: 'absolute',
 		left: 2,
 		top: 2,
 		height: 52,
-		width: 52
-	}
+		width: 52,
+	},
 });
 
 type Props = {
@@ -76,7 +76,7 @@ export default class ImageUploadButton extends Component<void, Props, void> {
 		errorIconStyle: Icon.propTypes.style,
 		idleIcon: PropTypes.string.isRequired,
 		idleIconStyle: Icon.propTypes.style,
-		style: TouchableHighlight.propTypes.style
+		style: TouchableHighlight.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

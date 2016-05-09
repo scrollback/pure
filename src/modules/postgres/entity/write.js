@@ -2,7 +2,7 @@ import * as pg from '../../../lib/pg';
 import { TABLES, COLUMNS, RELATION_TYPES } from '../../../lib/schema';
 import * as Constants from '../../../lib/Constants';
 import jsonop from 'jsonop';
-import defaultOps from './../../../lib/defaultOps';
+import defaultOps from '../../../lib/defaultOps';
 
 function shouldInsert(entity) {
 	if (!('createTime' in entity)) return false;
@@ -46,18 +46,18 @@ export default function (entity) {
 						$: 'to_tsvector(&{locale}, &{name} || \' \' || &{body})',
 						locale: 'english',
 						name: entity.name,
-						body: entity.body
+						body: entity.body,
 					};
 				case 'roles':
 					return {
 						$: `&{${name}}`,
-						[name]: entity[name] || []
+						[name]: entity[name] || [],
 					};
 				case 'createtime':
 				case 'updatetime':
 					return {
 						$: `&{${name}}`,
-						[name]: Date.now()
+						[name]: Date.now(),
 					};
 				case 'meta':
 				case 'params':
@@ -71,14 +71,14 @@ export default function (entity) {
 				default:
 					return {
 						$: `&{${name}}`,
-						[name]: entity[name]
+						[name]: entity[name],
 					};
 				}
 			}), ', '),
 			{
 				$: ') RETURNING &{id}::text as "id"',
-				id: isRel ? entity.user + '_' + entity.item : entity.id
-			}
+				id: isRel ? entity.user + '_' + entity.item : entity.id,
+			},
 		], ' ');
 	} else { // UPDATE
 		return pg.cat([
@@ -97,19 +97,19 @@ export default function (entity) {
 							')',
 						locale: 'english',
 						name: entity.name,
-						body: entity.body
+						body: entity.body,
 					};
 				case 'updatetime':
 					return `${name} = ${Date.now()}`;
 				case 'presence':
 					return {
 						$: 'presence = GREATEST(presence, &{presence}::smallint)',
-						presence: entity.presence
+						presence: entity.presence,
 					};
 				case 'counts':
 					return {
 						$: `"${name}" = jsonop("${name}"::jsonb, &{${name}}::jsonb, &{defaultOps}::jsonb)`,
-						[name]: entity[name]
+						[name]: entity[name],
 					};
 				case 'meta':
 				case 'params':
@@ -118,12 +118,12 @@ export default function (entity) {
 					return {
 						$: `"${name}" = jsonop("${name}"::jsonb, &{${name}}::jsonb, &{${name}_op}::jsonb)`,
 						[name]: entity[name],
-						[name + '_op']: ops[name] || null
+						[name + '_op']: ops[name] || null,
 					};
 				default:
 					return {
 						$: `"${name.toLowerCase()}" = &{${name}}`,
-						[name]: entity[name]
+						[name]: entity[name],
 					};
 				}
 			}).filter(sql => sql), ', '),
@@ -131,24 +131,24 @@ export default function (entity) {
 			'WHERE',
 			entity.id && !isRel ? {
 				$: '"id" = &{id}',
-				id: entity.id
+				id: entity.id,
 			} :
 			isRel ? {
 				$: '"user" = &{user} AND "item" = &{item}',
 				user: entity.user,
-				item: entity.item
+				item: entity.item,
 			} :
 			entity.user && entity.event && entity.group ? {
 				$: '"user" = &{user} AND "event" = &{event}' +
 					' AND "group" = &{group}',
 				user: entity.user,
 				event: entity.item,
-				group: entity.group
+				group: entity.group,
 			} : 'FALSE',
 			{
 				$: ' RETURNING &{id}::text as "id"',
-				id: isRel ? entity.user + '_' + entity.item : entity.id
-			}
+				id: isRel ? entity.user + '_' + entity.item : entity.id,
+			},
 		], ' ');
 	}
 }

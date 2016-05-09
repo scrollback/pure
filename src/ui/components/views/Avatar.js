@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 
 const {
-	Image
+	Image,
 } = ReactNative;
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 export default class Avatar extends Component<void, Props, void> {
 	static propTypes = {
-		uri: PropTypes.string
+		uri: PropTypes.string,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

@@ -8,21 +8,21 @@ import AppText from './AppText';
 
 const {
 	Linking,
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	link: {
-		color: Colors.info
-	}
+		color: Colors.info,
+	},
 });
 
 type Props = {
-	children?: Element,
-	url?: string,
-	onPress?: Function,
-	onOpen?: Function,
-	style?: any,
+	children?: Element;
+	url?: string;
+	onPress?: Function;
+	onOpen?: Function;
+	style?: any;
 }
 
 type DefaultProps = {
@@ -31,7 +31,7 @@ type DefaultProps = {
 
 export default class Link extends Component<DefaultProps, Props, void> {
 	static defaultProps = {
-		url: '#'
+		url: '#',
 	};
 
 	static propTypes = {
@@ -53,7 +53,7 @@ export default class Link extends Component<DefaultProps, Props, void> {
 			},
 
 			defaultPrevented: false,
-			url
+			url,
 		};
 
 		if (this.props.onOpen) {

@@ -40,18 +40,20 @@ const styles = StyleSheet.create({
 		margin: 8,
 	},
 	imageLogo: {
-		height: 39,
-		width: 72,
+		height: 60,
+		width: 51,
 	},
 	imageLogoType: {
-		height: 23,
-		width: 146,
+		height: 39,
+		width: 111,
 	},
 	logoContainer: {
 		flex: 1,
+		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 16,
+		marginLeft: -16,
 	},
 	tip: {
 		color: Colors.white,
@@ -202,10 +204,8 @@ export default class SignIn extends Component<void, Props, State> {
 				<Image source={require('../../../../../assets/signin_bg.jpg')} style={styles.cover}>
 					<View style={styles.overlay}>
 						<View style={styles.logoContainer}>
-							<Image source={require('../../../../../assets/logo.png')} style={[ styles.image, styles.imageLogo ]} />
-							{/*
-								<Image source={require('../../../../../assets/logotype.png')} style={[ styles.image, styles.imageLogoType ]} />
-							*/}
+							<Image source={require('../../../../../assets/logo-white.png')} style={[ styles.image, styles.imageLogo ]} />
+							<Image source={require('../../../../../assets/logotype-white.png')} style={[ styles.image, styles.imageLogoType ]} />
 						</View>
 						<View style={styles.buttonContainer}>
 							<AppText style={styles.tip}>SIGN IN OR SIGN UP WITH</AppText>

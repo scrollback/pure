@@ -9,12 +9,12 @@ import NavigationCard from '../navigation-rfc/CustomComponents/NavigationCard';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	scene: {
-		backgroundColor: Colors.lightGrey
+		backgroundColor: Colors.lightGrey,
 	},
 
 	container: {
@@ -22,8 +22,8 @@ const styles = StyleSheet.create({
 	},
 
 	normal: {
-		marginTop: 56
-	}
+		marginTop: 56,
+	},
 });
 
 const renderScene = function(navState: Object, onNavigation: Function): Function {
@@ -31,7 +31,7 @@ const renderScene = function(navState: Object, onNavigation: Function): Function
 		const route = props.sceneRecord.get('route'); // eslint-disable-line react/prop-types
 
 		const {
-			component: RouteComponent
+			component: RouteComponent,
 		} = routeMapper(route);
 
 		return (

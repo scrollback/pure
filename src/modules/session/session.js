@@ -27,10 +27,10 @@ function generateSession(sub) {
 		jwt.sign({
 			iss: ISSUER, sub, aud: AUDIENCE,
 			iat: Math.floor((new Date()).getTime() / 1000),
-			exp: Math.floor((new Date()).getTime() / 1000) + TOKEN_VALIDITY
+			exp: Math.floor((new Date()).getTime() / 1000) + TOKEN_VALIDITY,
 		}, KEY, {
 			algorithm: 'HS256',
-			type: 'JWS'
+			type: 'JWS',
 		}, (session) => {
 			resolve(session);
 		});
@@ -45,8 +45,8 @@ function sessionHandler(changes, n) {
 		if (e) {
 			(changes.response = changes.response || {}).state = {
 				signin: {
-					error: e
-				}
+					error: e,
+				},
 			};
 
 			n(changes);

@@ -17,13 +17,13 @@ async function saveAndInitializeSession() {
 
 	const changes: { auth?: { session: string } } = {
 		state: {
-			session
-		}
+			session,
+		},
 	};
 
 	if (session) {
 		changes.auth = {
-			session
+			session,
 		};
 	}
 
@@ -34,8 +34,8 @@ bus.on('error', changes => {
 	if (changes.state && changes.state.signin) {
 		bus.emit('change', {
 			state: {
-				session: null
-			}
+				session: null,
+			},
 		});
 	}
 });

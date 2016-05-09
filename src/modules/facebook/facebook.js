@@ -112,8 +112,8 @@ function getDataFromToken(token) {
 						name: user.name,
 						timezone: user.timezone,
 						verified: user.verified,
-						picture: encodeURITemplate `https://graph.facebook.com/${user.id}/picture?type=square&height=192&width=192`
-					}
+						picture: encodeURITemplate `https://graph.facebook.com/${user.id}/picture?type=square&height=192&width=192`,
+					},
 				};
 				signin.timezone = user.timezone * 60;
 				resolve(signin);
@@ -182,14 +182,14 @@ bus.on('http/init', app => {
 	app.use(route.get(config.facebook.login_url, function *() {
 		this.body = scriptTemplate({
 			title: 'Logging in with Facebook',
-			script: SCRIPT_REDIRECT
+			script: SCRIPT_REDIRECT,
 		});
 	}));
 
 	app.use(route.get(config.facebook.redirect_path, function *() {
 		this.body = scriptTemplate({
 			title: 'Logging in with Facebook',
-			script: SCRIPT_MESSAGE
+			script: SCRIPT_MESSAGE,
 		});
 	}));
 });

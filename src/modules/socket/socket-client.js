@@ -1,7 +1,7 @@
 /* @flow */
 
 import { bus, config } from '../../core-client';
-import packer from './../../lib/packer';
+import packer from '../../lib/packer';
 import uuid from 'node-uuid';
 
 type Frame = {
@@ -37,14 +37,13 @@ function disconnected() {
 	}
 
 	bus.emit('change', {
-		state: { connectionStatus: 'offline', backOff }
+		state: { connectionStatus: 'offline', backOff },
 	});
 
 	setTimeout(connect, backOff * 1000);
 }
 
 function onMessage(message) {
-	// console.log('frame: -->', message);
 	const frame = packer.decode(message);
 
 	console.log('-->', frame);
@@ -63,7 +62,7 @@ function onMessage(message) {
 function connect() {
 	client = new eio.Socket((protocol === 'https:' ? 'wss:' : 'ws:') + '//' + host, {
 		jsonp: poll,
-		transports: poll ? [ 'polling', 'websocket' ] : [ 'websocket' ]
+		transports: poll ? [ 'polling', 'websocket' ] : [ 'websocket' ],
 	});
 
 	client.on('close', disconnected);
@@ -71,7 +70,7 @@ function connect() {
 	client.on('open', () => {
 		backOff = 1;
 		bus.emit('change', {
-			state: { connectionStatus: 'online', backOff }
+			state: { connectionStatus: 'online', backOff },
 		});
 	});
 
@@ -99,7 +98,7 @@ bus.on('postchange', changes => {
 		client.send(packer.encode({
 			type: 'change',
 			message: frame,
-			id: uuid.v4()
+			id: uuid.v4(),
 		}));
 	}
 });
@@ -115,8 +114,8 @@ bus.on('signout', () => {
 	}
 	bus.emit('change', {
 		state: {
-			connectionStatus: 'connecting'
-		}
+			connectionStatus: 'connecting',
+		},
 	});
 	connect();
 });
@@ -124,13 +123,13 @@ bus.on('signout', () => {
 bus.on('s3/getPolicy', (policy, next) => {
 	const frame: Frame = {
 		type: 's3/getPolicy',
-		message: policy
+		message: policy,
 	};
 
 	policy.id = uuid.v4();
 	pendingCallbacks[policy.id] = {
 		data: policy,
-		next
+		next,
 	};
 
 	client.send(packer.encode(frame));

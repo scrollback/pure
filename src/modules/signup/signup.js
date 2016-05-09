@@ -30,10 +30,10 @@ function generateSignedIdentities(identities) {
 		jwt.sign({
 			iss: ISSUER, sub: identities, aud: AUDIENCE,
 			iat: Math.floor((new Date()).getTime() / 1000),
-			exp: Math.floor((new Date()).getTime() / 1000) + TOKEN_VALIDITY // seven days
+			exp: Math.floor((new Date()).getTime() / 1000) + TOKEN_VALIDITY, // seven days
 		}, KEY, {
 			algorithm: 'HS256',
-			type: 'JWS'
+			type: 'JWS',
 		}, (session) => {
 			resolve(session);
 		});

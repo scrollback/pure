@@ -1,11 +1,12 @@
 /* @flow */
 
-import { TAG_USER_CONTENT } from '../../lib/Constants';
+import { TAG_USER_CONTENT, TAG_USER_ADMIN } from '../../lib/Constants';
 import { subscribe, dispatch } from '../store/store';
 import { cache, config } from '../../core-client';
 import PersistentStorage from '../../lib/PersistentStorage';
 
 const sessionListStorage = new PersistentStorage('sessionList');
+const roomListStorage = new PersistentStorage('allRoomsList');
 
 const {
 	server: {
@@ -15,11 +16,19 @@ const {
 } = config;
 
 
-function saveList(list) {
+function saveSessionList(list) {
 	dispatch({ state: { sessionList: list } });
 }
 
-function removeList() {
+function removeSessionList() {
+	dispatch({ state: { sessionList: null } });
+}
+
+function saveRoomList(list) {
+	dispatch({ state: { roomList: list } });
+}
+
+function removeRoomList() {
 	dispatch({ state: { sessionList: null } });
 }
 
@@ -30,12 +39,7 @@ function removeList() {
  * If it doesn't exist, we check if the user id exists in the current list
  * If it doesn't exist in the current list, clear the current list
  */
-
-subscribe({ type: 'me', source: 'sessionswitcher' }, async user => {
-	if (!user) {
-		return;
-	}
-
+async function fetchUsers(user) {
 	if (user.tags && user.tags.indexOf(TAG_USER_CONTENT) > -1) {
 		const res = await fetch(`${protocol}//${host}/s/session_list.json`);
 
@@ -55,14 +59,15 @@ subscribe({ type: 'me', source: 'sessionswitcher' }, async user => {
 			if (!exists) {
 				list.unshift({
 					user: user.id,
-					session: cache.getState('session')
+					session: cache.getState('session'),
 				});
 			}
 
 			sessionListStorage.setItem('list', list);
-			saveList(list);
+			saveSessionList(list);
 		} catch (e) {
-			removeList();
+			sessionListStorage.removeItem('list');
+			removeSessionList();
 		}
 	} else {
 		const list = await sessionListStorage.getItem('list');
@@ -78,12 +83,43 @@ subscribe({ type: 'me', source: 'sessionswitcher' }, async user => {
 			}
 
 			if (exists) {
-				saveList(list);
+				saveSessionList(list);
 			} else {
-				removeList();
+				removeSessionList();
 			}
 		} else {
-			removeList();
+			removeSessionList();
 		}
 	}
+}
+
+async function fetchRooms(user) {
+	if (user.tags && (user.tags.indexOf(TAG_USER_CONTENT) > -1 || user.tags.indexOf(TAG_USER_ADMIN) > -1)) {
+		const currentList = await roomListStorage.getItem('list');
+
+		if (currentList) {
+			saveRoomList(currentList);
+		}
+
+		global.requestIdleCallback(async () => {
+			const res = await fetch(`${protocol}//${host}/s/all_rooms_list.json`);
+
+			try {
+				const list = await res.json();
+
+				roomListStorage.setItem('list', list);
+				saveRoomList(list);
+			} catch (e) {
+				roomListStorage.removeItem('list');
+				removeRoomList();
+			}
+		});
+	}
+ }
+
+ subscribe({ type: 'me', source: 'sessionswitcher' }, user => {
+	 if (user) {
+		fetchUsers(user);
+		fetchRooms(user);
+	 }
  });

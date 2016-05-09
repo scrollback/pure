@@ -9,26 +9,26 @@ import Page from './Page';
 
 const {
 	StyleSheet,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		padding: 16,
-		backgroundColor: Colors.primary
+		backgroundColor: Colors.primary,
 	},
 	image: {
 		marginHorizontal: 16,
-		marginVertical: 48
+		marginVertical: 48,
 	},
 	header: {
 		color: Colors.white,
 		fontSize: 20,
-		lineHeight: 30
+		lineHeight: 30,
 	},
 	footer: {
 		color: Colors.white,
-	}
+	},
 });
 
 type Props = {
@@ -37,7 +37,7 @@ type Props = {
 
 export default class Offline extends Component<void, Props, void> {
 	static propTypes = {
-		style: Page.propTypes.style
+		style: Page.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

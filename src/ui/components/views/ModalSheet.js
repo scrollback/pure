@@ -7,14 +7,14 @@ import Colors from '../../Colors';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	sheet: {
 		backgroundColor: Colors.white,
-		elevation: 16
-	}
+		elevation: 16,
+	},
 });
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 export default class ModalSheet extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

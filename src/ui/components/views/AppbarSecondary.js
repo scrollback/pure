@@ -8,7 +8,7 @@ import Colors from '../../Colors';
 const {
 	PixelRatio,
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1 / PixelRatio.get(),
 		paddingHorizontal: 4,
 		height: 56,
-	}
+	},
 });
 
 type Props = {
@@ -32,7 +32,7 @@ type Props = {
 export default class AppbarSecondary extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	_root: Object;

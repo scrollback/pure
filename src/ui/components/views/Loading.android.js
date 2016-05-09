@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 
 const {
-	ProgressBarAndroid
+	ProgressBarAndroid,
 } = ReactNative;
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 export default class Loading extends Component<void, Props, void> {
 	static propTypes = {
-		style: ProgressBarAndroid.propTypes.style
+		style: ProgressBarAndroid.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

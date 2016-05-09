@@ -7,14 +7,14 @@ import AppText from './AppText';
 import Colors from '../../Colors';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	title: {
 		fontWeight: 'bold',
-		color: Colors.black
-	}
+		color: Colors.black,
+	},
 });
 
 type Props = {

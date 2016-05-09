@@ -11,12 +11,12 @@ const AvatarContainer = (props: any) => (
 );
 
 AvatarContainer.defaultProps = {
-	size: 48
+	size: 48,
 };
 
 AvatarContainer.propTypes = {
 	user: PropTypes.string,
-	size: PropTypes.number
+	size: PropTypes.number,
 };
 
 export default AvatarContainer;

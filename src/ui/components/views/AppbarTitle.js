@@ -7,7 +7,7 @@ import Colors from '../../Colors';
 import AppText from './AppText';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -18,8 +18,8 @@ const styles = StyleSheet.create({
 		lineHeight: 27,
 		marginVertical: 14,
 		marginRight: 64,
-		paddingHorizontal: 4
-	}
+		paddingHorizontal: 4,
+	},
 });
 
 type Props = {
@@ -28,7 +28,7 @@ type Props = {
 
 export default class AppbarTitle extends Component<void, Props, void> {
 	static propTypes = {
-		title: PropTypes.string.isRequired
+		title: PropTypes.string.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

@@ -9,8 +9,6 @@ import '../modules/signin/signin';
 import '../modules/signup/signup';
 import '../modules/resource/resource';
 
-import '../modules/belong/belong';
-
 /* ########### */
 import '../modules/relation/relation';
 import '../modules/guard/guard-server';
@@ -26,9 +24,13 @@ import '../modules/avatar/avatar';
 import '../modules/client/client';
 import '../modules/client/routes';
 
+import '../modules/belong/belong';
+import '../modules/content-seeding/content-seeding';
+
 // Email server
 import '../modules/email/email-daemon';
 // Moderator UI
 import '../modules/modui/modui-server';
 
-import '../modules/http/http'; // if fired before socket server then the http/init listener might not be listening.
+// if fired before socket server then the http/init listener might not be listening.
+import '../modules/http/http';

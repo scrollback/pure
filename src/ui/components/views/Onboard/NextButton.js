@@ -9,7 +9,7 @@ import Colors from '../../../Colors';
 const {
 	View,
 	TouchableHighlight,
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -24,11 +24,11 @@ const styles = StyleSheet.create({
 	label: {
 		color: Colors.fadedBlack,
 		fontWeight: 'bold',
-		margin: 16
+		margin: 16,
 	},
 
 	disabled: {
-		opacity: 0.5
+		opacity: 0.5,
 	},
 });
 
@@ -65,7 +65,7 @@ NextButton.propTypes = {
 	label: PropTypes.string,
 	loading: PropTypes.bool,
 	disabled: PropTypes.bool,
-	onPress: PropTypes.func.isRequired
+	onPress: PropTypes.func.isRequired,
 };
 
 export default NextButton;

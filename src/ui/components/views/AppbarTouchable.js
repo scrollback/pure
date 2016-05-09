@@ -6,7 +6,7 @@ import shallowEqual from 'shallowequal';
 import TouchFeedback from './TouchFeedback';
 
 const {
-	View
+	View,
 } = ReactNative;
 
 type Props = {
@@ -19,7 +19,7 @@ export default class AppbarTouchable extends Component<void, Props, void> {
 	static propTypes = {
 		type: PropTypes.oneOf([ 'primary', 'secondary' ]),
 		onPress: PropTypes.func.isRequired,
-		children: PropTypes.node.isRequired
+		children: PropTypes.node.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

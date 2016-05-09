@@ -13,8 +13,8 @@ let watch, subscriptions = 0;
 
 const success = position => bus.emit('change', {
 	state: {
-		location: position.coords
-	}
+		location: position.coords,
+	},
 });
 
 store.on('subscribe', ({ path }) => {

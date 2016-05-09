@@ -11,7 +11,7 @@ import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -20,8 +20,8 @@ const styles = StyleSheet.create({
 		top: 10,
 		right: 10,
 		backgroundColor: Colors.badge,
-		elevation: 2
-	}
+		elevation: 2,
+	},
 });
 
 type Props = {
@@ -30,7 +30,7 @@ type Props = {
 
 export default class NotificationIcon extends Component<void, Props, void> {
 	static propTypes = {
-		onNavigation: PropTypes.func.isRequired
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

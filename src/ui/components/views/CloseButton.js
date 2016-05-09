@@ -9,7 +9,7 @@ import Icon from './Icon';
 const {
 	StyleSheet,
 	TouchableHighlight,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 		height: 36,
 		width: 36,
 		borderRadius: 18,
-		elevation: 4
+		elevation: 4,
 	},
 	button: {
 		backgroundColor: Colors.darkGrey,
@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
 		width: 36,
 		borderRadius: 18,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	icon: {
-		color: Colors.white
-	}
+		color: Colors.white,
+	},
 });
 
 type Props = {
@@ -38,7 +38,7 @@ type Props = {
 
 export default class CloseButton extends Component<void, Props, void> {
 	static propTypes = {
-		style: TouchableHighlight.propTypes.style
+		style: TouchableHighlight.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

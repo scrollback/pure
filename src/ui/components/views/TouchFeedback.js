@@ -8,7 +8,7 @@ import VersionCodes from '../../modules/VersionCodes';
 const {
 	TouchableNativeFeedback,
 	TouchableHighlight,
-	Platform
+	Platform,
 } = ReactNative;
 
 type Props = {
@@ -21,7 +21,7 @@ export default class TouchFeedback extends Component<void, Props, void> {
 	static propTypes = {
 		borderless: PropTypes.bool,
 		pressColor: PropTypes.string,
-		children: PropTypes.node.isRequired
+		children: PropTypes.node.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

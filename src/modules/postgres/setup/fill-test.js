@@ -1,5 +1,5 @@
-import * as Constants from './../../../lib/Constants';
-import uid from './../../../lib/uid-server';
+import * as Constants from '../../../lib/Constants';
+import uid from '../../../lib/uid-server';
 import pg from '../../../lib/pg';
 import casual from 'casual';
 import logger from 'winston';
@@ -53,7 +53,7 @@ function insertUser(i, done) {
 			$\{ident}, 330, 91
 		)`,
 		id: id,
-		ident: [ 'email:' + casual.email.toLowerCase() ]
+		ident: [ 'email:' + casual.email.toLowerCase() ],
 	} ], done);
 }
 
@@ -71,7 +71,7 @@ function insertRoom(i, done) {
 		)`,
 		id: id,
 		body: casual.description,
-		uid: userId(r(numUsers))
+		uid: userId(r(numUsers)),
 	} ], done);
 }
 
@@ -89,7 +89,7 @@ function insertTopic(i, done) {
 		)`,
 		id: id,
 		body: casual.description,
-		uid: userId(r(numUsers))
+		uid: userId(r(numUsers)),
 	} ], done);
 }
 
@@ -115,7 +115,7 @@ function insertThread(i, done) {
 		body: casual.description,
 		rid: roomId(Math.floor(i / 10)),
 		topics: [ roomId(2 * numRooms + r(numTopics)) ],
-		uid: userId(r(numUsers))
+		uid: userId(r(numUsers)),
 	} ], done);
 }
 
@@ -139,7 +139,7 @@ function insertText(i, done) {
 		body: casual.description,
 		tid: threadId(Math.floor(i / 10)),
 		rid: roomId(Math.floor(i / 100)),
-		uid: userId(r(numUsers))
+		uid: userId(r(numUsers)),
 	} ], done);
 }
 
@@ -158,7 +158,7 @@ function insertMember(i, done) {
 		)`,
 		rid: roomId(r(numRooms)),
 		uid: userId(r(numUsers)),
-		tags: tags
+		tags: tags,
 	} ], done);
 }
 
@@ -177,7 +177,7 @@ function insertWatcher(i, done) {
 		)`,
 		rid: threadId(r(numThreads)),
 		uid: userId(r(numUsers)),
-		tags: tags
+		tags: tags,
 	} ], done);
 }
 
@@ -193,7 +193,7 @@ function insertPresence(i, done) {
 		res: uid(),
 		status: Math.random() < 0.05 ?
 			Constants.STATUS_ONLINE :
-			Constants.STATUS_OFFLINE
+			Constants.STATUS_OFFLINE,
 	} ], done);
 }
 

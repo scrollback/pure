@@ -15,6 +15,6 @@ core.bus.emit('change', { entities: {
 		type: Constants.TYPE_ROOM,
 		name: 'Open House',
 		body: 'Chat with all heyneighbor users',
-		createTime: Date.now()
-	}
+		createTime: Date.now(),
+	},
 } });

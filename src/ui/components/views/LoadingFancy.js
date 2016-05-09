@@ -9,7 +9,7 @@ import Loading from './Loading';
 const {
 	StyleSheet,
 	PixelRatio,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 24,
-		elevation: 1
+		elevation: 1,
 	},
 
 	loading: {
 		height: 24,
-		width: 24
-	}
+		width: 24,
+	},
 });
 
 type Props = {
@@ -38,7 +38,7 @@ type Props = {
 
 export default class LoadingFancy extends Component<void, Props, void> {
 	static propTypes = {
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

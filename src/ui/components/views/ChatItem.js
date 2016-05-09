@@ -11,6 +11,7 @@ import Modal from './Modal';
 import Icon from './Icon';
 import Time from './Time';
 import { parseURLs } from '../../../lib/URL';
+import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
 import { TAG_POST_HIDDEN } from '../../../lib/Constants';
 import type { Text } from '../../../lib/schemaTypes';
 
@@ -105,6 +106,7 @@ type Props = {
 	banUser: Function;
 	unbanUser: Function;
 	style?: any;
+	onNavigation: Function;
 };
 
 export default class ChatItem extends Component<void, Props, void> {
@@ -131,11 +133,23 @@ export default class ChatItem extends Component<void, Props, void> {
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 		style: View.propTypes.style,
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
 		return !shallowEqual(this.props, nextProps);
 	}
+
+	_goToProfile: Function = () => {
+		const { text } = this.props;
+
+		this.props.onNavigation(new NavigationActions.Push({
+			name: 'profile',
+			props: {
+				user: text.creator,
+			},
+		}));
+	};
 
 	_copyToClipboard: Function = text => {
 		Clipboard.setString(text);
@@ -223,11 +237,13 @@ export default class ChatItem extends Component<void, Props, void> {
 			<View {...this.props} style={[ styles.container, this.props.style ]}>
 				<View style={[ styles.chat, received ? styles.received : null, hidden ? styles.hidden : null ]}>
 					{received && showAuthor ?
-						<AvatarRound
+						<TouchableOpacity
+							activeOpacity={0.5}
+							onPress={this._goToProfile}
 							style={styles.avatar}
-							size={36}
-							user={text.creator}
-						/> :
+						>
+							<AvatarRound size={36} user={text.creator} />
+						</TouchableOpacity> :
 						null
 					}
 

@@ -70,7 +70,7 @@ export function createMention(
 				props: {
 					room: room.id,
 					thread: thread.id,
-				}
+				},
 			}),
 			title: `${room.name}: ${text.creator} mentioned you in ${thread.name}`,
 			body: text.body,
@@ -95,7 +95,7 @@ export function getRolesFromChanges(changes: Object): Array<{ type: number; rela
 				notes.push({
 					type: ROLE_MENTIONED,
 					item: changes.entities[relation.item],
-					relation
+					relation,
 				});
 			}
 		}

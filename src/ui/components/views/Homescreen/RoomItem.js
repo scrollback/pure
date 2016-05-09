@@ -3,14 +3,14 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
-import Colors from '../../Colors';
-import AppText from './AppText';
-import ListItem from './ListItem';
-import Icon from './Icon';
-import Modal from './Modal';
-import Share from '../../modules/Share';
-import { convertRouteToURL } from '../../../lib/Route';
-import { config } from '../../../core-client';
+import Colors from '../../../Colors';
+import AppText from '../AppText';
+import ListItem from '../ListItem';
+import Icon from '../Icon';
+import Modal from '../Modal';
+import Share from '../../../modules/Share';
+import { convertRouteToURL } from '../../../../lib/Route';
+import { config } from '../../../../core-client';
 
 const {
 	StyleSheet,

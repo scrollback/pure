@@ -10,16 +10,18 @@ import PeopleListContainer from '../containers/PeopleListContainer';
 import type { Thread } from '../../../lib/schemaTypes';
 
 const {
-	ScrollView
+	ScrollView,
 } = ReactNative;
 
 type Props = {
-	thread: ?Thread | { type: 'loading' }
+	thread: ?Thread | { type: 'loading' };
+	onNavigation: Function;
 }
 
 export default class DiscussionDetails extends Component<void, Props, void> {
 	static propTypes = {
-		thread: PropTypes.object
+		thread: PropTypes.object,
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -37,7 +39,7 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 			return (
 				<ScrollView {...this.props}>
 					<DiscussionDetailsCard thread={thread} />
-					<PeopleListContainer thread={thread.id} />
+					<PeopleListContainer thread={thread.id} onNavigation={this.props.onNavigation} />
 				</ScrollView>
 			);
 		} else {

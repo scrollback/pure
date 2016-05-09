@@ -19,15 +19,15 @@ const styles = StyleSheet.create({
 
 	title: {
 		fontWeight: 'bold',
-		color: Colors.black
+		color: Colors.black,
 	},
 
 	summary: {
 		color: Colors.black,
 		opacity: 0.5,
 		fontSize: 12,
-		lineHeight: 18
-	}
+		lineHeight: 18,
+	},
 });
 
 type Props = {
@@ -44,7 +44,7 @@ export default class LocationItem extends Component<void, Props, void> {
 			primaryText: PropTypes.string.isRequired,
 			secondaryText: PropTypes.string,
 			fullText: PropTypes.string,
-		})
+		}),
 	};
 
 	render() {

@@ -21,8 +21,8 @@ const {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
-	}
+		flex: 1,
+	},
 });
 
 type Props = {
@@ -67,7 +67,7 @@ export default class SearchableList extends Component<void, Props, State> {
 	_cachedResults: Object = {};
 
 	_dataSource: ListView.DataSource = new ListView.DataSource({
-		rowHasChanged: (r1, r2) => r1 !== r2
+		rowHasChanged: (r1, r2) => r1 !== r2,
 	});
 
 	_fetchResults: Function = debounce(async (filter: string): Promise => {
@@ -76,13 +76,13 @@ export default class SearchableList extends Component<void, Props, State> {
 
 			if (filter === this.state.filter) {
 				this.setState({
-					data
+					data,
 				});
 			}
 		} catch (e) {
 			if (filter === this.state.filter) {
 				this.setState({
-					data: '@@failed'
+					data: '@@failed',
 				});
 			}
 		}
@@ -94,7 +94,7 @@ export default class SearchableList extends Component<void, Props, State> {
 
 			this.setState({
 				filter,
-				data: data || '@@loading'
+				data: data || '@@loading',
 			});
 
 			if (data) {
@@ -105,7 +105,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		} else {
 			this.setState({
 				filter,
-				data: '@@blankslate'
+				data: '@@blankslate',
 			});
 		}
 	};

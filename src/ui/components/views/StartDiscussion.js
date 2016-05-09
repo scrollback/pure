@@ -32,22 +32,22 @@ const {
 	StyleSheet,
 	ScrollView,
 	ToastAndroid,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: Colors.white
+		backgroundColor: Colors.white,
 	},
 	scene: {
 		paddingHorizontal: 8,
-		paddingVertical: 16
+		paddingVertical: 16,
 	},
 	threadName: {
 		fontWeight: 'bold',
 		fontSize: 20,
-		lineHeight: 30
+		lineHeight: 30,
 	},
 	threadSummary: {
 		fontSize: 16,
@@ -55,51 +55,51 @@ const styles = StyleSheet.create({
 		margin: 0,
 	},
 	icon: {
-		color: Colors.fadedBlack
+		color: Colors.fadedBlack,
 	},
 	disabled: {
-		opacity: 0.5
+		opacity: 0.5,
 	},
 	userIcon: {
-		margin: 12
+		margin: 12,
 	},
 	entry: {
 		paddingVertical: 4,
-		paddingHorizontal: 12
+		paddingHorizontal: 12,
 	},
 	uploadButtonIcon: {
 		color: Colors.fadedBlack,
 		marginHorizontal: 16,
-		marginVertical: 14
+		marginVertical: 14,
 	},
 	uploadButtonIconActive: {
-		color: Colors.info
+		color: Colors.info,
 	},
 	footer: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		borderTopColor: Colors.separator,
-		borderTopWidth: 1
+		borderTopWidth: 1,
 	},
 	postButton: {
 		backgroundColor: Colors.info,
 		margin: 6,
 		width: 100,
-		borderRadius: 3
+		borderRadius: 3,
 	},
 	postButtonInner: {
 		paddingVertical: 10,
-		paddingHorizontal: 16
+		paddingHorizontal: 16,
 	},
 	postButtonText: {
 		color: Colors.white,
 		fontWeight: 'bold',
-		textAlign: 'center'
+		textAlign: 'center',
 	},
 	socialItem: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		margin: 12
+		margin: 12,
 	},
 	socialIconContainer: {
 		height: 28,
@@ -107,23 +107,23 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		backgroundColor: Colors.grey,
-		borderRadius: 2
+		borderRadius: 2,
 	},
 	socialIconContainerSelected: {
-		backgroundColor: Colors.facebook
+		backgroundColor: Colors.facebook,
 	},
 	socialIcon: {
 		fontSize: 28,
-		color: Colors.white
+		color: Colors.white,
 	},
 	socialTextContainer: {
 		marginHorizontal: 12,
 		color: Colors.fadedBlack,
-		bottom: -3
+		bottom: -3,
 	},
 	socialTextSelected: {
 		color: Colors.facebook,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
 	},
 	socialLabel: {
 		fontSize: 12,
@@ -133,8 +133,8 @@ const styles = StyleSheet.create({
 		fontSize: 10,
 		lineHeight: 15,
 		opacity: 0.5,
-		fontWeight: 'normal'
-	}
+		fontWeight: 'normal',
+	},
 });
 
 const FACEBOOK_SHARE_CHECKED_KEY = 'start_discussion_facebook_share_checked';
@@ -180,7 +180,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		dismiss: PropTypes.func.isRequired,
 		thread: PropTypes.string,
 		startThread: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -191,7 +191,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		status: null,
 		error: null,
 		thread: null,
-		shareOnFacebook: false
+		shareOnFacebook: false,
 	};
 
 	componentDidMount() {
@@ -273,7 +273,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 			}
 
 			this.setState({
-				shareOnFacebook
+				shareOnFacebook,
 			});
 
 			AsyncStorage.setItem(FACEBOOK_SHARE_CHECKED_KEY, JSON.stringify(shareOnFacebook));
@@ -298,7 +298,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		}
 
 		this.setState({
-			shareOnFacebook
+			shareOnFacebook,
 		});
 	};
 
@@ -309,12 +309,12 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 				thread: thread.id,
 				room: this.props.room,
 				title: this.state.name,
-			}
+			},
 		};
 
 		if (this.state.shareOnFacebook) {
 			this._shareOnFacebook({
-				link: config.server.protocol + '//' + config.server.host + convertRouteToURL(route)
+				link: config.server.protocol + '//' + config.server.host + convertRouteToURL(route),
 			});
 		}
 
@@ -328,7 +328,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 	_handleError: Function = message => {
 		this.setState({
 			error: message,
-			status: null
+			status: null,
 		});
 	};
 
@@ -379,13 +379,13 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 					thumbnail_width: Math.min(480, width),
 					thumbnail_url: result.thumbnail,
 					type: 'photo',
-				}
+				},
 			};
 			body = body || `${name}: ${result.url}`;
 		}
 
 		this.setState({
-			status: 'loading'
+			status: 'loading',
 		}, () => {
 			this.props.startThread(
 				id,
@@ -407,27 +407,27 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 	_handleChangeName: Function = name => {
 		this.setState({
 			name,
-			error: null
+			error: null,
 		});
 	};
 
 	_handleChangeBody: Function = body => {
 		this.setState({
 			body,
-			error: null
+			error: null,
 		});
 	};
 
 	_handleUploadImage: Function = async () => {
 		try {
 			this.setState({
-				photo: null
+				photo: null,
 			});
 
 			const photo = await ImageChooser.pickImage();
 
 			this.setState({
-				photo
+				photo,
 			});
 		} catch (e) {
 			// Do nothing
@@ -437,7 +437,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 	_handleUploadFinish: Function = upload => {
 		this.setState({
 			upload,
-			error: null
+			error: null,
 		});
 	};
 

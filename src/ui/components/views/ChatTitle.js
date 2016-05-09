@@ -18,18 +18,18 @@ const styles = StyleSheet.create({
 	container: {
 		marginRight: 64,
 		height: 56,
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	title: {
 		color: Colors.white,
-		fontWeight: 'bold'
+		fontWeight: 'bold',
 	},
 	subtitle: {
 		color: Colors.fadedWhite,
 		fontSize: 12,
 		lineHeight: 18,
-		width: 160
-	}
+		width: 160,
+	},
 });
 
 type Props = {
@@ -41,10 +41,10 @@ type Props = {
 export default class ChatTitle extends Component<void, Props, void> {
 	static propTypes = {
 		thread: PropTypes.shape({
-			name: PropTypes.string
+			name: PropTypes.string,
 		}),
 		online: PropTypes.number.isRequired,
-		onNavigation: PropTypes.func.isRequired
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -58,8 +58,8 @@ export default class ChatTitle extends Component<void, Props, void> {
 			this.props.onNavigation(new NavigationActions.Push({
 				name: 'details',
 				props: {
-					thread: thread.id
-				}
+					thread: thread.id,
+				},
 			}));
 		}
 	};
@@ -67,7 +67,7 @@ export default class ChatTitle extends Component<void, Props, void> {
 	render() {
 		const {
 			thread,
-			online
+			online,
 		} = this.props;
 
 		let title;

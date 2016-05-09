@@ -99,7 +99,7 @@ export const subscribe = (options: SubscriptionOptions, callback: Function): Sub
 			unWatch();
 
 			bus.emit('store:unsubscribe', options);
-		}
+		},
 	};
 };
 
@@ -109,7 +109,7 @@ export const on = (event: string, callback: Function): Subscription => {
 	bus.on(`store:${event}`, callback);
 
 	return {
-		remove: () => off(event, callback)
+		remove: () => off(event, callback),
 	};
 };
 

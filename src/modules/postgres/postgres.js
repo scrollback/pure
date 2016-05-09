@@ -7,9 +7,9 @@ import * as pg from '../../lib/pg';
 import presenceHandler from './presence';
 import queryHandler from './query';
 import { TYPE_NAMES } from '../../lib/schema';
-import * as Types from './../../models/models';
+import * as Types from '../../models/models';
 import winston from 'winston';
-import packer from './../../lib/packer';
+import packer from '../../lib/packer';
 const channel = 'heyneighbor';
 
 function getTypeFromId(id) {
@@ -51,7 +51,7 @@ function onRangeQuery(key, range, err, r) {
 	const newRange = cache.countedToBounded(madeRange, orderedResult);
 	cache.put({
 		knowledge: { [key]: newRange },
-		indexes: { [key]: orderedResult }
+		indexes: { [key]: orderedResult },
 	});
 }
 
@@ -74,7 +74,7 @@ function onEntityQuery(ids, err, r) {
 
 	cache.put({
 		entities,
-		source: 'postgres'
+		source: 'postgres',
 	});
 }
 
@@ -91,7 +91,7 @@ cache.onChange((changes) => {
 						user: [],
 						note: [],
 						rel: [],
-						rest: []
+						rest: [],
 					});
 
 				typeToId.rest.forEach(id => {
@@ -179,7 +179,7 @@ bus.on('change', (changes, next) => {
 
 				jsonop(response, {
 					indexes: { [key]: results },
-					knowledge: { [key]: newRange }
+					knowledge: { [key]: newRange },
 				});
 				counter.dec();
 			},

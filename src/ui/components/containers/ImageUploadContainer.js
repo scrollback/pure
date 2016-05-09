@@ -69,7 +69,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 		try {
 			const result = await upload.send(photo.name ? photo.name.replace(/\s+/g, ' ') : 'image', {
 				uri: photo.uri,
-				type: 'image/' + (photo.name && photo.name.split('.').pop() || 'jpg')
+				type: 'image/' + (photo.name && photo.name.split('.').pop() || 'jpg'),
 			});
 
 			if (this.props.onUploadFinish) {

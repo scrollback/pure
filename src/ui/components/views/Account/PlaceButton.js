@@ -44,11 +44,11 @@ const styles = StyleSheet.create({
 	},
 
 	icon: {
-		color: Colors.white
+		color: Colors.white,
 	},
 
 	labelContainer: {
-		flex: 1
+		flex: 1,
 	},
 });
 

@@ -12,7 +12,7 @@ const CTA = { type: 'cta' };
 
 const transformThreads = (results, me) => {
 	const data = me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(item => {
-		return !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
+		return (me.id === item.creator) || !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
 	}).reverse();
 
 	if (data.length > 3) {

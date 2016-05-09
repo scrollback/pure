@@ -10,14 +10,14 @@ const mapSubscriptionToProps = {
 		key: {
 			type: 'state',
 			path: 'connectionStatus',
-		}
+		},
 	},
 	session: {
 		key: {
 			type: 'state',
 			path: 'session',
-		}
-	}
+		},
+	},
 };
 
 const AppContainer = (props: any) => (

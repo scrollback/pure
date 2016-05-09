@@ -6,7 +6,7 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import shallowEqual from 'shallowequal';
 
 const {
-	Text
+	Text,
 } = ReactNative;
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 
 export default class Icon extends Component<void, Props, void> {
 	static propTypes = {
-		style: Text.propTypes.style
+		style: Text.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

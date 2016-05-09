@@ -46,6 +46,6 @@ export function convertURLToRoute(url: string, transform?: Function): Route {
 
 	return {
 		name,
-		props
+		props,
 	};
 }

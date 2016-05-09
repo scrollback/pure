@@ -14,7 +14,7 @@ import request from 'request';
 import handlebars from 'handlebars';
 import route from 'koa-route';
 import queryString from 'querystring';
-import { bus, config } from './../../core-server';
+import { bus, config } from '../../core-server';
 import encodeURITemplate from '../../lib/encodeURITemplate';
 import * as Constants from '../../lib/Constants';
 
@@ -47,15 +47,15 @@ function getTokenFromCode(code) {
 		request.post({
 			uri: 'https://accounts.google.com/o/oauth2/token',
 			headers: {
-				'content-type': 'application/x-www-form-urlencoded'
+				'content-type': 'application/x-www-form-urlencoded',
 			},
 			body: queryString.stringify({
 				code,
 				redirect_uri: redirectURL,
 				client_id: config.google.client_id,
 				client_secret: config.google.client_secret,
-				grant_type: 'authorization_code'
-			})
+				grant_type: 'authorization_code',
+			}),
 		}, (err, res, t) => {
 
 			if (err) {
@@ -123,8 +123,8 @@ function getDataFromToken(token) {
 						idToken: token,
 						verified: true,
 						name: user.name,
-						picture: user.picture
-					}
+						picture: user.picture,
+					},
 				};
 				resolve(signin);
 			} catch (e) {
@@ -189,14 +189,14 @@ bus.on('http/init', app => {
 	app.use(route.get(config.google.login_url, function *() {
 		this.body = scriptTemplate({
 			title: 'Logging in with Google',
-			script: SCRIPT_REDIRECT
+			script: SCRIPT_REDIRECT,
 		});
 	}));
 
 	app.use(route.get(config.google.redirect_path, function *() {
 		this.body = scriptTemplate({
 			title: 'Logging in with Google',
-			script: SCRIPT_MESSAGE
+			script: SCRIPT_MESSAGE,
 		});
 	}));
 });

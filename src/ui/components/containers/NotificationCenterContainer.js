@@ -28,6 +28,7 @@ const NotificationCenterContainer = (props: any) => (
 						after: 0,
 					},
 				},
+				transform: () => [], // TODO: handle notifications properly
 			},
 		}}
 		mapActionsToProps={mapActionsToProps}

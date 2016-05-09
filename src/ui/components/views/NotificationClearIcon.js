@@ -11,7 +11,7 @@ type Props = {
 
 export default class NotificationClearIcon extends Component<void, Props, void> {
 	static propTypes = {
-		dismissAllNotes: PropTypes.func.isRequired
+		dismissAllNotes: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

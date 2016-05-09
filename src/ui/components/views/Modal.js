@@ -17,7 +17,7 @@ const {
 	TouchableWithoutFeedback,
 	Animated,
 	PixelRatio,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -25,28 +25,28 @@ const styles = StyleSheet.create({
 		flex: 1,
 		position: 'absolute',
 		top: 0,
-		left: 0
+		left: 0,
 	},
 	overlay: {
 		flex: 1,
 		alignItems: 'stretch',
 		justifyContent: 'flex-end',
-		backgroundColor: Colors.fadedBlack
+		backgroundColor: Colors.fadedBlack,
 	},
 	menuItem: {
 		borderColor: Colors.separator,
-		borderTopWidth: 1 / PixelRatio.get()
+		borderTopWidth: 1 / PixelRatio.get(),
 	},
 	menuItemFirst: {
-		borderTopWidth: 0
+		borderTopWidth: 0,
 	},
 	menuItemText: {
 		fontSize: 16,
 		lineHeight: 24,
 		color: Colors.darkGrey,
 		margin: 20,
-		paddingHorizontal: 4
-	}
+		paddingHorizontal: 4,
+	},
 });
 
 type State = {
@@ -125,7 +125,7 @@ export default class Modal extends Component<void, any, State> {
 
 	state: State = {
 		element: null,
-		fadeAnim: null
+		fadeAnim: null,
 	};
 
 	componentDidMount() {
@@ -154,15 +154,15 @@ export default class Modal extends Component<void, any, State> {
 		if (element) {
 			this.setState({
 				element,
-				fadeAnim: new Animated.Value(0)
+				fadeAnim: new Animated.Value(0),
 			}, () => Animated.timing(this.state.fadeAnim, {
 				toValue: 1,
-				duration: 300
+				duration: 300,
 			}).start());
 		} else if (this.state.element) {
 			Animated.timing(this.state.fadeAnim, {
 				toValue: 0,
-				duration: 300
+				duration: 300,
 			}).start(() => this.setState({ element: null }));
 		}
 	};

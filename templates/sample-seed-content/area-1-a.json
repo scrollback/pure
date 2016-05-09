@@ -1,0 +1,5 @@
+{
+	"title": "area-1-a-title <%= name %>",
+	"body": "area-1-a-body <%= name %>",
+	"creator": "belong-admin"
+}

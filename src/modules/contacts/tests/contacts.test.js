@@ -1,5 +1,5 @@
 import test from 'ava';
-import { buildSql } from './../contacts';
+import { buildSql } from '../contacts';
 
 test('should generate SQL query for single contact', t => {
 	const time = Date.now();
@@ -7,8 +7,8 @@ test('should generate SQL query for single contact', t => {
 		{
 			name: 'harish',
 			phone: 320394234,
-			email: 'cmsodf@dslkmf.com'
-		}
+			email: 'cmsodf@dslkmf.com',
+		},
 	], time);
 
 	t.deepEqual(sql, [ {
@@ -18,8 +18,8 @@ test('should generate SQL query for single contact', t => {
 		contact: {
 			name: 'harish',
 			phone: 320394234,
-			email: 'cmsodf@dslkmf.com'
-		}
+			email: 'cmsodf@dslkmf.com',
+		},
 	} ]);
 });
 
@@ -29,13 +29,13 @@ test('should generate SQL query for multiple contacts', t => {
 		{
 			name: 'harish',
 			phone: 320394234,
-			email: 'cmsodf@dslkmf.com'
+			email: 'cmsodf@dslkmf.com',
 		},
 		{
 			name: 'satya',
 			phone: 320394234,
-			email: 'cmsodf@dslkmf.com'
-		}
+			email: 'cmsodf@dslkmf.com',
+		},
 	], time);
 
 	t.deepEqual(sql, [ {
@@ -43,14 +43,14 @@ test('should generate SQL query for multiple contacts', t => {
 		contact: {
 			email: 'cmsodf@dslkmf.com',
 			name: 'harish',
-			phone: 320394234
+			phone: 320394234,
 		},
 		contact_1: {
 			name: 'satya',
 			email: 'cmsodf@dslkmf.com',
-			phone: 320394234
+			phone: 320394234,
 		},
 		createtime: time,
-		referrer: 'harish'
+		referrer: 'harish',
 	} ]);
 });

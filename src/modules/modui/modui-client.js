@@ -10,8 +10,8 @@ let todos = [];
 if (localStorage && localStorage.todos) {
 	try {
 		todos = JSON.parse(localStorage.todos);
-		console.log("Got todos:", todos.length);
-		if (todos[0] !== "separator") todos.unshift("separator");
+		console.log('Got todos:', todos.length);
+		if (todos[0] !== 'separator') todos.unshift('separator');
 	} catch (e) {
 		// ignore
 	}

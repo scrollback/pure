@@ -15,7 +15,7 @@ function replaceParams(u, params) {
 export default function buildAvatarURLForSize(url: string, size: number = 24): string {
 	if (/https?\:\/\/.*\.googleusercontent\.com\//.test(url)) {
 		return replaceParams(url, {
-			sz: size
+			sz: size,
 		});
 	}
 
@@ -23,14 +23,14 @@ export default function buildAvatarURLForSize(url: string, size: number = 24): s
 		return replaceParams(url, {
 			type: 'square',
 			height: size,
-			width: size
+			width: size,
 		});
 	}
 
 	if (/https?\:\/\/gravatar\.com\//.test(url)) {
 		return replaceParams(url, {
 			size,
-			d: 'retro'
+			d: 'retro',
 		});
 	}
 

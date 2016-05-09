@@ -8,7 +8,5 @@ cache:
 node_js:
   - 'stable'
   - '5'
-before_install:
-  - npm i -g quik@latest
 before_script:
   - npm run build

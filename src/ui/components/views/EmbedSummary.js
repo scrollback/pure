@@ -6,14 +6,14 @@ import shallowEqual from 'shallowequal';
 import AppText from './AppText';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	summary: {
 		fontSize: 12,
-		lineHeight: 18
-	}
+		lineHeight: 18,
+	},
 });
 
 type Props = {

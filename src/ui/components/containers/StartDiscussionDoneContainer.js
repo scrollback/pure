@@ -25,9 +25,9 @@ class StartDiscussionDoneContainer extends Component<void, Props, void> {
 					thread: {
 						key: {
 							type: 'entity',
-							id: this.props.thread
-						}
-					}
+							id: this.props.thread,
+						},
+					},
 				}}
 				passProps={this.props}
 				component={StartDiscussionDone}

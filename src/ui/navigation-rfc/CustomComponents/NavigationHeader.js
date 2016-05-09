@@ -26,7 +26,8 @@
  */
 'use strict';
 
-const React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 const NavigationHeaderTitle = require('./NavigationHeaderTitle');
 const NavigationContainer = require('../Navigation/NavigationContainer');
 const NavigationState = require('../Navigation/NavigationState');
@@ -37,7 +38,7 @@ const {
   Platform,
   StyleSheet,
   View,
-} = React;
+} = ReactNative;
 
 const APPBAR_HEIGHT = Platform.OS === 'ios' ? 44 : 56;
 const STATUSBAR_HEIGHT = Platform.OS === 'ios' ? 20 : 0;

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 
 	text: {
 		fontSize: 12,
-		color: Colors.grey
+		color: Colors.grey,
 	},
 
 	g1: {
@@ -44,12 +44,12 @@ const styles = StyleSheet.create({
 
 	e1: {
 		color: '#EA4532',
-	}
+	},
 });
 
 export default class PoweredByGoogle extends Component<void, { style?: any }, void> {
 	static propTypes = {
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	render() {

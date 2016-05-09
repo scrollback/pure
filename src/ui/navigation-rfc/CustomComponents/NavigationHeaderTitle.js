@@ -22,18 +22,19 @@
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- * 
+ *
  */
 'use strict';
 
-const React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 
 const {
   Platform,
   StyleSheet,
   View,
   Text,
-} = React;
+} = ReactNative;
 
 const styles = StyleSheet.create({
   title: {

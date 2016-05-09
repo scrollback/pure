@@ -104,7 +104,8 @@ CREATE TABLE notes (
 	data jsonb, -- information like
 	event smallint, -- e.g. mention, invite, request
 	createtime bigint,
-	updatetime bigint
+	updatetime bigint,
+	deletetime bigint
 );
 
 CREATE TABLE jobs (

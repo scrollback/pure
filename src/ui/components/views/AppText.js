@@ -6,15 +6,15 @@ import shallowEqual from 'shallowequal';
 
 const {
 	StyleSheet,
-	Text
+	Text,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	text: {
 		fontFamily: 'Lato',
 		fontSize: 14,
-		lineHeight: 21
-	}
+		lineHeight: 21,
+	},
 });
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 export default class AppText extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		style: Text.propTypes.style
+		style: Text.propTypes.style,
 	};
 
 	_root: Object;

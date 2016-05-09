@@ -9,19 +9,19 @@ import Page from './Page';
 const {
 	StyleSheet,
 	View,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	content: {
 		alignItems: 'center',
-		margin: 32
+		margin: 32,
 	},
 	missing: {
 		margin: 16,
 		textAlign: 'center',
 		fontSize: 16,
-		lineHeight: 24
+		lineHeight: 24,
 	},
 });
 
@@ -33,7 +33,7 @@ type Props = {
 export default class PageEmpty extends Component<void, Props, void> {
 	static propTypes = {
 		label: PropTypes.string,
-		image: PropTypes.any
+		image: PropTypes.any,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

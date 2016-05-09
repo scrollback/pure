@@ -14,20 +14,20 @@ import { PRESENCE_FOREGROUND, PRESENCE_NONE, TAG_POST_PHOTO, TAG_POST_HIDDEN } f
  */
 export const initializeSession = (session: string): Object => ({
 	auth: {
-		session
-	}
+		session,
+	},
 });
 
 export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; }): Object => ({
 	auth: {
-		[provider]: auth
-	}
+		[provider]: auth,
+	},
 });
 
 export const signUp = (user: User): Object => ({
 	auth: {
-		signup: new UserModel({ ...user, presence: PRESENCE_FOREGROUND })
-	}
+		signup: new UserModel({ ...user, presence: PRESENCE_FOREGROUND }),
+	},
 });
 
 export const clearSignUpError = (signup: Object): Object => ({
@@ -36,13 +36,13 @@ export const clearSignUpError = (signup: Object): Object => ({
 			...signup,
 			error: null,
 		},
-	}
+	},
 });
 
 export const cancelSignUp = (): Object => ({
 	state: {
 		signup: null,
-	}
+	},
 });
 
 export const signOut = (): Object => ({
@@ -50,13 +50,13 @@ export const signOut = (): Object => ({
 		session: null,
 		user: null,
 		initialURL: null,
-	}
+	},
 });
 
 export const saveUser = (user: User): Object => ({
 	entities: {
-		[user.id]: new UserModel({ ...user, presence: PRESENCE_FOREGROUND })
-	}
+		[user.id]: new UserModel({ ...user, presence: PRESENCE_FOREGROUND }),
+	},
 });
 
 export const addPlace = (user: string, type: string, place: Object): Object => ({
@@ -65,12 +65,12 @@ export const addPlace = (user: string, type: string, place: Object): Object => (
 			id: user,
 			params: {
 				places: {
-					[type]: place
-				}
+					[type]: place,
+				},
 			},
-			presence: PRESENCE_FOREGROUND
-		})
-	}
+			presence: PRESENCE_FOREGROUND,
+		}),
+	},
 });
 
 export const removePlace = (user: string, type: string): Object => ({
@@ -79,12 +79,12 @@ export const removePlace = (user: string, type: string): Object => ({
 			id: user,
 			params: {
 				places: {
-					[type]: null
-				}
+					[type]: null,
+				},
 			},
-			presence: PRESENCE_FOREGROUND
-		})
-	}
+			presence: PRESENCE_FOREGROUND,
+		}),
+	},
 });
 
 export const banUser = (): Object => ({
@@ -100,7 +100,7 @@ export const unbanUser = (): Object => ({
  * Text related actions
  */
 export const sendMessage = (
-	data: { id?: string, body: string; meta?: ?Object; parents: Array<string>; creator: string; }
+	data: { id?: string; body: string; meta?: ?Object; parents: Array<string>; creator: string; }
 ): Object => {
 	const id = data.id || uuid.v4();
 
@@ -113,13 +113,13 @@ export const sendMessage = (
 				createTime: Date.now(),
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
-			})
-		}
+			}),
+		},
 	};
 };
 
 export const startThread = (
-	data: { id?: string, name: string; body: string; meta?: ?Object; parents: Array<string>; creator: string; }
+	data: { id?: string; name: string; body: string; meta?: ?Object; parents: Array<string>; creator: string; }
 ): Object => {
 	const id = data.id || uuid.v4();
 
@@ -132,8 +132,8 @@ export const startThread = (
 				createTime: Date.now(),
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
-			})
-		}
+			}),
+		},
 	};
 };
 
@@ -142,8 +142,8 @@ export const hideText = (text: Text): Object => ({
 		[text.id]: new TextModel({
 			id: text.id,
 			tags: text.tags ? text.tags.concat(TAG_POST_HIDDEN) : [ TAG_POST_HIDDEN ],
-		})
-	}
+		}),
+	},
 });
 
 export const unhideText = (text: Text): Object => {
@@ -158,8 +158,8 @@ export const unhideText = (text: Text): Object => {
 						tags: text.tags ? text.tags.filter(e => {
 							return e === TAG_POST_HIDDEN ? false : e;
 						}) : [],
-					})
-				}
+					}),
+				},
 			};
 		}
 	}
@@ -172,8 +172,8 @@ export const hideThread = (thread: Thread): Object => ({
 		[thread.id]: new ThreadModel({
 			id: thread.id,
 			tags: thread.tags ? thread.tags.concat(TAG_POST_HIDDEN) : [ TAG_POST_HIDDEN ],
-		})
-	}
+		}),
+	},
 });
 
 export const unhideThread = (thread: Thread): Object => {
@@ -189,8 +189,8 @@ export const unhideThread = (thread: Thread): Object => {
 						tags: thread.tags ? thread.tags.filter(e => {
 							return e === TAG_POST_HIDDEN ? false : e;
 						}) : [],
-					})
-				}
+					}),
+				},
 			};
 		}
 	}
@@ -217,32 +217,32 @@ export const setPresence = (id: string, status: 'online' | 'offline'): Object =>
 	entities: {
 		[id]: new UserModel({
 			id,
-			presence: status === 'online' ? PRESENCE_FOREGROUND : PRESENCE_NONE
-		})
-	}
+			presence: status === 'online' ? PRESENCE_FOREGROUND : PRESENCE_NONE,
+		}),
+	},
 });
 
 export const setItemPresence = (
-	presence: { item: string, user: string, roles: Array<number>, create?: boolean },
+	presence: { item: string; user: string; roles: Array<number>; create?: boolean },
 	type: 'room' | 'thread', status: 'online' | 'offline'
 ): Object => {
 	const rel = {
 		...presence,
-		presence: status === 'online' ? PRESENCE_FOREGROUND : PRESENCE_NONE
+		presence: status === 'online' ? PRESENCE_FOREGROUND : PRESENCE_NONE,
 	};
 
 	switch (type) {
 	case 'room':
 		return {
 			entities: {
-				[`${presence.user}_${presence.item}`]: new RoomRelModel(rel)
-			}
+				[`${presence.user}_${presence.item}`]: new RoomRelModel(rel),
+			},
 		};
 	case 'thread':
 		return {
 			entities: {
-				[`${presence.user}_${presence.item}`]: new ThreadRelModel(rel)
-			}
+				[`${presence.user}_${presence.item}`]: new ThreadRelModel(rel),
+			},
 		};
 	default:
 		return {};

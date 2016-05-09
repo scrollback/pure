@@ -49,26 +49,31 @@ function sendStanza(changes, entity) {
 					name: 'chat',
 					props: {
 						room: entity && entity.parents[0],
-						thread: entity && entity.id
-					}
+						thread: entity && entity.id,
+					},
 				});
 
 			log.info('sending pushnotification for thread', entity, urlLink);
 			const pushData = {
 				count: 1,
+				score: 10,
 				data: {
 					body: entity.name,
 					creator: entity.creator,
 					id: entity.id,
-					room: entity && entity.parents[0],
+					room: {
+						id: entity && entity.parents[0],
+					},
 					title,
-					thread: entity.id,
+					thread: {
+						id: entity.id,
+					},
 					type: 'thread',
 					link: urlLink,
-					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`
+					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`,
 				},
 				updateTime: Date.now(),
-				type: entity.type
+				type: entity.type,
 			};
 
 				// console.log("gcm entity:", pushData)
@@ -110,26 +115,31 @@ function sendStanza(changes, entity) {
 					name: 'chat',
 					props: {
 						room: entity && entity.parents[1],
-						thread: entity && entity.parents[0]
-					}
+						thread: entity && entity.parents[0],
+					},
 				});
 
 			log.info('pushnotification: ', entity, urlLink);
 			const pushData = {
 				count: 1,
+				score: 30,
 				data: {
 					body: entity.body,
 					creator: entity.creator,
 					id: entity.id,
-					room: entity && entity.parents[1],
+					room: {
+						id: entity && entity.parents[1],
+					},
 					title,
-					thread: entity && entity.parents[0],
+					thread: {
+						id: entity && entity.parents[0],
+					},
 					type: 'reply',
 					link: urlLink,
-					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`
+					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`,
 				},
 				updateTime: Date.now(),
-				type: entity.type
+				type: entity.type,
 			};
 
 			log.info('sending pushnotification for text', pushData);

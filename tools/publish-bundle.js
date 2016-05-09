@@ -9,7 +9,7 @@ const crypto = require('crypto');
 const child_process = require('child_process');
 const pack = require('../node_modules/react-native/package.json');
 
-const SSH_HOST_PROD = 'ubuntu@52.76.69.167';
+const SSH_HOST_PROD = 'ubuntu@52.77.99.163';
 const SSH_HOST_DEV = 'ubuntu@52.77.64.21';
 const SSH_HOST = process.argv.indexOf('--prod') > -1 ? SSH_HOST_PROD : SSH_HOST_DEV; // The server user and host
 const SSH_PATH = '/home/ubuntu/pure/static/bundles/android/'; // The server user and host

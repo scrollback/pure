@@ -26,7 +26,8 @@
  */
 'use strict';
 
-var React = require('react-native');
+var React = require('react');
+var ReactNative = require('react-native');
 const NavigationActions = require('../Navigation/NavigationActions');
 const NavigationContainer = require('../Navigation/NavigationContainer');
 const NavigationState = require('../Navigation/NavigationState');
@@ -36,7 +37,7 @@ var {
   PanResponder,
   StyleSheet,
   View,
-} = React;
+} = ReactNative;
 
 class NavigationCard extends React.Component {
   _responder: Object;

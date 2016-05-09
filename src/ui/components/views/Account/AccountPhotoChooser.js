@@ -13,8 +13,8 @@ const styles = StyleSheet.create({
 	container: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
-		padding: 8
-	}
+		padding: 8,
+	},
 });
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 export default class AccountPhotoChooser extends Component<void, Props, void> {
 	static propTypes = {
 		photos: PropTypes.arrayOf(PropTypes.string).isRequired,
-		onSelect: PropTypes.func.isRequired
+		onSelect: PropTypes.func.isRequired,
 	};
 
 	render() {

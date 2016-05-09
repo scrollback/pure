@@ -37,7 +37,7 @@ export function initMailSending (userRel) {
 			emailHtml = template({
 				token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
 				domain: config.server.protocol + '//' + config.server.host + ':' + config.server.port,
-				rooms: rels
+				rooms: rels,
 			}),
 			emailSub = getSubject(rels);
 // console.log("rels[0].threads: ", rels)
@@ -53,7 +53,7 @@ export function initMailSending (userRel) {
 		pg.write(connStr, [ {
 			$: 'UPDATE jobs SET lastrun=&{end} WHERE id=&{jid}',
 			end,
-			jid: Constants.JOB_EMAIL_DIGEST
+			jid: Constants.JOB_EMAIL_DIGEST,
 		} ], (error) => {
 			if (!error) log.info('successfully updated jobs for digest email');
 		});
@@ -92,13 +92,13 @@ function sendDigestEmail () {
 		end,
 		follower: Constants.ROLE_FOLLOWER,
 		min: timeZone.min,
-		max: timeZone.max
+		max: timeZone.max,
 	}).on('row', (urel) => {
 	// console.log('Got user for digest email: ', urel);
 		counter.inc();
 		pg.read(config.connStr, {
 			$: 'select * from rooms where id=&{id} ', // and presencetime<&{roletime}
-			id: urel.parents[0]
+			id: urel.parents[0],
 		}, (err, room) => {
 			if (err) throw err;
 			urel.roomName = room[0].name;

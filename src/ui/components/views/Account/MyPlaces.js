@@ -8,20 +8,20 @@ import Colors from '../../../Colors';
 import LocationListener from '../../../modules/LocationListener';
 
 const {
-	InteractionManager
+	InteractionManager,
 } = ReactNative;
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		backgroundColor: Colors.white,
-		paddingVertical: 8
-	}
+		paddingVertical: 8,
+	},
 });
 
 type Props = {

@@ -10,7 +10,7 @@ import ImageUploadButton from './ImageUploadButton';
 const {
 	StyleSheet,
 	View,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -18,29 +18,29 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
-		padding: 8
+		padding: 8,
 	},
 	thumbnailContainer: {
-		elevation: 4
+		elevation: 4,
 	},
 	thumbnailStyle: {
 		alignItems: 'flex-end',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
 	},
 	iconIdle: {
 		color: Colors.fadedBlack,
 		marginRight: 13,
-		marginLeft: 19
+		marginLeft: 19,
 	},
 	iconError: {
 		marginTop: 14,
-		marginBottom: 18
+		marginBottom: 18,
 	},
 	closeButton: {
 		position: 'absolute',
 		top: -8,
-		left: -8
-	}
+		left: -8,
+	},
 });
 
 type Props = {
@@ -65,7 +65,7 @@ export default class ImageUploadChat extends Component {
 			uri: PropTypes.string.isRequired,
 			height: PropTypes.number.isRequired,
 			width: PropTypes.number.isRequired,
-			size: PropTypes.number.isRequired
+			size: PropTypes.number.isRequired,
 		}).isRequired,
 		status: PropTypes.string.isRequired,
 		startUpload: PropTypes.func.isRequired,
@@ -98,7 +98,7 @@ export default class ImageUploadChat extends Component {
 		const {
 			uri,
 			height,
-			width
+			width,
 		} = this.props.photo;
 
 		return (

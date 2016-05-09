@@ -76,12 +76,12 @@ test('should update connected component with data', t => {
 					firstName: 'f',
 					middleName: {
 						key: 'm',
-						transform: name => name ? `'${name}'` : ''
+						transform: name => name ? `'${name}'` : '',
 					},
 					lastName: {
 						key: {
 							type: 'l',
-						}
+						},
 					},
 				}}
 				component={NameComponent}
@@ -141,7 +141,7 @@ test('should pass dispatch', t => {
 		<Provider store={store}>
 			<Connect
 				mapActionsToProps={{
-					ping: s => () => s.dispatch(TEST_ACTION)
+					ping: s => () => s.dispatch(TEST_ACTION),
 				}}
 				component={ButtonComponent}
 			/>
@@ -162,7 +162,7 @@ test('should pass dispatch and data', t => {
 		subscribe: (options, cb) => {
 			callback = options.type === 'label' ? cb : null;
 			return {
-				remove: () => (callback = null)
+				remove: () => (callback = null),
 			};
 		},
 		dispatch: action => action.type === 'CLICK' ? callback(action.payload.label) : null,
@@ -172,16 +172,16 @@ test('should pass dispatch and data', t => {
 		<Connect
 			mapSubscriptionToProps={{
 				label: {
-					key: sub
-				}
+					key: sub,
+				},
 			}}
 			mapActionsToProps={{
 				click: s => () => s.dispatch({
 					type: 'CLICK',
 					payload: {
-						label: 'Clicked'
-					}
-				})
+						label: 'Clicked',
+					},
+				}),
 			}}
 			passProps={{ initialLabel: 'Hello' }}
 			component={ButtonComponent}

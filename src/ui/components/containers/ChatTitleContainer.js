@@ -24,29 +24,29 @@ const ChatTitleContainer = (props: any) => {
 				thread: {
 					key: {
 						type: 'entity',
-						id: props.thread
-					}
+						id: props.thread,
+					},
 				},
 				online: {
 					key: {
 						slice: {
 							type: 'rel',
 							link: {
-								user: 'user'
+								user: 'user',
 							},
 							filter: {
-								item: props.thread
+								item: props.thread,
 							},
-							order: 'presenceTime'
+							order: 'presenceTime',
 						},
 						range: {
 							start: Infinity,
 							before: 100,
-							after: 0
-						}
+							after: 0,
+						},
 					},
-					transform: getOnlineCount
-				}
+					transform: getOnlineCount,
+				},
 			}}
 			passProps={props}
 			component={ChatTitle}
@@ -55,7 +55,7 @@ const ChatTitleContainer = (props: any) => {
 };
 
 ChatTitleContainer.propTypes = {
-	thread: PropTypes.string.isRequired
+	thread: PropTypes.string.isRequired,
 };
 
 export default ChatTitleContainer;

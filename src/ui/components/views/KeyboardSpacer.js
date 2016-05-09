@@ -7,7 +7,7 @@ import shallowEqual from 'shallowequal';
 const {
 	Animated,
 	View,
-	DeviceEventEmitter
+	DeviceEventEmitter,
 } = ReactNative;
 
 type Props = {
@@ -20,15 +20,15 @@ type State = {
 
 export default class KeyboardSpacer extends Component<Props, Props, State> {
 	static propTypes = {
-		offset: PropTypes.number
+		offset: PropTypes.number,
 	};
 
 	static defaultProps = {
-		offset: 0
+		offset: 0,
 	};
 
 	state: State = {
-		keyboardHeightAnim: new Animated.Value(0)
+		keyboardHeightAnim: new Animated.Value(0),
 	};
 
 	componentWillMount() {
@@ -58,13 +58,13 @@ export default class KeyboardSpacer extends Component<Props, Props, State> {
 
 	_keyboardDidShow: Function = e => {
 		Animated.spring(this.state.keyboardHeightAnim, {
-			toValue: e.endCoordinates.height - (this.props.offset || 0)
+			toValue: e.endCoordinates.height - (this.props.offset || 0),
 		}).start();
 	};
 
 	_keyboardDidHide: Function = () => {
 		Animated.spring(this.state.keyboardHeightAnim, {
-			toValue: 0
+			toValue: 0,
 		}).start();
 	};
 

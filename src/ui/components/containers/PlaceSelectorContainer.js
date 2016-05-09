@@ -8,7 +8,7 @@ const mapSubscriptionToProps = {
 	location: {
 		key: {
 			type: 'state',
-			path: 'location'
+			path: 'location',
 		},
 	},
 };

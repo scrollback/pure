@@ -48,19 +48,58 @@ const styles = {
 	},
 };
 
-class Home extends Component {
+type Props = {
+	title: string;
+	description: string;
+	url: string;
+}
+
+type State = {
+	url: string;
+	label: string;
+}
+
+class Home extends Component<void, Props, State> {
 	static propTypes = {
 		title: PropTypes.string.isRequired,
 		description: PropTypes.string.isRequired,
 		url: PropTypes.string.isRequired,
 	};
 
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			url: this.props.url,
+			label: 'Install app',
+		};
+	}
+
+	state: State;
+
+	componentWillMount() {
+		if (global.location && global.navigator && /Android.+Chrome\/[.0-9]*/.test(navigator.userAgent)) {
+			this.setState({
+				url: [
+					`intent://${location.host + location.pathname + location.search}#Intent`,
+					'package=chat.belong.hello',
+					'scheme=belong',
+					'end',
+				].join(';'),
+				label: 'Open in app',
+			});
+		}
+	}
+
 	render() {
 		const {
 			title,
 			description,
-			url,
 		} = this.props;
+		const {
+			url,
+			label,
+		} = this.state;
 
 		return (
 			<div style={styles.container}>
@@ -68,7 +107,7 @@ class Home extends Component {
 					<h1 style={styles.header}>{title}</h1>
 					<p style={styles.summary}>{description}</p>
 					<a style={styles.button} href={url}>
-						Install app
+						{label}
 					</a>
 				</div>
 			</div>

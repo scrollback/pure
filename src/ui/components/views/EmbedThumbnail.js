@@ -11,7 +11,7 @@ const {
 	StyleSheet,
 	Dimensions,
 	View,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
 		width: 240,
 		height: 135,
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	playContainer: {
 		backgroundColor: Colors.fadedBlack,
@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		padding: 4,
 		borderWidth: 2,
-		borderRadius: 24
+		borderRadius: 24,
 	},
 	play: {
-		color: Colors.white
-	}
+		color: Colors.white,
+	},
 });
 
 type Props = {
@@ -54,16 +54,16 @@ export default class EmbedThumbnail extends Component<void, Props, State> {
 			width: PropTypes.number,
 			thumbnail_height: PropTypes.number,
 			thumbnail_width: PropTypes.number,
-			thumbnail_url: PropTypes.string
+			thumbnail_url: PropTypes.string,
 		}).isRequired,
-		style: Image.propTypes.style
+		style: Image.propTypes.style,
 	};
 
 	state: State;
 
 	componentWillMount() {
 		this.setState({
-			dimensions: this.props.embed.thumbnail_url ? this._getOptimalDimensions(this.props.embed) : null
+			dimensions: this.props.embed.thumbnail_url ? this._getOptimalDimensions(this.props.embed) : null,
 		});
 	}
 
@@ -76,7 +76,7 @@ export default class EmbedThumbnail extends Component<void, Props, State> {
 			height,
 			width,
 			thumbnail_width,
-			thumbnail_height
+			thumbnail_height,
 		} = embed;
 
 		const win = Dimensions.get('window');
@@ -103,7 +103,7 @@ export default class EmbedThumbnail extends Component<void, Props, State> {
 
 		return {
 			height: displayWidth * ratio,
-			width: displayWidth
+			width: displayWidth,
 		};
 	};
 

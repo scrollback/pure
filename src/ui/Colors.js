@@ -4,8 +4,8 @@ export default {
 	grey: '#999',
 	lightGrey: '#eee',
 	darkGrey: '#444',
-	primary: '#673ab7',
-	accent: '#ff9419',
+	primary: '#6644bb',
+	accent: '#ff1144',
 	badge: '#e91e63',
 	info: '#2196f3',
 	error: '#f44336',
@@ -16,5 +16,5 @@ export default {
 	fadedBlack: 'rgba(0, 0, 0, .5)',
 	separator: 'rgba(0, 0, 0, .08)',
 	underlay: 'rgba(0, 0, 0, .12)',
-	placeholder: 'rgba(0, 0, 0, .16)'
+	placeholder: 'rgba(0, 0, 0, .16)',
 };

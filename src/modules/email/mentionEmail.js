@@ -30,7 +30,7 @@ function initMailSending (userRel) {
 		const emailHtml = template({
 				token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
 				domain: conf.domain,
-				rooms: rels
+				rooms: rels,
 			}),
 			emailSub = `You h've been mentioned in ${rels.length} rooms`;
 			// console.log("rels[0].threads: ", rels.length)
@@ -50,7 +50,7 @@ function initMailSending (userRel) {
 			pg.write(connStr, [ {
 				$: 'UPDATE jobs SET lastrun=&{end} WHERE id=&{jid}',
 				end,
-				jid: Constants.JOB_EMAIL_MENTION
+				jid: Constants.JOB_EMAIL_MENTION,
 			} ], (error) => {
 				if (!error) log.info('successfully updated jobs for mention email');
 			});
@@ -81,13 +81,13 @@ function sendMentionEmail() {
 		counter.inc();
 		pg.read(connStr, {
 			$: `select * from rooms where id=&{id} `, // and presencetime<&{roletime}
-			id: urel.parents[1]
+			id: urel.parents[1],
 		}, (err, room) => {
 			if (err) throw err;
 			urel.roomName = room[0].name;
 			pg.read(connStr, {
 				$: `select * from threads where id=&{id} `, // and presencetime<&{roletime}
-				id: urel.parents[0]
+				id: urel.parents[0],
 			}, (er, thread) => {
 				if (er) throw er;
 				urel.threadTitle = thread[0].name;

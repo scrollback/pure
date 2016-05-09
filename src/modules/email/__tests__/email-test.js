@@ -12,7 +12,7 @@ describe('send digest email', function () {
 	it.only('send email to users who are offline', function () {
 		pg.read(connString, {
 			$: 'SELECT * FROM jobs WHERE jobid = &{jid}',
-			jid: constants.JOB_EMAIL_DIGEST
+			jid: constants.JOB_EMAIL_DIGEST,
 		}, (e, r) => {
 			sendDigestEmail(r);
 		});

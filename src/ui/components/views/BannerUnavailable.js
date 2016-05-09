@@ -15,12 +15,12 @@ const {
 const styles = StyleSheet.create({
 	banner: {
 		backgroundColor: Colors.info,
-		padding: 16
+		padding: 16,
 	},
 
 	bannerText: {
-		color: Colors.white
-	}
+		color: Colors.white,
+	},
 });
 
 export default class extends Component<void, any, void> {

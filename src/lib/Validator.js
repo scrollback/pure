@@ -7,7 +7,7 @@ export default class Validator {
 		'undefined', 'null',
 		'room', 'user', 'thread', 'entity',
 		'admin', 'owner', 'root',
-		'missing', 'loading', 'failed', 'error'
+		'missing', 'loading', 'failed', 'error',
 	];
 
 	static validate(name) {

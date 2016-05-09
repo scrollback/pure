@@ -22,7 +22,7 @@ describe('Entity insert/update', () => {
 			parents: [],
 			creator: '',
 			updater: '',
-			createTime: 93784
+			createTime: 93784,
 		})).toEqual({
 			$: 'INSERT INTO "rooms" ( "id", "name", "body", "type", "tags", "meta", "params", "parents", "creator", "updater", "createtime", "terms" ) VALUES ( &{id}, &{name}, &{body}, &{type}, &{tags}, &{meta}, &{params}, &{parents}, &{creator}, &{updater}, &{createTime}, to_tsvector(&{locale}, &{name} || \' \' || &{body}) ) RETURNING *',
 			body: '',
@@ -36,7 +36,7 @@ describe('Entity insert/update', () => {
 			parents: {},
 			tags: { 0: 21 },
 			type: 1,
-			updater: ''
+			updater: '',
 		});
 	});
 	it('update room', () => {
@@ -50,7 +50,7 @@ describe('Entity insert/update', () => {
 			params: {},
 			parents: [],
 			creator: '',
-			updater: ''
+			updater: '',
 		})).toEqual({
 			 $: 'UPDATE "rooms" SET "name" = &{name}, "body" = &{body}, "type" = &{type}, "tags" = &{tags}, "meta" = jsonop("meta", &{meta}, &{meta_op}), "params" = jsonop("params", &{params}, &{params_op}), "parents" = &{parents}, "creator" = &{creator}, "updater" = &{updater}, "terms" = to_tsvector(&{locale}, &{name} || \' \' || "body") WHERE "id" = &{id} RETURNING *',
 			 body: '',
@@ -65,7 +65,7 @@ describe('Entity insert/update', () => {
 			 parents: {},
 			 tags: { 0: 21 },
 			 type: 1,
-			 updater: ''
+			 updater: '',
 		});
 	});
 });

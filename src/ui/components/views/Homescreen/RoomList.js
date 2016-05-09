@@ -3,18 +3,13 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
-import RoomItemContainer from '../containers/RoomItemContainer';
-import CTACardContainerHome from '../containers/CTACardContainerHome';
-import BannerUnavailable from './BannerUnavailable';
-import PageEmpty from './PageEmpty';
-import PageLoading from './PageLoading';
-import LoadingItem from './LoadingItem';
-import ListItem from './ListItem';
-import AppText from './AppText';
-import Icon from './Icon';
-import Colors from '../../Colors';
-import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
-import type { RoomRel, Room } from '../../../lib/schemaTypes';
+import RoomItemContainer from '../../containers/RoomItemContainer';
+import RoomsFooterContainer from '../../containers/RoomsFooterContainer';
+import PageEmpty from '../PageEmpty';
+import PageLoading from '../PageLoading';
+import LoadingItem from '../LoadingItem';
+import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
+import type { RoomRel, Room } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -26,30 +21,9 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
-
-	footer: {
-		marginTop: 8,
-	},
-
-	footerItem: {
-		height: 48,
-	},
-
-	footerLabel: {
-		fontSize: 12,
-		lineHeight: 18,
-		fontWeight: 'bold',
-		color: Colors.fadedBlack,
-	},
-
-	footerIcon: {
-		color: Colors.fadedBlack,
-		marginHorizontal: 16,
-	},
 });
 
 type Props = {
-	available?: boolean;
 	onNavigation: Function;
 	data: Array<{ roomrel: RoomRel; room: Room } | { type: 'loading' } | { type: 'failed' }>;
 }
@@ -60,7 +34,6 @@ type State = {
 
 export default class Rooms extends Component<void, Props, State> {
 	static propTypes = {
-		available: PropTypes.bool,
 		onNavigation: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 	};
@@ -112,45 +85,8 @@ export default class Rooms extends Component<void, Props, State> {
 		);
 	};
 
-	_handleManagePlaces: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'places',
-		}));
-	};
-
-	_handleReportIssue: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'room',
-			props: {
-				room: 'e8d0a3b8-6c00-4871-84ad-1078b1265c08',
-			},
-		}));
-	};
-
 	_renderFooter: Function = () => {
-		return (
-			<View>
-				<View style={styles.footer}>
-					<ListItem containerStyle={styles.footerItem} onPress={this._handleManagePlaces}>
-						<Icon
-							style={styles.footerIcon}
-							name='settings'
-							size={18}
-						/>
-						<AppText style={styles.footerLabel}>MANAGE MY PLACES</AppText>
-					</ListItem>
-					<ListItem containerStyle={styles.footerItem} onPress={this._handleReportIssue}>
-						<Icon
-							style={styles.footerIcon}
-							name='info'
-							size={18}
-						/>
-						<AppText style={styles.footerLabel}>REPORT AN ISSUE</AppText>
-					</ListItem>
-				</View>
-				<CTACardContainerHome style={styles.footer} />
-			</View>
-		);
+		return <RoomsFooterContainer onNavigation={this.props.onNavigation} />;
 	};
 
 	render() {
@@ -169,11 +105,6 @@ export default class Rooms extends Component<void, Props, State> {
 
 		return (
 			<View style={styles.container}>
-				{this.props.available === false ?
-					<BannerUnavailable /> :
-					null
-				}
-
 				{placeHolder ? placeHolder :
 					<ListView
 						keyboardShouldPersistTaps

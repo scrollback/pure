@@ -20,5 +20,5 @@ export default [
 	[ /https?:\/\/.*deviantart\.com\/art\/\S+/i, 'http://backend.deviantart.com/oembed' ],
 	[ /https?:\/\/.*deviantart\.com\/.*#\/d\S+/i, 'http://backend.deviantart.com/oembed' ],
 	[ /https?:\/\/fav\.me\/\S+/i, 'http://backend.deviantart.com/oembed' ],
-	[ /https?:\/\/stash\.sh\/\S+/i, 'http://backend.deviantart.com/oembed' ]
+	[ /https?:\/\/stash\.sh\/\S+/i, 'http://backend.deviantart.com/oembed' ],
 ];

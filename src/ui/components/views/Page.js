@@ -6,15 +6,15 @@ import shallowEqual from 'shallowequal';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	page: {
 		flex: 1,
 		alignItems: 'center',
-		justifyContent: 'center'
-	}
+		justifyContent: 'center',
+	},
 });
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 export default class Page extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.node.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

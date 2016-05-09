@@ -52,7 +52,7 @@ export default class ImageUploadHelper {
 		const formData = new FormData();
 		const fields = [
 			'acl', 'policy', 'x-amz-algorithm', 'x-amz-credential',
-			'x-amz-date', 'x-amz-signature'
+			'x-amz-date', 'x-amz-signature',
 		];
 
 		for (const field of fields) {

@@ -16,9 +16,9 @@ test.cb('should add score on thread update', t => {
 				type: TYPE_THREAD,
 				parents: [ 'adjgf7f-dsfh3-dsf43-23r' ],
 				body: 'some thread title',
-				updateTime: time
-			}
-		}
+				updateTime: time,
+			},
+		},
 	}, (err, changes) => {
 		if (err) {
 			t.fail(err);
@@ -31,7 +31,7 @@ test.cb('should add score on thread update', t => {
 			parents: [ 'adjgf7f-dsfh3-dsf43-23r' ],
 			body: 'some thread title',
 			updateTime: time,
-			score: 1
+			score: 1,
 		});
 		t.end();
 	});

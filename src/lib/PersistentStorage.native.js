@@ -3,7 +3,7 @@
 import ReactNative from 'react-native';
 
 const {
-	AsyncStorage
+	AsyncStorage,
 } = ReactNative;
 
 export default class PersistentStorage {

@@ -8,7 +8,7 @@ const styles = {
 	},
 	link: {
 		textDecoration: 'none',
-		color: '#333333'
+		color: '#333333',
 	},
 	name: {
 		fontWeight: 'bold',
@@ -33,13 +33,13 @@ class TodoItem extends Component {
 	render() {
 		const todo = this.props.todo,
 			thread = (todo.type === Constants.TYPE_THREAD),
-			body = todo.tags.indexOf(3) >= 0 ? <img src={todo.meta.photo.thumbnail_url} height="50" /> : todo.body,
+			body = todo.tags.indexOf(3) >= 0 ? <img src={todo.meta.photo.thumbnail_url} height='50' /> : todo.body,
 			url = 'belong://' + config.server.host + '/' + (
 				thread ?
 				todo.parents[0] + '/' + todo.id :
 				todo.parents[1] + '/' + todo.parents[0]
 			),
-			type = thread ? 'Start': 'Reply';
+			type = thread ? 'Start' : 'Reply';
 
 		return (
 			<div style={styles.message}>

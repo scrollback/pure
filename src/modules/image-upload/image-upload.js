@@ -1,6 +1,6 @@
 import crypto from 'crypto';
 import winston from 'winston';
-import EnhancedError from './../../lib/EnhancedError';
+import EnhancedError from '../../lib/EnhancedError';
 import { APP_PRIORITIES } from '../../lib/Constants';
 import { bus, config } from '../../core-server';
 
@@ -53,8 +53,8 @@ function getPolicy(keyPrefix) {
 			{ success_action_status: '201' },
 			{ 'x-amz-credential': getCredential() },
 			{ 'x-amz-algorithm': config.s3.algorithm },
-			{ 'x-amz-date': getDate(true) }
-		]
+			{ 'x-amz-date': getDate(true) },
+		],
 	})).toString('base64');
 }
 
@@ -80,7 +80,7 @@ export function getResponse(policyReq) {
 		'x-amz-algorithm': config.s3.algorithm,
 		'x-amz-credential': getCredential(),
 		'x-amz-date': getDate(true),
-		'x-amz-signature': signature
+		'x-amz-signature': signature,
 	};
 }
 

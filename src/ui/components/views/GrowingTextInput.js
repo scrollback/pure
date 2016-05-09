@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 		left: 0,
 		right: 0,
 		opacity: 0,
-	}
+	},
 });
 
 type Props = {
@@ -50,18 +50,18 @@ export default class GrowingTextInput extends Component<void, Props, State> {
 
 	state: State = {
 		value: '',
-		height: 58
+		height: 58,
 	};
 
 	componentWillMount() {
 		this.setState({
-			value: this.props.value || this.props.defaultValue || ''
+			value: this.props.value || this.props.defaultValue || '',
 		});
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
-			value: nextProps.value
+			value: nextProps.value,
 		});
 	}
 

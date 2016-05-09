@@ -13,9 +13,9 @@ const options = {
 	json: true,
 	method: 'POST',
 	headers: {
-		Authorization: authKey
+		Authorization: authKey,
 	},
-	body: {}
+	body: {},
 };
 
 export function getIIDInfo(iid: String, cb: Function) {
@@ -23,7 +23,7 @@ export function getIIDInfo(iid: String, cb: Function) {
 		url: `https://iid.googleapis.com/iid/info/${iid}?details=true`,
 		method: 'GET',
 		headers: {
-			Authorization: authKey
+			Authorization: authKey,
 		},
 	}, cb);
 }
@@ -37,8 +37,8 @@ function unsubscribeTopics (data, cb) {
 			url: 'https://iid.googleapis.com/iid/v1:batchRemove',
 			body: {
 				registration_tokens: [ iid ],
-				to: '/topics/' + data.topic
-			}
+				to: '/topics/' + data.topic,
+			},
 		}, (err, rspns, bdy) => {
 			if (!err) {
 				log.info('unsubscribed from ', data.topic || '');
@@ -67,8 +67,8 @@ function unsubscribeTopics (data, cb) {
 							url: 'https://iid.googleapis.com/iid/v1:batchRemove',
 							body: {
 								registration_tokens: [ iid ],
-								to: '/topics/' + topic
-							}
+								to: '/topics/' + topic,
+							},
 						}, (err, rspns, bdy) => {
 							if (!err) {
 								log.info('unsubscribed from ', topic);
@@ -102,8 +102,8 @@ export function subscribe (userRel: Object) {
 				...options,
 				body: {
 					registration_tokens: [ token ],
-					to: '/topics/' + userRel.topic
-				}
+					to: '/topics/' + userRel.topic,
+				},
 			}, (error, response, body) => {
 				if (error) {
 					log.error('error subscribing to topic: ', userRel.topic, token, error);
@@ -199,7 +199,7 @@ function handleSubscription(changes, next) {
 					subscribe({
 						params: user.params || {},
 						topic: entity.type === Constants.TYPE_ROOMREL ? 'room-' + entity.item :
-						'thread-' + entity.item
+						'thread-' + entity.item,
 					});
 				}
 			});

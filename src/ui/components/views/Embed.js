@@ -12,7 +12,7 @@ import type { Embed as EmbedData } from '../../../modules/oembed/oEmbedTypes';
 const {
 	Linking,
 	TouchableOpacity,
-	View
+	View,
 } = ReactNative;
 
 type DefaultProps = {
@@ -47,15 +47,15 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 		containerStyle: View.propTypes.style,
 		thumbnailStyle: EmbedThumbnail.propTypes.style,
 		titleStyle: EmbedTitle.propTypes.style,
-		summaryStyle: EmbedSummary.propTypes.style
+		summaryStyle: EmbedSummary.propTypes.style,
 	};
 
 	static defaultProps = {
-		openOnPress: true
+		openOnPress: true,
 	};
 
 	state: State = {
-		embed: null
+		embed: null,
 	};
 
 	componentWillMount() {
@@ -85,7 +85,7 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 	_fetchData: Function = () => {
 		if (this.props.data) {
 			this.setState({
-				embed: this.props.data
+				embed: this.props.data,
 			});
 		} else {
 			this._fetchEmbedData(this.props.url);
@@ -98,7 +98,7 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 
 			if (this._mounted) {
 				this.setState({
-					embed
+					embed,
 				});
 			}
 		} catch (e) {
@@ -117,7 +117,7 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 				openOnPress,
 				thumbnailStyle,
 				titleStyle,
-				summaryStyle
+				summaryStyle,
 			} = this.props;
 
 			const items = [];

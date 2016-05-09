@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	},
 
 	error: {
-		color: Colors.error
+		color: Colors.error,
 	},
 });
 
@@ -32,7 +32,7 @@ type Props = {
 export default class OnboardError extends Component<void, Props, void> {
 	static propTypes = {
 		message: PropTypes.string,
-		hint: PropTypes.string
+		hint: PropTypes.string,
 	};
 
 	render() {

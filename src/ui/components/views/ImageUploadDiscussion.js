@@ -10,33 +10,33 @@ import ImageUploadButton from './ImageUploadButton';
 const {
 	StyleSheet,
 	View,
-	Image
+	Image,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
 		paddingHorizontal: 16,
-		paddingVertical: 32
+		paddingVertical: 32,
 	},
 	thumbnailContainer: {
-		elevation: 4
+		elevation: 4,
 	},
 	thumbnailStyle: {
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	iconIdle: {
-		color: Colors.fadedBlack
+		color: Colors.fadedBlack,
 	},
 	iconError: {
 		marginTop: 14,
-		marginBottom: 18
+		marginBottom: 18,
 	},
 	closeButton: {
 		position: 'absolute',
 		top: 16,
-		left: 0
-	}
+		left: 0,
+	},
 });
 
 type Props = {
@@ -61,7 +61,7 @@ export default class ImageUploadDiscussion extends Component<void, Props, void> 
 			uri: PropTypes.string.isRequired,
 			height: PropTypes.number.isRequired,
 			width: PropTypes.number.isRequired,
-			size: PropTypes.number.isRequired
+			size: PropTypes.number.isRequired,
 		}).isRequired,
 		status: PropTypes.string.isRequired,
 		startUpload: PropTypes.func.isRequired,

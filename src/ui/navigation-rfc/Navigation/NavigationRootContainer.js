@@ -6,17 +6,19 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * 
+ *
  *
  */
 'use strict';
 
+var React = require('react');
+var ReactNative = require('react-native');
 var NavigationState = require('./NavigationState');
 var NavigationReducer = require('./NavigationReducer');
-var React = require('react-native');
+
 var {
   AsyncStorage,
-} = React;
+} = ReactNative;
 
 var invariant = require('invariant');
 
@@ -67,7 +69,7 @@ const NavigationRootContainer = React.createClass({
           navState: this.props.stringToState(storedString),
         });
       });
-    }  
+    }
   },
   getChildContext: function(): Object {
     return {

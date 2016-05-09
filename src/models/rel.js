@@ -18,7 +18,7 @@ export default class Relation {
 
 		Object.defineProperty(this, 'id', {
 			get: () => this.user + '_' + this.item,
-			enumerable: false
+			enumerable: false,
 		});
 	}
 

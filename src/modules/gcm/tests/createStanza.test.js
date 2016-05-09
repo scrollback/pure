@@ -16,8 +16,8 @@ test('should create stanza for threads', t => {
 			text: '@testinguser hi',
 			thread: 'some thread title',
 			createTime: 1457003330852,
-			room: 'scrollback'
-		}
+			room: 'scrollback',
+		},
 	};
 
 	const id = uid();

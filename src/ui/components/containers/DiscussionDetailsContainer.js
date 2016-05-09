@@ -14,9 +14,9 @@ const DiscussionDetailsContainer = (props: Props) => (
 			thread: {
 				key: {
 					type: 'entity',
-					id: props.thread
-				}
-			}
+					id: props.thread,
+				},
+			},
 		}}
 		passProps={props}
 		component={DiscussionDetails}
@@ -24,7 +24,7 @@ const DiscussionDetailsContainer = (props: Props) => (
 );
 
 DiscussionDetailsContainer.propTypes = {
-	thread: PropTypes.string.isRequired
+	thread: PropTypes.string.isRequired,
 };
 
 export default DiscussionDetailsContainer;

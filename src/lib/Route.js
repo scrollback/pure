@@ -74,8 +74,8 @@ export function convertURLToRoute(url: string): Route {
 					name: 'room',
 					props: {
 						...props,
-						room: type
-					}
+						room: type,
+					},
 				};
 			}
 
@@ -85,8 +85,8 @@ export function convertURLToRoute(url: string): Route {
 					props: {
 						...props,
 						room: type,
-						thread: name
-					}
+						thread: name,
+					},
 				};
 			}
 		} else {
@@ -95,8 +95,8 @@ export function convertURLToRoute(url: string): Route {
 					name: 'room',
 					props: {
 						...props,
-						room: type
-					}
+						room: type,
+					},
 				};
 			}
 		}
@@ -120,9 +120,9 @@ export function convertRouteToState(route: Route): NavigationState {
 	return {
 		routes: stack.map(name => ({
 			name,
-			props: route.props
+			props: route.props,
 		})),
-		index: stack.length - 1
+		index: stack.length - 1,
 	};
 }
 

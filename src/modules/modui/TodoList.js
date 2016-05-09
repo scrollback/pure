@@ -10,7 +10,7 @@ class TodoList extends Component {
 		return (
 			<div>
 				{this.props.todos.map(todo =>
-					todo === "separator" ?
+					todo === 'separator' ?
 					<div style={separatorStyle}></div> :
 					<TodoItem key={todo.id} todo={todo}/>
 				)}

@@ -17,27 +17,27 @@ const RIGHT_BUBBLE_COLOR = '#ddd';
 
 const styles = StyleSheet.create({
 	containerLeft: {
-		alignItems: 'flex-start'
+		alignItems: 'flex-start',
 	},
 	containerRight: {
-		alignItems: 'flex-end'
+		alignItems: 'flex-end',
 	},
 	bubble: {
 		backgroundColor: LEFT_BUBBLE_COLOR,
 		paddingHorizontal: 12,
 		paddingVertical: 8,
-		borderRadius: 3
+		borderRadius: 3,
 	},
 	bubbleLeft: {
-		marginLeft: 8
+		marginLeft: 8,
 	},
 	bubbleRight: {
 		backgroundColor: RIGHT_BUBBLE_COLOR,
-		marginRight: 8
+		marginRight: 8,
 	},
 	text: {
 		color: Colors.darkGrey,
-		paddingHorizontal: 4
+		paddingHorizontal: 4,
 	},
 	triangle: {
 		width: 0,
@@ -54,8 +54,8 @@ const styles = StyleSheet.create({
 		left: 0,
 		borderBottomColor: LEFT_BUBBLE_COLOR,
 		transform: [
-			{ rotate: '-180deg' }
-		]
+			{ rotate: '-180deg' },
+		],
 	},
 	triangleRight: {
 		right: 8,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
 		paddingBottom: 4,
 		paddingHorizontal: 4,
 		opacity: 0.5,
-	}
+	},
 });
 
 type Props = {
@@ -108,12 +108,12 @@ export default class ChatBubble extends Component<DefaultProps, Props, void> {
 		showArrow: PropTypes.bool,
 		onPress: PropTypes.func,
 		children: PropTypes.node,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	static defaultProps = {
 		showAuthor: false,
-		showArrow: true
+		showArrow: true,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

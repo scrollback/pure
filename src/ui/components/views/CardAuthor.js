@@ -9,21 +9,21 @@ import AvatarRound from './AvatarRound';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	author: {
 		flexDirection: 'row',
-		alignItems: 'center'
+		alignItems: 'center',
 	},
 	name: {
 		flex: 1,
 		color: Colors.grey,
 		fontSize: 12,
 		lineHeight: 18,
-		marginHorizontal: 8
-	}
+		marginHorizontal: 8,
+	},
 });
 
 type Props = {
@@ -34,7 +34,7 @@ type Props = {
 export default class CardAuthor extends Component<void, Props, void> {
 	static propTypes = {
 		nick: PropTypes.string.isRequired,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

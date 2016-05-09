@@ -18,21 +18,21 @@ const PeopleListContainer = (props: any) => (
 					slice: {
 						type: 'rel',
 						link: {
-							user: 'user'
+							user: 'user',
 						},
 						filter: {
-							item: props.thread
+							item: props.thread,
 						},
-						order: 'presenceTime'
+						order: 'presenceTime',
 					},
 					range: {
 						start: Infinity,
 						before: 100,
-						after: 0
-					}
+						after: 0,
+					},
 				},
-				transform: filterInvalidRels
-			}
+				transform: filterInvalidRels,
+			},
 		}}
 		passProps={props}
 		component={PeopleList}
@@ -40,7 +40,7 @@ const PeopleListContainer = (props: any) => (
 );
 
 PeopleListContainer.propTypes = {
-	thread: PropTypes.string.isRequired
+	thread: PropTypes.string.isRequired,
 };
 
 export default PeopleListContainer;

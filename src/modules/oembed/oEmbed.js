@@ -30,7 +30,7 @@ function decodeText(text) {
 
 function parseHTML(body): ?Embed {
 	const data: Embed = {
-		type: 'link'
+		type: 'link',
 	};
 
 	const props = [ 'title', 'description' ];
@@ -163,7 +163,7 @@ export default async function(url: string): Promise<Embed> {
 		if (contentType.indexOf('image') > -1) {
 			return {
 				type: 'link',
-				thumbnail_url: url
+				thumbnail_url: url,
 			};
 		} else if (contentType.indexOf('text/html') > -1) {
 			return fetchData(url);

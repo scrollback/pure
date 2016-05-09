@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import RoomItem from '../views/RoomItem';
+import RoomItem from '../views/Homescreen/RoomItem';
 
 const RoomItemContainer = (props: any) => (
 	<Connect

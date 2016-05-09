@@ -18,20 +18,20 @@ end as type`;
 export default {
 	item,
 	user,
-	rel
+	rel,
 };
 
 function item(ids) {
 	return {
 		$: `SELECT *, ${TYPE_SEGMENT} FROM items WHERE id IN (&(ids))`,
-		ids
+		ids,
 	};
 }
 
 function user(ids) {
 	return {
 		$: `SELECT *, ${TYPE_SEGMENT} FROM users WHERE id IN (&(ids))`,
-		ids
+		ids,
 	};
 }
 function rel(ids) {
@@ -41,7 +41,7 @@ function rel(ids) {
 		q.push({
 			$: `SELECT *, ${TYPE_SEGMENT} FROM rels WHERE "user" = &{user} AND "item" = &{item}`,
 			item: i,
-			user: u
+			user: u,
 		});
 	});
 

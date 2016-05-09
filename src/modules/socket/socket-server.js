@@ -2,9 +2,9 @@ import engine from 'engine.io';
 import winston from 'winston';
 import * as core from '../../core-server';
 import uid from '../../lib/uid-server';
-import notify from './../../lib/dispatch';
-import packer from './../../lib/packer';
-import * as Constants from './../../lib/Constants';
+import notify from '../../lib/dispatch';
+import packer from '../../lib/packer';
+import * as Constants from '../../lib/Constants';
 // import util from 'util';
 const sockets = {}, bus = core.bus;
 
@@ -14,8 +14,8 @@ function sendError(socket, code, reason, event) {
 		message: {
 			code,
 			reason,
-			event
-		}
+			event,
+		},
 	}));
 }
 
@@ -25,14 +25,14 @@ function handleGetPolicy(socket, message, resourceId, err) {
 	if (err) {
 		const errorToSend = {
 				type: 'error',
-				message: message.response
+				message: message.response,
 			}, encoded = packer.encode(errorToSend);
 
 		socket.send(encoded);
 	} else {
 		const toSend = {
 				type: 's3/getPolicy',
-				message: message.response
+				message: message.response,
 			}, encoded = packer.encode(toSend);
 		socket.send(encoded);
 	}
@@ -42,7 +42,7 @@ function handleChange(socket, message, resourceId, err) {
 		if (message.response) {
 			const errorToSend = {
 					type: 'error',
-					message: message.response
+					message: message.response,
 				}, encoded = packer.encode(errorToSend);
 
 			winston.debug('Sending Error:', errorToSend);
@@ -59,12 +59,12 @@ function handleChange(socket, message, resourceId, err) {
 		if (message.auth && message.auth.user) {
 			bus.emit('presence/online', {
 				resource: resourceId,
-				user: message.auth.user
+				user: message.auth.user,
 			});
 		}
 		const toSend = {
 				type: 'change',
-				message: message.response
+				message: message.response,
 			}, encoded = packer.encode(toSend);
 
 		winston.debug('To send:', JSON.stringify(toSend));
@@ -82,7 +82,7 @@ bus.on('http/init', app => {
 		sockets[resourceId] = socket;
 		socket.on('close', () => {
 			bus.emit('presence/offline', {
-				resource: resourceId
+				resource: resourceId,
 			});
 			delete sockets[resourceId];
 		});
@@ -143,7 +143,7 @@ bus.on('postchange', changes => {
 				const toDispatch = {
 						type: 'change',
 						message: change,
-						info: 'sent by dispatch'
+						info: 'sent by dispatch',
 					}, encoded = packer.encode(toDispatch);
 
 				winston.debug('SOCKET-DN: Dispatching: ' + e, JSON.stringify(toDispatch));

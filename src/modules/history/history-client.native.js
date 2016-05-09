@@ -4,7 +4,7 @@ import ReactNative from 'react-native';
 import { bus } from '../../core-client';
 
 const {
-	Linking
+	Linking,
 } = ReactNative;
 
 bus.on('state:init', () => {
@@ -13,8 +13,8 @@ bus.on('state:init', () => {
 	.then(initialURL => {
 		bus.emit('change', {
 			state: {
-				initialURL
-			}
+				initialURL,
+			},
 		});
 	});
 });

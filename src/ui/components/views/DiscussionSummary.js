@@ -9,18 +9,18 @@ import { parseURLs } from '../../../lib/URL';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	image: {
 		marginVertical: 4,
 		height: 180,
-		width: null
+		width: null,
 	},
 	item: {
-		marginHorizontal: 16
-	}
+		marginHorizontal: 16,
+	},
 });
 
 type Props = {
@@ -33,7 +33,7 @@ type Props = {
 export default class DiscussionSummary extends Component {
 	static propTypes = {
 		text: PropTypes.string.isRequired,
-		meta: PropTypes.object
+		meta: PropTypes.object,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

@@ -10,7 +10,7 @@ type Props = {
 
 export default class BannerOffline extends Component<void, Props, void> {
 	static propTypes = {
-		status: PropTypes.oneOf([ 'connecting', 'offline', 'online' ])
+		status: PropTypes.oneOf([ 'connecting', 'offline', 'online' ]),
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

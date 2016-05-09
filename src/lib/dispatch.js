@@ -10,7 +10,7 @@ function makeQuery(key, parent, cb) {
 		$: 'SELECT resources FROM rels WHERE item = &{id} or item = &{parent} and NOT(roles && &{excludeRoles}) and presence > &{presence}',
 		parent,
 		excludeRoles: [ Constants.ROLE_BANNED ],
-		presence: Constants.STATUS_NONE
+		presence: Constants.STATUS_NONE,
 	} ]));
 }
 
@@ -26,7 +26,7 @@ export default function(changes, cache, config) {
 			case Constants.TYPE_USER:
 				cb(pg.cat([ {
 					$: 'SELECT resources FROM users WHERE id = &{user}',
-					user: entity.id || entity.user
+					user: entity.id || entity.user,
 				} ]));
 				break;
 			case Constants.TYPE_ROOM:
@@ -58,7 +58,7 @@ export default function(changes, cache, config) {
 					user: entity.user,
 					item: entity.item,
 					excludeRoles: [ Constants.ROLE_BANNED ],
-					presence: Constants.STATUS_NONE
+					presence: Constants.STATUS_NONE,
 				} ]));
 				break;
 			}
@@ -67,8 +67,8 @@ export default function(changes, cache, config) {
 				pg.readStream(config.connStr, query).on('row', (res) => {
 					stream.emit('data', {
 						entities: {
-							[key]: e
-						}
+							[key]: e,
+						},
 					}, res);
 				});
 			}

@@ -12,21 +12,21 @@ import type { Text } from '../../../lib/schemaTypes';
 const {
 	StyleSheet,
 	ListView,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
-		paddingVertical: 4
+		paddingVertical: 4,
 	},
 	inverted: {
 		transform: [
-			{ scaleY: -1 }
-		]
+			{ scaleY: -1 },
+		],
 	},
 	item: {
-		overflow: 'hidden'
-	}
+		overflow: 'hidden',
+	},
 });
 
 type Props = {
@@ -34,40 +34,44 @@ type Props = {
 		text: Text;
 		previousText: Text;
 		isLast: boolean;
+		type: any;
 	} | { type: 'loading' } | { type: 'failed' }>;
 	user: string;
 	loadMore: (count: number) => void;
+	quoteMessage: Function;
+	replyToMessage: Function;
+	onNavigation: Function;
 }
 
 type State = {
 	dataSource: ListView.DataSource
 }
 
-export default class ChatMessages extends Component {
+export default class ChatMessages extends Component<void, Props, State> {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		user: PropTypes.string.isRequired,
 		loadMore: PropTypes.func.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
-		refreshData: PropTypes.func
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	state: State = {
 		dataSource: new ListView.DataSource({
-			rowHasChanged: (r1, r2) => r1 !== r2
-		})
+			rowHasChanged: (r1, r2) => r1 !== r2,
+		}),
 	};
 
 	componentWillMount() {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(this.props.data)
+			dataSource: this.state.dataSource.cloneWithRows(this.props.data),
 		});
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(nextProps.data)
+			dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
 		});
 	}
 
@@ -97,6 +101,7 @@ export default class ChatMessages extends Component {
 				quoteMessage={this.props.quoteMessage}
 				user={this.props.user}
 				style={[ styles.item, styles.inverted ]}
+				onNavigation={this.props.onNavigation}
 			/>
 		);
 	};

@@ -10,7 +10,7 @@ import NavigationReducer from '../navigation-rfc/Navigation/NavigationReducer';
 
 const {
 	StyleSheet,
-	BackAndroid
+	BackAndroid,
 } = ReactNative;
 
 const styles = StyleSheet.create({

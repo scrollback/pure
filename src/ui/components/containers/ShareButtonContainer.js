@@ -12,8 +12,8 @@ const transformThreadToUrl = thread => thread && thread.type !== 'loading' ? pro
 	name: 'chat',
 	props: {
 		room: thread.parents[0],
-		thread: thread.id
-	}
+		thread: thread.id,
+	},
 }) : null;
 
 const ShareButtonContainer = (props: any) => (
@@ -22,10 +22,10 @@ const ShareButtonContainer = (props: any) => (
 			url: {
 				key: {
 					type: 'entity',
-					id: props.thread
+					id: props.thread,
 				},
-				transform: transformThreadToUrl
-			}
+				transform: transformThreadToUrl,
+			},
 		}}
 		passProps={props}
 		component={ShareButton}

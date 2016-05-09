@@ -12,7 +12,7 @@ const options = {
 	port: config.gcm.port,
 	reconnect: false,
 	legacySSL: true,
-	preferred: 'PLAIN'
+	preferred: 'PLAIN',
 };
 
 

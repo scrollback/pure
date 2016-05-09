@@ -9,15 +9,15 @@ import { buildLink } from '../../../lib/URL';
 import { format, isEmoji } from '../../../lib/Smiley';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	emojiOnly: {
 		textAlign: 'center',
 		fontSize: 32,
-		lineHeight: 48
-	}
+		lineHeight: 48,
+	},
 });
 
 type Props = {
@@ -30,7 +30,7 @@ export default class RichText extends Component<void, Props, void> {
 	static propTypes = {
 		text: PropTypes.string.isRequired,
 		onOpenLink: PropTypes.func,
-		style: AppText.propTypes.style
+		style: AppText.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -112,7 +112,7 @@ export default class RichText extends Component<void, Props, void> {
 
 								return items;
 							}),
-							index !== (arr.length - 1) ? '\n' : ''
+							index !== (arr.length - 1) ? '\n' : '',
 						]);
 					})}
 				</AppText>

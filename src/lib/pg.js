@@ -29,7 +29,7 @@ function lock (s) {
 	if (!s) throw new Error('lock variable is not defined');
 	return {
 		$: 'SELECT pg_advisory_xact_lock(${hash})',
-		hash: hash(s)
+		hash: hash(s),
 	};
 }
 
@@ -106,7 +106,7 @@ export function values (record) {
 export function update (tableName, object) {
 	return cat([
 		'UPDATE "' + tableName + '" SET ',
-		nameValues(object)
+		nameValues(object),
 	], ' ');
 }
 
@@ -117,7 +117,7 @@ export function insert (tableName, objs) {
 	const parts = [
 		'INSERT INTO "' + tableName + '" (',
 		columns(objects[0]),
-		') VALUES'
+		') VALUES',
 	];
 
 	parts.push('(', cat(objects.map((object) => {
@@ -148,8 +148,8 @@ export function upsert (tableName, insertObject, keyColumns) {
 			') SELECT ',
 			values(insertObject),
 			'WHERE NOT EXISTS (SELECT 1 FROM ' + tableName,
-			'WHERE', nameValues(whereObject, ' AND '), ')'
-		])
+			'WHERE', nameValues(whereObject, ' AND '), ')',
+		]),
 	];
 }
 

@@ -8,7 +8,7 @@ const {
 	StyleSheet,
 	View,
 	Image,
-	TouchableOpacity
+	TouchableOpacity,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -17,14 +17,14 @@ const styles = StyleSheet.create({
 		height: 96,
 		width: 96,
 		borderRadius: 48,
-		margin: 8
+		margin: 8,
 	},
 
 	photo: {
 		height: 96,
 		width: 96,
-		borderRadius: 48
-	}
+		borderRadius: 48,
+	},
 });
 
 type Props = {
@@ -35,7 +35,7 @@ type Props = {
 export default class AccountPhotoChooserItem extends Component<void, Props, void> {
 	static propTypes = {
 		uri: PropTypes.string.isRequired,
-		onPress: PropTypes.func.isRequired
+		onPress: PropTypes.func.isRequired,
 	};
 
 	_handlePress: Function = () => {

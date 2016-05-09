@@ -13,7 +13,7 @@ export function buildSql(user, contacts, time) {
 		$: '(&(referrer), &(createtime), &(contact))',
 		referrer: user,
 		createtime: time,
-		contact
+		contact,
 	}));
 	sql.push(pg.cat(valuePart, ','));
 	return [ pg.cat(sql) ];
@@ -26,8 +26,8 @@ function saveContacts(sql) {
 async function getUser(session) {
 	const change = await emitAsync('change', {
 		auth: {
-			session
-		}
+			session,
+		},
 	});
 
 	return change.response.state.user;
@@ -40,12 +40,12 @@ async function handleContacts(session, contacts) {
 	try {
 		await saveContacts(sql);
 		return {
-			success: true
+			success: true,
 		};
 	} catch (e) {
 		return {
 			success: false,
-			message: e.message
+			message: e.message,
 		};
 	}
 }

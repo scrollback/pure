@@ -7,19 +7,19 @@ import VersionCodes from '../../modules/VersionCodes';
 const {
 	Platform,
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	statusbar: {
-		height: Platform.OS === 'android' ? 25 : 20 // offset for statusbar height
-	}
+		height: Platform.OS === 'android' ? 25 : 20, // offset for statusbar height
+	},
 });
 
 const StatusbarWrapper = (props: { style: any }) => <View style={[ styles.statusbar, props.style ]} />;
 
 StatusbarWrapper.propTypes = {
-	style: View.propTypes.style
+	style: View.propTypes.style,
 };
 
 // Versions below KitKat don't have translucent statusbar

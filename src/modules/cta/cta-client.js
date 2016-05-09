@@ -21,8 +21,8 @@ bus.on('state:init', () => {
 
 			bus.emit('change', {
 				state: {
-					['cta' + type]: data
-				}
+					['cta' + type]: data,
+				},
 			});
 		} catch (e) {
 			// ignore

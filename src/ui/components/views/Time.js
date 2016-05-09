@@ -10,7 +10,7 @@ const msPerMin = msPerSec * 60;
 const msPerHour = msPerMin * 60;
 
 type Props = {
-	type: 'short' | 'long',
+	type: 'short' | 'long';
 	time: number
 }
 
@@ -21,7 +21,7 @@ type State = {
 export default class Time extends Component<void, Props, State> {
 	static propTypes = {
 		type: PropTypes.oneOf([ 'short', 'long' ]).isRequired,
-		time: PropTypes.number.isRequired
+		time: PropTypes.number.isRequired,
 	};
 
 	state: State;
@@ -30,7 +30,7 @@ export default class Time extends Component<void, Props, State> {
 		const now = Date.now();
 
 		this.setState({
-			now
+			now,
 		});
 
 		this._setTimer(now);
@@ -69,7 +69,7 @@ export default class Time extends Component<void, Props, State> {
 				const now = Date.now();
 
 				this.setState({
-					now
+					now,
 				});
 
 				this._setTimer(now);
@@ -80,7 +80,7 @@ export default class Time extends Component<void, Props, State> {
 	render() {
 		const {
 			type,
-			time
+			time,
 		} = this.props;
 
 		return (

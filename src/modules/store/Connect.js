@@ -9,7 +9,7 @@ import storeShape from './storeShape';
 import type {
 	Subscription,
 	MapSubscriptionToProps,
-	MapActionsToProps
+	MapActionsToProps,
 } from './ConnectTypes';
 
 type Props = {
@@ -43,7 +43,7 @@ export default class Connect extends Component<void, Props, State> {
 
 	_addSubscriptions: Function = (props, context) => {
 		const {
-			store
+			store,
 		} = context;
 
 		const {
@@ -69,7 +69,7 @@ export default class Connect extends Component<void, Props, State> {
 						{
 							type: sub,
 							source,
-							defer
+							defer,
 						},
 						this._updateListener(item)
 					);
@@ -110,7 +110,7 @@ export default class Connect extends Component<void, Props, State> {
 		return data => {
 			if (this._mounted) {
 				this.setState({
-					[name]: transform ? transform(data, this.props) : data
+					[name]: transform ? transform(data, this.props) : data,
 				});
 			}
 		};
@@ -161,7 +161,7 @@ export default class Connect extends Component<void, Props, State> {
 		}
 
 		const {
-			store
+			store,
 		} = this.context;
 
 		const actions = {};

@@ -16,7 +16,7 @@ export function getTokenFromSession(session) {
 	}
 	return {
 		token: sessionAndtokens[session].token,
-		sessionId: session
+		sessionId: session,
 	};
 }
 
@@ -50,11 +50,11 @@ export function updateUser(u, cb) {
 		// console.log('no data token and session found to update user');
 		return;
 	}
-	console.log("auth user: ", u.data.sessionId);
+	console.log('auth user: ', u.data.sessionId);
 	bus.emit('change', {
 		auth: {
-			session: u.data.sessionId
-		}
+			session: u.data.sessionId,
+		},
 	}, (err, changes) => {
 		if (err) {
 			log.error('error on auth user: ', err, u.data.sessionId);
@@ -83,9 +83,9 @@ export function updateUser(u, cb) {
 								log.info('subscribing to new topic: ', topic);
 								subscribe({
 									params: {
-										gcm: { new: u.data.token }
+										gcm: { new: u.data.token },
 									},
-									topic
+									topic,
 								});
 							});
 						} else {
@@ -99,8 +99,8 @@ export function updateUser(u, cb) {
 			(user.params.gcm = user.params.gcm || {})[u.data.uuid] = u.data.token;
 			bus.emit('change', {
 				entities: {
-					[user.id]: user
-				}
+					[user.id]: user,
+				},
 			}, (e) => {
 				if (e) {
 					log.debug('error on saving token: ', e);
@@ -111,12 +111,12 @@ export function updateUser(u, cb) {
 						log.info('subscribing user: ', user.id, 'for mention');
 						subscribe({
 							params: user.params || {},
-							topic: 'user-' + user.id
+							topic: 'user-' + user.id,
 						});
 						log.info('subscribe to global topic');
 						subscribe({
 							params: user.params || {},
-							topic: 'global'
+							topic: 'global',
 						});
 						if (cb) cb(null);
 					});
@@ -156,13 +156,13 @@ function subscribeAll(id) {
 		cache.query({
 			type: 'roomrel',
 			filter: { user: user.id, roles_cts: [ ROLE_FOLLOWER ] },
-			order: 'createTime'
+			order: 'createTime',
 		}, [ -Infinity, Infinity ], (error, rels) => {
 			if (err) { return; }
 			for (const i of rels) {
 				subscribe({
 					params: user.params,
-					topic: 'room-' + i.item
+					topic: 'room-' + i.item,
 				});
 			}
 		});

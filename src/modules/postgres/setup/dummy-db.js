@@ -36,7 +36,7 @@ function insertUser(done) {
 		tags: tag,
 		name: casual.name,
 		ident: tag === Constants.TAG_USER_GUEST ? 'guest' : 'mailto:' + casual.email.toLowerCase(),
-		presence: Math.random() <= 0.5 ? Constants.PRESENCE_FOREGROUND : Constants.PRESENCE_NONE
+		presence: Math.random() <= 0.5 ? Constants.PRESENCE_FOREGROUND : Constants.PRESENCE_NONE,
 	} ], done);
 }
 
@@ -54,7 +54,7 @@ function insertRoom(done) {
 		)`,
 		id,
 		room,
-		body: casual.description
+		body: casual.description,
 	} ], done);
 }
 
@@ -78,7 +78,7 @@ function insertThread(done) {
 		body: casual.description,
 		parents: rooms[Math.floor(Math.random() * rooms.length)],
 		creator: users[Math.floor(Math.random() * users.length)],
-		updater: users[Math.floor(Math.random() * users.length)]
+		updater: users[Math.floor(Math.random() * users.length)],
 	} ], done);
 }
 
@@ -102,7 +102,7 @@ function insertText(done) {
 		thread: threads[Math.floor(Math.random() * threads.length)],
 		room: rooms[Math.floor(Math.random() * rooms.length)],
 		creator: users[Math.floor(Math.random() * users.length)],
-		updater: users[Math.floor(Math.random() * users.length)]
+		updater: users[Math.floor(Math.random() * users.length)],
 	} ], done);
 }
 
@@ -117,7 +117,7 @@ function insertRoomrel(usr, room, cb) {
 		user: usr,
 		item: room,
 		role: Constants.ROLE_FOLLOWER,
-		interest: Math.floor(Math.random() * 50)
+		interest: Math.floor(Math.random() * 50),
 	} ], cb);
 }
 
@@ -135,7 +135,7 @@ function insertThreadrel(usr, thread, cb) {
 		item: thread,
 		role: Constants.ROLE_FOLLOWER,
 		interest: Math.floor(Math.random() * 30),
-		ptime
+		ptime,
 	} ], cb);
 }
 
@@ -150,23 +150,23 @@ function insertTextrel(usr, text, cb) {
 		user: usr,
 		item: text,
 		role: Math.random() < 0.5 ? Constants.ROLE_FOLLOWER : Constants.ROLE_MENTIONED,
-		interest: Math.floor(Math.random() * 30)
+		interest: Math.floor(Math.random() * 30),
 	} ], cb);
 }
 
 function insertIntoJobs () {
 	pg.write(connstr, [ {
-		$: `INSERT INTO jobs VALUES (&{id}, &{lastrun})`,
+		$: 'INSERT INTO jobs VALUES (&{id}, &{lastrun})',
 		id: Constants.JOB_EMAIL_DIGEST,
-		lastrun: 0
+		lastrun: 0,
 	}, {
-		$: `INSERT INTO jobs VALUES (&{id}, &{lastrun})`,
+		$: 'INSERT INTO jobs VALUES (&{id}, &{lastrun})',
 		id: Constants.JOB_EMAIL_MENTION,
-		lastrun: 0
+		lastrun: 0,
 	}, {
-		$: `INSERT INTO jobs VALUES (&{id}, &{lastrun})`,
+		$: 'INSERT INTO jobs VALUES (&{id}, &{lastrun})',
 		id: Constants.JOB_EMAIL_WELCOME,
-		lastrun: 0
+		lastrun: 0,
 	} ], () => {
 		log.info('All done...');
 		process.exit();

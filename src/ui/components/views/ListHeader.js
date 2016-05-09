@@ -8,20 +8,20 @@ import Colors from '../../Colors';
 
 const {
 	View,
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	header: {
 		paddingHorizontal: 16,
-		paddingVertical: 12
+		paddingVertical: 12,
 	},
 	headerText: {
 		color: Colors.fadedBlack,
 		fontSize: 12,
 		lineHeight: 18,
-		fontWeight: 'bold'
-	}
+		fontWeight: 'bold',
+	},
 });
 
 type Props = {
@@ -30,7 +30,7 @@ type Props = {
 
 export default class ListHeader extends Component<void, Props, void> {
 	static propTypes = {
-		children: PropTypes.string.isRequired
+		children: PropTypes.string.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -39,7 +39,7 @@ export default class ListHeader extends Component<void, Props, void> {
 
 	render() {
 		const {
-			children
+			children,
 		} = this.props;
 
 		return (

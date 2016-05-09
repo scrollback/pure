@@ -7,7 +7,7 @@ const transport = nodemailer.createTransport(smtpTransport({
 	protocol: 'smtp',
 	secureConnection: true,
 	port: 465,
-	auth: config && config.email && config.email.auth
+	auth: config && config.email && config.email.auth,
 }));
 
 export default function send (from, to, sub, html, cb) {
@@ -16,7 +16,7 @@ export default function send (from, to, sub, html, cb) {
 		to,
 		subject: sub,
 		html,
-		bcc: config && config.bcc || ''
+		bcc: config && config.bcc || '',
 	};
 
 	transport.sendMail(email, (e) => {

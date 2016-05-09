@@ -14,13 +14,13 @@ bus.on('presence/offline', presence => {
 
 			u.resources = u.resources || {};
 			u.resources.__op__ = {
-				[presence.resource]: 'delete'
+				[presence.resource]: 'delete',
 			};
 
 			bus.emit('change', {
 				entities: {
-					[user]: u
-				}
+					[user]: u,
+				},
 			});
 		});
 	}

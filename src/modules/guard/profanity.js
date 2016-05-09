@@ -26,7 +26,7 @@ module.exports = (core) => {
 					(entity.id || ''),
 					(entity.text || ''),
 					(entity.title || ''),
-					(entity.description || '')
+					(entity.description || ''),
 				].join(' '),
 				appliedFilters = [],
 				matches;

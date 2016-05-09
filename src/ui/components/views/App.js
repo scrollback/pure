@@ -16,7 +16,7 @@ export default class App extends Component<void, Props, void> {
 	static propTypes = {
 		connection: PropTypes.oneOf([ 'connecting', 'online', 'offline' ]),
 		session: PropTypes.string,
-		user: PropTypes.string
+		user: PropTypes.string,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -27,7 +27,7 @@ export default class App extends Component<void, Props, void> {
 		const {
 			connection,
 			session,
-			user
+			user,
 		} = this.props;
 
 		const loading = session === '@@loading' || session && !user;

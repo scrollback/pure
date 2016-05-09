@@ -9,8 +9,8 @@ const mapSubscriptionToProps = {
 		key: {
 			type: 'state',
 			path: 'connectionStatus',
-		}
-	}
+		},
+	},
 };
 
 const BannerOfflineContainer = (props: any) => (

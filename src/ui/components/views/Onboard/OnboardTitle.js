@@ -28,7 +28,7 @@ const OnboardTitle = (props: Props) => <AppText style={[ styles.title, props.sty
 
 OnboardTitle.propTypes = {
 	children: PropTypes.node.isRequired,
-	style: AppText.propTypes.style
+	style: AppText.propTypes.style,
 };
 
 export default OnboardTitle;

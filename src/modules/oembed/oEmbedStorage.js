@@ -36,7 +36,7 @@ export default {
 		} else {
 			data.push({
 				url,
-				json
+				json,
 			});
 		}
 
@@ -53,6 +53,6 @@ export default {
 		}
 
 		return this._findItem(url);
-	}
+	},
 
 };

@@ -1,5 +1,6 @@
 {
   "presets": [
     "react-native"
-  ]
+  ],
+  "ignore": "node_modules/!(react-native*|react-clone-referenced-element)*/**"
 }

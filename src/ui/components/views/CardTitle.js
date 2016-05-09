@@ -7,14 +7,14 @@ import Colors from '../../Colors';
 import AppText from './AppText';
 
 const {
-	StyleSheet
+	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	title: {
 		fontWeight: 'bold',
-		color: Colors.darkGrey
-	}
+		color: Colors.darkGrey,
+	},
 });
 
 type Props = {
@@ -25,7 +25,7 @@ type Props = {
 export default class CardTitle extends Component<void, Props, void> {
 	static propTypes = {
 		children: PropTypes.string.isRequired,
-		style: AppText.propTypes.style
+		style: AppText.propTypes.style,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {

@@ -30,7 +30,7 @@ function initMailSending(cUserRel) {
 			user: user.id,
 			rels,
 			domain: config.server.protocol + '//' + config.server.host + ':' + config.server.port,
-			token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '2 days' })
+			token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '2 days' }),
 		});
 
 		send(conf.from, emailAdd, 'Welcome to ' + config.app_name, emailHtml, (e) => {
@@ -51,7 +51,7 @@ function initMailSending(cUserRel) {
 		pg.write(connStr, [ {
 			$: 'UPDATE jobs SET lastrun=&{end} WHERE id=&{jid}',
 			end,
-			jid: Constants.JOB_EMAIL_WELCOME
+			jid: Constants.JOB_EMAIL_WELCOME,
 		} ], (error) => {
 			lastEmailSent = end;
 			if (!error) log.info('successfully updated jobs for welcome email');
@@ -70,7 +70,7 @@ function sendWelcomeEmail () {
 	pg.readStream(connStr, {
 		$: 'SELECT * FROM users WHERE createtime >&{start} AND createtime <= &{end}',
 		start: lastEmailSent,
-		end
+		end,
 	}).on('row', (user) => {
 		log.info('Got a new user: ', user.id);
 		const userRel = {}, rels = [];
@@ -79,7 +79,7 @@ function sendWelcomeEmail () {
 
 		pg.readStream(connStr, {
 			$: 'SELECT * FROM roomrels JOIN rooms ON item=id where "user" = &{user}',
-			user: user.id
+			user: user.id,
 		}).on('row', (rel) => {
 			rels.push(rel);
 		}).on('end', () => {

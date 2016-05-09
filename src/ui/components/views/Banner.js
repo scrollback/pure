@@ -11,36 +11,36 @@ import TouchFeedback from './TouchFeedback';
 const {
 	StyleSheet,
 	Animated,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	banner: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: Colors.fadedBlack
+		backgroundColor: Colors.fadedBlack,
 	},
 	info: {
-		backgroundColor: Colors.info
+		backgroundColor: Colors.info,
 	},
 	error: {
-		backgroundColor: Colors.error
+		backgroundColor: Colors.error,
 	},
 	success: {
-		backgroundColor: Colors.success
+		backgroundColor: Colors.success,
 	},
 	textContainer: {
 		flex: 1,
 		paddingHorizontal: 16,
-		paddingVertical: 12
+		paddingVertical: 12,
 	},
 	text: {
-		color: Colors.white
+		color: Colors.white,
 	},
 	icon: {
 		margin: 16,
-		color: Colors.white
-	}
+		color: Colors.white,
+	},
 });
 
 type Props = {
@@ -64,16 +64,16 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 		text: PropTypes.string,
 		type: PropTypes.oneOf([ 'info', 'success', 'error' ]),
 		style: View.propTypes.style,
-		showClose: PropTypes.bool
+		showClose: PropTypes.bool,
 	};
 
 	static defaultProps = {
-		showClose: true
+		showClose: true,
 	};
 
 	state: State = {
 		heightAnim: new Animated.Value(0),
-		text: this.props.text
+		text: this.props.text,
 	};
 
 	componentDidMount() {
@@ -86,7 +86,7 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 		if (nextProps.text) {
 			if (!this.state.text) {
 				this.setState({
-					text: nextProps.text
+					text: nextProps.text,
 				}, () => this._animateIn());
 
 				return;
@@ -100,7 +100,7 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 		}
 
 		this.setState({
-			text: nextProps.text
+			text: nextProps.text,
 		});
 	}
 
@@ -111,21 +111,21 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 	_animateIn: Function = cb => {
 		Animated.timing(this.state.heightAnim, {
 			toValue: 45,
-			duration: 200
+			duration: 200,
 		}).start(cb);
 	};
 
 	_animateOut: Function = cb => {
 		Animated.timing(this.state.heightAnim, {
 			toValue: 0,
-			duration: 200
+			duration: 200,
 		}).start(cb);
 	};
 
 	_handleCloseBanner: Function = () => {
 		this._animateOut(() => {
 			this.setState({
-				text: null
+				text: null,
 			});
 		});
 	};

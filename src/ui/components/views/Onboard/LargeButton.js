@@ -9,17 +9,17 @@ import Colors from '../../../Colors';
 
 const {
 	StyleSheet,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
 	container: {
-		marginVertical: 16
+		marginVertical: 16,
 	},
 	loader: {
 		height: 21,
 		width: 21,
-		marginHorizontal: 16
+		marginHorizontal: 16,
 	},
 	button: {
 		backgroundColor: Colors.info,
@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
 		borderRadius: 3,
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
 	},
 	buttonText: {
 		color: Colors.white,
 		textAlign: 'center',
-		paddingHorizontal: 4
-	}
+		paddingHorizontal: 4,
+	},
 });
 
 type Props = {
@@ -50,7 +50,7 @@ export default class LargeButton extends Component<void, Props, void> {
 		onPress: PropTypes.func.isRequired,
 		spinner: PropTypes.bool,
 		disabled: PropTypes.bool,
-		style: View.propTypes.style
+		style: View.propTypes.style,
 	};
 
 	render() {

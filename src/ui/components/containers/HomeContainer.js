@@ -9,8 +9,8 @@ const mapSubscriptionToProps = {
 		key: {
 			type: 'state',
 			path: 'initialURL',
-		}
-	}
+		},
+	},
 };
 
 const HomeContainer = (props: any) => (

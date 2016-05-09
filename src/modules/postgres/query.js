@@ -13,7 +13,8 @@ const operators = {
 	lte: '<=',
 	cts: '@>',
 	ctd: '<@',
-	mts: 'like'
+	pref: 'like',
+	olp: '&&'
 };
 
 function getPropOp(prop) {
@@ -60,8 +61,7 @@ function fromPart (slice) {
 
 function wherePart (f) {
 	const sql = [];
-	let filter = f;
-
+	const filter = Object.create(f.filter);
 
 	for (const prop in filter) {
 		const [ op, name ] = getPropOp(prop);
@@ -70,8 +70,8 @@ function wherePart (f) {
 			continue;
 		}
 		switch (op) {
-		case 'mts':
-			filter[prop] = filter[prop].replace(/\*$/, ''); /* eslint-disable no-fallthrough */
+		case 'pref':
+			filter[prop] += '%'; // eslint-disable-line no-fallthrough
 		case 'gt':
 		case 'lt':
 		case 'neq':
@@ -79,6 +79,7 @@ function wherePart (f) {
 		case 'lte':
 		case 'in':
 		case 'cts':
+		case 'olp':
 		case 'ctd':
 			sql.push(`"${name.toLowerCase()}" ${operators[op]} &{${prop}}`);
 			break;
@@ -88,7 +89,19 @@ function wherePart (f) {
 	}
 
 	if (sql.length) {
-		filter = Object.create(filter);
+
+		switch (TABLES[TYPES[f.type]]) {
+		case 'items':
+		case 'rooms':
+		case 'texts':
+		case 'threads':
+		case 'topics':
+		case 'privs':
+		case 'users':
+		case 'notes':
+			sql.push(`"${TABLES[TYPES[f.type]]}".deletetime IS NULL`);
+		}
+
 		filter.$ = 'WHERE ' + sql.join(' AND ');
 		return filter;
 	} else {
@@ -107,8 +120,8 @@ function orderPart(type, order, limit) {
 function simpleQuery(slice, limit) {
 	return pg.cat([
 		fromPart(slice),
-		wherePart(slice.filter),
-		orderPart(slice.type, slice.order, limit)
+		wherePart(slice),
+		orderPart(slice.type, slice.order, limit),
 	], ' ');
 }
 
@@ -134,8 +147,8 @@ function beforeQuery (slice, start, before, exclude) {
 		query,
 		{
 			$: `) r ORDER BY ${slice.type.toLowerCase()}->&{order} ASC`,
-			order: slice.order.toLowerCase()
-		}
+			order: slice.order.toLowerCase(),
+		},
 
 	], ' ');
 }
@@ -165,7 +178,7 @@ export default function (slice, range) {
 					'UNION ALL',
 					'(',
 					afterQuery(slice, range[0], range[2]),
-					')'
+					')',
 				], ' ');
 			} else if (range[1] > 0) {
 				query = beforeQuery(slice, range[0], range[1]);

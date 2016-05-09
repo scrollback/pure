@@ -8,15 +8,15 @@ const mapSubscriptionToProps = {
 	user: {
 		key: {
 			type: 'state',
-			path: 'user'
-		}
-	}
+			path: 'user',
+		},
+	},
 };
 
 export default function(component: ReactClass<any>): ReactClass<any> {
 	class PassUserProp extends Component<void, any, void> {
 		static propTypes = {
-			user: PropTypes.string
+			user: PropTypes.string,
 		};
 
 		shouldComponentUpdate(nextProps: any): boolean {

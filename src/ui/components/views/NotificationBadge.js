@@ -9,7 +9,7 @@ import AppText from './AppText';
 const {
 	StyleSheet,
 	Animated,
-	View
+	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -18,15 +18,15 @@ const styles = StyleSheet.create({
 		width: 24,
 		borderRadius: 12,
 		paddingVertical: 4,
-		backgroundColor: Colors.fadedBlack
+		backgroundColor: Colors.fadedBlack,
 	},
 	count: {
 		color: Colors.white,
 		fontWeight: 'bold',
 		fontSize: 10,
 		lineHeight: 15,
-		textAlign: 'center'
-	}
+		textAlign: 'center',
+	},
 });
 
 type Props = {
@@ -41,11 +41,11 @@ type State = {
 export default class NotificationBadge extends Component<void, Props, State> {
 	static propTypes = {
 		count: PropTypes.number.isRequired,
-		style: Animated.View.propTypes.style
+		style: Animated.View.propTypes.style,
 	};
 
 	state: State = {
-		scaleAnim: new Animated.Value(0)
+		scaleAnim: new Animated.Value(0),
 	};
 
 	componentDidMount() {
@@ -75,24 +75,24 @@ export default class NotificationBadge extends Component<void, Props, State> {
 	_bounce: Function = () => {
 		Animated.timing(this.state.scaleAnim, {
 			toValue: 0.5,
-			duration: 100
+			duration: 100,
 		}).start(() => {
 			Animated.timing(this.state.scaleAnim, {
 				toValue: 1,
-				duration: 100
+				duration: 100,
 			}).start();
 		});
 	};
 
 	_scaleIn: Function = () => {
 		Animated.spring(this.state.scaleAnim, {
-			toValue: 1
+			toValue: 1,
 		}).start();
 	};
 
 	_scaleOut: Function = () => {
 		Animated.spring(this.state.scaleAnim, {
-			toValue: 0
+			toValue: 0,
 		}).start();
 	};
 
