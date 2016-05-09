@@ -1,26 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TodoList from './TodoList';
+import RootComponent from './RootComponent';
 import config from './config';
 
 const eio = require('engine.io-client'); // eslint-disable-line import/no-commonjs
 
-let todos = [];
+let todos = this.props.todo;
 
-if (localStorage && localStorage.todos) {
-	try {
-		todos = JSON.parse(localStorage.todos);
-		console.log('Got todos:', todos.length);
-		if (todos[0] !== 'separator') todos.unshift('separator');
-	} catch (e) {
-		// ignore
-	}
-}
+// if (localStorage && localStorage.todo) {
+// 	try {
+// 		todo = JSON.parse(localStorage.todo);
+// 		console.log('Got todo:', todo.length);
+// 		if (todo[0] !== 'separator') todo.unshift('separator');
+// 	} catch (e) {
+// 		// ignore
+// 	}
+// }
 
 const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
 
 function rerender() {
-	ReactDOM.render(<TodoList todos={todos}/>, document.getElementById('root'));
+	ReactDOM.render(<RootComponent />, document.getElementById('root'));
 }
 
 client.on('message', (message) => { // eslint-disable-line
