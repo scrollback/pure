@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
 
 	id: {
 		color: Colors.darkGrey,
-		fontWeight: 'bold',
 	},
 
 	name: {

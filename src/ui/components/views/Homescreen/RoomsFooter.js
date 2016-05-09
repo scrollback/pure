@@ -153,7 +153,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 							name='settings'
 							size={18}
 						/>
-						<AppText style={styles.footerLabel}>CHANGE ACCOUNT SETTINGS</AppText>
+						<AppText style={styles.footerLabel}>ACCOUNT SETTINGS</AppText>
 					</ListItem>
 					<ListItem containerStyle={styles.footerItem} onPress={this._handleReportIssue}>
 						<Icon

@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import shallowEqual from 'shallowequal';
 import RoomListContainer from '../../containers/RoomListContainer';
-import RoomsFooterContainer from '../../containers/RoomsFooterContainer';
 import SearchableList from '../SearchableList';
 import RoomItem from './RoomItem';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
@@ -43,10 +42,6 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 				onSelect={this._handleSelectLocality}
 			/>
 		);
-	};
-
-	_renderFooter: Function = () => {
-		return <RoomsFooterContainer onNavigation={this.props.onNavigation} />;
 	};
 
 	_getResults: Function = (filter: string) => {
@@ -89,7 +84,6 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 				autoFocus={false}
 				getResults={this._getResults}
 				renderRow={this._renderRow}
-				renderFooter={this._renderFooter}
 				renderBlankslate={this._renderBlankslate}
 				searchHint='Search for groups'
 			/>

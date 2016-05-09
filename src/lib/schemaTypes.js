@@ -120,10 +120,9 @@ export type Note = {
 	dismissTime?: number;
 	event: number;
 	group: string;
-	id: string;
 	readTime?: number;
 	score: number;
 	type: number;
 	updateTime: number;
-	user: string;
+	user?: string;
 }

@@ -29,14 +29,21 @@ export function getIIDInfo(iid: String, cb: Function) {
 }
 
 function unsubscribeTopics (data, cb) {
-	const iid = data.iid;
+	log.info('unsubscribe data: ', data);
+	let iids = [];
+
+	if (Array.isArray(data.iid)) {
+		iids = data.iid;
+	} else {
+		iids.push(data.iid);
+	}
 
 	if (data.topic) {
 		request({
 			...options,
 			url: 'https://iid.googleapis.com/iid/v1:batchRemove',
 			body: {
-				registration_tokens: [ iid ],
+				registration_tokens: iids,
 				to: '/topics/' + data.topic,
 			},
 		}, (err, rspns, bdy) => {
@@ -48,43 +55,47 @@ function unsubscribeTopics (data, cb) {
 			}
 		});
 	} else {
-		getIIDInfo(iid, async (e, r, b) => {
-			if (e) {
-				log.error(e);
-				return;
-			}
-			try {
-				// unsubscribe thread topics
-				await Object.keys(JSON.parse(b).rel.topics).map(topic => {
-					if (!/thread-/.test(topic)) {
-						log.debug('does not match thread');
-						return null;
-					}
+		iids.forEach(iid => {
+			getIIDInfo(iid, async (e, r, b) => {
+				if (e) {
+					log.error(e);
+					return;
+				}
+				try {
+					// unsubscribe thread topics
+					await Object.keys(JSON.parse(b).rel.topics).map(topic => {
+						if (!/thread-/.test(topic)) {
+							log.debug('does not match thread');
+							return null;
+						}
 
-					return new Promise((resolve, reject) => {
-						request({
-							...options,
-							url: 'https://iid.googleapis.com/iid/v1:batchRemove',
-							body: {
-								registration_tokens: [ iid ],
-								to: '/topics/' + topic,
-							},
-						}, (err, rspns, bdy) => {
-							if (!err) {
-								log.info('unsubscribed from ', topic);
-								log.info(bdy);
-								resolve();
-							} else {
-								log.error(err);
-								reject(err);
-							}
+						return new Promise((resolve, reject) => {
+							request({
+								...options,
+								url: 'https://iid.googleapis.com/iid/v1:batchRemove',
+								body: {
+									registration_tokens: [ iid ],
+									to: '/topics/' + topic,
+								},
+							}, (err, rspns, bdy) => {
+								if (!err) {
+									log.info('unsubscribed from ', topic);
+									log.info(bdy);
+									resolve();
+								} else {
+									log.error(err);
+									reject(err);
+								}
+							});
 						});
 					});
-				});
-			} catch (err) {
-				// ignore
-			}
-			cb();
+				} catch (err) {
+					// ignore
+				}
+				if (cb) {
+					cb();
+				}
+			});
 		});
 	}
 
@@ -92,40 +103,37 @@ function unsubscribeTopics (data, cb) {
 
 export function subscribe (userRel: Object) {
 	const gcm = userRel.params ? userRel.params.gcm : null;
-
+	const tokens = values(gcm);
 	function register () {
-		const tokens = values(gcm);
 
 		log.info('tokens: ', tokens);
-		tokens.forEach(token => {
-			request({
-				...options,
-				body: {
-					registration_tokens: [ token ],
-					to: '/topics/' + userRel.topic,
-				},
-			}, (error, response, body) => {
-				if (error) {
-					log.error('error subscribing to topic: ', userRel.topic, token, error);
-					if (error.type === 'TOO_MANY_TOPICS') {
-						log.info('unsubscribe few old topics');
-						unsubscribeTopics({ iid: token }, () => {
-							subscribe(userRel);
-						});
-					} else {
-						log.error('can not subscribe to topic', error);
-					}
-				}
-				if (body.error) {
-					log.error(body, userRel.topic);
-					// console.log(options);
+		request({
+			...options,
+			body: {
+				registration_tokens: tokens,
+				to: '/topics/' + userRel.topic,
+			},
+		}, (error, response, body) => {
+			if (error) {
+				log.error('error subscribing to topic: ', userRel.topic, tokens, error);
+				if (error.type === 'TOO_MANY_TOPICS') {
+					log.info('unsubscribe few old topics');
+					unsubscribeTopics({ iid: tokens }, () => {
+						subscribe(userRel);
+					});
 				} else {
-					// getIIDInfo(token, (e, r, b) => {
-					// 	log.info(b);
-					// 	// return;
-					// });
+					log.error('can not subscribe to topic', error);
 				}
-			});
+			}
+			if (body.error) {
+				log.error(body, userRel.topic);
+				// console.log(options);
+			} else {
+				// getIIDInfo(token, (e, r, b) => {
+				// 	log.info(b);
+				// 	// return;
+				// });
+			}
 		});
 	}
 	if (!gcm) {
@@ -146,6 +154,63 @@ export function subscribe (userRel: Object) {
 	}
 
 }
+
+function mapRelsAndSubscriptions(entity) {
+	cache.getEntity(entity.user, (err, user) => {
+		if (err || !user) return;
+		const tokens = values(user.params.gcm);
+		cache.query({
+			type: 'roomrel',
+			filter: { user: user.id, roles_cts: [ Constants.ROLE_FOLLOWER ] },
+			order: 'createTime',
+		}, [ -Infinity, Infinity ], (error, rels) => {
+			if (err) { return; }
+			tokens.forEach((token) => {
+				function callback (e, r, b) {
+					if (e || !b || !JSON.parse(b).rel) {
+						log.error(e, JSON.parse(b));
+						return;
+					}
+					const subscribedRooms = Object.keys(JSON.parse(b).rel.topics).filter(topic => {
+						return /room-/.test(topic);
+					}).map(room => {
+						return room.replace('room-', '');
+					});
+					const roomsFollowing = rels.arr.map((room) => {
+						return room.item;
+					});
+					console.log('all here: ', subscribedRooms, roomsFollowing);
+
+					const roomsNotSubscribed = roomsFollowing.filter(room => {
+						return subscribedRooms.indexOf(room) === -1;
+					});
+					const notFollowingSubscribed = subscribedRooms.filter(room => {
+						return roomsFollowing.indexOf(room) === -1;
+					});
+					log.info('rooms following but not subscribed: ', roomsNotSubscribed);
+					log.info('rooms not following but subscribed: ', notFollowingSubscribed);
+
+					if (roomsNotSubscribed.length > 0) {
+						roomsNotSubscribed.forEach(room => {
+							subscribe({
+								params: user.params,
+								topic: 'room-' + room,
+							});
+						});
+					}
+
+					if (notFollowingSubscribed.length > 0) {
+						notFollowingSubscribed.forEach(room => {
+							unsubscribeTopics({ iid: token, topic: 'room-' + room });
+						});
+					}
+				}
+				getIIDInfo(token, callback);
+			});
+		});
+	});
+}
+
 function handleSubscription(changes, next) {
 	const counter = new Counter();
 
@@ -161,10 +226,14 @@ function handleSubscription(changes, next) {
 				entity.type === Constants.TYPE_THREADREL ||
 				entity.type === Constants.TYPE_ROOMREL
 			) {
-			// console.log("ksdfhjhadf : ", entity);
+			// console.log('ksdfhjhadf : ', entity);
+			mapRelsAndSubscriptions(entity);
 			if (!entity.createTime || entity.createTime !== entity.updateTime) {
-				log.info('Not created now, return', entity);
-				continue;
+				if (entity.roles && entity.roles.length > 0) {
+					log.info('Not created now, return', entity);
+					continue;
+				}
+
 			}
 			let user = changes.entities[entity.user];
 
@@ -177,21 +246,20 @@ function handleSubscription(changes, next) {
 			}
 			counter.then(() => {
 				if (
-					entity.roles && entity.roles.length === 0 ||
+					entity.roles && entity.roles.length === 0 /* ||
 					entity.roles.indexOf(Constants.ROLE_FOLLOWER) === -1 &&
-					entity.roles.indexOf(Constants.ROLE_CREATOR) === -1
+					entity.roles.indexOf(Constants.ROLE_CREATOR) === -1*/
 				) {
-					// log.info('Got unfollow, unsubscribe from topics');
-					// const gcm = user.params && user.params.gcm;
-					// const	tokens = values(gcm);
-					// const topic = entity.type === Constants.TYPE_ROOMREL ? 'room-' +
-					//  entity.item : 'thread-' + entity.item;
-					// tokens.forEach((token) => {
-					// 	unsubscribeTopics({ iid: token, topic }, () => {
-					// 		log.info('Unsubscribed from topic: ', topic);
-					// 	});
-					// });
-					// console.log("sdjfh jsghf gh fdgfm: ", Constants.ROLE_OWNER, entity.roles.indexOf(Constants.ROLE_OWNER), entity);
+					log.info('Got unfollow, unsubscribe from topics');
+					const gcm = user.params && user.params.gcm;
+					const	tokens = values(gcm);
+					const topic = entity.type === Constants.TYPE_ROOMREL ? 'room-' +
+					 entity.item : 'thread-' + entity.item;
+					tokens.forEach((token) => {
+						unsubscribeTopics({ iid: token, topic }, () => {
+							log.info('Unsubscribed from topic: ', topic);
+						});
+					});
 					return;
 				} else if (entity.roles && entity.roles.length > 0) {
 					// console.log("jhgf shfg: ", entity)

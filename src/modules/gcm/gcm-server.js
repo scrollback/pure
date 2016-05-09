@@ -1,14 +1,17 @@
 /* @flow */
+
 import { connect } from './xmpp';
 import { bus, config, cache } from '../../core-server';
-import * as Constants from '../../lib/Constants';
 import log from 'winston';
+import * as Constants from '../../lib/Constants';
 import uid from '../../lib/uid-server';
 import Counter from '../../lib/counter';
 import handleUpstreamMessage from './handleUpstreamMessage';
 import createStanza from './createStanza';
-import './subscribeTopics';
 import { convertRouteToURL } from '../../lib/Route';
+import type { Note } from '../../lib/schemaTypes';
+import './subscribeTopics';
+
 let client;
 
 if (config.gcm.senderId) {
@@ -54,7 +57,8 @@ function sendStanza(changes, entity) {
 				});
 
 			log.info('sending pushnotification for thread', entity, urlLink);
-			const pushData = {
+			const pushData: Note = {
+				group: entity.id,
 				count: 1,
 				score: 10,
 				data: {
@@ -68,16 +72,17 @@ function sendStanza(changes, entity) {
 					thread: {
 						id: entity.id,
 					},
-					type: 'thread',
 					link: urlLink,
 					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`,
 				},
+				event: Constants.NOTE_THREAD,
+				createTime: Date.now(),
 				updateTime: Date.now(),
 				type: entity.type,
 			};
 
 				// console.log("gcm entity:", pushData)
-			client.send(createStanza(pushData, uid()));
+			client.send(createStanza(uid(), pushData));
 		});
 	}
 	if (entity.type === Constants.TYPE_TEXT) {
@@ -120,7 +125,8 @@ function sendStanza(changes, entity) {
 				});
 
 			log.info('pushnotification: ', entity, urlLink);
-			const pushData = {
+			const pushData: Note = {
+				group: entity.id,
 				count: 1,
 				score: 30,
 				data: {
@@ -134,21 +140,22 @@ function sendStanza(changes, entity) {
 					thread: {
 						id: entity && entity.parents[0],
 					},
-					type: 'reply',
 					link: urlLink,
 					picture: `${config.server.protocol}//${config.server.host}/i/picture?user=${entity.creator}&size=${48}`,
 				},
+				event: Constants.NOTE_REPLY,
+				createTime: Date.now(),
 				updateTime: Date.now(),
 				type: entity.type,
 			};
 
 			log.info('sending pushnotification for text', pushData);
-			client.send(createStanza(pushData, uid()));
+			client.send(createStanza(uid(), pushData));
 		});
 	}
 	if (entity.type === Constants.TYPE_NOTE) {
 		log.info('sending pushnotification for mention');
-		client.send(createStanza(entity, uid()));
+		client.send(createStanza(uid(), entity));
 	}
 }
 

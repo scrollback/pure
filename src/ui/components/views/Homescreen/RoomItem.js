@@ -24,10 +24,12 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		paddingHorizontal: 16,
 	},
+
 	title: {
 		color: Colors.darkGrey,
 		fontWeight: 'bold',
 	},
+
 	expand: {
 		margin: 20,
 		color: Colors.fadedBlack,
@@ -81,7 +83,9 @@ export default class RoomItem extends Component<void, Props, void> {
 	};
 
 	render() {
-		const { room } = this.props;
+		const {
+			room,
+		} = this.props;
 
 		return (
 			<ListItem {...this.props} onPress={this._handlePress}>

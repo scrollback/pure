@@ -15,7 +15,7 @@ export function short(time: number, now: number = Date.now()): string {
 	const diff = now - time;
 
 	if (diff <= 0) {
-		if (diff > msPerMin) {
+		if (Math.abs(diff) > msPerMin) {
 			return 'future';
 		} else {
 			return 'now';
@@ -26,8 +26,10 @@ export function short(time: number, now: number = Date.now()): string {
 		return Math.round(diff / msPerMin) + 'm';
 	} else if (diff < msPerDay) {
 		return Math.round(diff / msPerHour) + 'h';
-	} else if (diff < msPerYear) {
+	} else if (diff < msPerWeek) {
 		return Math.round(diff / msPerDay) + 'd';
+	} else if (diff < msPerYear) {
+		return Math.round(diff / msPerWeek) + 'w';
 	} else {
 		return Math.round(diff / msPerYear) + 'y';
 	}
@@ -37,13 +39,15 @@ export function long(time: number, now: number = Date.now()): string {
 	const diff = now - time;
 
 	if (diff <= 0) {
-		if (diff > msPerMin) {
+		if (Math.abs(diff) > msPerMin) {
 			return 'Future';
 		} else {
 			return 'Just now';
 		}
 	} else if (diff < msPerMin) {
-		return 'Just now';
+		const s = Math.round(diff / msPerSec);
+
+		return s + ' second' + (s > 1 ? 's' : '') + ' ago';
 	} else if (diff < msPerHour) {
 		const m = Math.round(diff / msPerMin);
 
@@ -69,11 +73,13 @@ export function long(time: number, now: number = Date.now()): string {
 		} else {
 			const year = date.getFullYear();
 
-			timeStr = (year !== currentDate.getFullYear() ? year + ' ' : '') + months[date.getMonth()] + ' ' + date.getDate();
+			timeStr = date.getDate() + ' ' + months[date.getMonth()] + (year !== currentDate.getFullYear() ? ' ' + year : '');
 		}
 
 		const minutes = date.getMinutes();
+		const hours = date.getHours();
+		const meridium = hours > 12 ? 'pm' : 'am';
 
-		return (timeStr ? (timeStr + ' at ') : '') + date.getHours() + ':' + (minutes < 10 ? '0' : '') + minutes;
+		return (timeStr ? (timeStr + ', ') : '') + (hours > 12 ? (hours + 11) % 12 + 1 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + meridium;
 	}
 }

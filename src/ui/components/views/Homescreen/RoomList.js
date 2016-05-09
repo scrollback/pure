@@ -79,8 +79,6 @@ export default class Rooms extends Component<void, Props, State> {
 				key={result.roomrel.item}
 				room={result.roomrel.item}
 				onSelect={this._handleSelectLocality}
-				showMenuButton
-				showBadge
 			/>
 		);
 	};

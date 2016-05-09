@@ -269,7 +269,6 @@ export default class Account extends Component<void, Props, State> {
 							autoCapitalize='sentences'
 							onChangeText={this._handleOccupationChange}
 							underlineColorAndroid='transparent'
-							multiline
 						/>
 					</View>
 				</View>

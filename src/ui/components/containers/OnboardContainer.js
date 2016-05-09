@@ -6,7 +6,7 @@ import isEmpty from 'lodash/isEmpty';
 import shallowEqual from 'shallowequal';
 import Connect from '../../../modules/store/Connect';
 import Onboard from '../views/Onboard/Onboard';
-import Validator from '../../../lib/Validator';
+import { validate } from '../../../lib/UserValidator';
 import uploadContacts from '../../../modules/contacts/uploadContacts';
 import { signIn, signUp, cancelSignUp, clearSignUpError, saveUser } from '../../../modules/store/actions';
 import { ERRORS } from '../../../lib/Constants';
@@ -257,7 +257,7 @@ class OnboardContainer extends Component<void, Props, State> {
 			case 'nick':
 				if (item.value) {
 					try {
-						Validator.validate(item.value);
+						validate(item.value);
 					} catch (e) {
 						fields[field] = {
 							...item,

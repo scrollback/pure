@@ -53,7 +53,7 @@ export default class NotificationCenter extends Component<void, Props, State> {
 
 	_renderRow: Function = (note: Note) => (
 		<NotificationCenterItem
-			key={note.id}
+			key={`${note.user}_${note.event}_${note.group}`}
 			note={note}
 			onNavigation={this.props.onNavigation}
 			dismissNote={this.props.dismissNote}

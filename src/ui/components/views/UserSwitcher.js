@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 	},
 
 	current: {
-		backgroundColor: Colors.info,
+		backgroundColor: Colors.accent,
 	},
 
 	avatar: {

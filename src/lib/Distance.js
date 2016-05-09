@@ -4,7 +4,7 @@ export type Location = { latitude: number; longitude: number };
 
 export const EARTH_RADIUS = 6371000; // In meters
 
-const toRadians = (degrees: number): number => degrees * Math.PI / 180;
+export const toRadians = (degrees: number): number => degrees * Math.PI / 180;
 
 export function calculateDistance(from: Location, to: Location): number {
 	const dLat = toRadians(from.latitude - to.latitude);

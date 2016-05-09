@@ -1,18 +1,23 @@
 /* @flow */
 
-import * as Constants from '../../lib/Constants';
+import {
+	TYPE_THREAD,
+	TYPE_TEXT,
+	TYPE_NOTE,
+} from '../../lib/Constants';
+import type { Note } from '../../lib/schemaTypes';
 
-export default function createStanza(pushData: Object, id: string) {
+export default function createStanza(id: string, note: Note) {
 	let topic;
 
-	if (pushData.type === Constants.TYPE_THREAD) {
-		topic = 'room-' + pushData.data.room;
+	if (note.type === TYPE_THREAD && note.data.room) {
+		topic = 'room-' + note.data.room.id;
 	}
-	if (pushData.type === Constants.TYPE_TEXT) {
-		topic = 'thread-' + pushData.data.thread;
+	if (note.type === TYPE_TEXT && note.data.thread) {
+		topic = 'thread-' + note.data.thread.id;
 	}
-	if (pushData.type === Constants.TYPE_NOTE) {
-		topic = 'user-' + pushData.user;
+	if (note.type === TYPE_NOTE && note.user) {
+		topic = 'user-' + note.user;
 	}
 	const stanza = `
 	<message>
@@ -20,10 +25,11 @@ export default function createStanza(pushData: Object, id: string) {
 	{
 		"to": "/topics/${topic}",
 		"message_id": "${id}",
-		"data": ${JSON.stringify(pushData)}
+		"data": ${JSON.stringify(note)}
 	}
 	</gcm>
 	</message>
 	`;
+
 	return stanza;
 }

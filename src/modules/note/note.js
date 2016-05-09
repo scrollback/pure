@@ -44,7 +44,6 @@ export function createMention(
 	now: number
 ): Note {
 	const note: NoteType = {
-		id: '', // make flow happy
 		group: thread.id,
 		user: textrel.user,
 		event: NOTE_MENTION,
@@ -106,10 +105,12 @@ export function getRolesFromChanges(changes: Object): Array<{ type: number; rela
 
 export function createNotesForChanges(changes: Object): Promise<Array<?Note>> {
 	return Promise.all(getRolesFromChanges(changes).map(async role => {
+		let item, parents;
+
 		switch (role.type) {
 		case ROLE_MENTIONED:
-			const item = role.item || await getEntityAsync(role.relation.item);
-			const parents = item && item.id ? await getTextParents(item.id) : null;
+			item = role.item || await getEntityAsync(role.relation.item);
+			parents = item && item.id ? await getTextParents(item.id) : null;
 
 			if (item && parents) {
 				return createMention(
