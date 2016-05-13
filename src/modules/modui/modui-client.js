@@ -5,30 +5,29 @@ import config from './config';
 
 const eio = require('engine.io-client'); // eslint-disable-line import/no-commonjs
 
-let todos = this.props.todo;
+let todo = [];
 
-// if (localStorage && localStorage.todo) {
-// 	try {
-// 		todo = JSON.parse(localStorage.todo);
-// 		console.log('Got todo:', todo.length);
-// 		if (todo[0] !== 'separator') todo.unshift('separator');
-// 	} catch (e) {
-// 		// ignore
-// 	}
-// }
+if (localStorage && localStorage.todo) {
+	try {
+		todo = JSON.parse(localStorage.todo);
+	} catch (e) {
+		// ignore
+	}
+}
 
 const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
+// const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path, port: 3030 });
 
 function rerender() {
-	ReactDOM.render(<RootComponent />, document.getElementById('root'));
+	ReactDOM.render(<RootComponent todo={todo}/>, document.getElementById('root'));
 }
 
 client.on('message', (message) => { // eslint-disable-line
 	console.log('--->', message); // eslint-disable-line
 	const data = JSON.parse(message);
-	todos.unshift(data);
-	todos = todos.slice(0, 1000);
-	localStorage.todos = JSON.stringify(todos);
+	todo.unshift(data);
+	todo = todo.slice(0, 1000);
+	localStorage.todo = JSON.stringify(todo);
 	rerender();
 });
 

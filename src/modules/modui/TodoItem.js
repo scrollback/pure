@@ -78,7 +78,7 @@ class TodoItem extends Component {
 						</button>
 		                <div style={styles.room}>{todo.room}</div>
 		            </div>
-		            <div style={styles.body}>{todo.body}</div>
+		            <div style={styles.body}>{body}</div>
 		            <div style={styles.header}>
 		                <div style={styles.time}>{todo.time}</div>
 		                <div style={styles.creator}>{todo.creator}</div>

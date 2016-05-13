@@ -3,12 +3,15 @@ import Radium from 'radium';
 import TodoList from './TodoList';
 import ReplyBox from './ReplyBox';
 
-let todo = [];
+// let todo = [];
 
 const styles = {
 	container: {
 		height: '100%'
-	}
+	},
+	background: {
+		color: '#8080ff'
+	},
 };
 
 class RootComponent extends Component {
@@ -16,7 +19,7 @@ class RootComponent extends Component {
 	constructor(props) {
 		super(props);
 		this.state = { id: null };
-		this.state.todo = todo;
+		this.state.todo = this.props.todo;
 	}
 
 	removeTodo: Function = (index) => {
@@ -32,13 +35,15 @@ class RootComponent extends Component {
 
 	render() {
 		return (
-			<div style={styles.container}>
-				<TodoList
-					todo={this.state.todo}
-					removeTodo={this.removeTodo}
-					selectId={this.selectTodo}
-				/>
-				<ReplyBox />
+			<div style={styles.background}>
+				<div style={styles.container}>
+					<TodoList
+						todo={this.state.todo}
+						removeTodo={this.removeTodo}
+						selectId={this.selectTodo}
+					/>
+					<ReplyBox />
+				</div>
 			</div>
 		);
 	}
