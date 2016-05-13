@@ -18,20 +18,25 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16,
 		paddingVertical: 32,
 	},
+
 	thumbnailContainer: {
 		elevation: 4,
 	},
+
 	thumbnailStyle: {
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+
 	iconIdle: {
-		color: Colors.fadedBlack,
+		color: Colors.white,
 	},
+
 	iconError: {
 		marginTop: 14,
 		marginBottom: 18,
 	},
+
 	closeButton: {
 		position: 'absolute',
 		top: 16,

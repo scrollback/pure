@@ -11,7 +11,7 @@ const msPerYear = msPerMonth * 365;
 const weekDays = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
 const months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
 
-export function short(time: number, now: number = Date.now()): string {
+export function formatShort(time: number, now: number = Date.now()): string {
 	const diff = now - time;
 
 	if (diff <= 0) {
@@ -35,7 +35,7 @@ export function short(time: number, now: number = Date.now()): string {
 	}
 }
 
-export function long(time: number, now: number = Date.now()): string {
+export function formatLong(time: number, now: number = Date.now()): string {
 	const diff = now - time;
 
 	if (diff <= 0) {
@@ -76,10 +76,14 @@ export function long(time: number, now: number = Date.now()): string {
 			timeStr = date.getDate() + ' ' + months[date.getMonth()] + (year !== currentDate.getFullYear() ? ' ' + year : '');
 		}
 
-		const minutes = date.getMinutes();
-		const hours = date.getHours();
-		const meridium = hours > 12 ? 'pm' : 'am';
-
-		return (timeStr ? (timeStr + ', ') : '') + (hours > 12 ? (hours + 11) % 12 + 1 : hours) + ':' + (minutes < 10 ? '0' : '') + minutes + ' ' + meridium;
+		return timeStr;
 	}
+}
+
+export function getReadableTime(now: number = Date.now()): string {
+	const date = new Date(now);
+	const hours = date.getHours();
+	const minutes = date.getMinutes();
+
+	return `${hours > 12 ? (hours + 11) % 12 + 1 : hours}:${minutes > 10 ? minutes : '0' + minutes} ${hours > 12 ? 'pm' : 'am'}`;
 }

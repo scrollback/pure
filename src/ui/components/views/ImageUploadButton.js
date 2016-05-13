@@ -27,22 +27,28 @@ const styles = StyleSheet.create({
 		width: 56,
 		borderRadius: 32,
 	},
+
 	idleIconContainer: {
 		backgroundColor: Colors.accent,
 	},
+
 	closeIconContainer: {
 		backgroundColor: Colors.fadedBlack,
 	},
+
 	doneIconContainer: {
 		backgroundColor: Colors.success,
 	},
+
 	errorIconContainer: {
 		backgroundColor: Colors.error,
 	},
+
 	icon: {
 		color: Colors.white,
 		margin: 16,
 	},
+
 	loading: {
 		position: 'absolute',
 		left: 2,

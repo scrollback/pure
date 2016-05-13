@@ -23,6 +23,7 @@ import '../modules/contacts/contacts';
 import '../modules/avatar/avatar';
 import '../modules/client/client';
 import '../modules/client/routes';
+import '../modules/debug/debug-server';
 
 import '../modules/belong/belong';
 import '../modules/content-seeding/content-seeding';

@@ -6,7 +6,8 @@ import shallowEqual from 'shallowequal';
 import Card from './Card';
 import CardTitle from './CardTitle';
 import DiscussionSummary from './DiscussionSummary';
-import CardAuthor from './CardAuthor';
+import DiscussionFooter from './DiscussionFooter';
+import type { Thread } from '../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -14,28 +15,25 @@ const {
 
 const styles = StyleSheet.create({
 	details: {
-		paddingVertical: 12,
+		paddingVertical: 4,
 		marginVertical: 0,
 	},
 
 	title: {
-		marginBottom: 8,
+		marginVertical: 8,
 		marginHorizontal: 16,
 	},
 
-	author: {
-		marginTop: 8,
+	footer: {
 		marginHorizontal: 16,
+		marginTop: 8,
+		marginBottom: 12,
 	},
 });
 
 type Props = {
-	thread: {
-		name: string;
-		body: string;
-		creator: string;
-		meta?: Object;
-	}
+	thread: Thread;
+	onNavigation: Function;
 }
 
 export default class DiscussionDetailsCard extends Component<void, Props, void> {
@@ -46,6 +44,7 @@ export default class DiscussionDetailsCard extends Component<void, Props, void> 
 			meta: PropTypes.object,
 			creator: PropTypes.string.isRequired,
 		}),
+		onNavigation: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props): boolean {
@@ -53,13 +52,15 @@ export default class DiscussionDetailsCard extends Component<void, Props, void> 
 	}
 
 	render() {
-		const { thread } = this.props;
+		const {
+			thread,
+		} = this.props;
 
 		return (
 			<Card style={styles.details}>
 				<CardTitle style={styles.title}>{thread.name}</CardTitle>
 				<DiscussionSummary text={thread.body} meta={thread.meta} />
-				<CardAuthor nick={thread.creator} style={styles.author} />
+				<DiscussionFooter { ...this.props } style={styles.footer} />
 			</Card>
 		);
 	}

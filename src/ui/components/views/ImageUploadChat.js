@@ -20,22 +20,27 @@ const styles = StyleSheet.create({
 		bottom: 0,
 		padding: 8,
 	},
+
 	thumbnailContainer: {
 		elevation: 4,
 	},
+
 	thumbnailStyle: {
 		alignItems: 'flex-end',
 		justifyContent: 'flex-end',
 	},
+
 	iconIdle: {
-		color: Colors.fadedBlack,
+		color: Colors.white,
 		marginRight: 13,
 		marginLeft: 19,
 	},
+
 	iconError: {
 		marginTop: 14,
 		marginBottom: 18,
 	},
+
 	closeButton: {
 		position: 'absolute',
 		top: -8,

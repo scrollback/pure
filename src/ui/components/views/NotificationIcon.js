@@ -3,7 +3,6 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
-import Colors from '../../Colors';
 import AppbarTouchable from './AppbarTouchable';
 import AppbarIcon from './AppbarIcon';
 import NotificationBadgeContainer from '../containers/NotificationBadgeContainer';
@@ -19,7 +18,6 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		top: 10,
 		right: 10,
-		backgroundColor: Colors.badge,
 		elevation: 2,
 	},
 });

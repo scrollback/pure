@@ -1,0 +1,10 @@
+{
+	"app_name": "Belong",
+
+	"server": {
+		"protocol": "http:",
+		"host": "localhost:8257",
+		"port": 8257,
+		"path": ""
+	}
+}

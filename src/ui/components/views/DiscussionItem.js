@@ -31,24 +31,27 @@ const styles = StyleSheet.create({
 	item: {
 		marginHorizontal: 16,
 	},
+
 	footer: {
-		marginVertical: 12,
+		marginTop: 8,
+		marginBottom: 12,
 	},
+
 	topArea: {
 		flexDirection: 'row',
 	},
+
 	title: {
 		flex: 1,
 		marginTop: 16,
 	},
-	badge: {
-		margin: 12,
-	},
+
 	expand: {
 		marginHorizontal: 16,
 		marginVertical: 12,
 		color: Colors.fadedBlack,
 	},
+
 	hidden: {
 		opacity: 0.3,
 	},
@@ -165,7 +168,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 						</View>
 
 						<DiscussionSummary text={thread.body} meta={thread.meta} />
-						<DiscussionFooter style={[ styles.item, styles.footer ]} thread={thread} />
+						<DiscussionFooter { ...this.props } style={[ styles.item, styles.footer ]} />
 					</View>
 				</TouchFeedback>
 			</Card>

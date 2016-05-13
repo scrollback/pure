@@ -81,3 +81,7 @@ FewIntegrationTests.txt
 
 src/modules/postgres/setup/dblink.sql
 src/modules/postgres/setup/location.csv
+
+
+config/debug-client.json
+config/debug-server.json

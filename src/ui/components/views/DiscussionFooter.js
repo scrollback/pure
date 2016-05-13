@@ -5,50 +5,55 @@ import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 import Colors from '../../Colors';
 import AppText from './AppText';
-import Icon from './Icon';
-import CardAuthor from './CardAuthor';
+import AvatarRound from './AvatarRound';
 import Time from './Time';
+import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
 import type { Thread } from '../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
+	TouchableOpacity,
 	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
-	footer: {
-		flexDirection: 'row',
-		marginTop: 6,
-	},
-	left: {
-		flex: 1,
-	},
-	right: {
-		flexDirection: 'row',
-		justifyContent: 'flex-end',
-	},
-	info: {
+	author: {
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
-	label: {
-		color: Colors.black,
+
+	info: {
+		flex: 1,
+		paddingHorizontal: 8,
+	},
+
+	name: {
+		color: Colors.info,
 		fontSize: 12,
-		lineHeight: 18,
-		marginLeft: 8,
-		marginRight: 16,
-		paddingHorizontal: 4,
+		lineHeight: 16,
 	},
-	icon: {
-		color: Colors.black,
+
+	meta: {
+		flexDirection: 'row',
+		alignItems: 'center',
 	},
-	faded: {
-		opacity: 0.3,
+
+	label: {
+		fontSize: 10,
+		lineHeight: 15,
+		color: Colors.grey,
+	},
+
+	dot: {
+		fontSize: 2,
+		lineHeight: 3,
+		marginHorizontal: 4,
 	},
 });
 
 type Props = {
 	thread: Thread;
+	onNavigation: Function;
 	style?: any;
 }
 
@@ -61,6 +66,7 @@ export default class DiscussionFooter extends Component<void, Props, void> {
 				children: PropTypes.number,
 			}),
 		}).isRequired,
+		onNavigation: PropTypes.func.isRequired,
 		style: View.propTypes.style,
 	};
 
@@ -68,35 +74,59 @@ export default class DiscussionFooter extends Component<void, Props, void> {
 		return !shallowEqual(this.props, nextProps);
 	}
 
+	_goToProfile: Function = () => {
+		const { thread } = this.props;
+
+		this.props.onNavigation(new NavigationActions.Push({
+			name: 'profile',
+			props: {
+				user: thread.creator,
+			},
+		}));
+	};
+
 	render() {
 		const {
 			thread,
 		} = this.props;
 
-		return (
-			<View {...this.props} style={[ styles.footer, this.props.style ]}>
-				<CardAuthor nick={thread.creator} style={styles.left} />
+		const responses = thread.counts && thread.counts.children ? thread.counts.children : 0;
 
-				<View style={styles.right}>
-					<View style={[ styles.info, styles.faded ]}>
-						<Icon
-							name='access-time'
-							style={styles.icon}
-							size={24}
-						/>
+		let reseponsesLabel;
+
+		switch (responses) {
+		case 0:
+			reseponsesLabel = 'No responses';
+			break;
+		case 1:
+			reseponsesLabel = '1 response';
+			break;
+		default:
+			reseponsesLabel = `${responses} responses`;
+		}
+
+		return (
+			<View {...this.props} style={[ styles.author, this.props.style ]}>
+				<TouchableOpacity
+					activeOpacity={0.5}
+					onPress={this._goToProfile}
+					style={styles.avatar}
+				>
+					<AvatarRound
+						size={26}
+						user={thread.creator}
+					/>
+				</TouchableOpacity>
+				<View style={styles.info}>
+					<AppText style={styles.name}>{thread.creator}</AppText>
+					<View style={styles.meta}>
 						<Time
-							type='short'
-							time={thread.updateTime}
 							style={styles.label}
+							type='long'
+							time={thread.createTime}
 						/>
-					</View>
-					<View style={[ styles.info, styles.faded ]}>
-						<Icon
-							name='forum'
-							style={styles.icon}
-							size={24}
-						/>
-						<AppText style={styles.label}>{thread.counts && thread.counts.children ? (thread.counts.children + 1) : 1}</AppText>
+						<AppText style={styles.dot}>●</AppText>
+						<AppText style={styles.label}>{reseponsesLabel}</AppText>
 					</View>
 				</View>
 			</View>

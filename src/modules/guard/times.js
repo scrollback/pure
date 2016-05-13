@@ -34,3 +34,4 @@ function validateTime(changes, next) {
 
 bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION1);
 bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION2);
+bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION3);

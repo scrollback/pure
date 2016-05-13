@@ -74,10 +74,16 @@ export default class Rooms extends Component<void, Props, State> {
 			return <LoadingItem />;
 		}
 
+		const {
+			roomrel,
+			room,
+		} = result;
+
 		return (
 			<RoomItemContainer
-				key={result.roomrel.item}
-				room={result.roomrel.item}
+				key={roomrel.item}
+				room={roomrel.item}
+				unread={room && roomrel.presenceTime ? room.updateTime > roomrel.presenceTime : false}
 				onSelect={this._handleSelectLocality}
 			/>
 		);

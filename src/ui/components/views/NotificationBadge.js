@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
 		width: 24,
 		borderRadius: 12,
 		paddingVertical: 4,
-		backgroundColor: Colors.fadedBlack,
+		backgroundColor: Colors.accent,
 	},
 	count: {
 		color: Colors.white,

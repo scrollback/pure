@@ -63,6 +63,8 @@ export default class ImageUploadHelper {
 	}
 
 	_pollThumbnail(thumbnail: string): Promise<string> {
+		const TIMEOUT_INTERVAL = 1500;
+
 		return new Promise((resolve, reject) => {
 			const startTime = Date.now();
 
@@ -70,10 +72,10 @@ export default class ImageUploadHelper {
 
 			const checkThumb = () => {
 				const onError = () => {
-					if (Date.now() - startTime > 15000) {
+					if (Date.now() - startTime > TIMEOUT_INTERVAL * 10) {
 						reject(new Error('ERR_THUMBNAIL_TIMEOUT'));
 					} else {
-						thumbTimer = setTimeout(checkThumb, 1500);
+						thumbTimer = setTimeout(checkThumb, TIMEOUT_INTERVAL);
 					}
 				};
 				const clearTimer = () => {
@@ -85,23 +87,21 @@ export default class ImageUploadHelper {
 				const req = new XMLHttpRequest();
 
 				req.open('HEAD', thumbnail, true); // Avoid doing a GET request to prevent OOM
-				req.onload = () => {
-					clearTimer();
+				req.onreadystatechange = () => {
+					if (req.readyState === req.DONE) {
+						clearTimer();
 
-					if (req.status < 300) {
-						resolve(thumbnail);
-					} else {
-						onError();
+						if (req.status < 300) {
+							resolve(thumbnail);
+						} else {
+							onError();
+						}
 					}
-				};
-				req.onerror = () => {
-					clearTimer();
-					onError();
 				};
 				req.send();
 			};
 
-			setTimeout(checkThumb, 1500);
+			setTimeout(checkThumb, TIMEOUT_INTERVAL);
 		});
 	}
 

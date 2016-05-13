@@ -6,7 +6,6 @@ export default {
 	darkGrey: '#444',
 	primary: '#6644bb',
 	accent: '#ff1144',
-	badge: '#e91e63',
 	info: '#2196f3',
 	error: '#f44336',
 	success: '#4caf50',

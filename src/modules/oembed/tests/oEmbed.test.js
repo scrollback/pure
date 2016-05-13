@@ -14,16 +14,6 @@ test('should return oEmbed data for youtube.com', async t => {
 	t.is(data.thumbnail_width, 480);
 });
 
-test('should return opengraph data for on.aol.com', async t => {
-	const data = await oEmbed('http://on.aol.com/video/officials-fox-lake-officer-s-death-a-suicide-519216799?context=PC:homepage:PL1944:1446706878971');
-
-	t.is(data.type, 'link');
-	t.is(data.title, 'Officials: Fox Lake Officer\'s Death a Suicide');
-	t.is(data.thumbnail_url, 'http://feedapi.b2c.on.aol.com/v1.0/app/videos/aolon/519216799/images/470x264.jpg?region=US');
-	t.is(data.thumbnail_height, 264);
-	t.is(data.thumbnail_width, 470);
-});
-
 test('should return meta data for w3schools.com', async t => {
 	const data = await oEmbed('http://www.w3schools.com/');
 

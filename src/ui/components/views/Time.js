@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import shallowEqual from 'shallowequal';
 import AppText from './AppText';
-import { short, long } from '../../../lib/Time';
+import { formatShort, formatLong } from '../../../lib/Time';
 
 const msPerSec = 1000;
 const msPerMin = msPerSec * 60;
@@ -11,7 +11,7 @@ const msPerHour = msPerMin * 60;
 
 type Props = {
 	type: 'short' | 'long';
-	time: number
+	time: number;
 }
 
 type State = {
@@ -85,7 +85,7 @@ export default class Time extends Component<void, Props, State> {
 
 		return (
 			<AppText ref={c => (this._root = c)} {...this.props}>
-				{type === 'short' ? short(time, this.state.now) : long(time, this.state.now)}
+				{type === 'short' ? formatShort(time, this.state.now) : formatLong(time, this.state.now)}
 			</AppText>
 		);
 	}

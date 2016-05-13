@@ -29,7 +29,10 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 	}
 
 	render() {
-		const { thread } = this.props;
+		const {
+			thread,
+			onNavigation,
+		} = this.props;
 
 		if (thread) {
 			if (thread.type === 'loading') {
@@ -38,8 +41,8 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 
 			return (
 				<ScrollView {...this.props}>
-					<DiscussionDetailsCard thread={thread} />
-					<PeopleListContainer thread={thread.id} onNavigation={this.props.onNavigation} />
+					<DiscussionDetailsCard thread={thread} onNavigation={onNavigation} />
+					<PeopleListContainer thread={thread.id} onNavigation={onNavigation} />
 				</ScrollView>
 			);
 		} else {
