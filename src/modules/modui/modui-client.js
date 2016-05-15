@@ -27,7 +27,7 @@ client.on('message', (message) => { // eslint-disable-line
 	const data = JSON.parse(message);
 	todo.unshift(data);
 	todo = todo.slice(0, 1000);
-	localStorage.todo = JSON.stringify(todo);
+	todo = JSON.stringify(todo);
 	rerender();
 });
 

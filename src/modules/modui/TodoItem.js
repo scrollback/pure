@@ -70,21 +70,21 @@ class TodoItem extends Component {
 
 		return (
 			<div>
+				<div style={styles.header}>
+	                <button
+						style={styles.button}
+						onClick={() => this.props.removeTodo(this.props.index)}>x
+					</button>
+	                <div style={styles.room}>{todo.room}</div>
+	            </div>
 				<a href={url} >
-					<div style={styles.header}>
-		                <button
-							style={styles.button}
-							onClick={() => this.props.removeTodo(this.props.index)}>x
-						</button>
-		                <div style={styles.room}>{todo.room}</div>
-		            </div>
-		            <div style={styles.body}>{body}</div>
-		            <div style={styles.header}>
-		                <div style={styles.time}>{todo.time}</div>
-		                <div style={styles.creator}>{todo.creator}</div>
-		            </div>
-		            <div style={styles.line}></div>
+					<div style={styles.body}>{body}</div>
 				</a>
+	            <div style={styles.header}>
+	                <div style={styles.time}>{todo.time}</div>
+	                <div style={styles.creator}>{todo.creator}</div>
+	            </div>
+	            <div style={styles.line}></div>
 	        </div>
 		);
 	}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
+import FacebookLogin from './FacebookLogin';
 
 const styles = {
 	ban: {
@@ -16,6 +17,7 @@ class ReplyBox extends Component {
             <div>
                 <button style={styles.ban}> Ban </button>
 				<button style={styles.hide}> Hide </button>
+				<FacebookLogin />
             </div>
         );
 	}
