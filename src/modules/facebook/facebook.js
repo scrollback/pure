@@ -15,7 +15,7 @@ import path from 'path';
 import handlebars from 'handlebars';
 import encodeURITemplate from '../../lib/encodeURITemplate';
 
-const redirectURL = `https://${config.host}${config.facebook.redirect_path}`;
+const redirectURL = `https://${config.server.host}${config.facebook.redirect_path}`;
 const SCRIPT_REDIRECT = encodeURITemplate `location.href='https://www.facebook.com/dialog/oauth?\
 client_id=${config.facebook.client_id}&\
 redirect_uri=${redirectURL}&\
