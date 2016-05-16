@@ -5,8 +5,8 @@ import config from './config';
 
 const eio = require('engine.io-client'); // eslint-disable-line import/no-commonjs
 
-const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
-// const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path, port: 3030 });
+// const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
+const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path, port: 3030 });
 
 
 let todo = [], store;

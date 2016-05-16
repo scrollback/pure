@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import FacebookLogin from './FacebookLogin';
+import GoogleLogin from './GoogleLogin';
 
 const styles = {
 	ban: {
@@ -18,6 +19,7 @@ class ReplyBox extends Component {
                 <button style={styles.ban}> Ban </button>
 				<button style={styles.hide}> Hide </button>
 				<FacebookLogin />
+				<GoogleLogin />
             </div>
         );
 	}
