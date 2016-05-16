@@ -57,8 +57,12 @@ function unsubscribeTopics (data, cb) {
 	} else {
 		iids.forEach(iid => {
 			getIIDInfo(iid, async (e, r, b) => {
-				if (e) {
-					log.error(e);
+				if (e || !b) {
+					log.debug(e);
+					return;
+				}
+				if (b && !JSON.parse(b).rel) {
+					log.debug(e, JSON.parse(b));
 					return;
 				}
 				try {
@@ -122,18 +126,23 @@ export function subscribe (userRel: Object) {
 						subscribe(userRel);
 					});
 				} else {
-					log.error('can not subscribe to topic', error);
+					log.error(userRel.params.id + 'can not subscribe to topic', error, response, body);
+
 				}
 			}
-			if (body.error) {
-				log.error(body, userRel.topic);
-				// console.log(options);
+			if (body && body.error) {
+				log.error(body, userRel.topic, response);
+				console.log(options);
 			} else {
+				log.info(userRel.params + ' is subscribed to ' + userRel.topic);
 				// getIIDInfo(token, (e, r, b) => {
 				// 	log.info(b);
 				// 	// return;
 				// });
 			}
+		}).on('error', (err) => {
+			log.error('on error here:', err);
+			register();
 		});
 	}
 	if (!gcm) {
@@ -167,7 +176,11 @@ function mapRelsAndSubscriptions(entity) {
 			if (err) { return; }
 			tokens.forEach((token) => {
 				function callback (e, r, b) {
-					if (e || !b || !JSON.parse(b).rel) {
+					if (e || !b) {
+						log.error(e);
+						return;
+					}
+					if (b && !JSON.parse(b).rel) {
 						log.error(e, JSON.parse(b));
 						return;
 					}
@@ -179,7 +192,7 @@ function mapRelsAndSubscriptions(entity) {
 					const roomsFollowing = rels.arr.map((room) => {
 						return room.item;
 					});
-					console.log('all here: ', subscribedRooms, roomsFollowing);
+					log.info('all here: ', subscribedRooms, roomsFollowing);
 
 					const roomsNotSubscribed = roomsFollowing.filter(room => {
 						return subscribedRooms.indexOf(room) === -1;

@@ -1,3 +1,4 @@
+import 'newrelic';
 // Socket
 import '../modules/socket/socket-server';
 
