@@ -1,34 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TodoList from './TodoList';
+import RootComponent from './RootComponent';
 import config from './config';
+import '../../ui/modules/Facebook';
 
 const eio = require('engine.io-client'); // eslint-disable-line import/no-commonjs
 
-let todos = [];
+// const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
+const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path, port: 3030 });
 
-if (localStorage && localStorage.todos) {
+
+let todo = [];
+
+if (localStorage && localStorage.todo) {
 	try {
-		todos = JSON.parse(localStorage.todos);
-		console.log('Got todos:', todos.length);
-		if (todos[0] !== 'separator') todos.unshift('separator');
+		todo = JSON.parse(localStorage.todo);
 	} catch (e) {
 		// ignore
 	}
 }
 
-const client = new eio.Socket({ host: 'wss://' + config.server.host, path: config.server.path + '/engine.io' });
-
 function rerender() {
-	ReactDOM.render(<TodoList todos={todos}/>, document.getElementById('root'));
+	ReactDOM.render(<RootComponent todo={todo}/>, document.getElementById('root'));
 }
 
 client.on('message', (message) => { // eslint-disable-line
 	console.log('--->', message); // eslint-disable-line
 	const data = JSON.parse(message);
-	todos.unshift(data);
-	todos = todos.slice(0, 1000);
-	localStorage.todos = JSON.stringify(todos);
+	todo.unshift(data);
+	todo = todo.slice(0, 1000);
+	todo = JSON.stringify(todo);
 	rerender();
 });
 

@@ -1,16 +1,24 @@
-/* @flow */
+import config from '../../core-client';
 
-type Account = {
-	id: ?string;
-	display_name: ?string;
-	email: ?string;
-	id_token: ?string;
-	auth_code: ?string;
-	photo_url?: string;
+type AuthCode = {
+    code: string;
+}
+export default class Google {
+	static siginIn(): Promise<AuthCode> {
+		return new Promise(resolve => {
+			function listener({ data }) {
+				if (data && data.type === 'auth' && data.provider === 'google') {
+					resolve({
+						code: data.code,
+					});
+					window.removeEventListener('message', listener);
+				}
+			}
+			window.addEventListener('message', listener);
+			window.open(config.server.protocol + '//' + config.server.host + config.google.login_url);
+		});
+	}
 }
 
-export default class Facebook {
-	static signIn: () => Promise<Account>;
-	static signOut: () => Promise<boolean>;
-	static revokeAccess: () => Promise<boolean>;
-}
+
+window.googlelogin = Google.signIn;

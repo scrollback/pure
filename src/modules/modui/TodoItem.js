@@ -1,32 +1,60 @@
 import React, { Component } from 'react';
+import Radium from 'radium';
 import * as Constants from '../../lib/Constants';
 import config from './config';
 
 const styles = {
-	row: {
-		display: 'block',
-	},
-	link: {
-		textDecoration: 'none',
-		color: '#333333',
-	},
-	name: {
+	room: {
+		height: '14px',
+		marginLeft: '5px',
+		marginTop: '10px',
+		marginBottom: '5px',
+		overflow: 'hidden',
+		textOverflow: 'ellipsis',
+		fontSize: '14px',
 		fontWeight: 'bold',
-	},
-	body: {
-	},
-	creator: {
-		fontStyle: 'italic',
-	},
-	type: {
-		fontStyle: 'italic',
+		fontFamily: 'Open Sans',
+		flexGrow: '1',
+		flexWrap: 'nowrap'
 	},
 	message: {
-		font: '16px/24px normal normal Lato,sans-serif',
-		margin: '0 auto',
-		width: '50%',
-		padding: '8px',
+		height: '14px',
+		marginLeft: '5px',
+		marginBottom: '5px',
+		overflow: 'hidden',
+		flexWrap: 'nowrap',
+		fontSize: '14px',
+		fontWeight: '400',
+		fontFamily: 'Open Sans'
 	},
+	creator: {
+		height: '14px',
+		marginLeft: '5px',
+		marginBottom: '5px',
+		flexWrap: 'nowrap',
+		fontFamily: 'Open Sans',
+		fontSize: '12px',
+		fontStyle: 'italic'
+	},
+	time: {
+		height: '14px',
+		marginRight: '15px',
+		float: 'right'
+	},
+	line: {
+		marginTop: '10px',
+		borderBottom: '1px solid #e9ebed',
+	},
+	button: {
+		marginRight: '15px',
+		float: 'right',
+		fontSize: '8px',
+		flexGrow: '0',
+	},
+	header: {
+		direction: 'flex',
+		flexDirection: 'column',
+	}
 };
 
 class TodoItem extends Component {
@@ -38,24 +66,39 @@ class TodoItem extends Component {
 				thread ?
 				todo.parents[0] + '/' + todo.id :
 				todo.parents[1] + '/' + todo.parents[0]
-			),
-			type = thread ? 'Start' : 'Reply';
+			);
 
 		return (
-			<div style={styles.message}>
-				<a style={styles.link} href={url}>
-					<span style={styles.row}>
-						<span style={styles.type}>{type} by </span>
-						<span style={styles.creator}>{todo.creator}: </span>
-						<span style={styles.name}>{todo.name}</span>
-					</span>
-					<span style={styles.row}>
-						<span style={styles.body}>{body}</span>
-					</span>
+			<div>
+				<div style={styles.header}>
+	                <button
+						style={styles.button}
+						onClick={() => this.props.removeTodo(this.props.index)}>x
+					</button>
+	                <div style={styles.room}>{todo.room}</div>
+	            </div>
+				<a href={url} >
+					<div style={styles.body}>{body}</div>
 				</a>
-			</div>
+	            <div style={styles.header}>
+	                <div style={styles.time}>{todo.time}</div>
+	                <div style={styles.creator}>{todo.creator}</div>
+	            </div>
+	            <div style={styles.line}></div>
+	        </div>
 		);
 	}
 }
 
-export default TodoItem;
+export default Radium(TodoItem);
+
+/*-
+<span style={styles.row}>
+    <span style={styles.type}>{type} by </span>
+               <span style={styles.creator}>{todo.creator}: </span>
+               <span style={styles.name}>{todo.name}</span>
+       </span>
+       <span style={styles.row}>
+               <span style={styles.body}>{body}</span>
+       </span>
+*/
