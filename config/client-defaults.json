@@ -8,5 +8,9 @@
 
 	"gcm": {
 		"sender_id": "949615022713"
+	},
+
+	"facebook": {
+		"login_url": "/r/facebook/login"
 	}
 }
