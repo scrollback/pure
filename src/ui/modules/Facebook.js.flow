@@ -2,6 +2,7 @@
 
 type AccessToken = {
 	access_token: ?string;
+	code?: string;
 	user_id: ?string;
 	expires: ?number;
 	permissions_granted: Array<string>;

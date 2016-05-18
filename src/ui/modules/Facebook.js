@@ -1,3 +1,5 @@
+/* @flow */
+
 import { config } from '../../core-client';
 
 type AuthCode = {
@@ -19,7 +21,22 @@ export default class Facebook {
 			window.open(config.server.protocol + '//' + config.server.host + config.facebook.login_url);
 		});
 	}
-}
 
+	static logInWithPublishPermissions() {
+		return Promise.reject(new Error('Not implemented'));
+	}
+
+	static logOut() {
+		return Promise.resolve(true);
+	}
+
+	static getCurrentAccessToken() {
+		return Promise.reject(new Error('Not implemented'));
+	}
+
+	static sendGraphRequest() {
+		return Promise.reject(new Error('Not implemented'));
+	}
+}
 
 window.facebooklogin = Facebook.logInWithReadPermissions;

@@ -6,6 +6,7 @@ type Account = {
 	email: ?string;
 	id_token: ?string;
 	auth_code: ?string;
+	code?: string;
 	photo_url?: string;
 }
 

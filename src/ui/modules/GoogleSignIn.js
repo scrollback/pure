@@ -1,10 +1,13 @@
+/* @flow */
+
 import config from '../../core-client';
 
 type AuthCode = {
     code: string;
 }
+
 export default class Google {
-	static siginIn(): Promise<AuthCode> {
+	static signIn(): Promise<AuthCode> {
 		return new Promise(resolve => {
 			function listener({ data }) {
 				if (data && data.type === 'auth' && data.provider === 'google') {
@@ -18,7 +21,14 @@ export default class Google {
 			window.open(config.server.protocol + '//' + config.server.host + config.google.login_url);
 		});
 	}
-}
 
+	static signOut() {
+		return Promise.resolve(true);
+	}
+
+	static revokeAccess() {
+		return Promise.resolve(true);
+	}
+}
 
 window.googlelogin = Google.signIn;
