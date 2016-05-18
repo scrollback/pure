@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS contacts;
 
 CREATE TABLE contacts (
 	referrer text,
-	createtime bigint,
+	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	contact jsonb
 );
 
@@ -23,12 +23,12 @@ DROP TABLE IF EXISTS jobs;
 CREATE TABLE users (
 	id text PRIMARY KEY,
 	name text, -- user display name
-	identities text[], -- user-private
-	createtime bigint,
+	identities text[] NOT NULL, -- user-private
+	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	deletetime bigint,
-	tags smallint[], -- e.g. admin, manager
+	tags smallint[] DEFAULT '{}' NOT NULL, -- e.g. admin, manager
 	locale smallint,
-	counts jsonb default '{}',
+	counts jsonb DEFAULT '{}',
 	meta jsonb,
 	params jsonb, -- user-private information
 	presence smallint, -- foreground/background/none
@@ -44,9 +44,9 @@ CREATE TABLE items (
 	name text, -- room display name, thread title
 	body text, -- room description, thread start message
 	type smallint,
-	parents uuid[], -- room or thread
-	tags smallint[], -- e.g. image, hidden, sticky, city, area, spot
-	createtime bigint,
+	parents uuid[] DEFAULT '{}' NOT NULL, -- room or thread
+	tags smallint[] DEFAULT '{}' NOT NULL, -- e.g. image, hidden, sticky, city, area, spot
+	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	creator text,
 	deletetime bigint,
 	meta jsonb, -- guides, image dimensions, counts
@@ -54,27 +54,33 @@ CREATE TABLE items (
 	terms tsvector,
 	updater text,
 	updatetime bigint,
-	counts jsonb default '{}'
+	counts jsonb DEFAULT '{}'
 );
 
 CREATE TABLE rooms (
+	name text NOT NULL,
 	identities text[][],
 	params jsonb -- owner-private information
 ) INHERITS (items);
 
 CREATE TABLE threads (
+	body text NOT NULL, -- thread start message
 	score float(24) -- sort ordering
 ) INHERITS (items);
 
-CREATE TABLE texts  () INHERITS (items);
+CREATE TABLE texts (
+	body text NOT NULL, -- message text
+	creator text NOT NULL -- message text
+) INHERITS (items);
+
 CREATE TABLE topics () INHERITS (items);
 CREATE TABLE privs  () INHERITS (items);
 
 CREATE TABLE rels (
-	item uuid,
-	"user" text,
+	item uuid NOT NULL,
+	"user" text NOT NULL,
 	roles smallint[], -- mute, upvote, home, work
-	createtime bigint,
+	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	updatetime bigint,
 	admin text,
 	expiretime bigint,
@@ -98,20 +104,21 @@ CREATE TABLE privrels   (PRIMARY KEY("user","item")) INHERITS (rels);
 
 CREATE TABLE notes (
 	"user" text,
-	"group" text, -- e.g. thread in which mentioned, room to which invited
-	score float(24),
-	count integer, -- this event in this group id
-	data jsonb, -- information like
-	event smallint, -- e.g. mention, invite, request
-	createtime bigint,
+	"group" text NOT NULL, -- e.g. thread in which mentioned, room to which invited
+	score float(24) NOT NULL,
+	count integer DEFAULT 1 NOT NULL, -- this event in this group id
+	data jsonb DEFAULT '{}' NOT NULL, -- information like
+	event smallint NOT NULL, -- e.g. mention, invite, request
+	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	updatetime bigint,
 	deletetime bigint
 );
 
 CREATE TABLE jobs (
 	id smallint,
-	lastrun bigint default extract(epoch from now())*1000
+	lastrun bigint DEFAULT extract(epoch from now())*1000
 );
+
 INSERT INTO jobs VALUES (1), (2), (3);
 CREATE EXTENSION plv8;
 

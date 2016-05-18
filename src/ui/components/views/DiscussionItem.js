@@ -147,6 +147,11 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			thread,
 		} = this.props;
 
+		// FIXME: temporary check to avoid crash
+		if (!(thread && thread.body && thread.name)) {
+			return null;
+		}
+
 		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
 
 		return (
@@ -168,7 +173,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 						</View>
 
 						<DiscussionSummary text={thread.body} meta={thread.meta} />
-						<DiscussionFooter { ...this.props } style={[ styles.item, styles.footer ]} />
+						<DiscussionFooter {...this.props} style={[ styles.item, styles.footer ]} />
 					</View>
 				</TouchFeedback>
 			</Card>

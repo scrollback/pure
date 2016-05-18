@@ -1,13 +1,13 @@
 /* @flow */
 
 import { bus } from '../../core-client';
-import { subscribe } from '../../modules/store/store';
+import store from '../../modules/store/store';
 import PersistentStorage from '../../lib/PersistentStorage';
 
 const sessionStorage = new PersistentStorage('session');
 
 async function saveAndInitializeSession() {
-	let session;
+	let session = null;
 
 	try {
 		session = await sessionStorage.getItem('id');
@@ -40,25 +40,25 @@ bus.on('error', changes => {
 	}
 });
 
-bus.on('postchange', changes => {
-	if (changes.state && 'session' in changes.state) {
-		const { session } = changes.state;
+bus.on('state:init', state => (state.session = '@@loading'));
 
-		if (session === '@@loading') {
-			return;
-		}
+store.observe({ type: 'state', path: 'session', source: 'session' }).forEach(session => {
+	if (session === '@@loading') {
+		return;
+	}
 
-		if (session && typeof changes.state.session === 'string') {
-			sessionStorage.setItem('id', changes.state.session);
-		} else {
-			sessionStorage.removeItem('id');
-		}
+	if (typeof session === 'string' && session) {
+		sessionStorage.setItem('id', session);
+	}
+
+	// remove session from storage only when explicitly removed from cache
+	// session might be undefined instead of null if not initialized yet
+	if (session === null) {
+		sessionStorage.removeItem('id');
 	}
 });
 
-bus.on('state:init', state => (state.session = '@@loading'));
-
-subscribe({ type: 'state', path: 'connectionStatus', source: 'session' }, status => {
+store.observe({ type: 'state', path: 'connectionStatus', source: 'session' }).forEach(status => {
 	if (status === 'online') {
 		saveAndInitializeSession();
 	}

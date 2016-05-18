@@ -9,6 +9,7 @@ cache.onChange(changes => {
 bus.on('change', changes => {
 	cache.put(changes);
 });
+
 bus.on('error', changes => {
 	if (changes.state) {
 		const { ...state } = changes.state; // eslint-disable-line no-use-before-define

@@ -9,34 +9,74 @@ function getScore(types) {
 	let finalScore, finalTag = null;
 	for (const type of types) {
 		let score, tag;
-		if (type === 'locality') {
+
+		switch (type) {
+		case 'administrative_area_level_3':
 			tag = constants.TAG_ROOM_CITY;
-			score = '1';
-		} else if (type === 'sublocality' || type === 'neighborhood') {
-			score = '2';
+			score = 9;
+			break;
+		case 'locality':
+			tag = constants.TAG_ROOM_CITY;
+			score = 10;
+			break;
+		case 'sublocality':
 			tag = constants.TAG_ROOM_AREA;
-		} else if (/.*sublocality.*/.test(type)) {
-			score = '2' + type.match(/[0-9]/);
+			score = 20;
+			break;
+		case 'sublocality_level_4':
+		case 'sublocality_level_5':
+		case 'sublocality_level_3':
+		case 'sublocality_level_2':
+		case 'sublocality_level_1':
 			tag = constants.TAG_ROOM_AREA;
-		} else if (type === 'premise' || type === 'subpremise') {
-			score = '3';
+			score = 20 + parseInt(type.substr(-1), 10);
+			break;
+		case 'colloquial_area':
+			tag = constants.TAG_ROOM_AREA;
+			score = 25;
+			break;
+		case 'neighborhood':
+			tag = constants.TAG_ROOM_AREA;
+			score = 26;
+			break;
+		case 'country':
+		case 'administrative_area_level_1':
+		case 'administrative_area_level_2':
+		case 'administrative_area_level_4':
+		case 'administrative_area_level_5':
+		case 'natural_feature':
+		case 'political':
+		case 'post_box':
+		case 'postal_code':
+		case 'postal_code_prefix':
+		case 'postal_code_suffix':
+		case 'postal_town':
+		case 'subpremise':
+		case 'floor':
+		case 'room':
+		case 'route':
+		case 'intersection':
+		case 'geocode':
+		case 'street_address':
+		case 'street_number':
+			score = 0;
+			tag = 0;
+			break; /* ignore these */
+		default:
 			tag = constants.TAG_ROOM_SPOT;
+			score = 30;
 		}
 
-		if (typeof score !== 'undefined' && (!finalScore || score > finalScore)) {
+		if (!finalScore || score > finalScore) {
 			finalScore = score;
 			finalTag = tag;
 		}
 	}
 
-	if (!finalTag || !finalScore) {
-		return null;
-	} else {
-		return {
-			score: finalScore,
-			tag: finalTag,
-		};
-	}
+	return {
+		score: finalScore,
+		tag: finalTag,
+	};
 }
 
 function handleError(message, reject) {
@@ -78,11 +118,11 @@ function callApi(api, params) {
 }
 
 function placeToStub(place) {
+	const { tag } = getScore(place.types);
 	return {
 		identity: 'place:' + place.place_id,
-		name: place.address_components ? place.address_components[0].long_name : place.name,
-		type: place.types[0] === 'locality' ?
-			constants.TAG_ROOM_CITY : constants.TAG_ROOM_AREA,
+		name: place.name ? place.name : place.address_components && place.address_components[0].long_name,
+		type: tag,
 		parents: place.parents,
 	};
 }
@@ -95,10 +135,8 @@ export function getStubset(placeid: string, rel: number): Promise<Object> {
 		const scoreTag = getScore(place.types);
 
 		spot = place;
-		if (scoreTag) {
-			score = scoreTag.score;
-			tag = scoreTag.tag;
-		}
+		score = scoreTag.score;
+		tag = scoreTag.tag;
 
 		return callApi('geocode', {
 			latlng: place.geometry.location.lat +
@@ -106,11 +144,11 @@ export function getStubset(placeid: string, rel: number): Promise<Object> {
 		});
 	})
 	.then(results => {
-		if (!score) score = '3';
+		if (!score) score = 30;
 		let areas = results.filter(area => {
 			const res = getScore(area.types);
-			if (res) area.score = res.score;
-			return res && res.score < score;
+			area.score = res.score;
+			return res.score && res.score < score;
 		});
 
 		spot.score = score;
@@ -139,7 +177,7 @@ export function getStubset(placeid: string, rel: number): Promise<Object> {
 		areas = areas.map(placeToStub);
 
 		for (let i = areas.length - 1; i > 0; i--) {
-			areas[i].name = areas[i].name + (areas[i - 1] ? ', ' + areas[i - 1].name : '');
+			areas[i].name += (areas[i - 1] ? ', ' + areas[i - 1].name : '');
 		}
 
 		return { rel, stubs: areas };

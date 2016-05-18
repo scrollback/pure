@@ -7,7 +7,6 @@ import isEqual from 'lodash/isEqual';
 import storeShape from './storeShape';
 
 import type {
-	Subscription,
 	MapSubscriptionToProps,
 	MapActionsToProps,
 } from './ConnectTypes';
@@ -65,19 +64,19 @@ export default class Connect extends Component<void, Props, State> {
 
 				switch (typeof sub) {
 				case 'string':
-					listener = store.subscribe(
-						{
-							type: sub,
-							source,
-							defer,
-						},
-						this._updateListener(item)
+					listener = store.observe({
+						type: sub,
+						source,
+						defer,
+					}).subscribe(
+						this._createUpdateObserver(item),
 					);
 					break;
 				case 'object':
-					listener = store.subscribe(
+					listener = store.observe(
 						typeof sub.key === 'string' ? { type: sub.key, source, defer } : { ...sub.key, source, defer },
-						this._updateListener(item, sub.transform)
+					).subscribe(
+						this._createUpdateObserver(item, sub.transform),
 					);
 					break;
 				default:
@@ -94,7 +93,7 @@ export default class Connect extends Component<void, Props, State> {
 	_removeSubscriptions: Function = () => {
 		if (this._subscriptions) {
 			for (let i = 0, l = this._subscriptions.length; i < l; i++) {
-				this._subscriptions[i].remove();
+				this._subscriptions[i].unsubscribe();
 			}
 
 			this._subscriptions = [];
@@ -106,14 +105,16 @@ export default class Connect extends Component<void, Props, State> {
 		this._addSubscriptions(props, context);
 	};
 
-	_updateListener: Function = (name, transform) => {
-		return data => {
+	_createUpdateObserver: Function = (name, transform) => {
+		const next = data => {
 			if (this._mounted) {
 				this.setState({
 					[name]: transform ? transform(data, this.props) : data,
 				});
 			}
 		};
+
+		return { next };
 	};
 
 	componentDidMount() {

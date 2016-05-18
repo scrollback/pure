@@ -4,11 +4,15 @@
     "stage-1",
     "react"
   ],
+  "plugins": [
+    "lodash"
+  ],
   "env": {
     "production": {
       "plugins": [
         "transform-react-constant-elements",
-        "transform-react-inline-elements"
+        "transform-react-inline-elements",
+        "lodash"
       ]
     }
   }

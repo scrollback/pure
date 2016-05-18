@@ -48,7 +48,7 @@ class StartDiscussionContainer extends Component<void, Props, State> {
 							creator: props.user,
 						});
 
-						store.dispatch(changes);
+						store.put(changes);
 
 						// FIXME: This should be simpler
 						this.setState({

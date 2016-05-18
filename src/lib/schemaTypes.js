@@ -10,7 +10,7 @@ export type Entity = {
 	params?: Object;
 	tags?: Array<number>;
 	type: number;
-	updateTime: number;
+	updateTime?: number;
 }
 
 export type User = Entity & {
@@ -47,20 +47,24 @@ export type User = Entity & {
 }
 
 export type Item = Entity & {
-	body: string;
-	creator: string;
+	body?: string;
+	creator?: string;
 	parents: Array<string>;
 	score?: number;
 	updater: string;
 }
 
 export type Room = Item & {
-	identities: Array<string>;
+	identities?: Array<string>;
 }
 
-export type Text = Item
+export type Text = Item & {
+	body: string;
+	creator: string;
+}
 
 export type Thread = Item & {
+	body: string;
 	name: string;
 	score: number;
 }
@@ -80,7 +84,7 @@ export type Relation = {
 	resources?: { [key: string]: number };
 	roles?: Array<number>;
 	createTime: number;
-	updateTime: number;
+	updateTime?: number;
 	tags?: Array<number>;
 	transitRole?: number;
 	transitType?: number;
@@ -123,6 +127,6 @@ export type Note = {
 	readTime?: number;
 	score: number;
 	type: number;
-	updateTime: number;
+	updateTime?: number;
 	user?: string;
 }

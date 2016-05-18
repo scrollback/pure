@@ -3,7 +3,6 @@ package chat.belong.hello.modules.analytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
-import java.util.Date;
 import java.util.Map;
 
 public class Trackers {
@@ -13,12 +12,6 @@ public class Trackers {
     public static final String UTM_MEDIUM = "utm_medium";
     public static final String UTM_TERM = "utm_term";
     public static final String UTM_CONTENT = "utm_content";
-
-    public static void logTiming(String actionName, Date startTime, Date endTime) {
-        Answers.getInstance().logCustom(new CustomEvent("Timing")
-                .putCustomAttribute("Name", actionName)
-                .putCustomAttribute("Time Spent", (endTime.getTime() - startTime.getTime() / 1000)));
-    }
 
     public static void logInstall(String referrer, Map<String, String> params) {
         if (params == null || params.isEmpty()) {

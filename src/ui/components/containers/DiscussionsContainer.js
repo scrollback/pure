@@ -6,7 +6,7 @@ import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
 import Discussions from '../views/Discussions';
 import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
-import type { SubscriptionRange } from '../../../modules/store/ConnectTypes';
+import type { SubscriptionRange } from '../../../modules/store/SimpleStoreTypes';
 
 const CTA = { type: 'cta' };
 

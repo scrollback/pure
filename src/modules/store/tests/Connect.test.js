@@ -2,6 +2,7 @@ import test from 'ava';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
+import SimpleStore from '../SimpleStore';
 import Connect from '../Connect';
 import Provider from '../Provider';
 
@@ -9,9 +10,10 @@ test('should render component with no data', t => {
 	t.plan(1);
 
 	const TextComponent = ({ text }) => <span>{text}</span>; // eslint-disable-line
-	const store = {
-		subscribe: () => null,
-	};
+	const store = new SimpleStore({
+		watch: () => null,
+		put: () => null,
+	});
 	const wrapper = mount(
 		<Provider store={store}>
 			<Connect component={TextComponent} passProps={{ text: 'Hey!' }} />
@@ -25,12 +27,12 @@ test('should not render connected component without data', t => {
 	t.plan(2);
 
 	const NameComponent = ({ name }) => <span>{name}</span>; // eslint-disable-line react/prop-types
-
-	const store = {
-		subscribe: options => {
+	const store = new SimpleStore({
+		watch: options => {
 			t.is(options.type, 'name');
 		},
-	};
+		put: () => null,
+	});
 
 	const wrapper = mount(
 		<Provider store={store}>
@@ -53,8 +55,8 @@ test('should update connected component with data', t => {
 	let middleNameCallback;
 	let lastNameCallback;
 
-	const store = {
-		subscribe: (options, cb) => {
+	const store = new SimpleStore({
+		watch: (options, cb) => {
 			switch (options.type) {
 			case 'f':
 				firstNameCallback = cb;
@@ -66,8 +68,11 @@ test('should update connected component with data', t => {
 				lastNameCallback = cb;
 				break;
 			}
+
+			cb('');
 		},
-	};
+		put: () => null,
+	});
 
 	const wrapper = mount(
 		<Provider store={store}>
@@ -89,10 +94,6 @@ test('should update connected component with data', t => {
 		</Provider>
 	);
 
-	firstNameCallback('');
-	middleNameCallback('');
-	lastNameCallback('');
-
 	t.is(wrapper.text(), '  ');
 	firstNameCallback('first');
 	t.is(wrapper.text(), 'first  ');
@@ -108,11 +109,19 @@ test('should remove subscription on unmount', t => {
 	t.plan(1);
 
 	const container = document.createElement('div');
-	const remove = () => t.pass();
 	const TextComponent = ({ textContent }) => <span>{textContent}</span>; // eslint-disable-line react/prop-types
-	const store = {
-		subscribe: options => options.type === 'text' && { remove },
-	};
+	const store = new SimpleStore({
+		watch: options => {
+			if (options.type !== 'text') {
+				return null;
+			}
+
+			return () => {
+				t.pass();
+			};
+		},
+		put: () => null,
+	});
 
 	ReactDOM.render(
 		<Provider store={store}>
@@ -129,19 +138,18 @@ test('should pass dispatch', t => {
 
 	const TEST_ACTION = { type: 'TEST' };
 	const ButtonComponent = ({ ping }) => <button onClick={ping} />; // eslint-disable-line react/prop-types
-	const dispatch = action => {
-		t.is(action, TEST_ACTION);
-	};
-	const store = {
-		subscribe: () => null,
-		dispatch,
-	};
+	const store = new SimpleStore({
+		watch: () => null,
+		put: action => {
+			t.is(action, TEST_ACTION);
+		},
+	});
 
 	const wrapper = mount(
 		<Provider store={store}>
 			<Connect
 				mapActionsToProps={{
-					ping: s => () => s.dispatch(TEST_ACTION),
+					ping: s => () => s.put(TEST_ACTION),
 				}}
 				component={ButtonComponent}
 			/>
@@ -158,15 +166,15 @@ test('should pass dispatch and data', t => {
 
 	let callback;
 
-	const store = {
-		subscribe: (options, cb) => {
+	const store = new SimpleStore({
+		watch: (options, cb) => {
 			callback = options.type === 'label' ? cb : null;
 			return {
 				remove: () => (callback = null),
 			};
 		},
-		dispatch: action => action.type === 'CLICK' ? callback(action.payload.label) : null,
-	};
+		put: action => action.type === 'CLICK' ? callback(action.payload.label) : null,
+	});
 
 	const TestComponent = ({ sub }) => ( // eslint-disable-line react/prop-types
 		<Connect
@@ -176,7 +184,7 @@ test('should pass dispatch and data', t => {
 				},
 			}}
 			mapActionsToProps={{
-				click: s => () => s.dispatch({
+				click: s => () => s.put({
 					type: 'CLICK',
 					payload: {
 						label: 'Clicked',

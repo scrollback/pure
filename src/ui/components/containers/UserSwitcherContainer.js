@@ -68,7 +68,7 @@ const mapActionsToProps = {
 			return;
 		}
 
-		store.dispatch(initializeSession(item.session));
+		store.put(initializeSession(item.session));
 	},
 };
 

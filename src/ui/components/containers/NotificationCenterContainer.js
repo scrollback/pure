@@ -7,7 +7,7 @@ import NotificationCenter from '../views/NotificationCenter';
 import { dismissNote } from '../../../modules/store/actions';
 
 const mapActionsToProps = {
-	dismissNote: store => id => store.dispatch(dismissNote(id)),
+	dismissNote: store => id => store.put(dismissNote(id)),
 };
 
 const NotificationCenterContainer = (props: any) => (

@@ -21,10 +21,10 @@ const mapSubscriptionToProps = {
 };
 
 const mapActionsToProps = {
-	hideThread: (store, result) => () => store.dispatch(hideThread(result.thread)),
-	unhideThread: (store, result) => () => store.dispatch(unhideThread(result.thread)),
-	banUser: (store, result) => () => store.dispatch(banUser(result.thread.creator)),
-	unbanUser: (store, result) => () => store.dispatch(unbanUser(result.thread.creator)),
+	hideThread: (store, result) => () => store.put(hideThread(result.thread)),
+	unhideThread: (store, result) => () => store.put(unhideThread(result.thread)),
+	banUser: (store, result) => () => store.put(banUser(result.thread.creator)),
+	unbanUser: (store, result) => () => store.put(unbanUser(result.thread.creator)),
 };
 
 const DiscussionItemContainer = (props: any) => (

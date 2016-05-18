@@ -3,5 +3,7 @@
 import { PropTypes } from 'react';
 
 export default PropTypes.shape({
-	subscribe: PropTypes.func.isRequired,
+	observe: PropTypes.func.isRequired,
+	put: PropTypes.func.isRequired,
+	on: PropTypes.func.isRequired,
 });

@@ -7,8 +7,11 @@
     "es6": true
   },
 
-  "ecmaFeatures": {
-    "jsx": true
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
   },
 
   "plugins": [
@@ -31,6 +34,9 @@
     "ReactPropsChainableTypeChecker": false,
     "ReactPropTypes": false,
     "SyntheticEvent": false,
+
+    "Observable": false,
+    "Subscription": false,
   },
 
   "rules": {

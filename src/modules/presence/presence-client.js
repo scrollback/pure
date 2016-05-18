@@ -1,7 +1,7 @@
 /* @flow */
 
 import { bus, cache } from '../../core-client';
-import { subscribe, on } from '../store/store';
+import store from '../store/store';
 import { setPresence, setItemPresence } from '../store/actions';
 import { ROLE_VISITOR } from '../../lib/Constants';
 import promisify from '../../lib/promisify';
@@ -46,19 +46,19 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 // 	}
 // });
 
-subscribe({ type: 'state', path: 'user', source: 'presence' }, id => {
+store.observe({ type: 'state', path: 'user', source: 'presence' }).forEach(id => {
 	if (id) {
 		bus.emit('change', setPresence(id, 'online'));
 	}
 });
 
-on('subscribe', options => {
+store.on('subscribe', options => {
 	if (options.slice) {
 		getRelationAndSetPresence(options.slice, 'online');
 	}
 });
 
-on('unsubscribe', options => {
+store.on('unsubscribe', options => {
 	if (options.slice) {
 		getRelationAndSetPresence(options.slice, 'offline');
 	}

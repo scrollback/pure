@@ -25,20 +25,20 @@ const mapSubscriptionToProps = {
 const mapActionsToProps = {
 	hideText: (store, result) => () => {
 		if (result.text.type === TYPE_THREAD) {
-			store.dispatch(hideThread(result.text));
+			store.put(hideThread(result.text));
 		} else {
-			store.dispatch(hideText(result.text));
+			store.put(hideText(result.text));
 		}
 	},
 	unhideText: (store, result) => () => {
 		if (result.text.type === TYPE_THREAD) {
-			store.dispatch(unhideThread(result.text));
+			store.put(unhideThread(result.text));
 		} else {
-			store.dispatch(unhideText(result.text));
+			store.put(unhideText(result.text));
 		}
 	},
-	banUser: (store, result) => () => store.dispatch(banUser(result.text.creator)),
-	unbanUser: (store, result) => () => store.dispatch(unbanUser(result.text.creator)),
+	banUser: (store, result) => () => store.put(banUser(result.text.creator)),
+	unbanUser: (store, result) => () => store.put(unbanUser(result.text.creator)),
 };
 
 const ChatItemContainer = (props: any) => (

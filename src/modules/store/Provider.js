@@ -7,10 +7,10 @@
  */
 
 import { Component, Children, PropTypes } from 'react';
+import SimpleStore from './SimpleStore';
 import storeShape from './storeShape';
-import type { Store } from './ConnectTypes';
 
-export default class Provider extends Component<void, { children?: Element; store: Store }, void> {
+export default class Provider extends Component<void, { children?: Element; store: SimpleStore }, void> {
 	static propTypes = {
 		children: PropTypes.element.isRequired,
 		store: storeShape.isRequired,

@@ -14,8 +14,8 @@ const mapSubscriptionToProps = {
 };
 
 const mapActionsToProps = {
-	addPlace: (store, result, props) => (type, place) => store.dispatch(addPlace(props.user, type, place)),
-	removePlace: (store, result, props) => (type, place) => store.dispatch(removePlace(props.user, type, place)),
+	addPlace: (store, result, props) => (type, place) => store.put(addPlace(props.user, type, place)),
+	removePlace: (store, result, props) => (type, place) => store.put(removePlace(props.user, type, place)),
 };
 
 const MyPlacesContainer = (props: any) => (

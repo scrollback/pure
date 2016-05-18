@@ -345,13 +345,13 @@ class OnboardContainer extends Component<void, Props, State> {
 }
 
 const mapActionsToProps = {
-	clearSignUpError: (store, result) => () => store.dispatch(clearSignUpError(result.pendingUser)),
-	signIn: (store) => (provider, auth) => store.dispatch(signIn(provider, auth)),
-	cancelSignUp: (store) => () => store.dispatch(cancelSignUp()),
+	clearSignUpError: (store, result) => () => store.put(clearSignUpError(result.pendingUser)),
+	signIn: (store) => (provider, auth) => store.put(signIn(provider, auth)),
+	cancelSignUp: (store) => () => store.put(cancelSignUp()),
 	signUp: (store, result) => (id: string, name: string) => {
 		const { error, ...user } = result.pendingUser; // eslint-disable-line no-unused-vars
 
-		store.dispatch(signUp({
+		store.put(signUp({
 			...user,
 			id,
 			name,
@@ -378,7 +378,7 @@ const mapActionsToProps = {
 			};
 		}
 
-		store.dispatch(saveUser({
+		store.put(saveUser({
 			...result.user,
 			params: {
 				...params,

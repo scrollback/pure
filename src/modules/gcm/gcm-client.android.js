@@ -1,9 +1,9 @@
 /* @flow */
 
-import { subscribe } from '../store/store';
+import store from '../store/store';
 import GCMPreferences from '../../ui/modules/GCMPreferences';
 
-subscribe({ type: 'state', path: 'session', source: 'gcm' }, session => {
+store.observe({ type: 'state', path: 'session', source: 'gcm' }).forEach(session => {
 	if (session === '@@loading') {
 		return;
 	}

@@ -7,8 +7,8 @@ import { saveUser } from '../../../modules/store/actions';
 import { bus } from '../../../core-client';
 
 const mapActionsToProps = {
-	saveUser: store => user => store.dispatch(saveUser(user)),
-	saveParams: (store, result) => params => store.dispatch(saveUser({ ...result.user, params })),
+	saveUser: store => user => store.put(saveUser(user)),
+	saveParams: (store, result) => params => store.put(saveUser({ ...result.user, params })),
 	signOut: () => () => bus.emit('signout'),
 };
 

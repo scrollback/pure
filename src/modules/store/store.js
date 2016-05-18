@@ -1,47 +1,59 @@
 /* @flow */
 
 import { bus, cache } from '../../core-client';
-import type { SubscriptionOptions, Subscription } from './ConnectTypes';
+import SimpleStore from './SimpleStore';
+import type { SubscriptionOptions } from './SimpleStoreTypes';
 
 const LOADING = Object.freeze({ type: 'loading' });
 const LOADING_ITEMS = Object.freeze([ LOADING ]);
 
-export const subscribe = (options: SubscriptionOptions, callback: Function): Subscription => {
-	let unWatch, unWatchMe, unWatchUser;
-
+const watch = (options: SubscriptionOptions, callback: Function) => {
 	switch (options.type) {
 	case 'state':
 		if (typeof options.path !== 'string') {
-			throw new TypeError(`Invalid 'path' passed to store.subscribe::state in ${options.source}`);
+			throw new TypeError(`Invalid 'path' passed to store.observe::state in ${options.source}`);
 		}
 
-		unWatch = cache.watchState(options.path, callback);
-		break;
+		return cache.watchState(options.path, data => {
+			callback(data);
+		});
 	case 'entity':
 		if (typeof options.id !== 'string') {
-			throw new TypeError(`Invalid 'id' passed to store.subscribe::entity in ${options.source}`);
+			throw new TypeError(`Invalid 'id' passed to store.observe::entity in ${options.source}`);
 		}
 
-		unWatch = cache.watchEntity(options.id, data => data && data.type === 'loading' ? callback(LOADING) : callback(data || null));
-		break;
-	case 'me':
-		unWatchUser = cache.watchState('user', user => {
+		return cache.watchEntity(options.id, data => {
+			if (data && data.type === 'loading') {
+				callback(LOADING);
+			} else {
+				callback(data || null);
+			}
+		});
+	case 'me': {
+		let unWatchMe;
+
+		const unWatchUser = cache.watchState('user', user => {
 			if (unWatchMe) {
 				unWatchMe();
 			}
 
-			unWatchMe = cache.watchEntity(user, data => data && data.type === 'loading' ? callback(LOADING) : callback(data || null));
+			unWatchMe = cache.watchEntity(user, data => {
+				if (data && data.type === 'loading') {
+					callback(LOADING);
+				} else {
+					callback(data || null);
+				}
+			});
 		});
 
-		unWatch = () => {
+		return () => {
 			if (unWatchMe) {
 				unWatchMe();
 			}
 
 			unWatchUser();
 		};
-
-		break;
+	}
 	default:
 		if (options.slice) {
 			let range;
@@ -55,13 +67,13 @@ export const subscribe = (options: SubscriptionOptions, callback: Function): Sub
 					range = [ r.start, r.end ];
 				}
 			} else {
-				throw new TypeError(`Range was not passed to store.subscribe in ${options.source}`);
+				throw new TypeError(`Range was not passed to store.observe in ${options.source}`);
 			}
 
-			let unWatchInner, handle;
+			let unWatch, handle;
 
 			const watchItems = () => {
-				unWatchInner = cache.watch(options.slice, range, ({ arr }) => {
+				unWatch = cache.watch(options.slice, range, ({ arr }) => {
 					if (arr.length === 1 && arr[0] && arr[0].type === 'loading') {
 						callback(LOADING_ITEMS);
 					} else {
@@ -78,9 +90,9 @@ export const subscribe = (options: SubscriptionOptions, callback: Function): Sub
 				watchItems();
 			}
 
-			unWatch = () => {
-				if (unWatchInner) {
-					unWatchInner();
+			return () => {
+				if (unWatch) {
+					unWatch();
 				}
 
 				if (handle) {
@@ -88,29 +100,16 @@ export const subscribe = (options: SubscriptionOptions, callback: Function): Sub
 				}
 			};
 		} else {
-			throw new TypeError(`Invalid options passed to store.subscribe in ${options.source}`);
+			throw new TypeError(`Invalid options passed to store.observe in ${options.source}`);
 		}
 	}
-
-	bus.emit('store:subscribe', options);
-
-	return {
-		remove: () => {
-			unWatch();
-
-			bus.emit('store:unsubscribe', options);
-		},
-	};
 };
 
-export const off = (event: string, callback: Function): void => bus.off(`store:${event}`, callback);
+const put = (payload: Object): void => bus.emit('change', payload);
 
-export const on = (event: string, callback: Function): Subscription => {
-	bus.on(`store:${event}`, callback);
+const store = new SimpleStore({
+	watch,
+	put,
+});
 
-	return {
-		remove: () => off(event, callback),
-	};
-};
-
-export const dispatch = (payload: Object): void => bus.emit('change', payload);
+export default store;

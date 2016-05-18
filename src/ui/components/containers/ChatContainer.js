@@ -7,7 +7,7 @@ import Chat from '../views/Chat';
 import { sendMessage } from '../../../modules/store/actions';
 
 const mapActionsToProps = {
-	sendMessage: (store, result, props) => (id, body, meta) => store.dispatch(sendMessage({
+	sendMessage: (store, result, props) => (id, body, meta) => store.put(sendMessage({
 		body,
 		meta,
 		parents: [ props.thread, props.room ],

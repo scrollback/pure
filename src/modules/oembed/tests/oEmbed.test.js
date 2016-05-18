@@ -37,14 +37,6 @@ test('should return oEmbed data for deccanherald.com', async t => {
 	t.is(data.description, 'BJP MPs were today asked to avoid making provocative statements amid the debate in Parliament over the issue of intolerance where controversial comments by some party leaders, including ministers, have come in handy for the opposition in its attack on the government.');
 });
 
-test('should return oEmbed data for storypick.com', async t => {
-	const data = await oEmbed('http://www.storypick.com/mark-priscilla-max/');
-
-	t.is(data.type, 'rich');
-	t.is(data.thumbnail_url, 'http://www.storypick.com/wp-content/uploads/2015/12/mark-priscilla-cover.jpg');
-	t.is(data.title, 'Mark Zuckerberg Just Became Dad Of A Baby Girl, Pledges To Donate 99% Of Facebook Shares.');
-});
-
 test('should return oEmbed data 9gag.com', async t => {
 	const data = await oEmbed('http://9gag.com/gag/aNK6m3b');
 

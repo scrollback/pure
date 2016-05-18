@@ -1,0 +1,163 @@
+html, body { margin: 0; padding: 0; }
+body { font: 900 24px/1.5em "Alegreya Sans",sans-serif; }
+
+.banner {
+    display: table;
+    table-layout: fixed;
+    font-family: Alegreya Sans, sans-serif;
+    font-size: 24px;
+    width: 100%;
+    background: #333;
+    color: #fff;
+}
+
+.banner-content {
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	padding: 16px;
+}
+
+.banner-header {
+	color: #fff;
+	font-weight: 300;
+	font-size: 36px;
+}
+
+.banner-summary {
+	color: #999;
+	font-size: 24px;
+}
+
+section { padding: 1em 0; min-width: 400px; }
+.top { background: #f14; color: #fff; }
+.mid { background: #fff; color: #64b; padding: 2em 0 2em 0; }
+.bot { background: #64b; color: #fff; }
+
+.container { max-width: 1366px; margin: 0 auto; }
+
+article {
+	box-sizing: border-box;
+	padding: 1em;
+	position: relative;
+}
+article.left {
+	width: 60%;
+	float: left;
+	clear: left;
+	text-align: right;
+}
+article.right { padding-left: 60%; }
+
+article.levels { padding-right: 4%; }
+article.screenshot img { margin: 0 auto; margin-top: -7em; }
+article.uses, article.levels { padding-top: 3em; }
+
+img, svg { max-width: 100%; display: block; }
+.logo > svg { width: 80%; }
+.levels svg { width: 100%; }
+
+.promo { padding-top: 4em; font-size: 32px; }
+.download {
+	display: block;
+	text-decoration: none;
+	color: #fff;
+	background: #333;
+	padding: 1em;
+	text-align: center;
+	border-radius: 4px;
+	width: 8em;
+	position: relative;
+	left: 40%;
+	margin: 3.5em 0 -4.5em -4em;
+	text-indent: -3em;
+	text-transform: uppercase;
+}
+.download svg {
+	display: inline-block;
+	height: 1em;
+	vertical-align: middle;
+	margin-right: 0.5em;
+	fill: #cf9;
+}
+
+
+h2 {
+	font-weight: 300;
+	font-size: 32px;
+	margin: 0;
+	text-align: left;
+	padding-bottom: 1em;
+}
+h2 > strong { font-weight: 500; }
+.levels h2 { padding-left: 2em; }
+
+@media all and (max-width: 800px) {
+	article.left {
+		float: none;
+		width: 100%;
+		clear: none;
+	}
+	article.screenshot img { margin-top: 0; }
+	article.right { padding-left: 1em; }
+	article.levels { padding-right: 1em; }
+	.promo { padding-top: 1em; text-align: center; }
+	.download { text-indent: 0; left: 50%; }
+
+	.logo > svg { margin: 0 auto; }
+	.levels h2 { padding-left: 0; }
+
+	.top { max-height: 560px; overflow: hidden; }
+}
+
+
+
+ul { text-align: left; margin: 0; padding: 0; }
+
+li {
+	list-style-type: none;
+	padding: 0;
+	margin: 0;
+	font-weight: 500;
+	font-size: 24px;
+	line-height: 1em;
+	position: relative;
+}
+
+li strong { font-weight: 900; }
+
+.levels .illustration { position: relative; }
+.levels li {
+	white-space: nowrap;
+	line-height: 1.5em;
+	text-shadow: 3px  0 1px #64b,
+				-3px  0 1px #64b,
+				 0  3px 1px #64b,
+				 0 -3px 1px #64b;
+}
+.levels ul {
+	position: absolute;
+	top: 10%;
+	right: 40%;
+}
+
+.building { color: #fc9; fill: #fc9; }
+.locality { color: #9fc; fill: #9fc; }
+.city { color: #f9c; fill: #f9c; }
+
+.uses li { padding: 0.5em 0 0.5em 60px; }
+.uses li > svg {
+	position: absolute;
+	left: 0; top: 50%;
+	margin-top: -25px;
+}
+
+.uses .burger svg, .uses .heart svg { margin-top: -22.5px; }
+
+.football { color: #9fc; fill: #9fc; }
+.cupcake { color: #fc9; fill: #fc9; }
+.weather { color: #c9f; fill: #c9f; }
+.burger { color: #9cf; fill: #9cf; }
+.heart { color: #f9c; fill: #f9c; }
+
+footer { clear: both; font-weight: 300; font-size: 16px; padding-top: 5em; text-align: center; }

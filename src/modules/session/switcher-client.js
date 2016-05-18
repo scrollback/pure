@@ -1,8 +1,8 @@
 /* @flow */
 
 import { TAG_USER_CONTENT, TAG_USER_ADMIN } from '../../lib/Constants';
-import { subscribe, dispatch } from '../store/store';
 import { cache, config } from '../../core-client';
+import store from '../store/store';
 import PersistentStorage from '../../lib/PersistentStorage';
 
 const sessionListStorage = new PersistentStorage('sessionList');
@@ -17,19 +17,19 @@ const {
 
 
 function saveSessionList(list) {
-	dispatch({ state: { sessionList: list } });
+	store.put({ state: { sessionList: list } });
 }
 
 function removeSessionList() {
-	dispatch({ state: { sessionList: null } });
+	store.put({ state: { sessionList: null } });
 }
 
 function saveRoomList(list) {
-	dispatch({ state: { roomList: list } });
+	store.put({ state: { roomList: list } });
 }
 
 function removeRoomList() {
-	dispatch({ state: { sessionList: null } });
+	store.put({ state: { sessionList: null } });
 }
 
 
@@ -117,7 +117,7 @@ async function fetchRooms(user) {
 	}
  }
 
- subscribe({ type: 'me', source: 'sessionswitcher' }, user => {
+store.observe({ type: 'me', source: 'sessionswitcher' }).forEach(user => {
 	 if (user) {
 		fetchUsers(user);
 		fetchRooms(user);

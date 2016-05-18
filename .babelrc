@@ -2,5 +2,8 @@
   "presets": [
     "react-native"
   ],
+  "plugins": [
+    "lodash"
+  ],
   "ignore": "node_modules/!(react-native*|react-clone-referenced-element)*/**"
 }
