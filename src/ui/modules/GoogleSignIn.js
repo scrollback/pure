@@ -30,5 +30,3 @@ export default class Google {
 		return Promise.resolve(true);
 	}
 }
-
-window.googlelogin = Google.signIn;

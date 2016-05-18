@@ -38,5 +38,3 @@ export default class Facebook {
 		return Promise.reject(new Error('Not implemented'));
 	}
 }
-
-window.facebooklogin = Facebook.logInWithReadPermissions;
