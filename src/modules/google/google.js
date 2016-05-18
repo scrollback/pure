@@ -18,7 +18,7 @@ import { bus, config } from '../../core-server';
 import encodeURITemplate from '../../lib/encodeURITemplate';
 import * as Constants from '../../lib/Constants';
 
-const redirectURL = `https://${config.server.host}${config.google.redirect_path}`;
+const redirectURL = `${config.server.protocol}//${config.server.host}:${config.server.port}${config.google.redirect_path}`;
 
 const SCRIPT_REDIRECT = `\
 location.href = 'https://accounts.google.com/o/oauth2/auth?\

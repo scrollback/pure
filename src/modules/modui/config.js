@@ -8,7 +8,7 @@ export * from '../../core-base';
 export let config = jsonop({}, defaults);
 
 try {
-	config = jsonop(config, require('../config/modui.json'));
+	config = jsonop(config, require('../../../config/modui.json'));
 } catch (e) {
 	// ignore
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Radium from 'radium';
 import config from './config';
+import '../../ui/modules/Facebook';
 
 const styles = {
 	facebook: {
@@ -11,7 +12,7 @@ const styles = {
 class FacebookLogin extends Component {
 
 	webLogin: Function = () => {
-		window.open('http://' + config.server.host + ':' + config.server.port + config.facebook.login_url);
+		window.open(config.server.protocol + '//' + config.server.host + ':' + config.server.port + config.facebook.login_url);
 	};
 
 	render() {

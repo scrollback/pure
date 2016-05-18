@@ -28,6 +28,11 @@ sockServer.on('connection', (socket) => {
 		const index = sockets.indexOf(socket);
 		if (index >= 0) { sockets.splice(index, 1); }
 	});
+
+	socket.on('message', (data) => {
+		bus.emit('change', JSON.parse(data).code);
+		console.log('Data received:', JSON.parse(data).code);
+	});
 });
 
 bus.on('change', (change) => {
