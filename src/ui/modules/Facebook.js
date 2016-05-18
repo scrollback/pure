@@ -1,21 +1,25 @@
-/* @flow */
+import { config } from '../../core-client';
 
-type AccessToken = {
-	access_token: ?string;
-	user_id: ?string;
-	expires: ?number;
-	permissions_granted: Array<string>;
-	permissions_declined: Array<string>;
+type AuthCode = {
+	code: string;
 }
 
 export default class Facebook {
-	static logInWithReadPermissions: (permissions: Array<string>) => Promise<AccessToken>;
-	static logInWithPublishPermissions: (permissions: Array<string>) => Promise<AccessToken>;
-	static logOut: () => Promise<boolean>;
-	static getCurrentAccessToken: () => Promise<AccessToken>;
-	static sendGraphRequest: (
-		method: 'GET' | 'POST' | 'DELETE',
-		path: string,
-		params: { [key: string]: string }
-	) => void;
+	static logInWithReadPermissions(): Promise<AuthCode> {
+		return new Promise(resolve => {
+			function listener({ data }) {
+				if (data && data.type === 'auth' && data.provider === 'facebook') {
+					resolve({
+						code: data.code,
+					});
+					window.removeEventListener('message', listener);
+				}
+			}
+			window.addEventListener('message', listener);
+			window.open(config.server.protocol + '//' + config.server.host + config.facebook.login_url);
+		});
+	}
 }
+
+
+window.facebooklogin = Facebook.logInWithReadPermissions;

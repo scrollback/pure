@@ -1,21 +1,31 @@
 import React, { Component } from 'react';
+import Radium from 'radium';
 import TodoItem from './TodoItem';
 
-let separatorStyle = {
-	borderBottom: '1px solid red',
+const styles = {
+	todolist: {
+		float: 'left',
+		width: '31%',
+		height: '100%',
+		borderRight: '2px solid #e9ebed',
+		overflowY: 'auto'
+	},
 };
 
 class TodoList extends Component {
 	render() {
 		return (
-			<div>
-				{this.props.todos.map(todo =>
-					todo === 'separator' ?
-					<div style={separatorStyle}></div> :
-					<TodoItem key={todo.id} todo={todo}/>
+			<div style={styles.todolist}>
+				{this.props.todo.map((todo, index) =>
+					<TodoItem
+						key={todo.id}
+						todo={todo}
+						removeTodo={this.props.removeTodo}
+						index={index}
+					/>
 				)}
 			</div>
 		);
 	}
 }
-export default TodoList;
+export default Radium(TodoList);

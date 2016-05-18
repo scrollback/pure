@@ -76,6 +76,7 @@ build/
 
 config/server.json
 config/client.json
+config/modui.json
 FewIntegrationTests.txt
 
 src/modules/postgres/setup/dblink.sql
