@@ -7,9 +7,10 @@ import Colors from '../../../Colors';
 import AppText from '../AppText';
 import PageLoading from '../PageLoading';
 import PageEmpty from '../PageEmpty';
-import Modal from '../Modal';
 import Icon from '../Icon';
 import TouchFeedback from '../TouchFeedback';
+import ActionSheet from '../ActionSheet';
+import ActionSheetItem from '../ActionSheetItem';
 import GCMPreferences from '../../../modules/GCMPreferences';
 import type { User } from '../../../../lib/schemaTypes';
 
@@ -90,6 +91,7 @@ type Props = {
 
 type State = {
 	GCMEnabled: boolean;
+	frequencySheetVisible: boolean;
 }
 
 const PUSH_NOTIFICATION_ENABLED_KEY = 'enabled';
@@ -112,6 +114,7 @@ export default class Account extends Component<void, Props, State> {
 
 	state: State = {
 		GCMEnabled: true,
+		frequencySheetVisible: false,
 	};
 
 	componentWillMount() {
@@ -192,12 +195,20 @@ export default class Account extends Component<void, Props, State> {
 		this.props.saveParams({ ...params, email });
 	};
 
-	_handleSelectFrequency: Function = () => {
-		const options = [ 'Daily', 'Never' ];
+	_getSelectFrequencyHandler: Function = value => {
+		return () => this._handleEmailFrequencyChange(value);
+	};
 
-		Modal.showActionSheetWithOptions({ options }, i =>
-			this._handleEmailFrequencyChange(options[i].toLowerCase())
-		);
+	_handleShowFrequencySheet: Function = () => {
+		this.setState({
+			frequencySheetVisible: true,
+		});
+	};
+
+	_handleRequestCloseFrequencySheet: Function = () => {
+		this.setState({
+			frequencySheetVisible: false,
+		});
 	};
 
 	_handleSignOut: Function = () => {
@@ -292,7 +303,7 @@ export default class Account extends Component<void, Props, State> {
 							onValueChange={this._handleEmailNotificationChange}
 						/>
 					</View>
-					<TouchFeedback onPress={this._handleSelectFrequency}>
+					<TouchFeedback onPress={this._handleShowFrequencySheet}>
 						<View style={styles.item}>
 							<View style={styles.itemLabel}>
 								<AppText style={styles.itemText}>Email digest frequency</AppText>
@@ -303,6 +314,18 @@ export default class Account extends Component<void, Props, State> {
 									}
 								</AppText>
 							</View>
+
+							<ActionSheet
+								visible={this.state.frequencySheetVisible}
+								onRequestClose={this._handleRequestCloseFrequencySheet}
+							>
+								<ActionSheetItem onPress={this._getSelectFrequencyHandler('daily')}>
+									Daily
+								</ActionSheetItem>
+								<ActionSheetItem onPress={this._getSelectFrequencyHandler('never')}>
+									Never
+								</ActionSheetItem>
+							</ActionSheet>
 						</View>
 					</TouchFeedback>
 				</View>

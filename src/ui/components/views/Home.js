@@ -4,18 +4,14 @@ import React, { PropTypes, Component } from 'react';
 import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 import PersistentNavigator from '../../navigation/PersistentNavigator';
-import StatusbarWrapper from './StatusbarWrapper';
-import KeyboardSpacer from './KeyboardSpacer';
-import Modal from './Modal';
 import UserSwitcherContainer from '../containers/UserSwitcherContainer';
 import NavigationState from '../../navigation-rfc/Navigation/NavigationState';
-import VersionCodes from '../../modules/VersionCodes';
 import Colors from '../../Colors';
 import { convertRouteToState, convertURLToState } from '../../../lib/Route';
 
 const {
+	StatusBar,
 	StyleSheet,
-	Platform,
 	View,
 } = ReactNative;
 
@@ -26,9 +22,6 @@ const styles = StyleSheet.create({
 	},
 	inner: {
 		flex: 1,
-	},
-	statusbar: {
-		backgroundColor: Colors.primary,
 	},
 });
 
@@ -55,18 +48,12 @@ export default class Home extends Component<void, Props, void> {
 			<View style={styles.container}>
 				<UserSwitcherContainer />
 				<View style={styles.inner}>
-					<StatusbarWrapper style={styles.statusbar} />
+					<StatusBar backgroundColor={Colors.primaryDark} />
 					<PersistentNavigator
 						initialState={new NavigationState(routes, index)}
 						persistenceKey={initialURL ? null : PERSISTANCE_KEY}
 					/>
-
-					{Platform.Version >= VersionCodes.KITKAT ?
-						<KeyboardSpacer /> :
-						null // Android seems to Pan the screen on < Kitkat
-					}
 				</View>
-				<Modal />
 			</View>
 		);
 	}

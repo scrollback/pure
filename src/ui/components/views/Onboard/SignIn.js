@@ -8,9 +8,8 @@ import GoogleSignIn from '../../../modules/GoogleSignIn';
 import Facebook from '../../../modules/Facebook';
 import Colors from '../../../Colors';
 
-global.GoogleSignIn = GoogleSignIn;
-
 const {
+	StatusBar,
 	StyleSheet,
 	View,
 	ToastAndroid,
@@ -201,6 +200,7 @@ export default class SignIn extends Component<void, Props, State> {
 	render() {
 		return (
 			<View style={styles.container}>
+				<StatusBar backgroundColor={Colors.black} />
 				<Image source={require('../../../../../assets/signin_bg.jpg')} style={styles.cover}>
 					<View style={styles.overlay}>
 						<View style={styles.logoContainer}>

@@ -1,43 +1,81 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
+import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 import FloatingActionButton from './FloatingActionButton';
-import Modal from './Modal';
 import StartDiscussionContainer from '../containers/StartDiscussionContainer';
+
+const {
+	Modal,
+	View,
+	StyleSheet,
+} = ReactNative;
+
+const styles = StyleSheet.create({
+	container: {
+		position: 'absolute',
+		bottom: 0,
+		left: 0,
+		right: 0,
+		flex: 1,
+	},
+});
 
 type Props = {
 	room: string;
 	user: string;
 	onNavigation: Function;
-};
+}
 
-export default class StartDiscussionButton extends Component<void, Props, void> {
+type State = {
+	modalVisible: boolean
+}
+
+export default class StartDiscussionButton extends Component<void, Props, State> {
 	static propTypes = {
 		room: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
 		onNavigation: PropTypes.func.isRequired,
 	};
 
-	shouldComponentUpdate(nextProps: Props): boolean {
-		return !shallowEqual(this.props, nextProps);
+	state: State = {
+		modalVisible: false,
+	};
+
+	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+		return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
 	}
 
-	_dismissModal: Function = () => {
-		Modal.renderChild(null);
+	_handleRequestClose: Function = () => {
+		this.setState({
+			modalVisible: false,
+		});
 	};
 
 	_handlePress: Function = () => {
-		Modal.renderChild(<StartDiscussionContainer {...this.props} dismiss={this._dismissModal} />);
+		this.setState({
+			modalVisible: true,
+		});
 	};
 
 	render() {
 		return (
-			<FloatingActionButton
-				{...this.props}
-				icon='create'
-				onPress={this._handlePress}
-			/>
+			<View style={styles.container}>
+				<FloatingActionButton
+					{...this.props}
+					icon='create'
+					onPress={this._handlePress}
+				/>
+
+				<Modal
+					visible={this.state.modalVisible}
+					onRequestClose={this._handleRequestClose}
+					animationType='fade'
+				>
+					<StartDiscussionContainer {...this.props} dismiss={this._handleRequestClose} />
+				</Modal>
+			</View>
 		);
 	}
 }

@@ -7,6 +7,7 @@ import Colors from '../../Colors';
 import Loading from './Loading';
 
 const {
+	StatusBar,
 	StyleSheet,
 	View,
 	Image,
@@ -40,6 +41,7 @@ export default class Splash extends Component<void, any, void> {
 	render() {
 		return (
 			<View style={styles.container}>
+				<StatusBar backgroundColor={Colors.primaryDark} />
 				<Image style={styles.logo} source={require('../../../../assets/logo-white.png')} />
 				<Loading style={styles.loading} />
 			</View>

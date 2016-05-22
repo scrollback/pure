@@ -7,8 +7,9 @@ import Colors from '../../../Colors';
 import AppText from '../AppText';
 import ListItem from '../ListItem';
 import Icon from '../Icon';
-import Modal from '../Modal';
 import Time from '../Time';
+import ActionSheet from '../ActionSheet';
+import ActionSheetItem from '../ActionSheetItem';
 import Share from '../../../modules/Share';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -73,7 +74,11 @@ type Props = {
 	onSelect: Function;
 }
 
-export default class RoomItem extends Component<void, Props, void> {
+type State = {
+	actionSheetVisible: boolean;
+}
+
+export default class RoomItem extends Component<void, Props, State> {
 	static propTypes = {
 		room: PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -83,27 +88,35 @@ export default class RoomItem extends Component<void, Props, void> {
 		onSelect: PropTypes.func,
 	};
 
-	shouldComponentUpdate(nextProps: Props): boolean {
-		return !shallowEqual(this.props, nextProps);
+	state: State = {
+		actionSheetVisible: false,
+	};
+
+	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+		return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
 	}
 
-	_handleShowMenu: Function = () => {
+	_handleShareGroup: Function = () => {
 		const { room } = this.props;
 
-		const options = [];
-		const actions = [];
+		Share.shareItem('Share group', config.server.protocol + '//' + config.server.host + convertRouteToURL({
+			name: 'room',
+			props: {
+				room: room.id,
+			},
+		}));
+	};
 
-		options.push('Share group');
-		actions.push(() => {
-			Share.shareItem('Share group', config.server.protocol + '//' + config.server.host + convertRouteToURL({
-				name: 'room',
-				props: {
-					room: room.id,
-				},
-			}));
+	_handleShowMenu: Function = () => {
+		this.setState({
+			actionSheetVisible: true,
 		});
+	};
 
-		Modal.showActionSheetWithOptions({ options }, index => actions[index]());
+	_handleRequestClose: Function = () => {
+		this.setState({
+			actionSheetVisible: false,
+		});
 	};
 
 	_handlePress: Function = () => {
@@ -159,6 +172,12 @@ export default class RoomItem extends Component<void, Props, void> {
 						size={20}
 					/>
 				</TouchableOpacity>
+
+				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
+					<ActionSheetItem onPress={this._handleShareGroup}>
+						Share group
+					</ActionSheetItem>
+				</ActionSheet>
 			</ListItem>
 		);
 	}

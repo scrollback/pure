@@ -3,23 +3,21 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import NextButton from './NextButton';
-import StatusbarWrapper from '../StatusbarWrapper';
 import AppTextInput from '../AppTextInput';
 import KeyboardSpacer from '../KeyboardSpacer';
 import OnboardTitle from './OnboardTitle';
 import OnboardParagraph from './OnboardParagraph';
 import OnboardError from './OnboardError';
 import Icon from '../Icon';
-import VersionCodes from '../../../modules/VersionCodes';
 import Colors from '../../../Colors';
 import { config } from '../../../../core-client';
 
 const {
+	StatusBar,
 	View,
 	ScrollView,
 	Image,
 	StyleSheet,
-	Platform,
 	TouchableOpacity,
 } = ReactNative;
 
@@ -133,8 +131,8 @@ export default class UserDetails extends Component<void, Props, void> {
 
 		return (
 			<View style={styles.container}>
+				<StatusBar backgroundColor={Colors.grey} />
 				<ScrollView keyboardShouldPersistTaps contentContainerStyle={[ styles.container, styles.inner ]}>
-					<StatusbarWrapper />
 					<TouchableOpacity style={styles.closeButtonContainer} onPress={this.props.cancelSignUp}>
 						<Icon
 							name='close'
@@ -181,11 +179,6 @@ export default class UserDetails extends Component<void, Props, void> {
 					disabled={!this.props.canGoForward}
 					onPress={this.props.submitUserDetails}
 				/>
-
-				{Platform.Version >= VersionCodes.KITKAT ?
-					<KeyboardSpacer /> :
-					null // Android seems to Pan the screen on < Kitkat
-				}
 			</View>
 		);
 	}

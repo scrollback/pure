@@ -4,13 +4,13 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import LocationItem from './LocationItem';
 import PoweredByGoogle from './PoweredByGoogle';
-import KeyboardSpacer from '../KeyboardSpacer';
-import StatusbarWrapper from '../StatusbarWrapper';
 import SearchableList from '../SearchableList';
+import KeyboardSpacer from '../KeyboardSpacer';
 import Colors from '../../../Colors';
 import GooglePlaces from '../../../modules/GooglePlaces';
 
 const {
+	StatusBar,
 	StyleSheet,
 	View,
 } = ReactNative;
@@ -60,7 +60,7 @@ export default class PlacesSelector extends Component<void, Props, void> {
 	render() {
 		return (
 			<View style={styles.container}>
-				<StatusbarWrapper />
+				<StatusBar backgroundColor={Colors.grey} />
 				<SearchableList
 					getResults={this._getResults}
 					renderRow={this._renderRow}

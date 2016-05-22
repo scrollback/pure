@@ -9,8 +9,9 @@ import CardTitle from './CardTitle';
 import DiscussionSummary from './DiscussionSummary';
 import DiscussionFooter from './DiscussionFooter';
 import TouchFeedback from './TouchFeedback';
-import Modal from './Modal';
 import Icon from './Icon';
+import ActionSheet from './ActionSheet';
+import ActionSheetItem from './ActionSheetItem';
 import Share from '../../modules/Share';
 import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
 import { convertRouteToURL } from '../../../lib/Route';
@@ -67,7 +68,11 @@ type Props = {
 	onNavigation: Function;
 }
 
-export default class DiscussionItem extends Component<void, Props, void> {
+type State = {
+	actionSheetVisible: boolean
+}
+
+export default class DiscussionItem extends Component<void, Props, State> {
 	static propTypes = {
 		thread: PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -84,8 +89,12 @@ export default class DiscussionItem extends Component<void, Props, void> {
 		unbanUser: PropTypes.func.isRequired,
 	};
 
-	shouldComponentUpdate(nextProps: Props): boolean {
-		return !shallowEqual(this.props, nextProps);
+	state: State = {
+		actionSheetVisible: false,
+	};
+
+	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+		return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
 	}
 
 	_copyToClipboard: Function = text => {
@@ -93,41 +102,57 @@ export default class DiscussionItem extends Component<void, Props, void> {
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};
 
-	_handleShowMenu: Function = () => {
+	_handleOpenImage: Function = () => {
 		const { thread } = this.props;
-		const menu = {};
 
-		menu['Copy title'] = () => this._copyToClipboard(thread.name);
+		if (thread.meta) {
+			const { photo } = thread.meta;
 
-		const { meta } = thread;
-
-		if (meta && meta.type === 'photo') {
-			menu['Open image in browser'] = () => Linking.openURL(meta.url);
-			menu['Copy image link'] = () => this._copyToClipboard(meta.url);
-		} else {
-			menu['Copy summary'] = () => this._copyToClipboard(thread.body);
+			Linking.openURL(photo.url);
 		}
+	};
 
-		menu['Share discussion'] = () => {
-			Share.shareItem('Share discussion', config.server.protocol + '//' + config.server.host + convertRouteToURL({
-				name: 'chat',
-				props: {
-					room: thread.parents[0],
-					thread: thread.id,
-					title: thread.name,
-				},
-			}));
-		};
+	_handleCopyImageLink: Function = () => {
+		const { thread } = this.props;
 
-		if (this.props.isUserAdmin) {
-			if (thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1) {
-				menu['Unhide discussion'] = () => this.props.unhideThread();
-			} else {
-				menu['Hide discussion'] = () => this.props.hideThread();
-			}
+		if (thread.meta) {
+			const { photo } = thread.meta;
+
+			this._copyToClipboard(photo.url);
 		}
+	};
 
-		Modal.showActionSheetWithItems(menu);
+	_handleCopyTitle: Function = () => {
+		this._copyToClipboard(this.props.thread.name);
+	};
+
+	_handleCopySummary: Function = () => {
+		this._copyToClipboard(this.props.thread.body);
+	};
+
+	_handleShare: Function = () => {
+		const { thread } = this.props;
+
+		Share.shareItem('Share discussion', config.server.protocol + '//' + config.server.host + convertRouteToURL({
+			name: 'chat',
+			props: {
+				room: thread.parents[0],
+				thread: thread.id,
+				title: thread.name,
+			},
+		}));
+	};
+
+	_handleShowMenu: Function = () => {
+		this.setState({
+			actionSheetVisible: true,
+		});
+	};
+
+	_handleRequestClose: Function = () => {
+		this.setState({
+			actionSheetVisible: false,
+		});
 	};
 
 	_handlePress: Function = () => {
@@ -145,6 +170,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 	render() {
 		const {
 			thread,
+			isUserAdmin,
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
@@ -176,6 +202,35 @@ export default class DiscussionItem extends Component<void, Props, void> {
 						<DiscussionFooter {...this.props} style={[ styles.item, styles.footer ]} />
 					</View>
 				</TouchFeedback>
+
+				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
+					<ActionSheetItem onPress={this._handleCopyTitle}>
+						Copy title
+					</ActionSheetItem>
+
+					{thread.meta && thread.meta.photo ? [
+						<ActionSheetItem key='open-image' onPress={this._handleOpenImage}>
+							Open image in browser
+						</ActionSheetItem>,
+						<ActionSheetItem key='copy-imagelink' onPress={this._handleCopyImageLink}>
+							Copy image link
+						</ActionSheetItem>,
+					] :
+						<ActionSheetItem onPress={this._handleCopySummary}>
+							Copy summary
+						</ActionSheetItem>
+					}
+
+					{isUserAdmin ?
+						hidden ?
+							<ActionSheetItem onPress={this.props.unhideThread}>
+								Unhide discussion
+							</ActionSheetItem> :
+							<ActionSheetItem onPress={this.props.hideThread}>
+								Hide discussion
+							</ActionSheetItem> : null
+					}
+				</ActionSheet>
 			</Card>
 		);
 	}

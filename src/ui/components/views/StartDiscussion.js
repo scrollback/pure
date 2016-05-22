@@ -8,7 +8,6 @@ import ImageChooser from 'react-native-image-chooser';
 import Colors from '../../Colors';
 import AppText from './AppText';
 import AppTextInput from './AppTextInput';
-import StatusbarWrapper from './StatusbarWrapper';
 import AppbarSecondary from './AppbarSecondary';
 import AppbarTouchable from './AppbarTouchable';
 import AppbarIcon from './AppbarIcon';
@@ -455,8 +454,6 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 
 		return (
 			<View style={styles.container}>
-				<StatusbarWrapper />
-
 				<AppbarSecondary>
 					<AppbarTouchable type='secondary' onPress={this.props.dismiss}>
 						<AppbarIcon name='close' style={styles.icon} />
@@ -490,15 +487,15 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 							onUploadFinish={this._handleUploadFinish}
 							autoStart
 						/> :
-						<GrowingTextInput
-							numberOfLines={5}
-							value={this.state.body}
-							onChangeText={this._handleChangeBody}
-							placeholder='And a short summary'
-							autoCapitalize='sentences'
-							inputStyle={[ styles.threadSummary, styles.entry ]}
-							underlineColorAndroid='transparent'
-						/>
+							<GrowingTextInput
+								numberOfLines={5}
+								value={this.state.body}
+								onChangeText={this._handleChangeBody}
+								placeholder='And a short summary'
+								autoCapitalize='sentences'
+								inputStyle={[ styles.threadSummary, styles.entry ]}
+								underlineColorAndroid='transparent'
+							/>
 					}
 
 					<TouchableOpacity onPress={this._handleSharePress}>
@@ -536,11 +533,11 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 							<View style={styles.postButtonInner}>
 								<AppText style={styles.postButtonText}>{isLoading ? 'Posting…' : 'Post'}</AppText>
 							</View> :
-							<TouchFeedback onPress={this._handlePress}>
-								<View style={styles.postButtonInner}>
-									<AppText style={styles.postButtonText}>Post</AppText>
-								</View>
-							</TouchFeedback>
+								<TouchFeedback onPress={this._handlePress}>
+									<View style={styles.postButtonInner}>
+										<AppText style={styles.postButtonText}>Post</AppText>
+									</View>
+								</TouchFeedback>
 						}
 					</View>
 				</View>

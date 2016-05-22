@@ -5,6 +5,7 @@ export default {
 	lightGrey: '#eee',
 	darkGrey: '#444',
 	primary: '#6644bb',
+	primaryDark: '#4c338b',
 	accent: '#ff1144',
 	info: '#2196f3',
 	error: '#f44336',

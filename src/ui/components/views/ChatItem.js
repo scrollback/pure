@@ -7,9 +7,10 @@ import Colors from '../../Colors';
 import AvatarRound from './AvatarRound';
 import ChatBubble from './ChatBubble';
 import Embed from './Embed';
-import Modal from './Modal';
 import Icon from './Icon';
 import Time from './Time';
+import ActionSheet from './ActionSheet';
+import ActionSheetItem from './ActionSheetItem';
 import { parseURLs } from '../../../lib/URL';
 import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
 import { TAG_POST_HIDDEN } from '../../../lib/Constants';
@@ -109,7 +110,11 @@ type Props = {
 	onNavigation: Function;
 };
 
-export default class ChatItem extends Component<void, Props, void> {
+type State = {
+	actionSheetVisible: boolean
+}
+
+export default class ChatItem extends Component<void, Props, State> {
 	static propTypes = {
 		text: PropTypes.shape({
 			body: PropTypes.string.isRequired,
@@ -136,8 +141,12 @@ export default class ChatItem extends Component<void, Props, void> {
 		onNavigation: PropTypes.func.isRequired,
 	};
 
-	shouldComponentUpdate(nextProps: Props): boolean {
-		return !shallowEqual(this.props, nextProps);
+	state: State = {
+		actionSheetVisible: false,
+	};
+
+	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+		return !shallowEqual(this.props, nextProps) || !shallowEqual(this.state, nextState);
 	}
 
 	_goToProfile: Function = () => {
@@ -156,34 +165,48 @@ export default class ChatItem extends Component<void, Props, void> {
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};
 
-	_handleShowMenu: Function = () => {
-		const { text, user } = this.props;
+	_handleOpenImage: Function = () => {
+		const { text } = this.props;
 
-		const menu = {};
-
-		if (text.meta && text.meta.photo) {
+		if (text.meta) {
 			const { photo } = text.meta;
 
-			menu['Open image in browser'] = () => Linking.openURL(photo.url);
-			menu['Copy image link'] = () => this._copyToClipboard(photo.url);
-		} else {
-			menu['Copy text'] = () => this._copyToClipboard(text.body);
-			menu['Quote message'] = () => this.props.quoteMessage(text);
+			Linking.openURL(photo.url);
 		}
+	};
 
-		if (user !== text.creator) {
-			menu['Reply to @' + text.creator] = () => this.props.replyToMessage(text);
+	_handleCopyImageLink: Function = () => {
+		const { text } = this.props;
+
+		if (text.meta) {
+			const { photo } = text.meta;
+
+			this._copyToClipboard(photo.url);
 		}
+	};
 
-		if (this.props.isUserAdmin) {
-			if (text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1) {
-				menu['Unhide message'] = () => this.props.unhideText();
-			} else {
-				menu['Hide message'] = () => this.props.hideText();
-			}
-		}
+	_handleCopyMessage: Function = () => {
+		this._copyToClipboard(this.props.text.body);
+	};
 
-		Modal.showActionSheetWithItems(menu);
+	_handleQuoteMessage: Function = () => {
+		this.props.quoteMessage(this.props.text);
+	};
+
+	_handleReplyToMessage: Function = () => {
+		this.props.replyToMessage(this.props.text);
+	};
+
+	_handleShowMenu: Function = () => {
+		this.setState({
+			actionSheetVisible: true,
+		});
+	};
+
+	_handleRequestClose: Function = () => {
+		this.setState({
+			actionSheetVisible: false,
+		});
 	};
 
 	render() {
@@ -192,6 +215,7 @@ export default class ChatItem extends Component<void, Props, void> {
 			previousText,
 			isLast,
 			user,
+			isUserAdmin,
 		} = this.props;
 
 		const hidden = text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1;
@@ -263,19 +287,53 @@ export default class ChatItem extends Component<void, Props, void> {
 
 				{showTime ?
 					(<View style={[ styles.timestamp, received ? styles.timestampLeft : styles.timestampRight ]}>
-					 <Icon
-						name='access-time'
-						style={styles.timestampIcon}
-						size={12}
-					 />
-					 <Time
-						type='long'
-						time={text.createTime}
-						style={styles.timestampText}
-					 />
+						<Icon
+							name='access-time'
+							style={styles.timestampIcon}
+							size={12}
+						/>
+						<Time
+							type='long'
+							time={text.createTime}
+							style={styles.timestampText}
+						/>
 					</View>) :
 					null
 				}
+
+				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
+					{text.meta && text.meta.photo ? [
+						<ActionSheetItem key='open-image' onPress={this._handleOpenImage}>
+							Open image in browser
+						</ActionSheetItem>,
+						<ActionSheetItem key='copy-imagelink' onPress={this._handleCopyImageLink}>
+							Copy image link
+						</ActionSheetItem>,
+					] : [
+						<ActionSheetItem key='copy-text' onPress={this._handleCopyMessage}>
+							Copy message text
+						</ActionSheetItem>,
+						<ActionSheetItem key='quote-text' onPress={this._handleQuoteMessage}>
+							Quote message
+						</ActionSheetItem>,
+					]}
+
+					{user !== text.creator ?
+						<ActionSheetItem onPress={this._handleReplyToMessage}>
+							{'Reply to @' + text.creator}
+						</ActionSheetItem> : null
+					}
+
+					{isUserAdmin ?
+						hidden ?
+							<ActionSheetItem onPress={this.props.unhideText}>
+								Unhide message
+							</ActionSheetItem> :
+							<ActionSheetItem onPress={this.props.hideText}>
+								Hide message
+							</ActionSheetItem> : null
+					}
+				</ActionSheet>
 			</View>
 		);
 	}
