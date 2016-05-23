@@ -20,19 +20,24 @@ const styles = StyleSheet.create({
 	},
 });
 
+type Options = {
+	element: Element;
+	onRequestClose: Function;
+}
+
 type State = {
-	elements: Array<Element>;
+	stack: Array<Options>;
 }
 
 export default class ModalHost extends Component<void, any, State> {
-	static render(element, callback) {
+	static render(options: Options, callback: Function) {
 		if (ModalHost._pushChild) {
-			ModalHost._pushChild(element, callback);
+			ModalHost._pushChild(options, callback);
 
 			return {
 				remove: (cb) => {
 					if (ModalHost._removeChild) {
-						ModalHost._removeChild(element, cb);
+						ModalHost._removeChild(options, cb);
 					}
 				},
 			};
@@ -41,16 +46,34 @@ export default class ModalHost extends Component<void, any, State> {
 		return null;
 	}
 
+	static requestClose() {
+		if (this._requestClose) {
+			this._requestClose();
+		}
+	}
+
+	static isOpen() {
+		if (this._isOpen) {
+			return this._isOpen();
+		}
+
+		return false;
+	}
+
 	static _pushChild: ?Function;
 	static _removeChild: ?Function;
+	static _requestClose: ?Function;
+	static _isOpen: ?Function;
 
 	state: State = {
-		elements: [],
+		stack: [],
 	};
 
 	componentDidMount() {
 		ModalHost._pushChild = this._pushChild;
 		ModalHost._removeChild = this._removeChild;
+		ModalHost._requestClose = this._requestClose;
+		ModalHost._isOpen = this._isOpen;
 	}
 
 	shouldComponentUpdate(nextProps: any, nextState: State): boolean {
@@ -60,41 +83,53 @@ export default class ModalHost extends Component<void, any, State> {
 	componentWillUnmount() {
 		ModalHost._pushChild = null;
 		ModalHost._removeChild = null;
+		ModalHost._requestClose = null;
+		ModalHost._isOpen = null;
 	}
 
-	_elements: Array<Element>;
-
-	_pushChild: Function = (element, cb) => {
+	_pushChild: Function = (options, cb) => {
 		this.setState({
-			elements: [ ...this.state.elements, element ],
+			stack: [ ...this.state.stack, options ],
 		}, cb);
 	};
 
-	_removeChild: Function = (element, cb) => {
-		const { elements } = this.state;
-		const newlist = [];
+	_removeChild: Function = (options, cb) => {
+		const { stack } = this.state;
+		const newstack = [];
 
-		for (const el of elements) {
-			if (el !== element) {
-				newlist.push(el);
+		for (const op of stack) {
+			if (op !== options) {
+				newstack.push(op);
 			}
 		}
 
 		this.setState({
-			elements: newlist,
+			stack: newstack,
 		}, cb);
 	};
 
-	render(): ?React.Element {
-		const { elements } = this.state;
+	_requestClose: Function = () => {
+		const { stack } = this.state;
 
-		if (elements.length === 0) {
+		if (stack.length) {
+			stack[stack.length - 1].onRequestClose();
+		}
+	};
+
+	_isOpen: Function = () => {
+		return this.state.stack.length > 0;
+	};
+
+	render(): ?React.Element {
+		const { stack } = this.state;
+
+		if (stack.length === 0) {
 			return null;
 		}
 
 		return (
 			<View style={styles.container}>
-				{elements[elements.length - 1]}
+				{stack[stack.length - 1].element}
 			</View>
 		);
 	}

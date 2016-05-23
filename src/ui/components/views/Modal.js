@@ -76,7 +76,10 @@ export default class Modal extends Component<void, Props, State> {
 
 		if (visible) {
 			const child = this._getChild(props);
-			this._handle = ModalHost.render(child, cb);
+			this._handle = ModalHost.render({
+				element: child,
+				onRequestClose: this.props.onRequestClose,
+			}, cb);
 		}
 	};
 

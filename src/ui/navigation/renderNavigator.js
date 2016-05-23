@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactNative from 'react-native';
+import ModalHost from '../components/views/ModalHost';
 import renderOverlay from './renderOverlay';
 import renderScene from './renderScene';
 import NavigationAnimatedView from '../navigation-rfc/Navigation/NavigationAnimatedView';
@@ -21,6 +22,12 @@ const styles = StyleSheet.create({
 let _navState, _onNavigation;
 
 BackAndroid.addEventListener('hardwareBackPress', () => {
+	if (ModalHost.isOpen()) {
+		ModalHost.requestClose();
+
+		return true;
+	}
+
 	if (_onNavigation && _navState && _navState.index !== 0) {
 		_onNavigation(new NavigationReducer.Actions.Pop());
 
