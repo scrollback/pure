@@ -1,9 +1,9 @@
-declare class Subscription {
+declare interface Subscription {
     // Cancels the subscription
     unsubscribe(): void;
 }
 
-declare class Observer {
+declare interface Observer {
 
     // Sends the next value in the sequence
     next(value: any): void;
@@ -15,7 +15,7 @@ declare class Observer {
     complete(completeValue: any): void;
 }
 
-declare class SubscriptionObserver {
+declare interface SubscriptionObserver {
 
     // Sends the next value in the sequence
     next(value: any): void;

@@ -3,7 +3,7 @@
 import route from 'koa-route';
 import { bus, cache } from '../../core-server';
 import promisify from '../../lib/promisify';
-import buildAvatarURLForSize from './buildAvatarURLForSize';
+import buildAvatarURLForSize from '../../lib/buildAvatarURLForSize';
 
 const getEntityAsync = promisify(cache.getEntity.bind(cache));
 

@@ -10,7 +10,8 @@ import com.facebook.react.bridge.ReactMethod;
 
 public class ShareModule extends ReactContextBaseJavaModule {
 
-    private static final String ACTIVITY_DOES_NOT_EXIST_ERROR = "Activity doesn't exist";
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST = "Activity doesn't exist";
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST_CODE = "ERR_ACTIVITY_DOES_NOT_EXIST";
 
     public ShareModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -34,7 +35,7 @@ public class ShareModule extends ReactContextBaseJavaModule {
             currentActivity.startActivity(Intent.createChooser(sharingIntent, title));
             promise.resolve(true);
         } else {
-            promise.reject(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
         }
 
     }

@@ -28,6 +28,11 @@ public class GoogleSignInModule extends ReactContextBaseJavaModule implements Ac
     private static final String ERR_API_CLIENT_NOT_INITIALIZED = "Google API client is not initialized";
     private static final String ERR_SIGNIN_CANCELLED = "Signin was cancelled";
 
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST_CODE = "ERR_ACTIVITY_DOES_NOT_EXIST";
+    private static final String ERR_SIGNOUT_FAILED_CODE = "ERR_SIGNOUT_FAILED";
+    private static final String ERR_API_CLIENT_NOT_INITIALIZED_CODE = "ERR_API_CLIENT_NOT_INITIALIZED";
+    private static final String ERR_SIGNIN_CANCELLED_CODE = "ERR_SIGNIN_CANCELLED";
+
     private static final int REQUEST_CODE_SIGN_IN = 3454;
 
     private Promise mSignInPromise;
@@ -73,10 +78,10 @@ public class GoogleSignInModule extends ReactContextBaseJavaModule implements Ac
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
                 currentActivity.startActivityForResult(signInIntent, REQUEST_CODE_SIGN_IN);
             } else {
-                promise.reject("ERR_ACTIVITY_DOES_NOT_EXIST", ERR_ACTIVITY_DOES_NOT_EXIST);
+                promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
             }
         } else {
-            promise.reject("ERR_API_CLIENT_NOT_INITIALIZED", ERR_API_CLIENT_NOT_INITIALIZED);
+            promise.reject(ERR_API_CLIENT_NOT_INITIALIZED_CODE, ERR_API_CLIENT_NOT_INITIALIZED);
         }
     }
 
@@ -92,12 +97,12 @@ public class GoogleSignInModule extends ReactContextBaseJavaModule implements Ac
                             if (status.isSuccess()) {
                                 promise.resolve(true);
                             } else {
-                                promise.reject("ERR_SIGNOUT_FAILED", ERR_SIGNOUT_FAILED);
+                                promise.reject(ERR_SIGNOUT_FAILED_CODE, ERR_SIGNOUT_FAILED);
                             }
                         }
                     });
         } else {
-            promise.reject("ERR_API_CLIENT_NOT_INITIALIZED", ERR_API_CLIENT_NOT_INITIALIZED);
+            promise.reject(ERR_API_CLIENT_NOT_INITIALIZED_CODE, ERR_API_CLIENT_NOT_INITIALIZED);
         }
     }
 
@@ -113,12 +118,12 @@ public class GoogleSignInModule extends ReactContextBaseJavaModule implements Ac
                             if (status.isSuccess()) {
                                 promise.resolve(true);
                             } else {
-                                promise.reject("ERR_SIGNOUT_FAILED", ERR_SIGNOUT_FAILED);
+                                promise.reject(ERR_SIGNOUT_FAILED_CODE, ERR_SIGNOUT_FAILED);
                             }
                         }
                     });
         } else {
-            promise.reject("ERR_API_CLIENT_NOT_INITIALIZED", ERR_API_CLIENT_NOT_INITIALIZED);
+            promise.reject(ERR_API_CLIENT_NOT_INITIALIZED_CODE, ERR_API_CLIENT_NOT_INITIALIZED);
         }
     }
 
@@ -126,7 +131,7 @@ public class GoogleSignInModule extends ReactContextBaseJavaModule implements Ac
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_CODE_SIGN_IN) {
             if (resultCode == Activity.RESULT_CANCELED) {
-                rejectSignInPromise("ERR_SIGNIN_CANCELLED", ERR_SIGNIN_CANCELLED);
+                rejectSignInPromise(ERR_SIGNIN_CANCELLED_CODE, ERR_SIGNIN_CANCELLED);
             } else if (resultCode == Activity.RESULT_OK) {
                 GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
                 GoogleSignInAccount account = result.getSignInAccount();

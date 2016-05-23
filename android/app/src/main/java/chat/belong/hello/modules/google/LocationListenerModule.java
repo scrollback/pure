@@ -29,11 +29,17 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 
 public class LocationListenerModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    private static final String ACTIVITY_DOES_NOT_EXIST_ERROR = "Activity doesn't exist";
-    private static final String GOOGLE_API_NOT_INITIALIZED_ERROR = "Google API client not initialized";
-    private static final String SETTINGS_CHANGE_UNAVAILABLE_ERROR = "Unable to change GPS settings";
-    private static final String PROMPT_CANCELED_ERROR = "Permission request was canceled";
-    private static final String NO_LAST_LOCATION_ERROR = "No last known location found";
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST = "Activity doesn't exist";
+    private static final String ERR_GOOGLE_API_NOT_INITIALIZED = "Google API client not initialized";
+    private static final String ERR_SETTINGS_CHANGE_UNAVAILABLE = "Unable to change GPS settings";
+    private static final String ERR_PROMPT_CANCELED = "Permission request was canceled";
+    private static final String ERR_NO_LAST_LOCATION = "No last known location found";
+
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST_CODE = "ERR_ACTIVITY_DOES_NOT_EXIST";
+    private static final String ERR_GOOGLE_API_NOT_INITIALIZED_CODE = "ERR_GOOGLE_API_NOT_INITIALIZED";
+    private static final String ERR_SETTINGS_CHANGE_UNAVAILABLE_CODE = "ERR_SETTINGS_CHANGE_UNAVAILABLE";
+    private static final String ERR_PROMPT_CANCELED_CODE = "ERR_PROMPT_CANCELED";
+    private static final String ERR_NO_LAST_LOCATION_CODE = "ERR_NO_LAST_LOCATION";
 
     private static final int LOCATION_PROMPT_REQUEST_CODE = 1170;
 
@@ -67,9 +73,9 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         }
     }
 
-    private void rejectPromptPromise(String reason) {
+    private void rejectPromptPromise(String code, String reason) {
         if (mPromptPromise != null) {
-            mPromptPromise.reject(reason);
+            mPromptPromise.reject(code, reason);
             mPromptPromise = null;
         }
     }
@@ -159,14 +165,14 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
 
         final Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            rejectPromptPromise(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            rejectPromptPromise(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
             return;
         }
 
@@ -190,7 +196,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
                         promise.resolve(true);
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        promise.reject(SETTINGS_CHANGE_UNAVAILABLE_ERROR);
+                        promise.reject(ERR_SETTINGS_CHANGE_UNAVAILABLE_CODE, ERR_SETTINGS_CHANGE_UNAVAILABLE);
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         mPromptPromise = promise;
@@ -211,7 +217,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
         
@@ -220,7 +226,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         if (location != null) {
             promise.resolve(buildLocationMap(location));
         } else {
-            promise.reject(NO_LAST_LOCATION_ERROR);
+            promise.reject(ERR_NO_LAST_LOCATION_CODE, ERR_NO_LAST_LOCATION);
         }
     }
 
@@ -229,7 +235,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            sendLocationError(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            sendLocationError(ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
         
@@ -242,7 +248,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            sendLocationError(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            sendLocationError(ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
         
@@ -254,7 +260,7 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
         switch (requestCode) {
             case LOCATION_PROMPT_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    rejectPromptPromise(PROMPT_CANCELED_ERROR);
+                    rejectPromptPromise(ERR_PROMPT_CANCELED_CODE, ERR_PROMPT_CANCELED);
                 } else if (resultCode == Activity.RESULT_OK) {
                     resolvePromptPromise(true);
                 }

@@ -24,7 +24,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getReferrer());
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 
@@ -33,7 +33,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_CAMPAIGN));
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 
@@ -42,7 +42,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_SOURCE));
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 
@@ -51,7 +51,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_MEDIUM));
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 
@@ -60,7 +60,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_TERM));
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 
@@ -69,7 +69,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         try {
             promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_CONTENT));
         } catch (NoSuchPropertyException e) {
-            promise.reject(e.getMessage());
+            promise.reject(e);
         }
     }
 }

@@ -16,7 +16,6 @@ public class CorePackage implements ReactPackage {
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.<NativeModule>asList(
                 new BuildConfigModule(reactContext),
-                new URLResolverModule(reactContext),
                 new ShareModule(reactContext)
         );
     }

@@ -16,6 +16,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableNativeArray;
+import com.facebook.react.bridge.ReadableNativeMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
 import com.squareup.okhttp.Callback;
@@ -25,6 +27,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -302,9 +305,21 @@ public class ContactsModule extends ReactContextBaseJavaModule {
             @Override
             public void run() {
                 try {
-                    final JSONObject data = JSONHelpers.ReadableMapToJSON(metadata);
+                    final JSONObject data;
 
-                    data.put("data", JSONHelpers.ReadableArrayToJSON(getContactsList()));
+                    if (metadata != null) {
+                        data = new JSONObject(((ReadableNativeMap) metadata).toHashMap());
+                    } else {
+                        data = new JSONObject();
+                    }
+
+                    WritableArray contactList = getContactsList();
+
+                    if (contactList == null) {
+                        throw new Exception(ERR_READING_CONTACTS);
+                    }
+
+                    data.put("data", new JSONArray(((ReadableNativeArray) contactList).toArrayList()));
 
                     MediaType JSON = MediaType.parse("application/json; charset=utf-8");
                     OkHttpClient client = new OkHttpClient();

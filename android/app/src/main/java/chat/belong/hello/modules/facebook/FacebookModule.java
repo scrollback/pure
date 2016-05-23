@@ -40,6 +40,11 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
     private static final String ERR_GETTING_ACCESS_TOKEN = "Failed to get access token";
     private static final String ERR_SIGNIN_CANCELLED = "Signin was cancelled";
 
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST_CODE = "ERR_ACTIVITY_DOES_NOT_EXIST";
+    private static final String ERR_MULTIPLE_CALLBACKS_CODE = "ERR_MULTIPLE_CALLBACKS";
+    private static final String ERR_GETTING_ACCESS_TOKEN_CODE = "ERR_GETTING_ACCESS_TOKEN";
+    private static final String ERR_SIGNIN_CANCELLED_CODE = "ERR_SIGNIN_CANCELLED";
+
     private CallbackManager mCallbackManager;
     private Promise mTokenPromise;
 
@@ -69,7 +74,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     @Override
                     public void onCancel() {
                         if (mTokenPromise != null) {
-                            rejectPromise("ERR_SIGNIN_CANCELLED", ERR_SIGNIN_CANCELLED);
+                            rejectPromise(ERR_SIGNIN_CANCELLED_CODE, ERR_SIGNIN_CANCELLED);
                         }
                     }
 
@@ -140,7 +145,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
 
     public void registerPermissionCallback(final Promise promise) {
         if (mTokenPromise != null) {
-            rejectPromise("ERR_MULTIPLE_CALLBACKS", ERR_MULTIPLE_CALLBACKS);
+            rejectPromise(ERR_MULTIPLE_CALLBACKS_CODE, ERR_MULTIPLE_CALLBACKS);
         } else {
             mTokenPromise = promise;
         }
@@ -157,7 +162,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     currentActivity,
                     readableArrayToStringList(permissions));
         } else {
-            promise.reject("ERR_ACTIVITY_DOES_NOT_EXIST", ERR_ACTIVITY_DOES_NOT_EXIST);
+            promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
         }
     }
 
@@ -172,7 +177,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
                     currentActivity,
                     readableArrayToStringList(permissions));
         } else {
-            promise.reject("ERR_ACTIVITY_DOES_NOT_EXIST", ERR_ACTIVITY_DOES_NOT_EXIST);
+            promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
         }
     }
 
@@ -195,7 +200,7 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
 
             promise.resolve(map);
         } else {
-            promise.reject("ERR_GETTING_ACCESS_TOKEN", ERR_GETTING_ACCESS_TOKEN);
+            promise.reject(ERR_GETTING_ACCESS_TOKEN_CODE, ERR_GETTING_ACCESS_TOKEN);
         }
     }
 

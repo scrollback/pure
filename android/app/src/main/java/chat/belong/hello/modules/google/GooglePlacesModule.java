@@ -48,10 +48,15 @@ import java.util.Map;
 
 public class GooglePlacesModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
-    private static final String ACTIVITY_DOES_NOT_EXIST_ERROR = "Activity doesn't exist";
-    private static final String GOOGLE_API_NOT_INITIALIZED_ERROR = "Google API client not initialized";
-    private static final String PERMISSION_NOT_GRANTED_ERROR = "Location permissions are not granted";
-    private static final String PICKER_CANCELLED_ERROR = "Places picker was cancelled";
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST = "Activity doesn't exist";
+    private static final String ERR_GOOGLE_API_NOT_INITIALIZED = "Google API client not initialized";
+    private static final String ERR_PERMISSION_NOT_GRANTED = "Location permissions are not granted";
+    private static final String ERR_PICKER_CANCELLED = "Places picker was cancelled";
+
+    private static final String ERR_ACTIVITY_DOES_NOT_EXIST_CODE = "ERR_ACTIVITY_DOES_NOT_EXIST";
+    private static final String ERR_GOOGLE_API_NOT_INITIALIZED_CODE = "ERR_GOOGLE_API_NOT_INITIALIZED";
+    private static final String ERR_PERMISSION_NOT_GRANTED_CODE = "ERR_PERMISSION_NOT_GRANTED";
+    private static final String ERR_PICKER_CANCELLED_CODE = "ERR_PICKER_CANCELLED";
 
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1090;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1080;
@@ -88,9 +93,9 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         return constants;
     }
 
-    private void rejectPermissionPromise(String reason) {
+    private void rejectPermissionPromise(String code, String reason) {
         if (mPermissionPromise != null) {
-            mPermissionPromise.reject(reason);
+            mPermissionPromise.reject(code, reason);
             mPermissionPromise = null;
         }
     }
@@ -109,9 +114,9 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         }
     }
 
-    private void rejectRetrivePromise(String reason) {
+    private void rejectRetrivePromise(String code, String reason) {
         if (mRetrievePromise != null) {
-            mRetrievePromise.reject(reason);
+            mRetrievePromise.reject(code, reason);
             mRetrievePromise = null;
         }
     }
@@ -121,27 +126,27 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
 
         Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            promise.reject(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
             return;
         }
 
         int permission = ContextCompat.checkSelfPermission(currentActivity, Manifest.permission.ACCESS_FINE_LOCATION);
 
         if (permission != PackageManager.PERMISSION_GRANTED) {
-            promise.reject(PERMISSION_NOT_GRANTED_ERROR);
+            promise.reject(ERR_PERMISSION_NOT_GRANTED_CODE, ERR_PERMISSION_NOT_GRANTED);
             return;
         }
 
         PlaceFilter placeFilter = null;
 
-        if (filter != null) {;
+        if (filter != null) {
             Collection<String> restrictToPlaceIds = null;
 
             if (filter.hasKey("restrictToPlaceIds")) {
@@ -185,7 +190,7 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
 
@@ -205,14 +210,14 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
 
         Activity currentActivity = getCurrentActivity();
 
         if (currentActivity == null) {
-            promise.reject(ACTIVITY_DOES_NOT_EXIST_ERROR);
+            promise.reject(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
             return;
         }
 
@@ -237,7 +242,7 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         GoogleApiClient googleApiClient = mGoogleApiManager.getGoogleApiClient();
 
         if (googleApiClient == null || !googleApiClient.isConnected()) {
-            promise.reject(GOOGLE_API_NOT_INITIALIZED_ERROR);
+            promise.reject(ERR_GOOGLE_API_NOT_INITIALIZED_CODE, ERR_GOOGLE_API_NOT_INITIALIZED);
             return;
         }
 
@@ -362,15 +367,15 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
         switch (requestCode) {
             case PLACE_AUTOCOMPLETE_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    rejectRetrivePromise(PICKER_CANCELLED_ERROR);
+                    rejectRetrivePromise(ERR_PICKER_CANCELLED_CODE, ERR_PICKER_CANCELLED);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                     Activity currentActivity = getCurrentActivity();
 
                     if (currentActivity != null) {
                         Status status = PlaceAutocomplete.getStatus(currentActivity, data);
-                        rejectRetrivePromise(status.getStatusMessage());
+                        rejectRetrivePromise("ERR_INVALID_STATUS", status.getStatusMessage());
                     } else {
-                        rejectRetrivePromise(ACTIVITY_DOES_NOT_EXIST_ERROR);
+                        rejectRetrivePromise(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
                     }
                 } else if (resultCode == Activity.RESULT_OK) {
                     Activity currentActivity = getCurrentActivity();
@@ -378,23 +383,23 @@ public class GooglePlacesModule extends ReactContextBaseJavaModule implements Ac
                     if (currentActivity != null) {
                         resolveRetrivePromise(buildPlacesMap(PlaceAutocomplete.getPlace(currentActivity, data)));
                     } else {
-                        rejectRetrivePromise(ACTIVITY_DOES_NOT_EXIST_ERROR);
+                        rejectRetrivePromise(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
                     }
 
                 }
                 break;
             case LOCATION_PERMISSION_REQUEST_CODE:
                 if (resultCode == Activity.RESULT_CANCELED) {
-                    rejectPermissionPromise(PERMISSION_NOT_GRANTED_ERROR);
+                    rejectPermissionPromise(ERR_PERMISSION_NOT_GRANTED_CODE, ERR_PERMISSION_NOT_GRANTED);
                 } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                    rejectPermissionPromise(PERMISSION_NOT_GRANTED_ERROR);
+                    rejectPermissionPromise(ERR_PERMISSION_NOT_GRANTED_CODE, ERR_PERMISSION_NOT_GRANTED);
                 } else if (resultCode == Activity.RESULT_OK) {
                     Activity currentActivity = getCurrentActivity();
 
                     if (currentActivity != null) {
                         resolveRetrivePromise(buildPlacesMap(PlaceAutocomplete.getPlace(currentActivity, data)));
                     } else {
-                        rejectRetrivePromise(ACTIVITY_DOES_NOT_EXIST_ERROR);
+                        rejectRetrivePromise(ERR_ACTIVITY_DOES_NOT_EXIST_CODE, ERR_ACTIVITY_DOES_NOT_EXIST);
                     }
 
                 }
