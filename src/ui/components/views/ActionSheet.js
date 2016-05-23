@@ -9,6 +9,7 @@ const {
 	View,
 	StyleSheet,
 	TouchableWithoutFeedback,
+	StatusBar,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -25,18 +26,21 @@ const styles = StyleSheet.create({
 
 type Props = {
 	onRequestClose: Function;
+	visible: boolean;
 	children?: any;
 }
 
 export default class ActionSheet extends Component<void, Props, void> {
 	static propTypes = {
 		onRequestClose: PropTypes.func.isRequired,
+		visible: PropTypes.bool.isRequired,
 		children: PropTypes.node.isRequired,
 	};
 
 	render() {
 		const {
 			children,
+			visible,
 			onRequestClose,
 		} = this.props;
 
@@ -48,6 +52,7 @@ export default class ActionSheet extends Component<void, Props, void> {
 			>
 				<TouchableWithoutFeedback onPress={onRequestClose}>
 					<View style={styles.container}>
+						{visible ? <StatusBar backgroundColor='#251945' /> : null}
 						<View style={styles.sheet}>
 							{Children.map(children, child => {
 								if (child) {
