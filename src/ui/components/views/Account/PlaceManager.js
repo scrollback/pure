@@ -126,13 +126,13 @@ export default class PlaceManager extends Component<void, Props, State> {
 					}
 
 					return (
-					<PlaceButton
-						key={item.type}
-						type={item.type}
-						label={item.label}
-						hint={item.hint}
-						onPress={this._handlePress}
-					/>
+						<PlaceButton
+							key={item.type}
+							type={item.type}
+							label={item.label}
+							hint={item.hint}
+							onPress={this._handlePress}
+						/>
 					);
 				})}
 
