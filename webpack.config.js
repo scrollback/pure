@@ -41,7 +41,7 @@ module.exports = {
 		new webpack.optimize.UglifyJsPlugin()
 	]),
 	resolve: {
-		extensions: [ '', '.web.js', '.js', ],
+		extensions: [ '', '.js', ],
 		alias: {
 			'react-native': 'react-native-web'
 		}
