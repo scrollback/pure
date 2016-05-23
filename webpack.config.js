@@ -20,7 +20,7 @@ const plugins = [
 ];
 
 const entry = [
-	'./src/ui/Client',
+	'./index.web.js',
 ];
 
 const babelrc = JSON.parse(fs.readFileSync(path.join(__dirname, '.babelrc.web.json'), 'utf-8').toString());
@@ -42,6 +42,9 @@ module.exports = {
 	]),
 	resolve: {
 		extensions: [ '', '.web.js', '.js', ],
+		alias: {
+			'react-native': 'react-native-web'
+		}
 	},
 	module: {
 		preLoaders: [
@@ -55,7 +58,6 @@ module.exports = {
 			{
 				test: /\.js$/,
 				loader: 'babel',
-				exclude: /node_modules/,
 				query: Object.assign({}, babelrc, {
 					presets: babelrc.presets.map(p => p.startsWith('es2015') ? 'es2015-native-modules' : p),
 					env: {
