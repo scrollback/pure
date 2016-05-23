@@ -19,7 +19,6 @@ import StartDiscussionDone from '../containers/StartDiscussionDoneContainer';
 import AvatarRound from './AvatarRound';
 import Banner from './Banner';
 import ImageUploadDiscussion from './ImageUploadDiscussion';
-import KeyboardSpacer from './KeyboardSpacer';
 import Facebook from '../../modules/Facebook';
 import NavigationActions from '../../navigation-rfc/Navigation/NavigationActions';
 import { convertRouteToURL } from '../../../lib/Route';
@@ -541,7 +540,6 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 						}
 					</View>
 				</View>
-				<KeyboardSpacer />
 				<StartDiscussionDone thread={this.props.thread} onPosted={this._handlePosted} />
 			</View>
 		);

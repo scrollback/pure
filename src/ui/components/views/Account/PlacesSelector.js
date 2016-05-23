@@ -5,12 +5,10 @@ import ReactNative from 'react-native';
 import LocationItem from './LocationItem';
 import PoweredByGoogle from './PoweredByGoogle';
 import SearchableList from '../SearchableList';
-import KeyboardSpacer from '../KeyboardSpacer';
 import Colors from '../../../Colors';
 import GooglePlaces from '../../../modules/GooglePlaces';
 
 const {
-	StatusBar,
 	StyleSheet,
 	View,
 } = ReactNative;
@@ -60,7 +58,6 @@ export default class PlacesSelector extends Component<void, Props, void> {
 	render() {
 		return (
 			<View style={styles.container}>
-				<StatusBar backgroundColor={Colors.grey} />
 				<SearchableList
 					getResults={this._getResults}
 					renderRow={this._renderRow}
@@ -68,7 +65,6 @@ export default class PlacesSelector extends Component<void, Props, void> {
 					onCancel={this.props.onCancel}
 					searchHint={this.props.searchHint}
 				/>
-				<KeyboardSpacer offset={36} />
 				<PoweredByGoogle style={styles.poweredBy} />
 			</View>
 		);

@@ -2,10 +2,10 @@
 
 import React, { Children, Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
+import Modal from './Modal';
 import Colors from '../../Colors';
 
 const {
-	Modal,
 	View,
 	StyleSheet,
 	TouchableWithoutFeedback,

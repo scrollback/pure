@@ -6,9 +6,9 @@ import PlacesSelectorContainer from '../../containers/PlaceSelectorContainer';
 import PlaceItem from './PlaceItem';
 import PlaceButton from './PlaceButton';
 import PlacesSelectorTip from './PlacesSelectorTip';
+import Modal from '../Modal';
 
 const {
-	Modal,
 	View,
 } = ReactNative;
 

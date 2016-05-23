@@ -6,6 +6,7 @@ import shallowEqual from 'shallowequal';
 import PersistentNavigator from '../../navigation/PersistentNavigator';
 import UserSwitcherContainer from '../containers/UserSwitcherContainer';
 import NavigationState from '../../navigation-rfc/Navigation/NavigationState';
+import ModalHost from './ModalHost';
 import Colors from '../../Colors';
 import { convertRouteToState, convertURLToState } from '../../../lib/Route';
 
@@ -54,6 +55,7 @@ export default class Home extends Component<void, Props, void> {
 						persistenceKey={initialURL ? null : PERSISTANCE_KEY}
 					/>
 				</View>
+				<ModalHost />
 			</View>
 		);
 	}

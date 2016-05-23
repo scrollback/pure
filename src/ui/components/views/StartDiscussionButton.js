@@ -5,9 +5,9 @@ import ReactNative from 'react-native';
 import shallowEqual from 'shallowequal';
 import FloatingActionButton from './FloatingActionButton';
 import StartDiscussionContainer from '../containers/StartDiscussionContainer';
+import Modal from './Modal';
 
 const {
-	Modal,
 	View,
 	StyleSheet,
 } = ReactNative;
