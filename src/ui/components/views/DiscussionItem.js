@@ -102,6 +102,19 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};
 
+	_getDiscussionLink: Function = () => {
+		const { thread } = this.props;
+
+		return config.server.protocol + '//' + config.server.host + convertRouteToURL({
+			name: 'chat',
+			props: {
+				room: thread.parents[0],
+				thread: thread.id,
+				title: thread.name,
+			},
+		});
+	};
+
 	_handleOpenImage: Function = () => {
 		const { thread } = this.props;
 
@@ -131,16 +144,11 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	};
 
 	_handleShare: Function = () => {
-		const { thread } = this.props;
+		Share.shareItem('Share discussion', this._getDiscussionLink());
+	};
 
-		Share.shareItem('Share discussion', config.server.protocol + '//' + config.server.host + convertRouteToURL({
-			name: 'chat',
-			props: {
-				room: thread.parents[0],
-				thread: thread.id,
-				title: thread.name,
-			},
-		}));
+	_handleCopyLink: Function = () => {
+		this._copyToClipboard(this._getDiscussionLink());
 	};
 
 	_handleShowMenu: Function = () => {
@@ -220,6 +228,14 @@ export default class DiscussionItem extends Component<void, Props, State> {
 							Copy summary
 						</ActionSheetItem>
 					}
+
+					<ActionSheetItem onPress={this._handleCopyLink}>
+						Copy discussion link
+					</ActionSheetItem>
+
+					<ActionSheetItem onPress={this._handleShare}>
+						Share discussion
+					</ActionSheetItem>
 
 					{isUserAdmin ?
 						hidden ?
