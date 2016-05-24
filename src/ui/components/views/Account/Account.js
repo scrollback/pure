@@ -9,6 +9,7 @@ import PageLoading from '../PageLoading';
 import PageEmpty from '../PageEmpty';
 import Icon from '../Icon';
 import TouchFeedback from '../TouchFeedback';
+import AppTextInput from '../AppTextInput';
 import ActionSheet from '../ActionSheet';
 import ActionSheetItem from '../ActionSheetItem';
 import GCMPreferences from '../../../modules/GCMPreferences';
@@ -19,7 +20,6 @@ const {
 	ScrollView,
 	View,
 	PixelRatio,
-	TextInput,
 	Switch,
 } = ReactNative;
 
@@ -242,7 +242,7 @@ export default class Account extends Component<void, Props, State> {
 							name='face'
 							size={18}
 						/>
-						<TextInput
+						<AppTextInput
 							style={[ styles.input, styles.growing ]}
 							defaultValue={user.name}
 							placeholder='Full name'
@@ -257,7 +257,7 @@ export default class Account extends Component<void, Props, State> {
 							name='short-text'
 							size={18}
 						/>
-						<TextInput
+						<AppTextInput
 							style={[ styles.input, styles.growing ]}
 							defaultValue={user.meta ? user.meta.description : ''}
 							placeholder='Status'
@@ -273,7 +273,7 @@ export default class Account extends Component<void, Props, State> {
 							name='business-center'
 							size={18}
 						/>
-						<TextInput
+						<AppTextInput
 							style={[ styles.input, styles.growing ]}
 							defaultValue={user.meta ? user.meta.occupation : ''}
 							placeholder='Occupation'
