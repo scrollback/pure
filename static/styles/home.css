@@ -9,6 +9,7 @@ body { font: 900 24px/1.5em "Alegreya Sans",sans-serif; }
     width: 100%;
     background: #333;
     color: #fff;
+    text-decoration: none;
 }
 
 .banner-content {
