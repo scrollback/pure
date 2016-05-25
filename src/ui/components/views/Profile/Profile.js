@@ -21,6 +21,7 @@ const {
 	StyleSheet,
 	ScrollView,
 	View,
+	PixelRatio,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -57,8 +58,9 @@ const styles = StyleSheet.create({
 
 	achievements: {
 		flexDirection: 'row',
-		backgroundColor: 'rgba(0, 0, 0, .1)',
 		paddingHorizontal: 32,
+		borderBottomColor: Colors.separator,
+		borderBottomWidth: 1 / PixelRatio.get(),
 	},
 
 	score: {
@@ -68,13 +70,13 @@ const styles = StyleSheet.create({
 	},
 
 	scoreCount: {
-		color: Colors.white,
+		color: Colors.primary,
 		fontSize: 24,
 		lineHeight: 36,
 	},
 
 	scoreLabel: {
-		color: Colors.white,
+		color: Colors.darkGrey,
 		fontSize: 8,
 		lineHeight: 12,
 		opacity: 0.7,
@@ -191,22 +193,22 @@ export default class Profile extends Component<void, Props, void> {
 									}
 								</View>
 							</View>
-							<View style={styles.achievements}>
-								<View style={styles.score}>
-									<AppText style={styles.scoreCount}>
-										{user.counts && user.counts.texts ? user.counts.texts : 0}
-									</AppText>
-									<AppText style={styles.scoreLabel}>MESSAGES</AppText>
-								</View>
-								<View style={styles.score}>
-									<AppText style={styles.scoreCount}>
-										{user.counts && user.counts.threads ? user.counts.threads : 0}
-									</AppText>
-									<AppText style={styles.scoreLabel}>DISCUSSIONS</AppText>
-								</View>
-							</View>
 						</View>
 					</Image>
+					<View style={styles.achievements}>
+						<View style={styles.score}>
+							<AppText style={styles.scoreCount}>
+								{user.counts && user.counts.texts ? user.counts.texts : 0}
+							</AppText>
+							<AppText style={styles.scoreLabel}>MESSAGES</AppText>
+						</View>
+						<View style={styles.score}>
+							<AppText style={styles.scoreCount}>
+								{user.counts && user.counts.threads ? user.counts.threads : 0}
+							</AppText>
+							<AppText style={styles.scoreLabel}>DISCUSSIONS</AppText>
+						</View>
+					</View>
 					<View style={styles.info}>
 						<ProfileField
 							action={own ? 'Add status' : null}
@@ -248,7 +250,7 @@ export default class Profile extends Component<void, Props, void> {
 						}
 					</View>
 				</ScrollView>
-				</View>
-			);
+			</View>
+		);
 	}
 }
