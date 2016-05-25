@@ -65,7 +65,7 @@ function getTokenFromCode(code) {
 				reject(error);
 				return;
 			}
-			console.log("Google response: ", t);
+
 			try {
 				const tokenBody = JSON.parse(t), token = tokenBody.id_token;
 				if (!token) throw new Error('INVALID_GOOGLE_CODE');
@@ -108,7 +108,7 @@ function getDataFromToken(token) {
 			try {
 				if (err) throw (err);
 				const user = JSON.parse(body);
-				console.log('Response: ', res);
+
 				if (user.error) {
 					throw (new EnhancedError(user.error || Constants.ERRORS.ERR_FACEBOOK_SIGNIN_FAILED, user.error || 'ERR_FACEBOOK_SIGNIN_FAILED'));
 				} else if (!user.email) {
@@ -140,7 +140,6 @@ function googleAuth(changes, n) {
 		if (e) {
 			(changes.response = changes.response || {}).state = changes.auth;
 			changes.response.state.google.error = e;
-			console.log('Err: ', e);
 			n(changes);
 		} else {
 			n();
