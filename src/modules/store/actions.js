@@ -18,7 +18,7 @@ export const initializeSession = (session: string): Object => ({
 	},
 });
 
-export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; }): Object => ({
+export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; } | { code: string; }): Object => ({
 	auth: {
 		[provider]: auth,
 	},

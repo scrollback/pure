@@ -84,7 +84,7 @@ const PROVIDER_FACEBOOK = 'facebook';
 const PERMISSION_PUBLIC_PROFILE = 'public_profile';
 const PERMISSION_EMAIL = 'email';
 
-type Token = { accessToken: string; } | { idToken: string; };
+type Token = { accessToken: string; } | { idToken: string; } | { code: string; };
 
 type Props = {
 	signIn: (provider: string, token: Token) => void
@@ -182,8 +182,8 @@ class SignIn extends Component<void, Props, State> {
 		try {
 			const result = await GoogleSignIn.signIn();
 
-			if (result.id_token) {
-				this._onSignInSuccess(PROVIDER_GOOGLE, { idToken: result.id_token });
+			if (result.code) {
+				this._onSignInSuccess(PROVIDER_GOOGLE, { code: result.code });
 			} else {
 				this._onSignInFailure(PROVIDER_GOOGLE);
 			}

@@ -18,14 +18,14 @@ import { bus, config } from '../../core-server';
 import encodeURITemplate from '../../lib/encodeURITemplate';
 import * as Constants from '../../lib/Constants';
 
-const redirectURL = `https://${config.host}${config.google.redirect_path}`;
+const redirectURL = `${config.server.protocol}//${config.server.host}:${config.server.port}${config.google.redirect_path}`;
 
 const SCRIPT_REDIRECT = `\
 location.href = 'https://accounts.google.com/o/oauth2/auth?\
 scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile&\
 client_id=${config.google.client_id}&\
 redirect_uri=${redirectURL}&\
-response_type=code&access_type=offline`;
+response_type=code&access_type=offline'`;
 
 const SCRIPT_MESSAGE = `
 	var code = (location.search.substring(1).split("&").filter(function(seg) {
@@ -65,10 +65,9 @@ function getTokenFromCode(code) {
 				reject(error);
 				return;
 			}
-
+			console.log("Google response: ", t);
 			try {
-				const tokenBody = JSON.parse(t), token = tokenBody.access_token;
-
+				const tokenBody = JSON.parse(t), token = tokenBody.id_token;
 				if (!token) throw new Error('INVALID_GOOGLE_CODE');
 				resolve(token);
 			} catch (e) {
@@ -109,7 +108,7 @@ function getDataFromToken(token) {
 			try {
 				if (err) throw (err);
 				const user = JSON.parse(body);
-
+				console.log('Response: ', res);
 				if (user.error) {
 					throw (new EnhancedError(user.error || Constants.ERRORS.ERR_FACEBOOK_SIGNIN_FAILED, user.error || 'ERR_FACEBOOK_SIGNIN_FAILED'));
 				} else if (!user.email) {
@@ -141,6 +140,7 @@ function googleAuth(changes, n) {
 		if (e) {
 			(changes.response = changes.response || {}).state = changes.auth;
 			changes.response.state.google.error = e;
+			console.log('Err: ', e);
 			n(changes);
 		} else {
 			n();
