@@ -155,7 +155,7 @@ class SignIn extends Component<void, Props, State> {
 			} = result;
 
 			if (code) {
-				this._onSignInSuccess(PROVIDER_FACEBOOK, { Code: code });
+				this._onSignInSuccess(PROVIDER_FACEBOOK, { code });
 			} else {
 				this._onSignInFailure(PROVIDER_FACEBOOK);
 			}
