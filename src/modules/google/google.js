@@ -134,7 +134,7 @@ function getDataFromToken(token) {
 }
 
 function googleAuth(changes, n) {
-	winston.debug('setstate: facebook module');
+	winston.debug('setstate: google module');
 
 	function next(e) {
 		if (e) {

@@ -125,7 +125,7 @@ function getDataFromToken(token) {
 }
 
 function fbAuth(changes, n) {
-	winston.debug('setstate: facebook module');
+	winston.debug('setstate: facebook module', changes);
 
 	function next(e) {
 		if (e) {

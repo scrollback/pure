@@ -151,24 +151,15 @@ class SignIn extends Component<void, Props, State> {
 			]);
 
 			const {
-				permissions_granted,
-				access_token,
+				code,
 			} = result;
 
-			if (
-				permissions_granted.length &&
-				permissions_granted.indexOf(PERMISSION_PUBLIC_PROFILE) > -1 &&
-				permissions_granted.indexOf(PERMISSION_EMAIL) > -1
-			) {
-
-				if (access_token) {
-					this._onSignInSuccess(PROVIDER_FACEBOOK, { accessToken: access_token });
-				} else {
-					this._onSignInFailure(PROVIDER_FACEBOOK);
-				}
+			if (code) {
+				this._onSignInSuccess(PROVIDER_FACEBOOK, { Code: code });
 			} else {
 				this._onSignInFailure(PROVIDER_FACEBOOK);
 			}
+
 		} catch (e) {
 			if (e.code !== 'ERR_SIGNIN_CANCELLED') {
 				this._showFailureMessage();
