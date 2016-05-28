@@ -74,6 +74,15 @@ export default class CTACard extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
+	componentWillUnmount() {
+		if (this._subscription) {
+			this._subscription.unsubscribe();
+			this._subscription = null;
+		}
+	}
+
+	_subscription: ?Subscription;
+
 	_checkImageExists: Function = (url: string): Promise<boolean> => {
 		return new Promise(resolve => {
 			const req = new XMLHttpRequest();
@@ -136,14 +145,16 @@ export default class CTACard extends Component<void, Props, State> {
 
 			let done;
 
-			this._checkImageList(images).forEach(image => {
-				if (done) {
-					return;
-				}
-				done = true;
-				this.setState({
-					image,
-				});
+			this._subscription = this._checkImageList(images).subscribe({
+				next: image => {
+					if (done) {
+						return;
+					}
+					done = true;
+					this.setState({
+						image,
+					});
+				},
 			});
 		}
 	};
