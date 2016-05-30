@@ -3,7 +3,7 @@
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
-import Chat from '../views/Chat';
+import Chat from '../views/Chat/Chat';
 import { sendMessage } from '../../../modules/store/actions';
 
 const mapActionsToProps = {

@@ -3,8 +3,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import AppbarTouchable from '../AppbarTouchable';
-import AvatarRound from '../AvatarRound';
+import AppbarTouchable from '../Appbar/AppbarTouchable';
+import AvatarRound from '../Avatar/AvatarRound';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 

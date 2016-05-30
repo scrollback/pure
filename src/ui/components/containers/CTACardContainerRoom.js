@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import CTACard from '../views/CTACard';
+import CTACard from '../views/Card/CTACard';
 
 const mapSubscriptionToProps = {
 	user: {

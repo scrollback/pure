@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactNative from 'react-native';
-import ModalHost from '../components/views/ModalHost';
+import ModalHost from '../components/views/Core/ModalHost';
 import renderOverlay from './renderOverlay';
 import renderScene from './renderScene';
 import NavigationAnimatedView from '../navigation-rfc/Navigation/NavigationAnimatedView';

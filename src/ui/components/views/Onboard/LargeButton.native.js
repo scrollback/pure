@@ -3,9 +3,9 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import AppText from '../AppText';
-import TouchFeedback from '../TouchFeedback';
-import Loading from '../Loading';
+import AppText from '../Core/AppText';
+import TouchFeedback from '../Core/TouchFeedback';
+import Loading from '../Core/Loading';
 import Colors from '../../../Colors';
 
 const {

@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import Connect from '../../../modules/store/Connect';
-import ChatSuggestions from '../views/ChatSuggestions';
+import ChatSuggestions from '../views/Chat/ChatSuggestions';
 
 type Props = {
 	user: string;

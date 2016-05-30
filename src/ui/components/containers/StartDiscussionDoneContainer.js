@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
-import StartDiscussionDone from '../views/StartDiscussionDone';
+import StartDiscussionDone from '../views/StartDiscussion/StartDiscussionDone';
 
 type Props = {
 	thread: ?string

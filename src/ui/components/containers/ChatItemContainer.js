@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import ChatItem from '../views/ChatItem';
+import ChatItem from '../views/Chat/ChatItem';
 import {
 	hideText,
 	unhideText,

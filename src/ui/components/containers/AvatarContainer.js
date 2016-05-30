@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PropTypes } from 'react';
-import Avatar from '../views/Avatar';
+import Avatar from '../views/Avatar/Avatar';
 import { config } from '../../../core-client';
 
 const { host, protocol } = config.server;

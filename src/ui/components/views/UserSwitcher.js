@@ -3,8 +3,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import AvatarRound from './AvatarRound';
-import AppText from './AppText';
+import AvatarRound from './Avatar/AvatarRound';
+import AppText from './Core/AppText';
 import Colors from '../../Colors';
 
 const {

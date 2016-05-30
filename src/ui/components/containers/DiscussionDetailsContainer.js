@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import DiscussionDetails from '../views/DiscussionDetails';
+import DiscussionDetails from '../views/Discussion/DiscussionDetails';
 
 type Props = {
 	thread: string;

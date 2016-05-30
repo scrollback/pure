@@ -3,9 +3,9 @@
 
 import React from 'react';
 import ReactNative from 'react-native';
-import AppText from '../components/views/AppText';
-import AppbarTouchable from '../components/views/AppbarTouchable';
-import AppbarIcon from '../components/views/AppbarIcon';
+import AppText from '../components/views/Core/AppText';
+import AppbarTouchable from '../components/views/Appbar/AppbarTouchable';
+import AppbarIcon from '../components/views/Appbar/AppbarIcon';
 import Colors from '../Colors';
 import routeMapper from './routeMapper';
 import NavigationReducer from '../navigation-rfc/Navigation/NavigationReducer';

@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import Colors from '../../Colors';
-import Loading from './Loading';
+import Loading from './Core/Loading';
 
 const {
 	StatusBar,

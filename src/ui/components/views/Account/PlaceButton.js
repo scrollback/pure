@@ -3,8 +3,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import AppText from '../AppText';
-import Icon from '../Icon';
+import AppText from '../Core/AppText';
+import Icon from '../Core/Icon';
 import Colors from '../../../Colors';
 
 const {

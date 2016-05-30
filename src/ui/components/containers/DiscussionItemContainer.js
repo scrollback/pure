@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import DiscussionItem from '../views/DiscussionItem';
+import DiscussionItem from '../views/Discussion/DiscussionItem';
 import {
 	hideThread,
 	unhideThread,

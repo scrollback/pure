@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import AppText from '../AppText';
+import AppText from '../Core/AppText';
 import Colors from '../../../Colors';
 
 const {

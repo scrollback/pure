@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Connect from '../../../modules/store/Connect';
-import BannerOffline from '../views/BannerOffline';
+import BannerOffline from '../views/Banner/BannerOffline';
 
 const mapSubscriptionToProps = {
 	status: {

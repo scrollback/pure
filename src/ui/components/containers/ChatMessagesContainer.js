@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import Connect from '../../../modules/store/Connect';
-import ChatMessages from '../views/ChatMessages';
+import ChatMessages from '../views/Chat/ChatMessages';
 import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
 import type { SubscriptionRange } from '../../../modules/store/SimpleStoreTypes';
 

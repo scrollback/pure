@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import RoomListContainer from '../../containers/RoomListContainer';
-import SearchableList from '../SearchableList';
+import SearchableList from '../Search/SearchableList';
 import RoomItem from './RoomItem';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 

@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import Colors from '../../Colors';
-import AppText from './AppText';
-import Page from './Page';
+import AppText from './Core/AppText';
+import Page from './Page/Page';
 
 const {
 	StyleSheet,

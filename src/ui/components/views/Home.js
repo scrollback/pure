@@ -6,7 +6,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import PersistentNavigator from '../../navigation/PersistentNavigator';
 import UserSwitcherContainer from '../containers/UserSwitcherContainer';
 import NavigationState from '../../navigation-rfc/Navigation/NavigationState';
-import ModalHost from './ModalHost';
+import ModalHost from './Core/ModalHost';
 import Colors from '../../Colors';
 import { convertRouteToState, convertURLToState } from '../../../lib/Route';
 

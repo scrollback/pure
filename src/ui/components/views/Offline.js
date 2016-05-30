@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import Radium from 'radium';
 import shallowCompare from 'react-addons-shallow-compare';
 import Colors from '../../Colors';
-import Page from './Page';
+import Page from './Page/Page';
 
 const styles = {
 	container: {

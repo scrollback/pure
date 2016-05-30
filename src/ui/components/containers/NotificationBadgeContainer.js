@@ -3,7 +3,7 @@
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
-import NotificationBadge from '../views/NotificationBadge';
+import NotificationBadge from '../views/Notification/NotificationBadge';
 
 const transformNotesToCount = (/* data */) => {
 	// TODO: handle notifications properly

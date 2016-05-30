@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Connect from '../../../modules/store/Connect';
-import NotificationClearIcon from '../views/NotificationClearIcon';
+import NotificationClearIcon from '../views/Notification/NotificationClearIcon';
 import { dismissAllNotes } from '../../../modules/store/actions';
 
 const mapActionsToProps = {

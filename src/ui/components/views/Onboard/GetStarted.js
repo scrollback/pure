@@ -6,9 +6,9 @@ import shallowCompare from 'react-addons-shallow-compare';
 import NextButton from './NextButton';
 import OnboardTitle from './OnboardTitle';
 import OnboardParagraph from './OnboardParagraph';
-import TouchFeedback from '../TouchFeedback';
-import Icon from '../Icon';
-import AppText from '../AppText';
+import TouchFeedback from '../Core/TouchFeedback';
+import Icon from '../Core/Icon';
+import AppText from '../Core/AppText';
 import Colors from '../../../Colors';
 
 const {

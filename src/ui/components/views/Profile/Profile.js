@@ -4,10 +4,10 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ProfileField from './ProfileField';
-import AppText from '../AppText';
-import AvatarRound from '../AvatarRound';
-import PageLoading from '../PageLoading';
-import PageEmpty from '../PageEmpty';
+import AppText from '../Core/AppText';
+import AvatarRound from '../Avatar/AvatarRound';
+import PageLoading from '../Page/PageLoading';
+import PageEmpty from '../Page/PageEmpty';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import {

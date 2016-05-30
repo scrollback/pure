@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import Radium from 'radium';
-import Loading from './Loading';
+import Loading from './Core/Loading';
 import Colors from '../../Colors';
 
 const styles = {

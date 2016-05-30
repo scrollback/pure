@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import ChatTitle from '../views/ChatTitle';
+import ChatTitle from '../views/Chat/ChatTitle';
 import {
 	ROLE_FOLLOWER,
 	PRESENCE_FOREGROUND,

@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import LocationItem from './LocationItem';
 import PoweredByGoogle from './PoweredByGoogle';
-import SearchableList from '../SearchableList';
+import SearchableList from '../Search/SearchableList';
 import Colors from '../../../Colors';
 import GooglePlaces from '../../../modules/GooglePlaces';
 

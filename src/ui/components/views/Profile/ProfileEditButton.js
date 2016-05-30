@@ -2,8 +2,8 @@
 
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
-import AppbarTouchable from '../AppbarTouchable';
-import AppbarIcon from '../AppbarIcon';
+import AppbarTouchable from '../Appbar/AppbarTouchable';
+import AppbarIcon from '../Appbar/AppbarIcon';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 
 type Props = {

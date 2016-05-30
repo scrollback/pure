@@ -7,7 +7,7 @@ import PlacesSelectorContainer from '../../containers/PlaceSelectorContainer';
 import PlaceItem from './PlaceItem';
 import PlaceButton from './PlaceButton';
 import PlacesSelectorTip from './PlacesSelectorTip';
-import Modal from '../Modal';
+import Modal from '../Core/Modal';
 
 const {
 	View,

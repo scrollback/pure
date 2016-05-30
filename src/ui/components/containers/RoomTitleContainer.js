@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import AppbarTitle from '../views/AppbarTitle';
+import AppbarTitle from '../views/Appbar/AppbarTitle';
 
 const transformTitle = room => {
 	if (room && room.type === 'loading') {

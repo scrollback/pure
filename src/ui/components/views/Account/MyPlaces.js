@@ -4,7 +4,7 @@ import React, { PropTypes, Component } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import PlaceManager from './PlaceManager';
-import PageLoading from '../PageLoading';
+import PageLoading from '../Page/PageLoading';
 import Colors from '../../../Colors';
 import LocationListener from '../../../modules/LocationListener';
 

@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import PeopleList from '../views/PeopleList';
+import PeopleList from '../views/PeopleList/PeopleList';
 import {
 	ROLE_FOLLOWER,
 } from '../../../lib/Constants';

@@ -5,9 +5,9 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import RoomItemContainer from '../../containers/RoomItemContainer';
 import RoomsFooterContainer from '../../containers/RoomsFooterContainer';
-import PageEmpty from '../PageEmpty';
-import PageLoading from '../PageLoading';
-import LoadingItem from '../LoadingItem';
+import PageEmpty from '../Page/PageEmpty';
+import PageLoading from '../Page/PageLoading';
+import LoadingItem from '../Core/LoadingItem';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import type { RoomRel, Room } from '../../../../lib/schemaTypes';
 

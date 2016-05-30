@@ -3,7 +3,7 @@
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import PassUserProp from '../../../modules/store/PassUserProp';
-import NotificationCenter from '../views/NotificationCenter';
+import NotificationCenter from '../views/Notification/NotificationCenter';
 import { dismissNote } from '../../../modules/store/actions';
 
 const mapActionsToProps = {

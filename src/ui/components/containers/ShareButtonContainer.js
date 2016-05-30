@@ -3,7 +3,7 @@
 import React, { PropTypes } from 'react';
 import { config } from '../../../core-client';
 import Connect from '../../../modules/store/Connect';
-import ShareButton from '../views/ShareButton';
+import ShareButton from '../views/Appbar/ShareButton';
 import { convertRouteToURL } from '../../../lib/Route';
 
 const { host, protocol } = config.server;
