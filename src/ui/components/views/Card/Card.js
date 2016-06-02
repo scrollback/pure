@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 		borderColor: Colors.separator,
 		borderTopWidth: 1 / PixelRatio.get(),
 		borderBottomWidth: 1 / PixelRatio.get(),
-		marginVertical: 4,
+		marginVertical: 6,
 	},
 });
 

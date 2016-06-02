@@ -6,18 +6,18 @@ import shallowCompare from 'react-addons-shallow-compare';
 import Card from '../Card/Card';
 import CardTitle from '../Card/CardTitle';
 import DiscussionSummary from './DiscussionSummary';
-import DiscussionFooter from './DiscussionFooter';
+import DiscussionAuthor from './DiscussionAuthor';
+import DiscussionActions from './DiscussionActions';
 import TouchFeedback from '../Core/TouchFeedback';
 import Icon from '../Core/Icon';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
-import Share from '../../../modules/Share';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
-import type { Thread } from '../../../../lib/schemaTypes';
+import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
 	Clipboard,
@@ -25,6 +25,7 @@ const {
 	ToastAndroid,
 	StyleSheet,
 	TouchableOpacity,
+	PixelRatio,
 	View,
 } = ReactNative;
 
@@ -33,24 +34,24 @@ const styles = StyleSheet.create({
 		marginHorizontal: 16,
 	},
 
-	footer: {
-		marginTop: 8,
-		marginBottom: 12,
+	separator: {
+		borderTopWidth: 1 / PixelRatio.get(),
+		borderTopColor: Colors.separator,
 	},
 
 	topArea: {
 		flexDirection: 'row',
 	},
 
-	title: {
+	author: {
 		flex: 1,
-		marginTop: 16,
+		marginHorizontal: 16,
 	},
 
 	expand: {
 		marginHorizontal: 16,
 		marginVertical: 12,
-		color: Colors.fadedBlack,
+		color: Colors.grey,
 	},
 
 	hidden: {
@@ -60,9 +61,12 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
+	threadrel: ThreadRel;
 	isUserAdmin: boolean;
 	hideThread: Function;
 	unhideThread: Function;
+	likeThread: Function;
+	unlikeThread: Function;
 	banUser: Function;
 	unbanUser: Function;
 	onNavigation: Function;
@@ -81,10 +85,13 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			creator: PropTypes.string.isRequired,
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
+		threadrel: PropTypes.object.isRequired,
 		onNavigation: PropTypes.func.isRequired,
 		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,
 		unhideThread: PropTypes.func.isRequired,
+		likeThread: PropTypes.func.isRequired,
+		unlikeThread: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 	};
@@ -100,19 +107,6 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	_copyToClipboard: Function = text => {
 		Clipboard.setString(text);
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
-	};
-
-	_getDiscussionLink: Function = () => {
-		const { thread } = this.props;
-
-		return config.server.protocol + '//' + config.server.host + convertRouteToURL({
-			name: 'chat',
-			props: {
-				room: thread.parents[0],
-				thread: thread.id,
-				title: thread.name,
-			},
-		});
 	};
 
 	_handleOpenImage: Function = () => {
@@ -143,12 +137,17 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		this._copyToClipboard(this.props.thread.body);
 	};
 
-	_handleShare: Function = () => {
-		Share.shareItem('Share discussion', this._getDiscussionLink());
-	};
-
 	_handleCopyLink: Function = () => {
-		this._copyToClipboard(this._getDiscussionLink());
+		const { thread } = this.props;
+
+		this._copyToClipboard(config.server.protocol + '//' + config.server.host + convertRouteToURL({
+			name: 'chat',
+			props: {
+				room: thread.parents[0],
+				thread: thread.id,
+				title: thread.name,
+			},
+		}));
 	};
 
 	_handleShowMenu: Function = () => {
@@ -178,7 +177,9 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	render() {
 		const {
 			thread,
+			threadrel,
 			isUserAdmin,
+			onNavigation,
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
@@ -193,10 +194,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 				<TouchFeedback onPress={this._handlePress}>
 					<View style={hidden ? styles.hidden : null}>
 						<View style={styles.topArea}>
-							<CardTitle style={[ styles.item, styles.title ]}>
-								{this.props.thread.name}
-							</CardTitle>
-
+							<DiscussionAuthor {...this.props} style={styles.author} />
 							<TouchableOpacity onPress={this._handleShowMenu}>
 								<Icon
 									name='expand-more'
@@ -205,9 +203,21 @@ export default class DiscussionItem extends Component<void, Props, State> {
 								/>
 							</TouchableOpacity>
 						</View>
-
-						<DiscussionSummary text={thread.body} meta={thread.meta} />
-						<DiscussionFooter {...this.props} style={[ styles.item, styles.footer ]} />
+						<CardTitle style={styles.item}>
+							{thread.name}
+						</CardTitle>
+						<DiscussionSummary
+							text={thread.body}
+							meta={thread.meta}
+						/>
+						<View style={styles.separator} />
+						<DiscussionActions
+							thread={thread}
+							threadrel={threadrel}
+							likeThread={this.props.likeThread}
+							unlikeThread={this.props.unlikeThread}
+							onNavigation={onNavigation}
+						/>
 					</View>
 				</TouchFeedback>
 
@@ -231,10 +241,6 @@ export default class DiscussionItem extends Component<void, Props, State> {
 
 					<ActionSheetItem onPress={this._handleCopyLink}>
 						Copy discussion link
-					</ActionSheetItem>
-
-					<ActionSheetItem onPress={this._handleShare}>
-						Share discussion
 					</ActionSheetItem>
 
 					{isUserAdmin ?

@@ -21,7 +21,7 @@ const {
 
 const styles = StyleSheet.create({
 	column: {
-		paddingTop: 4,
+		paddingTop: 6,
 		paddingBottom: 88,
 	},
 
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		flexWrap: 'wrap',
 		justifyContent: 'center',
-		paddingTop: 8,
+		paddingTop: 12,
 		paddingBottom: 88,
 	},
 
@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
 	gridItem: {
 		overflow: 'hidden',
 		width: 320,
-		marginHorizontal: 8,
-		marginVertical: 8,
+		marginHorizontal: 12,
+		marginVertical: 12,
 		borderLeftWidth: 1 / PixelRatio.get(),
 		borderRightWidth: 1 / PixelRatio.get(),
 		borderRadius: 3,
@@ -99,21 +99,26 @@ export default class Discussions extends Component<void, Props, State> {
 		return Dimensions.get('window').width > 400;
 	};
 
-	_renderRow: Function = thread => {
-		if (!thread) {
-			return null;
-		}
-
-		switch (thread.type) {
+	_renderRow: Function = ({ thread, threadrel, type }) => {
+		switch (type) {
 		case 'loading':
 			return <LoadingItem />;
 		case 'cta':
 			return <CTACardContainerRoom room={this.props.room} style={this._isWide() ? styles.gridItem : styles.columnItem} />;
 		default:
+			if (!thread) {
+				return null;
+			}
+
+			if (thread.type === 'loading') {
+				return <LoadingItem />;
+			}
+
 			return (
 				<DiscussionItemContainer
 					key={thread.id}
-					thread={thread.id}
+					thread={thread}
+					threadrel={threadrel}
 					onNavigation={this.props.onNavigation}
 					style={this._isWide() ? styles.gridItem : styles.columnItem}
 				/>
@@ -122,12 +127,16 @@ export default class Discussions extends Component<void, Props, State> {
 	};
 
 	render() {
+		const {
+			data,
+		} = this.props;
+
 		let placeHolder;
 
-		if (this.props.data.length === 0) {
+		if (data.length === 0) {
 			placeHolder = <PageEmpty label='No discussions yet' image='sad' />;
-		} else if (this.props.data.length === 1) {
-			switch (this.props.data[0] && this.props.data[0].type) {
+		} else if (data.length === 1) {
+			switch (data[0] && data[0].type) {
 			case 'loading':
 				placeHolder = <PageLoading />;
 				break;

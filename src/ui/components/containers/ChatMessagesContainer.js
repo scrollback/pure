@@ -7,7 +7,7 @@ import ChatMessages from '../views/Chat/ChatMessages';
 import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
 import type { SubscriptionRange } from '../../../modules/store/SimpleStoreTypes';
 
-const transformTexts = (texts, thread) => {
+const transformTexts = (texts, thread, threadrel) => {
 	if (texts.length === 1 && texts[0] && texts[0].type === 'loading') {
 		return texts;
 	}
@@ -19,7 +19,8 @@ const transformTexts = (texts, thread) => {
 			data.push(texts[i]);
 		} else {
 			data.push({
-				text: texts[i],
+				text: texts[i].text,
+				textrel: texts[i].textrel,
 				previousText: texts[i - 1],
 				isLast: i === l,
 			});
@@ -32,12 +33,16 @@ const transformTexts = (texts, thread) => {
 		if (first && first.text) {
 			data[data.length - 1] = {
 				text: first.text,
+				textrel: first.textrel,
 				previousText: thread,
 				isLast: false,
 			};
 		}
 
-		data.push({ text: thread });
+		data.push({
+			text: thread,
+			textrel: threadrel,
+		});
 	}
 
 	return data;
@@ -51,6 +56,7 @@ class ChatMessagesContainerInner extends Component<void, any, void> {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		thread: PropTypes.object,
+		threadrel: PropTypes.object,
 		me: PropTypes.shape({
 			tags: PropTypes.arrayOf(PropTypes.number),
 		}).isRequired,
@@ -59,11 +65,12 @@ class ChatMessagesContainerInner extends Component<void, any, void> {
 	render() {
 		const {
 			thread,
+			threadrel,
 			data,
 			me,
 		} = this.props;
 
-		return <ChatMessages {...this.props} data={transformTexts(filterHidden(data, me), thread)} />;
+		return <ChatMessages {...this.props} data={transformTexts(filterHidden(data, me), thread, threadrel)} />;
 	}
 }
 
@@ -122,8 +129,12 @@ export default class ChatMessagesContainer extends Component<void, any, State> {
 						key: {
 							slice: {
 								type: 'text',
+								join: {
+									textrel: 'item',
+								},
 								filter: {
 									parents_cts: [ this.props.thread ],
+									user: this.props.user,
 								},
 								order: 'createTime',
 							},
@@ -135,6 +146,12 @@ export default class ChatMessagesContainer extends Component<void, any, State> {
 						key: {
 							type: 'entity',
 							id: this.props.thread,
+						},
+					},
+					threadrel: {
+						key: {
+							type: 'entity',
+							id: `${this.props.user}_${this.props.thread}`,
 						},
 					},
 					me: {

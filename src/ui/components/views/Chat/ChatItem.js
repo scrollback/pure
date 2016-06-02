@@ -10,11 +10,12 @@ import Icon from '../Core/Icon';
 import Time from '../Core/Time';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
+import AppText from '../Core/AppText';
 import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { parseURLs } from '../../../../lib/URL';
-import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
-import type { Text } from '../../../../lib/schemaTypes';
+import { TAG_POST_HIDDEN, ROLE_UPVOTE } from '../../../../lib/Constants';
+import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 const {
 	Clipboard,
@@ -26,9 +27,10 @@ const {
 	View,
 } = ReactNative;
 
+const FADED_GREY = '#b2b2b2';
+
 const styles = StyleSheet.create({
 	container: {
-		marginHorizontal: 8,
 		marginVertical: 4,
 	},
 	chat: {
@@ -51,17 +53,15 @@ const styles = StyleSheet.create({
 		alignSelf: 'flex-end',
 	},
 	timestampIcon: {
-		color: Colors.black,
+		color: FADED_GREY,
 		marginVertical: 2,
-		opacity: 0.3,
 	},
 	timestampText: {
-		color: Colors.black,
+		color: FADED_GREY,
 		fontSize: 12,
 		lineHeight: 18,
 		marginHorizontal: 6,
 		paddingHorizontal: 8,
-		opacity: 0.3,
 	},
 	avatar: {
 		position: 'absolute',
@@ -82,19 +82,38 @@ const styles = StyleSheet.create({
 	embedThumbnail: {
 		marginBottom: 8,
 	},
-	bubbleReceived: {
-		marginRight: 8,
+	chatReceived: {
+		paddingRight: 52,
 	},
-	bubbleSent: {
+	chatSent: {
 		marginLeft: 8,
 	},
 	hidden: {
 		opacity: 0.3,
 	},
+	action: {
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+		width: 52,
+		alignItems: 'center',
+	},
+	icon: {
+		color: FADED_GREY,
+	},
+	likeCount: {
+		color: FADED_GREY,
+		fontSize: 10,
+		lineHeight: 15,
+	},
+	liked: {
+		color: Colors.accent,
+	},
 });
 
 type Props = {
 	text: Text;
+	textrel: TextRel;
 	previousText: Text;
 	isFirst: boolean;
 	isLast: boolean;
@@ -104,6 +123,8 @@ type Props = {
 	isUserAdmin: boolean;
 	hideText: Function;
 	unhideText: Function;
+	likeText: Function;
+	unlikeText: Function;
 	banUser: Function;
 	unbanUser: Function;
 	style?: any;
@@ -122,6 +143,7 @@ export default class ChatItem extends Component<void, Props, State> {
 			createTime: PropTypes.number.isRequired,
 			meta: PropTypes.object,
 		}).isRequired,
+		textrel: PropTypes.object.isRequired,
 		previousText: PropTypes.shape({
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
@@ -135,6 +157,8 @@ export default class ChatItem extends Component<void, Props, State> {
 		isUserAdmin: PropTypes.bool.isRequired,
 		hideText: PropTypes.func.isRequired,
 		unhideText: PropTypes.func.isRequired,
+		likeText: PropTypes.func.isRequired,
+		unlikeText: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 		style: View.propTypes.style,
@@ -148,6 +172,22 @@ export default class ChatItem extends Component<void, Props, State> {
 	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
+
+	_isLiked: Function = () => {
+		const {
+			textrel,
+		} = this.props;
+
+		return textrel && textrel.roles ? textrel.roles.indexOf(ROLE_UPVOTE) > -1 : false;
+	};
+
+	_handleLike: Function = () => {
+		if (this._isLiked()) {
+			this.props.unlikeText();
+		} else {
+			this.props.likeText();
+		}
+	};
 
 	_goToProfile: Function = () => {
 		const { text } = this.props;
@@ -257,6 +297,8 @@ export default class ChatItem extends Component<void, Props, State> {
 			showTime = showTime || (text.createTime - previousText.createTime) > 300000;
 		}
 
+		const liked = this._isLiked();
+
 		return (
 			<View {...this.props} style={[ styles.container, this.props.style ]}>
 				<View style={[ styles.chat, received ? styles.received : null, hidden ? styles.hidden : null ]}>
@@ -271,18 +313,33 @@ export default class ChatItem extends Component<void, Props, State> {
 						null
 					}
 
-					<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
-						<ChatBubble
-							body={text.meta && text.meta.photo ? null : text.body}
-							creator={text.creator}
-							type={received ? 'left' : 'right'}
-							showAuthor={showAuthor}
-							showArrow={received ? showAuthor : true}
-							style={received ? styles.bubbleReceived : styles.bubbleSent}
-						>
-							{cover}
-						</ChatBubble>
-					</TouchableOpacity>
+					<View style={received ? styles.chatReceived : styles.chatSent}>
+						<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
+							<ChatBubble
+								body={text.meta && text.meta.photo ? null : text.body}
+								creator={text.creator}
+								type={received ? 'left' : 'right'}
+								showAuthor={showAuthor}
+								showArrow={received ? showAuthor : true}
+							>
+								{cover}
+							</ChatBubble>
+						</TouchableOpacity>
+
+						{received ?
+							<TouchableOpacity style={styles.action} onPress={this._handleLike}>
+								<Icon
+									style={[ styles.icon, liked ? styles.liked : null ]}
+									name={liked ? 'favorite' : 'favorite-border'}
+									size={24}
+								/>
+								<AppText style={[ styles.likeCount, liked ? styles.liked : null ]}>
+									{text.counts && text.counts.upvote ? text.counts.upvote : '3'}
+								</AppText>
+							</TouchableOpacity> :
+							null
+						}
+					</View>
 				</View>
 
 				{showTime ?

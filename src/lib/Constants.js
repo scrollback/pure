@@ -25,7 +25,7 @@ export const ROLE_MODERATOR = 4;
 export const ROLE_OWNER = 5;
 export const ROLE_CREATOR = 6;
 
-export const ROLE_LIKE = 31;
+export const ROLE_UPVOTE = 31;
 export const ROLE_FLAG = 32;
 export const ROLE_MUTE = 33;
 export const ROLE_HOME = 41;
