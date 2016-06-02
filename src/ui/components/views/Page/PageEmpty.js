@@ -40,32 +40,36 @@ export default class PageEmpty extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getImageSource: Function = name => {
-		switch (name) {
-		case 'cool':
-			return require('../../../../assets/monkey-cool.png');
-		case 'happy':
-			return require('../../../../assets/monkey-happy.png');
-		case 'meh':
-			return require('../../../../assets/monkey-meh.png');
-		case 'sad':
-			return require('../../../../assets/monkey-sad.png');
-		default:
-			return null;
-		}
-	};
-
 	render() {
 		const {
 			label,
 			image,
 		} = this.props;
 
+		let source;
+
+		switch (image) {
+		case 'cool':
+			source = require('../../../../../assets/monkey-cool.png');
+			break;
+		case 'happy':
+			source = require('../../../../../assets/monkey-happy.png');
+			break;
+		case 'meh':
+			source = require('../../../../../assets/monkey-meh.png');
+			break;
+		case 'sad':
+			source = require('../../../../../assets/monkey-sad.png');
+			break;
+		default:
+			source = null;
+		}
+
 		return (
 			<Page {...this.props}>
 				<View style={styles.content}>
 					{image ?
-						<Image source={this._getImageSource(image)} /> :
+						<Image source={source} /> :
 						null
 					}
 					{label ?
