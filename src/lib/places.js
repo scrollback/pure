@@ -1,9 +1,7 @@
-/* @flow */
-
-import { config } from '../../core-server';
+import { config } from '../core-server';
 import request from 'request';
 import winston from 'winston';
-import * as constants from '../../lib/Constants';
+import * as constants from '../lib/Constants';
 
 function getScore(types) {
 	let finalScore, finalTag = null;
@@ -79,21 +77,22 @@ function getScore(types) {
 	};
 }
 
+
 function handleError(message, reject) {
 	winston.error(message);
 	reject(new Error(message));
 	return;
 }
 
-function callApi(api, params) {
+export function callApi(api: string, params: Object) {
 	return new Promise((resolve, reject) => {
-		request(
-			'https://maps.googleapis.com/maps/api/' + api +
-			'/json?key=' + config.google.api_key + '&' +
+		const p = 'https://maps.googleapis.com/maps/api/' + api +
+		'/json?key=' + config.google.api_key + '&' +
+		Object.keys(params).map(name => name + '=' + params[name])
+		.join('&');
 
-			/* $FlowFixMe : We don't need all keys to be present */
-			Object.keys(params).map(name => name + '=' + params[name])
-			.join('&'),
+		request(
+			p,
 			(error, response, body) => {
 				if (error) {
 					return handleError(
@@ -117,14 +116,65 @@ function callApi(api, params) {
 	});
 }
 
+export function getPhotoFromReference(photoreference: string, maxwidth: number) {
+	return new Promise((resolve, reject) => {
+		const params = {
+			key: config.google.api_key,
+			photoreference,
+			maxwidth
+		};
+		const p = 'https://maps.googleapis.com/maps/api/place/photo?' +
+		Object.keys(params).map(name => name + '=' + params[name])
+		.join('&');
+
+		request({
+			url: p,
+			followRedirect: false
+		},
+			(error, response) => {
+				if (error) {
+					return handleError(
+						'GAPI  HTTP ERROR: ' + error.message, reject
+					);
+				}
+
+				return resolve({
+					location: response.headers.location
+				});
+			}
+		);
+	});
+}
+
+export function getNearByPlaces(lat: number, long: number, radius: number, type: string) {
+	return callApi('place/nearbysearch', {
+		location: lat + ',' + long,
+		radius,
+		type
+	});
+}
+
+export function getPlaceDetails(placeid) {
+	return callApi('place/details', {
+		placeid
+	});
+}
+
 function placeToStub(place) {
 	const { tag } = getScore(place.types);
-	return {
+	const stub = {
 		identity: 'place:' + place.place_id,
 		name: place.name ? place.name : place.address_components && place.address_components[0].long_name,
 		type: tag,
 		parents: place.parents,
+		meta: {
+			geometry: place.geometry,
+			photos: place.photos
+		}
 	};
+
+	if ('photos' in place) stub.meta.photos = place.photos;
+	return stub;
 }
 
 export function getStubset(placeid: string, rel: number): Promise<Object> {

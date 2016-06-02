@@ -55,8 +55,6 @@
 		"validity": 600000
 	},
 	"newrelic": {
-		"name": "Belong production",
-		"key":  "put_your_key_here"
 	},
 	"connStr": "pg://scrollback:@localhost/pure",
 	"open_in_browser": false

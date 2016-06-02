@@ -119,11 +119,18 @@ CREATE TABLE jobs (
 	lastrun bigint DEFAULT extract(epoch from now())*1000
 );
 
+DROP TABLE IF EXISTS urls;
+
+CREATE TABLE urls (
+	shorturl text PRIMARY KEY,
+	longurl text NOT NULL
+);
+
 INSERT INTO jobs VALUES (1), (2), (3);
 CREATE EXTENSION plv8;
 
 INSERT INTO rooms (id, name) VALUES ('e8d0a3b8-6c00-4871-84ad-1078b1265c08', 'Support');
-
+INSERT INTO users(id, name,identities,params,meta) VALUES('belongbot', 'belongbot', '{}','{}','{}');
 
 DROP FUNCTION IF EXISTS jsonop(jsonb, jsonb, jsonb);
 DROP FUNCTION IF EXISTS jsonop(jsonb, jsonb);

@@ -4,7 +4,7 @@
 import { bus, cache, config } from '../../core-server';
 import winston from 'winston';
 import { room as Room, roomrel as RoomRel } from '../../models/models';
-import * as place from './place';
+import * as place from '../../lib/places';
 import * as constants from '../../lib/Constants';
 import uuid from 'node-uuid';
 import * as pg from '../../lib/pg';

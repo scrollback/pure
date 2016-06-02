@@ -226,4 +226,4 @@ bus.on('change', (changes, next) => {
 	}
 
 	counter.then(next);
-});
+}, 500);

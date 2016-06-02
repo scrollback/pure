@@ -6,6 +6,7 @@ import * as Constants from '../../lib/Constants';
 import log from 'winston';
 import User from '../../models/user';
 import Counter from '../../lib/counter';
+import jsonop from 'jsonop';
 // import ThreadRel from '../../models/threadrel';
 // import RoomRel from '../../models/roomrel';
 
@@ -47,16 +48,16 @@ bus.on('change', (changes, next) => {
 			//
 			// }
 			// console.log('parents count module: ', parent);
-			changes.entities[entity.parents[0]] = parent;
+			changes.entities[entity.parents[0]] = jsonop.merge(changes.entities[entity.parents[0]], parent);
 
 			// 2. Increment text/thread count of user
 
-			const user = changes.entities[entity.creator] || new User({ id: entity.creator });
+			const user = new User({ id: entity.creator });
 
-			user.counts = user.counts || {};
+			user.counts = {};
 			user.counts[TABLES[entity.type]] = [ inc, '$add' ];
 			user.id = entity.creator;
-			changes.entities[entity.creator] = user;
+			changes.entities[entity.creator] = jsonop.merge(changes.entities[entity.creator], user);
 		}
 
 		 // 3. Increment related counts on items
@@ -106,17 +107,7 @@ bus.on('change', (changes, next) => {
 				const item = changes.entities[entity.item] || {};
 
 				item.counts = item.counts || {};
-				// if (entity.__op__ && entity.__op__.role && entity.__op__.roles[0] === 'union') {
-				// 	const rem = entity.__op__.roles[0].slice(1);
-				//
-				// 	rem.forEach((role) => {
-				// 		if (ROLES[role]) {
-				// 			item.counts[ROLES[role]] = -1;
-				// 			item.counts.__op__[ROLES[role]] = 'inc';
-				// 		}
-				// 	});
-				// }
-				// console.log("exist: entity.roles: ", exist, entity.roles );
+
 				exist.forEach((role) => {
 					if (ROLES[role]) {
 						item.counts[ROLES[role]] = [ inc, '$add' ];

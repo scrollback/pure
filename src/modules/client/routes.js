@@ -69,6 +69,7 @@ bus.on('http/init', app => {
 					'//fonts.googleapis.com/css?family=Alegreya+Sans:300,500,900',
 					'/s/styles/home.css'
 				]}
+				analytics={config.analytics}
 			/>
 		);
 	}));

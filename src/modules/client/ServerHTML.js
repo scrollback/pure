@@ -11,9 +11,15 @@ type Props = {
 	image: string;
 	permalink: string;
 	styles?: Array<string>;
+	analytics: {
+		google: string;
+		optimizely: string;
+	}
 };
 
-const ServerHTML = ({ locale, title, description, body, image, permalink, styles }: Props) => (
+const ServerHTML = ({
+	locale, title, description, body, image, permalink, styles, analytics
+}: Props) => (
 	<html lang={locale}>
 		<head>
 			<meta charSet='utf-8' />
@@ -45,6 +51,24 @@ const ServerHTML = ({ locale, title, description, body, image, permalink, styles
 					rel='stylesheet'
 				/>
 			)) : null}
+
+			{analytics.google ? (
+				<script dangerouslySetInnerHTML={{ __html: `
+					(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;
+					i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},
+					i[r].l=1*new Date();a=s.createElement(o),
+					m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;
+					m.parentNode.insertBefore(a,m)})(window,document,'script',
+					'https://www.google-analytics.com/analytics.js','ga');
+
+					ga('create', '${analytics.google}', 'auto');
+					ga('send', 'pageview');
+				`}}></script>
+			): null}
+
+			{analytics.optimizely ? (<script
+				src={`https://cdn.optimizely.com/js/${analytics.optimizely}.js`}
+			></script>) : null}
 		</head>
 		<body>
 			<div id='root' dangerouslySetInnerHTML={{ __html: body }} />
@@ -60,6 +84,10 @@ ServerHTML.propTypes = {
 	image: PropTypes.string.isRequired,
 	permalink: PropTypes.string.isRequired,
 	styles: PropTypes.arrayOf(PropTypes.string),
+	analytics: {
+		google: PropTypes.string,
+		optimizely: PropTypes.string,
+	},
 };
 
 ServerHTML.defaultProps = {
