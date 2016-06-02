@@ -25,26 +25,20 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 		const item = slice.filter.parents_cts[0];
 		const result = await getEntityAsync(`${user}_${item}`);
 
-		if (result) {
-			bus.emit('change', setItemPresence(result, type, status));
-		} else {
-			bus.emit('change', setItemPresence({
-				item,
-				user,
-				roles: [ ROLE_VISITOR ],
-				create: true,
-			}, type, status));
-		}
+		global.requestIdleCallback(() => {
+			if (result) {
+				bus.emit('change', setItemPresence(result, type, status));
+			} else {
+				bus.emit('change', setItemPresence({
+					item,
+					user,
+					roles: [ ROLE_VISITOR ],
+					create: true,
+				}, type, status));
+			}
+		});
 	}
 }
-
-// subscribe({ type: 'state', path: 'session', source: 'presence' }, () => {
-// 	const id = cache.getState('user');
-//
-// 	if (id) {
-// 		bus.emit('change', setPresence(id, 'online'));
-// 	}
-// });
 
 store.observe({ type: 'state', path: 'user', source: 'presence' }).forEach(id => {
 	if (id) {
