@@ -39,11 +39,11 @@ export default class NavigationRootContainer extends Component<void, Props, Stat
 
 	state: State;
 
-	_reduceState = (currentState: NavigationState, action: NavigationAction) => {
-		switch (action.type) {
+	_reduceState = (currentState: NavigationState, { type, payload }: NavigationAction) => {
+		switch (type) {
 		case 'push':
-			if (action.payload) {
-				return NavigationStateUtils.push(currentState, { key: v4(), ...action.payload });
+			if (payload) {
+				return NavigationStateUtils.push(currentState, payload);
 			}
 			return currentState;
 		case 'pop':
@@ -56,8 +56,14 @@ export default class NavigationRootContainer extends Component<void, Props, Stat
 		}
 	};
 
-	_handleNavigate = (action: NavigationAction) => {
-		const nextNavigationState = this._reduceState(this.state.navigation, action);
+	_handleNavigate = ({ type, payload }: NavigationAction) => {
+		const nextNavigationState = this._reduceState(this.state.navigation, {
+			type,
+			payload: {
+				key: v4(),
+				...payload,
+			},
+		});
 
 		this.setState({
 			navigation: nextNavigationState,
