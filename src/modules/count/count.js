@@ -67,36 +67,44 @@ bus.on('change', (changes, next) => {
 		) {
 			if (!entity.id) entity.id = entity.user + '_' + entity.item;
 			promises.push(getEntityAsync(entity.id).then(result => {
-				let exist = [], inc = 1;
+				let rolesToInc = [];
+				const rolesToDec = [];
 
 				// console.log("result: ", result);
+				// console.log('entty: ', entity)
 				if (result) {
 					entity.roles.forEach((role) => {
 						if (result.roles.indexOf(role) === -1) {
-							exist.push(role);
+							rolesToInc.push(role);
 						}
 					});
 
-					if (entity.roles.length === 0) {
-						// console.log('got roles empty');
-						inc = -1;
-						exist = result.roles;
-					}
+					result.roles.forEach(role => {
+						if (entity.roles.indexOf(role) === -1) {
+							rolesToDec.push(role);
+						}
+					});
 
-					if (exist.length === 0) {
+					if (rolesToInc.length === 0 && rolesToDec.length === 0) {
 						return;
 					}
 				} else {
-					exist = entity.roles;
+					rolesToInc = entity.roles;
 				}
 
 				const item = changes.entities[entity.item] || {};
 
 				item.counts = item.counts || {};
 
-				exist.forEach((role) => {
+				rolesToInc.forEach((role) => {
 					if (ROLES[role]) {
-						item.counts[ROLES[role]] = [ inc, '$add' ];
+						item.counts[ROLES[role]] = [ 1, '$add' ];
+					}
+				});
+
+				rolesToDec.forEach((role) => {
+					if (ROLES[role]) {
+						item.counts[ROLES[role]] = [ -1, '$add' ];
 					}
 				});
 
@@ -119,6 +127,7 @@ bus.on('change', (changes, next) => {
 					item.type = Constants.TYPE_TOPIC;
 					break;
 				}
+				// console.log("count module: ", item)
 				changes.entities[entity.item] = item;
 			}));
 		}
