@@ -21,7 +21,6 @@ test.cb('should add count on room and user if thread created', t => {
 		}
 	};
 	bus.emit('change', changes, (e, c) => {
-		console.log(e, JSON.stringify(c.entities));
 		t.deepEqual(c.entities['52132a2b-b89f-41f4-b6f9-ce4244fa2a68'], {
 			counts: { children: [ 1, '$add' ] },
 			id: '52132a2b-b89f-41f4-b6f9-ce4244fa2a68',
@@ -53,7 +52,6 @@ test.cb('should add count on thread and user if text created', t => {
 		}
 	};
 	bus.emit('change', changes, (e, c) => {
-		// console.log(e, JSON.stringify(c.entities));
 		t.deepEqual(c.entities['52132a2b-b89f-41f4-b6f9-ce4244fa2a68'], {
 			counts: { children: [ 1, '$add' ] },
 			id: '52132a2b-b89f-41f4-b6f9-ce4244fa2a68',
@@ -86,7 +84,6 @@ test.cb('should add count on item if room relation created', t => {
 		roles: []
 	} } });
 	bus.emit('change', changes, (e, c) => {
-		// console.log(e, JSON.stringify(c.entities));
 		t.deepEqual(c.entities['8efec7ef-6899-4548-8467-4b2cc2f9b76b'], {
 			counts: { visitor: [ 1, '$add' ],
      mentioned: [ 1, '$add' ],
@@ -120,13 +117,12 @@ test.cb('should add count on item if thread relation created', t => {
 		roles: []
 	} } });
 	bus.emit('change', changes, (e, c) => {
-		// console.log(e, JSON.stringify(c.entities));
 		t.deepEqual(c.entities['8efec7ef-6899-4548-8467-4b2cc2f9b76b'], {
 			counts: {
 				visitor: [ 1, '$add' ],
 				mentioned: [ 1, '$add' ],
 				follower: [ 1, '$add' ],
-				like: [ 1, '$add' ],
+				upvote: [ 1, '$add' ],
 				flag: [ 1, '$add' ],
 				mute: [ 1, '$add' ]
 			},
@@ -156,13 +152,12 @@ test.cb('should add count -1 on item if unfollow room', t => {
 		roles: [ 1, 2, 3, 6, 31, 32, 33 ]
 	} } });
 	bus.emit('change', changes, (e, c) => {
-		// console.log(e, JSON.stringify(c.entities));
 		t.deepEqual(c.entities['8efec7ef-6899-4548-8467-4b2cc2f9b76b'], {
 			counts: {
 				visitor: [ -1, '$add' ],
 				mentioned: [ -1, '$add' ],
 				follower: [ -1, '$add' ],
-				like: [ -1, '$add' ],
+				upvote: [ -1, '$add' ],
 				flag: [ -1, '$add' ],
 				mute: [ -1, '$add' ]
 			},
