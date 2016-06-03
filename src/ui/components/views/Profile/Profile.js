@@ -5,9 +5,12 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ProfileField from './ProfileField';
 import AppText from '../Core/AppText';
+import AppbarTouchable from '../Appbar/AppbarTouchable';
+import AppbarIcon from '../Appbar/AppbarIcon';
 import AvatarRound from '../Avatar/AvatarRound';
 import PageLoading from '../Page/PageLoading';
 import PageEmpty from '../Page/PageEmpty';
+import ProfileEditButtonContainer from '../../containers/ProfileEditButtonContainer';
 import Colors from '../../../Colors';
 import {
 	ROLE_HOME,
@@ -30,11 +33,22 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 	},
 
+	appbar: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		height: 56,
+	},
+
 	cover: {
 		height: null,
 		width: null,
 		alignItems: 'stretch',
 		justifyContent: 'center',
+		padding: 16,
 	},
 
 	avatarContainer: {
@@ -148,6 +162,12 @@ export default class Profile extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
+	_handleGoBack = () => {
+		this.props.onNavigate({
+			type: 'pop',
+		});
+	};
+
 	_goToAccount: Function = () => {
 		this.props.onNavigate({
 			type: 'push',
@@ -171,6 +191,7 @@ export default class Profile extends Component<void, Props, void> {
 			currentUser,
 			user,
 			places,
+			onNavigate,
 		} = this.props;
 
 		if (!user) {
@@ -205,6 +226,12 @@ export default class Profile extends Component<void, Props, void> {
 							</View>
 						</View>
 					</Image>
+					<View style={styles.appbar}>
+						<AppbarTouchable onPress={this._handleGoBack}>
+							<AppbarIcon name='arrow-back' />
+						</AppbarTouchable>
+						<ProfileEditButtonContainer user={user.id} onNavigate={onNavigate} />
+					</View>
 					<View style={styles.achievements}>
 						<View style={styles.score}>
 							<AppText style={styles.scoreCount}>

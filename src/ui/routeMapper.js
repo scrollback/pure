@@ -2,7 +2,6 @@
 
 import type { Route } from '../lib/RouteTypes';
 import NotificationIcon from './components/views/Notification/NotificationIcon';
-import ProfileEditButtonContainer from './components/containers/ProfileEditButtonContainer';
 import ProfileButtonContainer from './components/containers/ProfileButtonContainer';
 import ShareButtonContainer from './components/containers/ShareButtonContainer';
 import DiscussionsDetailsContainer from './components/containers/DiscussionDetailsContainer';
@@ -51,8 +50,8 @@ export default function(route: Route): RouteDescription {
 	case 'profile':
 		return {
 			title: `${route.props ? route.props.user : 'someone'}'s profile`,
-			rightComponent: ProfileEditButtonContainer,
 			component: ProfileContainer,
+			appbar: false,
 		};
 	case 'account':
 		return {
