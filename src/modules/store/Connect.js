@@ -57,7 +57,7 @@ export default class Connect extends Component<void, Props, State> {
 		if (mapSubscriptionToProps) {
 			for (const item in mapSubscriptionToProps) {
 				const sub = mapSubscriptionToProps[item];
-				const defer = sub.defer;
+				const defer = sub.defer !== false;
 				const source = component.displayName || component.name;
 
 				let listener;

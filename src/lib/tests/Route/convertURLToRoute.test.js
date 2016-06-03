@@ -136,35 +136,40 @@ test('should parse url when room is invalid', t => {
 	t.deepEqual(result, convertURLToRoute('/nm/abc456def/such-thread/?time=1214340045721'));
 });
 
-test('should parse url with /:room?room=roomname', t => {
+test('should parse url with /p/room?room=roomname', t => {
 	t.deepEqual({
 		name: 'room',
 		props: {
 			room: 'someroom',
 		},
-	}, convertURLToRoute('/:room?room=someroom'));
+	}, convertURLToRoute('/p/room?room=someroom'));
 });
 
-test('should parse url with /:chat/?room=roomname&thread=threadid', t => {
+test('should parse url with /p/chat/?room=roomname&thread=threadid', t => {
 	t.deepEqual({
 		name: 'chat',
 		props: {
 			room: 'someroom',
 			thread: 'abc456def',
 		},
-	}, convertURLToRoute('/:chat/?room=someroom&thread=abc456def'));
+	}, convertURLToRoute('/p/chat/?room=someroom&thread=abc456def'));
 });
 
-test('should parse url with /:notes', t => {
-	t.deepEqual({
+test('should parse url with /p/notes', t => {
+	const result = {
 		name: 'notes',
 		props: {},
-	}, convertURLToRoute('/:notes'));
+	};
+
+	t.deepEqual(result, convertURLToRoute('https://belong.chat/p/notes'));
+	t.deepEqual(result, convertURLToRoute('http://localhost:7528/p/notes'));
+	t.deepEqual(result, convertURLToRoute('//localhost:7528/p/notes'));
+	t.deepEqual(result, convertURLToRoute('/p/notes'));
 });
 
-test('should parse url with /:account/', t => {
+test('should parse url with /p/account/', t => {
 	t.deepEqual({
 		name: 'account',
 		props: {},
-	}, convertURLToRoute('/:account/'));
+	}, convertURLToRoute('/p/account/hello'));
 });
