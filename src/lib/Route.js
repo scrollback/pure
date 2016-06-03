@@ -57,7 +57,7 @@ export function convertURLToRoute(url: string): Route {
 
 	const processed = RouteBase.processURL(url);
 
-	if (processed.indexOf(':') === 0) {
+	if (processed.indexOf('p/') === 0) {
 		return RouteBase.convertURLToRoute(processed, transformParam);
 	}
 

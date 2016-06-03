@@ -15,16 +15,16 @@ test('should throw error on invalid state', t => {
 });
 
 test('should build url with home', t => {
-	t.is('/:home/', convertRouteToURL({
+	t.is('/p/home/', convertRouteToURL({
 		name: 'home',
 	}));
 });
 
 test('should build url with notes', t => {
-	t.is('/:notes?type=unread', convertRouteToURL({
+	t.is('/p/notes?filter=unread', convertRouteToURL({
 		name: 'notes',
 		props: {
-			type: 'unread',
+			filter: 'unread',
 		},
 	}));
 });

@@ -36,12 +36,12 @@ export function convertRouteToURL(route: Route): string {
 		}
 	}
 
-	return `/:${route.name}${params.length ? '?' + params.join('&') : '/'}`;
+	return `/p/${route.name}${params.length ? '?' + params.join('&') : '/'}`;
 }
 
 export function convertURLToRoute(url: string, transform?: Function): Route {
 	const parts = processURL(url).split('?');
-	const name = parts[0].split('/')[0].slice(1);
+	const name = parts[0].split('/')[1];
 	const props = parts[1] ? decodeParams(parts[1], transform) : {};
 
 	return {

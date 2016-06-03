@@ -66,6 +66,7 @@ export default class ChatSuggestionsContainer extends Component<void, Props, Sta
 							},
 						},
 						transform: results => results.filter(item => item.type !== 'loading' && item.id !== user),
+						defer: false,
 					},
 				}}
 				passProps={this.props}
