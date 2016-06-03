@@ -14,6 +14,7 @@ import {
 	TAG_POST_PHOTO,
 	TAG_POST_HIDDEN,
 	ROLE_UPVOTE,
+	ROLE_FOLLOWER,
 } from '../../lib/Constants';
 
 /*
@@ -121,6 +122,11 @@ export const sendMessage = (
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
 			}),
+			[`${data.creator}_${id}`]: new TextRelModel({
+				item: id,
+				user: data.creator,
+				roles: [ ROLE_FOLLOWER ],
+			}),
 		},
 	};
 };
@@ -139,6 +145,11 @@ export const startThread = (
 				createTime: Date.now(),
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
+			}),
+			[`${data.creator}_${id}`]: new ThreadRelModel({
+				item: id,
+				user: data.creator,
+				roles: [ ROLE_FOLLOWER ],
 			}),
 		},
 	};

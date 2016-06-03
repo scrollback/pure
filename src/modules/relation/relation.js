@@ -139,7 +139,7 @@ bus.on('change', (changes, next) => {
 				user: entity.creator,
 				item: entity.id,
 				type: Constants.TYPE_THREADREL,
-				roles: [ Constants.ROLE_CREATOR, Constants.ROLE_FOLLOWER ],
+				roles: [ Constants.ROLE_FOLLOWER ],
 			};
 			const relation = new threadrel(threadRel);
 			changes.entities[relation.id] = relation;

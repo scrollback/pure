@@ -23,7 +23,6 @@ export const ROLE_MENTIONED = 2;
 export const ROLE_FOLLOWER = 3;
 export const ROLE_MODERATOR = 4;
 export const ROLE_OWNER = 5;
-export const ROLE_CREATOR = 6;
 
 export const ROLE_UPVOTE = 31;
 export const ROLE_FLAG = 32;

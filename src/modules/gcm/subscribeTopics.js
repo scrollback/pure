@@ -260,8 +260,7 @@ function handleSubscription(changes, next) {
 			counter.then(() => {
 				if (
 					entity.roles && entity.roles.length === 0 /* ||
-					entity.roles.indexOf(Constants.ROLE_FOLLOWER) === -1 &&
-					entity.roles.indexOf(Constants.ROLE_CREATOR) === -1*/
+					entity.roles.indexOf(Constants.ROLE_FOLLOWER) === -1*/
 				) {
 					log.info('Got unfollow, unsubscribe from topics');
 					const gcm = user.params && user.params.gcm;
