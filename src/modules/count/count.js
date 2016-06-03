@@ -7,8 +7,6 @@ import log from 'winston';
 import User from '../../models/user';
 import Counter from '../../lib/counter';
 import jsonop from 'jsonop';
-// import ThreadRel from '../../models/threadrel';
-// import RoomRel from '../../models/roomrel';
 
 bus.on('change', (changes, next) => {
 	if (!changes.entities) {
@@ -44,10 +42,6 @@ bus.on('change', (changes, next) => {
 			parent.type = (entity.type === Constants.TYPE_TEXT) ?
 				Constants.TYPE_THREAD : Constants.TYPE_ROOM;
 
-			// if (entity.type === Constants.TYPE_TEXT) {
-			//
-			// }
-			// console.log('parents count module: ', parent);
 			changes.entities[entity.parents[0]] = jsonop.merge(changes.entities[entity.parents[0]], parent);
 
 			// 2. Increment text/thread count of user
@@ -70,11 +64,6 @@ bus.on('change', (changes, next) => {
 			entity.type === Constants.TYPE_TOPICREL
 		) {
 			if (!entity.id) entity.id = entity.user + '_' + entity.item;
-			// console.log('roomrel: , entity: ', entity);
-			// if (entity.roles.length === 0) {
-			// 	decrementCount(changes, entity);
-			// 	continue;
-			// }
 			counter.inc();
 			cache.getEntity(entity.id, (err, result) => {
 				let exist = [], inc = 1;
@@ -134,7 +123,7 @@ bus.on('change', (changes, next) => {
 					break;
 				}
 				changes.entities[entity.item] = item;
-				console.log("item count module: ", item);
+				// console.log("item count module: ", item);
 				counter.dec();
 			});
 		}

@@ -1,38 +1,32 @@
 import test from 'ava';
 import { TYPE_THREAD } from '../../../lib/Constants';
-import { bus } from '../../../core-server';
+import { getScore } from '../score';
 
-test.cb('should add score on thread update', t => {
-	t.plan(1);
+test('should add score on thread creation', t => {
+	const entity = {
+		id: 'df8s-rbf43-sdfbhj34-dnf3',
+		type: TYPE_THREAD,
+		parents: [ 'adjgf7f-dsfh3-dsf43-23r' ],
+		body: 'some thread title',
+		updateTime: 1464873047099,
+		createTime: 1464873047099,
+		creator: 'testinguser'
+	};
+	const score = getScore(entity);
+	t.is(score, 24788.411831666665);
+});
 
-	require('../score');
-
-	const time = Date.now();
-
-	bus.emit('change', {
-		entities: {
-			'df8s-rbf43-sdfbhj34-dnf3': {
-				id: 'df8s-rbf43-sdfbhj34-dnf3',
-				type: TYPE_THREAD,
-				parents: [ 'adjgf7f-dsfh3-dsf43-23r' ],
-				body: 'some thread title',
-				updateTime: time,
-			},
-		},
-	}, (err, changes) => {
-		if (err) {
-			t.fail(err);
-			return;
+test('should add score on thread update', t => {
+	const entity = {
+		id: 'df8s-rbf43-sdfbhj34-dnf3',
+		type: TYPE_THREAD,
+		counts: {
+			children: 12,
+			follower: 4,
+			upvotes: 2
 		}
+	};
+	const score = getScore(entity);
 
-		t.deepEqual(changes.entities['df8s-rbf43-sdfbhj34-dnf3'], {
-			id: 'df8s-rbf43-sdfbhj34-dnf3',
-			type: 3,
-			parents: [ 'adjgf7f-dsfh3-dsf43-23r' ],
-			body: 'some thread title',
-			updateTime: time,
-			score: 1,
-		});
-		t.end();
-	});
+	t.is(score, 8.170849365732973);
 });

@@ -16,7 +16,7 @@ import '../modules/guard/guard-server';
 import '../modules/count/count';
 import '../modules/note/note';
 import '../modules/score/score';
-// import '../modules/gcm/gcm-server';
+import '../modules/gcm/gcm-server';
 import '../modules/postgres/postgres';
 import '../modules/image-upload/image-upload';
 import '../modules/email/unsubscribe';
@@ -30,7 +30,7 @@ import '../modules/belong/belong';
 import '../modules/content-seeding/content-seeding';
 
 // Email server
-// import '../modules/email/email-daemon';
+import '../modules/email/email-daemon';
 // Moderator UI
 import '../modules/modui/modui-server';
 

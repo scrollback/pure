@@ -14,6 +14,7 @@ function validateTime(changes, next) {
 			delete changes.entities[id];
 			continue;
 		}
+
 		counter.inc();
 		cache.getEntity(id, (err, result) => { // eslint-disable-line no-loop-func
 			if (err) {
@@ -22,13 +23,21 @@ function validateTime(changes, next) {
 			}
 
 			i++;
+			entity.createTime = now + i;
+			entity.updateTime = now + i;
 			if (result) {
 				entity.createTime = result.createTime;
-			} else {
-				entity.createTime = now + i;
+				if (entity.counts && !entity.counts.children) {
+					// We need to retain the old updateTime...
+					entity.updateTime = result.updateTime;
+					if (entity.createTime === entity.updateTime) {
+						// ... if it will cause postgres to do an insert, make a small
+						// increment to prevent that.
+						entity.updateTime++;
+					}
+				}
 			}
 
-			entity.updateTime = now + i;
 			counter.dec();
 		});
 	}

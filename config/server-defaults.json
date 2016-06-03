@@ -54,8 +54,13 @@
 		"algorithm": "AWS4-HMAC-SHA256",
 		"validity": 600000
 	},
+
 	"newrelic": {
 	},
+
+	"analytics": {
+	},
+
 	"connStr": "pg://scrollback:@localhost/pure",
 	"open_in_browser": false
 }
