@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
 	actions: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
+		marginHorizontal: 8,
 	},
 
 	liked: {

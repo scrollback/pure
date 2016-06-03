@@ -15,14 +15,13 @@ const {
 
 const styles = StyleSheet.create({
 	item: {
-		marginHorizontal: 8,
+		width: 80,
 		padding: 8,
 		flexDirection: 'row',
 		alignItems: 'center',
 	},
 
 	label: {
-		flex: 1,
 		color: Colors.grey,
 		fontWeight: 'bold',
 		fontSize: 11,
