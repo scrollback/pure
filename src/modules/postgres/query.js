@@ -1,4 +1,3 @@
-
 import * as pg from '../../lib/pg';
 import { TABLES, TYPES } from '../../lib/schema';
 
@@ -64,15 +63,30 @@ function wherePart (f) {
 	const filter = Object.create(f.filter);
 
 	for (const prop in filter) {
-		const [ op, name ] = getPropOp(prop);
+		const opName = getPropOp(prop);
+		const op = opName[0];
+		let parts, type, name = opName[1];
+
+		if (name) {
+			parts = name.split('.');
+			if (parts.length === 2) {
+				type = parts[0];
+				name = parts[1];
+			} else {
+				name = parts[0];
+			}
+		}
+
+		let tableName = type ? TABLES[TYPES[type]] + '.' : '';
 
 		if (Number.POSITIVE_INFINITY === filter[prop] || Number.NEGATIVE_INFINITY === filter[prop]) {
 			continue;
 		}
+
 		switch (op) {
 		case 'pref':
 			filter[prop] = filter[prop].toLowerCase() + '%';
-			sql.push(`lower("${name.toLowerCase()}") ${operators[op]} &{${prop}}`);
+			sql.push(`lower(${tableName}"${name.toLowerCase()}") ${operators[op]} &{${prop}}`);
 			break;
 		case 'gt':
 		case 'lt':
@@ -83,39 +97,46 @@ function wherePart (f) {
 		case 'cts':
 		case 'olp':
 		case 'ctd':
-			sql.push(`"${name.toLowerCase()}" ${operators[op]} &{${prop}}`);
+			sql.push(`${tableName}"${name.toLowerCase()}" ${operators[op]} &{${prop}}`);
 			break;
 		default:
-			sql.push(`"${prop.toLowerCase()}" = &{${prop}}`);
+			parts = prop.split('.');
+			if (parts.length === 2) {
+				type = parts[0];
+				name = parts[1];
+			} else {
+				name = parts[0];
+			}
+
+			tableName = type ? TABLES[TYPES[type]] + '.' : '';
+			sql.push(`${tableName}"${prop.toLowerCase()}" = &{${prop}}`);
 		}
 	}
 
-	if (sql.length) {
-
-		switch (TABLES[TYPES[f.type]]) {
-		case 'items':
-		case 'rooms':
-		case 'texts':
-		case 'threads':
-		case 'topics':
-		case 'privs':
-		case 'users':
-		case 'notes':
-			sql.push(`"${TABLES[TYPES[f.type]]}".deletetime IS NULL`);
-		}
-
-		filter.$ = 'WHERE ' + sql.join(' AND ');
-		return filter;
-	} else {
-		return '';
+	switch (TABLES[TYPES[f.type]]) {
+	case 'items':
+	case 'rooms':
+	case 'texts':
+	case 'threads':
+	case 'topics':
+	case 'privs':
+	case 'users':
+	case 'notes':
+		sql.push(`"${TABLES[TYPES[f.type]]}".deletetime IS NULL`);
 	}
+
+	filter.$ = 'WHERE ' + sql.join(' AND ');
+	return filter;
 }
 
 function orderPart(type, order, limit) {
+	const parts = order.split('.');
+	const field = (parts.length === 2) ? parts[1] : parts[0];
+
 	if (limit < 0) {
-		return `ORDER BY "${TABLES[TYPES[type]]}".${order.toLowerCase()} DESC LIMIT ${-limit}`;
+		return `ORDER BY "${TABLES[TYPES[type]]}".${field.toLowerCase()} DESC LIMIT ${-limit}`;
 	} else {
-		return `ORDER BY "${TABLES[TYPES[type]]}".${order.toLowerCase()} ASC LIMIT ${limit}`;
+		return `ORDER BY "${TABLES[TYPES[type]]}".${field.toLowerCase()} ASC LIMIT ${limit}`;
 	}
 }
 
@@ -165,7 +186,7 @@ function afterQuery (slice, start, after, exclude) {
 	return query;
 }
 
-export default function (slice, range) {
+export default function(slice, range) {
 	let query;
 
 	if (slice.order) {
