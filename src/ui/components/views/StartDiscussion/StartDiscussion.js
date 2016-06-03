@@ -319,7 +319,9 @@ export default class StartDiscussion extends Component<void, Props, State> {
 			});
 		}
 
-		this._handleGoBack();
+		setTimeout(() => {
+			this._handleGoBack();
+		}, 1000);
 	};
 
 	_handleError: Function = message => {
