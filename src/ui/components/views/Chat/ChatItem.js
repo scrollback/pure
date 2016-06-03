@@ -132,7 +132,8 @@ type Props = {
 };
 
 type State = {
-	actionSheetVisible: boolean
+	actionSheetVisible: boolean;
+	likes: number;
 }
 
 export default class ChatItem extends Component<void, Props, State> {
@@ -167,11 +168,37 @@ export default class ChatItem extends Component<void, Props, State> {
 
 	state: State = {
 		actionSheetVisible: false,
+		likes: 0,
 	};
+
+	componentDidMount() {
+		this._updateLikeCount(this.props.text);
+	}
+
+	componentWillReceiveProps(nextProps: Props) {
+		if (this._compareLikeCount(this.props.text, nextProps.text)) {
+			this._updateLikeCount(nextProps.text);
+		}
+	}
 
 	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
+
+	_compareLikeCount = (currentText: Text, nextText: Text) => {
+		const currentCount = currentText.counts && currentText.counts.upvote ? currentText.counts.upvote : 0;
+		const nextCount = nextText.counts && nextText.counts.upvote ? nextText.counts.upvote : 0;
+
+		return currentCount !== nextCount;
+	}
+
+	_updateLikeCount = (text: Text) => {
+		const likes = text.counts && text.counts.upvote ? text.counts.upvote : 0;
+
+		this.setState({
+			likes,
+		});
+	};
 
 	_isLiked: Function = () => {
 		const {
@@ -334,7 +361,7 @@ export default class ChatItem extends Component<void, Props, State> {
 									size={24}
 								/>
 								<AppText style={[ styles.likeCount, liked ? styles.liked : null ]}>
-									{text.counts && text.counts.upvote ? text.counts.upvote : '3'}
+									{text.counts && text.counts.upvote ? text.counts.upvote : ''}
 								</AppText>
 							</TouchableOpacity> :
 							null
