@@ -166,7 +166,6 @@ export default class Discussions extends Component<void, Props, State> {
 
 				<StartDiscussionButton
 					room={this.props.room}
-					user={this.props.user}
 					onNavigate={this.props.onNavigate}
 				/>
 			</View>

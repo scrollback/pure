@@ -140,7 +140,6 @@ type Props = {
 	user: string;
 	room: string;
 	thread: string;
-	dismiss: Function;
 	startThread: Function;
 	onNavigate: Function;
 }
@@ -170,11 +169,10 @@ type State = {
 const PERMISSION_PUBLISH_ACTIONS = 'publish_actions';
 const PERMISSION_PUBLISH_ERROR = 'ERR_REQUEST_PERMISSION';
 
-export default class StartDiscussionButton extends Component<void, Props, State> {
+export default class StartDiscussion extends Component<void, Props, State> {
 	static propTypes = {
 		user: PropTypes.string.isRequired,
 		room: PropTypes.string.isRequired,
-		dismiss: PropTypes.func.isRequired,
 		thread: PropTypes.string,
 		startThread: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
@@ -299,6 +297,12 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		});
 	};
 
+	_handleGoBack = () => {
+		this.props.onNavigate({
+			type: 'pop',
+		});
+	};
+
 	_handlePosted: Function = thread => {
 		const route = {
 			name: 'chat',
@@ -315,11 +319,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 			});
 		}
 
-		this.props.onNavigate({ type: 'push', payload: route });
-
-		setTimeout(() => {
-			this.props.dismiss();
-		}, 1000);
+		this._handleGoBack();
 	};
 
 	_handleError: Function = message => {
@@ -453,7 +453,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		return (
 			<View style={styles.container}>
 				<AppbarSecondary>
-					<AppbarTouchable type='secondary' onPress={this.props.dismiss}>
+					<AppbarTouchable type='secondary' onPress={this._handleGoBack}>
 						<AppbarIcon name='close' style={styles.icon} />
 					</AppbarTouchable>
 

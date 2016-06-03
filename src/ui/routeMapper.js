@@ -79,6 +79,7 @@ export default function(route: Route): RouteDescription {
 		return {
 			title: 'Start new discussion',
 			component: StartDiscussionContainer,
+			appbar: false,
 		};
 	default:
 		return {

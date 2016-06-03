@@ -7,7 +7,6 @@ import StartDiscussion from '../views/StartDiscussion/StartDiscussion';
 import { startThread } from '../../../modules/store/actions';
 
 type Props = {
-	user: string;
 	room: string;
 }
 
@@ -17,7 +16,6 @@ type State = {
 
 class StartDiscussionContainer extends Component<void, Props, State> {
 	static propTypes = {
-		user: PropTypes.string.isRequired,
 		room: PropTypes.string.isRequired,
 	};
 
