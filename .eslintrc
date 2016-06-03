@@ -92,7 +92,7 @@
     "no-alert": 2,
     "no-caller": 2,
     "no-case-declarations": 1,
-    "no-div-regex": 2,
+    "no-div-regex": 0,
     "no-else-return": 0,
     "no-eq-null": 2,
     "no-eval": 2,
