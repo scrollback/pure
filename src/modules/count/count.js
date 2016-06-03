@@ -3,17 +3,19 @@
 import { TABLES, ROLES } from '../../lib/schema';
 import { bus, cache } from '../../core-server';
 import * as Constants from '../../lib/Constants';
+import promisify from '../../lib/promisify';
 import log from 'winston';
 import User from '../../models/user';
-import Counter from '../../lib/counter';
 import jsonop from 'jsonop';
+
+const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
 bus.on('change', (changes, next) => {
 	if (!changes.entities) {
 		next();
 		return;
 	}
-	const counter = new Counter();
+	const promises = [];
 	for (const id in changes.entities) {
 		const entity = changes.entities[id];
 
@@ -64,13 +66,9 @@ bus.on('change', (changes, next) => {
 			entity.type === Constants.TYPE_TOPICREL
 		) {
 			if (!entity.id) entity.id = entity.user + '_' + entity.item;
-			counter.inc();
-			cache.getEntity(entity.id, (err, result) => {
+			promises.push(getEntityAsync(entity.id).then(result => {
 				let exist = [], inc = 1;
-				if (err) {
-					counter.err(err);
-					return;
-				}
+
 				// console.log("result: ", result);
 				if (result) {
 					entity.roles.forEach((role) => {
@@ -86,7 +84,6 @@ bus.on('change', (changes, next) => {
 					}
 
 					if (exist.length === 0) {
-						counter.dec();
 						return;
 					}
 				} else {
@@ -123,11 +120,13 @@ bus.on('change', (changes, next) => {
 					break;
 				}
 				changes.entities[entity.item] = item;
-				// console.log("item count module: ", item);
-				counter.dec();
-			});
+			}));
 		}
 	}
-	counter.then(next);
+
+	Promise.all(promises).then(
+		() => next(),
+		err => next(err),
+	);
 }, Constants.APP_PRIORITIES.COUNT);
 log.info('Count module ready.');
