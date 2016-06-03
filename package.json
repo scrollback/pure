@@ -54,6 +54,7 @@
     "babel-cli": "^6.9.0",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
+    "babel-node-debug": "^2.0.0",
     "babel-plugin-lodash": "^3.1.4",
     "babel-plugin-transform-react-constant-elements": "^6.9.1",
     "babel-plugin-transform-react-inline-elements": "^6.8.0",
@@ -92,6 +93,7 @@
   "scripts": {
     "start": "if [ \"$NODE_ENV\" = \"production\" ]; then npm run start:prod; else npm run start:dev; fi",
     "start:dev": "babel-node --presets es2015-node5,stage-1,react src/start/belong-server.dev",
+    "start:debug": "babel-node-debug --presets es2015-node5,stage-1,react src/start/belong-server.dev.js",
     "start:prod": "node build/start/belong-server.prod",
     "packager": "node node_modules/react-native/local-cli/cli.js start",
     "test": "ava",
