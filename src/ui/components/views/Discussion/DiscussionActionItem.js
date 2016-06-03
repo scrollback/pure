@@ -15,7 +15,7 @@ const {
 
 const styles = StyleSheet.create({
 	item: {
-		width: 80,
+		width: 100,
 		padding: 8,
 		flexDirection: 'row',
 		alignItems: 'center',

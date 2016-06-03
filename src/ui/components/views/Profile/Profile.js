@@ -8,7 +8,6 @@ import AppText from '../Core/AppText';
 import AvatarRound from '../Avatar/AvatarRound';
 import PageLoading from '../Page/PageLoading';
 import PageEmpty from '../Page/PageEmpty';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import {
 	ROLE_HOME,
@@ -111,7 +110,7 @@ type Props = {
 	places: {
 		[type: number]: Array<string>;
 	};
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 const PLACE_TYPES = [ ROLE_HOME, ROLE_WORK, ROLE_HOMETOWN ];
@@ -142,7 +141,7 @@ export default class Profile extends Component<void, Props, void> {
 			}),
 		]),
 		places: PropTypes.any.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -150,15 +149,21 @@ export default class Profile extends Component<void, Props, void> {
 	}
 
 	_goToAccount: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'account',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'account',
+			},
+		});
 	};
 
 	_goToPlaces: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'places',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'places',
+			},
+		});
 	};
 
 	render() {

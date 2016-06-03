@@ -6,7 +6,6 @@ import shallowCompare from 'react-addons-shallow-compare';
 import AppText from '../Core/AppText';
 import AvatarRound from '../Avatar/AvatarRound';
 import Time from '../Core/Time';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import type { Thread } from '../../../../lib/schemaTypes';
 
@@ -47,7 +46,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
-	onNavigation: Function;
+	onNavigate: Function;
 	style?: any;
 }
 
@@ -60,7 +59,7 @@ export default class DiscussionAuthor extends Component<void, Props, void> {
 				children: PropTypes.number,
 			}),
 		}).isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 		style: View.propTypes.style,
 	};
 
@@ -71,12 +70,15 @@ export default class DiscussionAuthor extends Component<void, Props, void> {
 	_goToProfile: Function = () => {
 		const { thread } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'profile',
-			props: {
-				user: thread.creator,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'profile',
+				props: {
+					user: thread.creator,
+				},
 			},
-		}));
+		});
 	};
 
 	render() {

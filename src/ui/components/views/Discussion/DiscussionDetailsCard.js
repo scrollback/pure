@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class DiscussionDetailsCard extends Component<void, Props, void> {
@@ -40,7 +40,7 @@ export default class DiscussionDetailsCard extends Component<void, Props, void> 
 			meta: PropTypes.object,
 			creator: PropTypes.string.isRequired,
 		}),
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {

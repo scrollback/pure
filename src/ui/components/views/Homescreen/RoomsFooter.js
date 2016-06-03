@@ -8,7 +8,6 @@ import ListItem from '../Core/ListItem';
 import AppText from '../Core/AppText';
 import Icon from '../Core/Icon';
 import Colors from '../../../Colors';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 
 const {
 	StyleSheet,
@@ -49,7 +48,7 @@ type Props = {
 	places: {
 		[key: string]: any
 	};
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -77,7 +76,7 @@ const DEFAULT_BUTTON = {
 export default class RoomsFooter extends Component<void, Props, State> {
 	static propTypes = {
 		places: PropTypes.object.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -113,24 +112,33 @@ export default class RoomsFooter extends Component<void, Props, State> {
 	};
 
 	_handleManagePlaces: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'places',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'places',
+			},
+		});
 	};
 
 	_handleGoToAccount: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'account',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'account',
+			},
+		});
 	};
 
 	_handleReportIssue: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'room',
-			props: {
-				room: 'e8d0a3b8-6c00-4871-84ad-1078b1265c08',
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'room',
+				props: {
+					room: 'e8d0a3b8-6c00-4871-84ad-1078b1265c08',
+				},
 			},
-		}));
+		});
 	};
 
 	render() {

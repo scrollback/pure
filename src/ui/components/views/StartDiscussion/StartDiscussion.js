@@ -19,7 +19,6 @@ import AvatarRound from '../Avatar/AvatarRound';
 import Banner from '../Banner/Banner';
 import ImageUploadDiscussion from '../ImageUpload/ImageUploadDiscussion';
 import Facebook from '../../../modules/Facebook';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -143,7 +142,7 @@ type Props = {
 	thread: string;
 	dismiss: Function;
 	startThread: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -178,7 +177,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		dismiss: PropTypes.func.isRequired,
 		thread: PropTypes.string,
 		startThread: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -316,7 +315,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 			});
 		}
 
-		this.props.onNavigation(new NavigationActions.Push(route));
+		this.props.onNavigate({ type: 'push', payload: route });
 
 		setTimeout(() => {
 			this.props.dismiss();

@@ -15,13 +15,13 @@ const {
 
 type Props = {
 	thread: ?Thread | { type: 'loading' };
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class DiscussionDetails extends Component<void, Props, void> {
 	static propTypes = {
 		thread: PropTypes.object,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -31,7 +31,7 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 	render() {
 		const {
 			thread,
-			onNavigation,
+			onNavigate,
 		} = this.props;
 
 		if (thread) {
@@ -41,8 +41,8 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 
 			return (
 				<ScrollView {...this.props}>
-					<DiscussionDetailsCard thread={thread} onNavigation={onNavigation} />
-					<PeopleListContainer thread={thread.id} onNavigation={onNavigation} />
+					<DiscussionDetailsCard thread={thread} onNavigate={onNavigate} />
+					<PeopleListContainer thread={thread.id} onNavigate={onNavigate} />
 				</ScrollView>
 			);
 		} else {

@@ -53,7 +53,7 @@ type Props = {
 	room: string;
 	data: Array<Thread | { type: 'loading' } | { type: 'failed' }>;
 	loadMore: (count: number) => void;
-	onNavigation: (count: number) => void;
+	onNavigate: (count: number) => void;
 }
 
 type State = {
@@ -66,7 +66,7 @@ export default class Discussions extends Component<void, Props, State> {
 		room: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
 		loadMore: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -119,7 +119,7 @@ export default class Discussions extends Component<void, Props, State> {
 					key={thread.id}
 					thread={thread}
 					threadrel={threadrel}
-					onNavigation={this.props.onNavigation}
+					onNavigate={this.props.onNavigate}
 					style={this._isWide() ? styles.gridItem : styles.columnItem}
 				/>
 			);
@@ -167,7 +167,7 @@ export default class Discussions extends Component<void, Props, State> {
 				<StartDiscussionButton
 					room={this.props.room}
 					user={this.props.user}
-					onNavigation={this.props.onNavigation}
+					onNavigate={this.props.onNavigate}
 				/>
 			</View>
 		);

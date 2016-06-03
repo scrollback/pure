@@ -6,7 +6,6 @@ import shallowCompare from 'react-addons-shallow-compare';
 import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AppbarIcon from '../Appbar/AppbarIcon';
 import NotificationBadgeContainer from '../../containers/NotificationBadgeContainer';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 
 const {
 	StyleSheet,
@@ -23,12 +22,12 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class NotificationIcon extends Component<void, Props, void> {
 	static propTypes = {
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -36,7 +35,10 @@ export default class NotificationIcon extends Component<void, Props, void> {
 	}
 
 	_handlePress: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({ name: 'notes' }));
+		this.props.onNavigate({
+			type: 'push',
+			payload: { name: 'notes' },
+		});
 	};
 
 	render() {

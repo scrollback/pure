@@ -41,7 +41,7 @@ type Props = {
 	loadMore: (count: number) => void;
 	quoteMessage: Function;
 	replyToMessage: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -55,7 +55,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 		loadMore: PropTypes.func.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -103,7 +103,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 				quoteMessage={this.props.quoteMessage}
 				user={this.props.user}
 				style={[ styles.item, styles.inverted ]}
-				onNavigation={this.props.onNavigation}
+				onNavigate={this.props.onNavigate}
 			/>
 		);
 	};

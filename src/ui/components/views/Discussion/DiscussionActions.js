@@ -4,7 +4,6 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import DiscussionActionItem from './DiscussionActionItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Share from '../../../modules/Share';
 import Colors from '../../../Colors';
 import { ROLE_UPVOTE } from '../../../../lib/Constants';
@@ -34,7 +33,7 @@ type Props = {
 	threadrel: ThreadRel;
 	unlikeThread: Function;
 	likeThread: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 	style?: any;
 }
 
@@ -53,7 +52,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 		style: View.propTypes.style,
 		unlikeThread: PropTypes.func.isRequired,
 		likeThread: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -79,13 +78,16 @@ export default class DiscussionActions extends Component<void, Props, void> {
 	_handleReply: Function = () => {
 		const { thread } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'chat',
-			props: {
-				thread: thread.id,
-				room: thread.parents[0],
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'chat',
+				props: {
+					thread: thread.id,
+					room: thread.parents[0],
+				},
 			},
-		}));
+		});
 	};
 
 	_handleShare: Function = () => {

@@ -87,7 +87,7 @@ type Props = {
 	saveUser: () => void;
 	saveParams: () => void;
 	signOut: () => void;
-	onNavigation: () => void;
+	onNavigate: () => void;
 }
 
 type State = {
@@ -110,7 +110,7 @@ export default class Account extends Component<void, Props, State> {
 		saveUser: PropTypes.func.isRequired,
 		saveParams: PropTypes.func.isRequired,
 		signOut: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {

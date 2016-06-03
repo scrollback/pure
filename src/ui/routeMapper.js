@@ -1,24 +1,24 @@
 /* @flow */
 
-import type { Route } from '../../lib/RouteTypes';
-import NotificationIcon from '../components/views/Notification/NotificationIcon';
-import ProfileEditButtonContainer from '../components/containers/ProfileEditButtonContainer';
-import ProfileButtonContainer from '../components/containers/ProfileButtonContainer';
-import ShareButtonContainer from '../components/containers/ShareButtonContainer';
-import DiscussionsDetailsContainer from '../components/containers/DiscussionDetailsContainer';
-import ChatContainer from '../components/containers/ChatContainer';
-import ChatTitleContainer from '../components/containers/ChatTitleContainer';
-import RoomTitleContainer from '../components/containers/RoomTitleContainer';
-import DiscussionsContainer from '../components/containers/DiscussionsContainer';
-import NotificationCenterContainer from '../components/containers/NotificationCenterContainer';
-import NotificationClearIconContainer from '../components/containers/NotificationClearIconContainer';
-import RoomsContainer from '../components/containers/RoomsContainer';
-import AccountContainer from '../components/containers/AccountContainer';
-import ProfileContainer from '../components/containers/ProfileContainer';
-import OnboardContainer from '../components/containers/OnboardContainer';
-import StartDiscussionContainer from '../components/containers/StartDiscussionContainer';
-import MyPlacesContainer from '../components/containers/MyPlacesContainer';
-import { config } from '../../core-client';
+import type { Route } from '../lib/RouteTypes';
+import NotificationIcon from './components/views/Notification/NotificationIcon';
+import ProfileEditButtonContainer from './components/containers/ProfileEditButtonContainer';
+import ProfileButtonContainer from './components/containers/ProfileButtonContainer';
+import ShareButtonContainer from './components/containers/ShareButtonContainer';
+import DiscussionsDetailsContainer from './components/containers/DiscussionDetailsContainer';
+import ChatContainer from './components/containers/ChatContainer';
+import ChatTitleContainer from './components/containers/ChatTitleContainer';
+import RoomTitleContainer from './components/containers/RoomTitleContainer';
+import DiscussionsContainer from './components/containers/DiscussionsContainer';
+import NotificationCenterContainer from './components/containers/NotificationCenterContainer';
+import NotificationClearIconContainer from './components/containers/NotificationClearIconContainer';
+import RoomsContainer from './components/containers/RoomsContainer';
+import AccountContainer from './components/containers/AccountContainer';
+import ProfileContainer from './components/containers/ProfileContainer';
+import OnboardContainer from './components/containers/OnboardContainer';
+import StartDiscussionContainer from './components/containers/StartDiscussionContainer';
+import MyPlacesContainer from './components/containers/MyPlacesContainer';
+import { config } from '../core-client';
 
 export type RouteDescription = {
 	title?: string;

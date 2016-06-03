@@ -8,6 +8,11 @@ export type Route = {
 }
 
 export type NavigationState = {
-	routes: Array<Route>;
-	index: number
+	children: Array<Route>;
+	index: number;
+}
+
+export type NavigationAction = {
+	type: 'push' | 'pop' | 'back';
+	payload?: Route;
 }

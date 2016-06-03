@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
 type Props = {
 	room: string;
 	user: string;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -36,7 +36,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 	static propTypes = {
 		room: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {

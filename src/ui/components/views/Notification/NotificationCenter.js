@@ -14,7 +14,7 @@ const {
 
 type Props = {
 	dismissNote: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 	data: Array<Note | { type: 'loading' } | { type: 'failed' }>;
 }
 
@@ -25,7 +25,7 @@ type State = {
 export default class NotificationCenter extends Component<void, Props, State> {
 	static propTypes = {
 		dismissNote: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 	};
 
@@ -55,7 +55,7 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		<NotificationCenterItem
 			key={`${note.user}_${note.event}_${note.group}`}
 			note={note}
-			onNavigation={this.props.onNavigation}
+			onNavigate={this.props.onNavigate}
 			dismissNote={this.props.dismissNote}
 		/>
 	);

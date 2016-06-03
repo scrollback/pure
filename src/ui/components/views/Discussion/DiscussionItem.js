@@ -12,7 +12,6 @@ import TouchFeedback from '../Core/TouchFeedback';
 import Icon from '../Core/Icon';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -69,7 +68,7 @@ type Props = {
 	unlikeThread: Function;
 	banUser: Function;
 	unbanUser: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -86,7 +85,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
 		threadrel: PropTypes.object.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,
 		unhideThread: PropTypes.func.isRequired,
@@ -165,13 +164,16 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	_handlePress: Function = () => {
 		const { thread } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'chat',
-			props: {
-				thread: thread.id,
-				room: thread.parents[0],
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'chat',
+				props: {
+					thread: thread.id,
+					room: thread.parents[0],
+				},
 			},
-		}));
+		});
 	};
 
 	render() {
@@ -179,7 +181,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			thread,
 			threadrel,
 			isUserAdmin,
-			onNavigation,
+			onNavigate,
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
@@ -216,7 +218,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 							threadrel={threadrel}
 							likeThread={this.props.likeThread}
 							unlikeThread={this.props.unlikeThread}
-							onNavigation={onNavigation}
+							onNavigate={onNavigate}
 						/>
 					</View>
 				</TouchFeedback>

@@ -11,7 +11,6 @@ import Time from '../Core/Time';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
 import AppText from '../Core/AppText';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { parseURLs } from '../../../../lib/URL';
 import { TAG_POST_HIDDEN, ROLE_UPVOTE } from '../../../../lib/Constants';
@@ -128,7 +127,7 @@ type Props = {
 	banUser: Function;
 	unbanUser: Function;
 	style?: any;
-	onNavigation: Function;
+	onNavigate: Function;
 };
 
 type State = {
@@ -162,7 +161,7 @@ export default class ChatItem extends Component<void, Props, State> {
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 		style: View.propTypes.style,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -192,12 +191,15 @@ export default class ChatItem extends Component<void, Props, State> {
 	_goToProfile: Function = () => {
 		const { text } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'profile',
-			props: {
-				user: text.creator,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'profile',
+				props: {
+					user: text.creator,
+				},
 			},
-		}));
+		});
 	};
 
 	_copyToClipboard: Function = text => {
