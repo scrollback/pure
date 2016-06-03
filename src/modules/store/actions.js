@@ -199,7 +199,7 @@ export const unlikeText = (text: string, user: string, roles: Array<number>): Ob
 		const id = `${user}_${text}`;
 		const textrel = new TextRelModel({
 			id,
-			roles: roles.filter(role => role === ROLE_UPVOTE),
+			roles: roles.filter(role => role !== ROLE_UPVOTE),
 			item: text,
 			user,
 		});
@@ -270,7 +270,7 @@ export const unlikeThread = (thread: string, user: string, roles: Array<number>)
 		const id = `${user}_${thread}`;
 		const threadrel = new ThreadRelModel({
 			id,
-			roles: roles.filter(role => role === ROLE_UPVOTE),
+			roles: roles.filter(role => role !== ROLE_UPVOTE),
 			item: thread,
 			user,
 		});
