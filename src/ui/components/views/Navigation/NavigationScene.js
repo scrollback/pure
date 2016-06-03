@@ -17,10 +17,23 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 	},
+	left: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+	},
+	right: {
+		position: 'absolute',
+		top: 0,
+		right: 0,
+	},
+	middle: {
+		position: 'absolute',
+		top: 0,
+		left: 56,
+		right: 56,
+	},
 	appbar: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'space-between',
 		backgroundColor: Colors.primary,
 		height: 56,
 		elevation: 4,
@@ -133,9 +146,15 @@ export default class Scene extends Component<void, Props, void> {
 				<StatusBar backgroundColor={Colors.primaryDark} />
 				{routeDesc.appbar !== false ?
 					<View style={styles.appbar}>
-						{this._renderLeftComponent(routeDesc)}
-						{this._renderTitleComponent(routeDesc)}
-						{this._renderRightComponent(routeDesc)}
+						<View style={styles.left}>
+							{this._renderLeftComponent(routeDesc)}
+						</View>
+						<View style={styles.middle}>
+							{this._renderTitleComponent(routeDesc)}
+						</View>
+						<View style={styles.right}>
+							{this._renderRightComponent(routeDesc)}
+						</View>
 					</View> :
 					null
 				}

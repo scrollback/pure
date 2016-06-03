@@ -12,7 +12,6 @@ const {
 
 const styles = StyleSheet.create({
 	title: {
-		flex: 1,
 		color: Colors.white,
 		fontWeight: 'bold',
 		fontSize: 18,
