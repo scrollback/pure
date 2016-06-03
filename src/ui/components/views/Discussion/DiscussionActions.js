@@ -37,7 +37,11 @@ type Props = {
 	style?: any;
 }
 
-export default class DiscussionActions extends Component<void, Props, void> {
+type State = {
+	likes: number;
+}
+
+export default class DiscussionActions extends Component<void, Props, State> {
 	static propTypes = {
 		thread: PropTypes.shape({
 			updateTime: PropTypes.number.isRequired,
@@ -55,9 +59,38 @@ export default class DiscussionActions extends Component<void, Props, void> {
 		onNavigate: PropTypes.func.isRequired,
 	};
 
+	state: State = {
+		likes: 0,
+	};
+
+	componentDidMount() {
+		this._updateLikeCount(this.props.thread);
+	}
+
+	componentWillReceiveProps(nextProps: Props) {
+		if (this._compareLikeCount(this.props.thread, nextProps.thread)) {
+			this._updateLikeCount(nextProps.thread);
+		}
+	}
+
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
+
+	_compareLikeCount = (currentThread: Thread, nextThread: Thread) => {
+		const currentCount = currentThread.counts && currentThread.counts.upvote ? currentThread.counts.upvote : 0;
+		const nextCount = nextThread.counts && nextThread.counts.upvote ? nextThread.counts.upvote : 0;
+
+		return currentCount !== nextCount;
+	}
+
+	_updateLikeCount = (thread: Thread) => {
+		const likes = thread.counts && thread.counts.upvote ? thread.counts.upvote : 0;
+
+		this.setState({
+			likes,
+		});
+	};
 
 	_isLiked: Function = () => {
 		const {
@@ -68,10 +101,20 @@ export default class DiscussionActions extends Component<void, Props, void> {
 	};
 
 	_handleLike: Function = () => {
+		let likes = this.state.likes;
+
 		if (this._isLiked()) {
+			likes--;
 			this.props.unlikeThread();
 		} else {
+			likes++;
 			this.props.likeThread();
+		}
+
+		if (likes >= 0) {
+			this.setState({
+				likes,
+			});
 		}
 	};
 
@@ -113,7 +156,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 		return (
 			<View {...this.props} style={[ styles.actions, this.props.style ]}>
 				<DiscussionActionItem
-					label={`Like ${thread.counts && thread.counts.upvote ? '(' + thread.counts.upvote + ')' : ''}`}
+					label={`Like ${this.state.likes ? '(' + this.state.likes + ')' : ''}`}
 					icon={liked ? 'favorite' : 'favorite-border'}
 					onPress={this._handleLike}
 					iconStyle={liked ? styles.liked : null}

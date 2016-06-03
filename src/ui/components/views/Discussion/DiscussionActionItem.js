@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
+	onPress: Function;
 	icon: string;
 	label: string;
 	style?: any;
@@ -44,6 +45,7 @@ type Props = {
 
 export default class DiscussionActionItem extends Component<void, Props, void> {
 	static propTypes = {
+		onPress: PropTypes.func.isRequired,
 		icon: PropTypes.string.isRequired,
 		label: PropTypes.string.isRequired,
 		style: View.propTypes.style,
@@ -54,6 +56,10 @@ export default class DiscussionActionItem extends Component<void, Props, void> {
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
+
+	_handlePress = () => {
+		global.requestAnimationFrame(() => this.props.onPress());
+	};
 
 	render() {
 		return (
