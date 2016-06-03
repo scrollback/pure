@@ -47,14 +47,14 @@ export default class ModalHost extends Component<void, any, State> {
 	}
 
 	static requestClose() {
-		if (this._requestClose) {
-			this._requestClose();
+		if (ModalHost._requestClose) {
+			ModalHost._requestClose();
 		}
 	}
 
 	static isOpen() {
-		if (this._isOpen) {
-			return this._isOpen();
+		if (ModalHost._isOpen) {
+			return ModalHost._isOpen();
 		}
 
 		return false;
