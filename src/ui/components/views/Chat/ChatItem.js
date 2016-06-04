@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
 	},
 	action: {
 		position: 'absolute',
+		top: 2,
 		right: 0,
-		bottom: 0,
 		width: 52,
 		alignItems: 'center',
 	},
