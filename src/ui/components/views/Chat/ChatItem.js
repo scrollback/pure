@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
 		paddingRight: 52,
 	},
 	chatSent: {
-		marginLeft: 8,
+		marginHorizontal: 8,
 	},
 	hidden: {
 		opacity: 0.3,
@@ -195,9 +195,11 @@ export default class ChatItem extends Component<void, Props, State> {
 	_updateLikeCount = (text: Text) => {
 		const likes = text.counts && text.counts.upvote ? text.counts.upvote : 0;
 
-		this.setState({
-			likes,
-		});
+		if (likes >= 0) {
+			this.setState({
+				likes,
+			});
+		}
 	};
 
 	_isLiked: Function = () => {
@@ -209,10 +211,20 @@ export default class ChatItem extends Component<void, Props, State> {
 	};
 
 	_handleLike: Function = () => {
+		let { likes } = this.state;
+
 		if (this._isLiked()) {
+			likes--;
 			this.props.unlikeText();
 		} else {
+			likes++;
 			this.props.likeText();
+		}
+
+		if (likes >= 0) {
+			this.setState({
+				likes,
+			});
 		}
 	};
 
@@ -361,7 +373,7 @@ export default class ChatItem extends Component<void, Props, State> {
 									size={24}
 								/>
 								<AppText style={[ styles.likeCount, liked ? styles.liked : null ]}>
-									{text.counts && text.counts.upvote ? text.counts.upvote : ''}
+									{this.state.likes ? this.state.likes : ''}
 								</AppText>
 							</TouchableOpacity> :
 							null

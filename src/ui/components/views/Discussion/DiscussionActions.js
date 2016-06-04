@@ -88,9 +88,11 @@ export default class DiscussionActions extends Component<void, Props, State> {
 	_updateLikeCount = (thread: Thread) => {
 		const likes = thread.counts && thread.counts.upvote ? thread.counts.upvote : 0;
 
-		this.setState({
-			likes,
-		});
+		if (likes >= 0) {
+			this.setState({
+				likes,
+			});
+		}
 	};
 
 	_isLiked: Function = () => {
@@ -102,7 +104,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 	};
 
 	_handleLike: Function = () => {
-		let likes = this.state.likes;
+		let { likes } = this.state;
 
 		if (this._isLiked()) {
 			likes--;
