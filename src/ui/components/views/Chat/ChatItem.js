@@ -8,18 +8,13 @@ import ChatBubble from './ChatBubble';
 import Embed from '../Embed/Embed';
 import Icon from '../Core/Icon';
 import Time from '../Core/Time';
-import ActionSheet from '../Core/ActionSheet';
-import ActionSheetItem from '../Core/ActionSheetItem';
-import AppText from '../Core/AppText';
-import Colors from '../../../Colors';
+import ChatLikeButton from './ChatLikeButton';
+import ChatActionSheet from './ChatActionSheet';
 import { parseURLs } from '../../../../lib/URL';
-import { TAG_POST_HIDDEN, ROLE_UPVOTE } from '../../../../lib/Constants';
+import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
 import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 const {
-	Clipboard,
-	Linking,
-	ToastAndroid,
 	PixelRatio,
 	StyleSheet,
 	TouchableOpacity,
@@ -85,28 +80,17 @@ const styles = StyleSheet.create({
 		paddingRight: 52,
 	},
 	chatSent: {
-		marginLeft: 8,
+		marginHorizontal: 8,
 	},
 	hidden: {
 		opacity: 0.3,
 	},
-	action: {
+	like: {
 		position: 'absolute',
+		top: 2,
 		right: 0,
-		bottom: 0,
 		width: 52,
 		alignItems: 'center',
-	},
-	icon: {
-		color: FADED_GREY,
-	},
-	likeCount: {
-		color: FADED_GREY,
-		fontSize: 10,
-		lineHeight: 15,
-	},
-	liked: {
-		color: Colors.accent,
 	},
 });
 
@@ -132,7 +116,6 @@ type Props = {
 
 type State = {
 	actionSheetVisible: boolean;
-	likes: number;
 }
 
 export default class ChatItem extends Component<void, Props, State> {
@@ -167,53 +150,11 @@ export default class ChatItem extends Component<void, Props, State> {
 
 	state: State = {
 		actionSheetVisible: false,
-		likes: 0,
 	};
-
-	componentDidMount() {
-		this._updateLikeCount(this.props.text);
-	}
-
-	componentWillReceiveProps(nextProps: Props) {
-		if (this._compareLikeCount(this.props.text, nextProps.text)) {
-			this._updateLikeCount(nextProps.text);
-		}
-	}
 
 	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
-
-	_compareLikeCount = (currentText: Text, nextText: Text) => {
-		const currentCount = currentText.counts && currentText.counts.upvote ? currentText.counts.upvote : 0;
-		const nextCount = nextText.counts && nextText.counts.upvote ? nextText.counts.upvote : 0;
-
-		return currentCount !== nextCount;
-	}
-
-	_updateLikeCount = (text: Text) => {
-		const likes = text.counts && text.counts.upvote ? text.counts.upvote : 0;
-
-		this.setState({
-			likes,
-		});
-	};
-
-	_isLiked: Function = () => {
-		const {
-			textrel,
-		} = this.props;
-
-		return textrel && textrel.roles ? textrel.roles.indexOf(ROLE_UPVOTE) > -1 : false;
-	};
-
-	_handleLike: Function = () => {
-		if (this._isLiked()) {
-			this.props.unlikeText();
-		} else {
-			this.props.likeText();
-		}
-	};
 
 	_goToProfile: Function = () => {
 		const { text } = this.props;
@@ -227,43 +168,6 @@ export default class ChatItem extends Component<void, Props, State> {
 				},
 			},
 		});
-	};
-
-	_copyToClipboard: Function = text => {
-		Clipboard.setString(text);
-		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
-	};
-
-	_handleOpenImage: Function = () => {
-		const { text } = this.props;
-
-		if (text.meta) {
-			const { photo } = text.meta;
-
-			Linking.openURL(photo.url);
-		}
-	};
-
-	_handleCopyImageLink: Function = () => {
-		const { text } = this.props;
-
-		if (text.meta) {
-			const { photo } = text.meta;
-
-			this._copyToClipboard(photo.url);
-		}
-	};
-
-	_handleCopyMessage: Function = () => {
-		this._copyToClipboard(this.props.text.body);
-	};
-
-	_handleQuoteMessage: Function = () => {
-		this.props.quoteMessage(this.props.text);
-	};
-
-	_handleReplyToMessage: Function = () => {
-		this.props.replyToMessage(this.props.text);
 	};
 
 	_handleShowMenu: Function = () => {
@@ -326,8 +230,6 @@ export default class ChatItem extends Component<void, Props, State> {
 			showTime = showTime || (text.createTime - previousText.createTime) > 300000;
 		}
 
-		const liked = this._isLiked();
-
 		return (
 			<View {...this.props} style={[ styles.container, this.props.style ]}>
 				<View style={[ styles.chat, received ? styles.received : null, hidden ? styles.hidden : null ]}>
@@ -356,16 +258,13 @@ export default class ChatItem extends Component<void, Props, State> {
 						</TouchableOpacity>
 
 						{received ?
-							<TouchableOpacity style={styles.action} onPress={this._handleLike}>
-								<Icon
-									style={[ styles.icon, liked ? styles.liked : null ]}
-									name={liked ? 'favorite' : 'favorite-border'}
-									size={24}
-								/>
-								<AppText style={[ styles.likeCount, liked ? styles.liked : null ]}>
-									{text.counts && text.counts.upvote ? text.counts.upvote : ''}
-								</AppText>
-							</TouchableOpacity> :
+							<ChatLikeButton
+								style={styles.like}
+								text={this.props.text}
+								textrel={this.props.textrel}
+								likeText={this.props.likeText}
+								unlikeText={this.props.unlikeText}
+							/> :
 							null
 						}
 					</View>
@@ -387,39 +286,19 @@ export default class ChatItem extends Component<void, Props, State> {
 					null
 				}
 
-				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
-					{text.meta && text.meta.photo ? [
-						<ActionSheetItem key='open-image' onPress={this._handleOpenImage}>
-							Open image in browser
-						</ActionSheetItem>,
-						<ActionSheetItem key='copy-imagelink' onPress={this._handleCopyImageLink}>
-							Copy image link
-						</ActionSheetItem>,
-					] : [
-						<ActionSheetItem key='copy-text' onPress={this._handleCopyMessage}>
-							Copy message text
-						</ActionSheetItem>,
-						<ActionSheetItem key='quote-text' onPress={this._handleQuoteMessage}>
-							Quote message
-						</ActionSheetItem>,
-					]}
-
-					{user !== text.creator ?
-						<ActionSheetItem onPress={this._handleReplyToMessage}>
-							{'Reply to @' + text.creator}
-						</ActionSheetItem> : null
-					}
-
-					{isUserAdmin ?
-						hidden ?
-							<ActionSheetItem onPress={this.props.unhideText}>
-								Unhide message
-							</ActionSheetItem> :
-							<ActionSheetItem onPress={this.props.hideText}>
-								Hide message
-							</ActionSheetItem> : null
-					}
-				</ActionSheet>
+				<ChatActionSheet
+					text={text}
+					user={user}
+					isUserAdmin={isUserAdmin}
+					quoteMessage={this.props.quoteMessage}
+					replyToMessage={this.props.replyToMessage}
+					hideText={this.props.hideText}
+					unhideText={this.props.unhideText}
+					banUser={this.props.banUser}
+					unbanUser={this.props.unbanUser}
+					visible={this.state.actionSheetVisible}
+					onRequestClose={this._handleRequestClose}
+				/>
 			</View>
 		);
 	}
