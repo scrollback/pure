@@ -4,7 +4,7 @@ import buildAvatarURLForSize from '../../lib/buildAvatarURLForSize';
 import EnhancedError from '../../lib/EnhancedError';
 import { APP_PRIORITIES, TYPE_USER } from '../../lib/Constants';
 import { bus, config } from '../../core-server';
-import upload from '../../lib/upload';
+import { urlTos3 } from '../../lib/upload';
 
 function getDate(long) {
 	const date = new Date();
@@ -120,7 +120,7 @@ if (config.s3) {
 						const url = entity.meta.picture;
 						const userName = entity.id;
 						promises.push(
-							upload.urlTos3(
+							urlTos3(
 								buildAvatarURLForSize(url, 1024),
 								'/a/' + userName + '/' + imageName
 							).then(res => ({
