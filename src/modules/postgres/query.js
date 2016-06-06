@@ -34,11 +34,16 @@ function fromPart (slice) {
 
 	if (slice.join) {
 		for (const type in slice.join) {
-			joins.push(
-				'LEFT OUTER JOIN "' + TABLES[TYPES[type]] + '" ON "' +
-				TABLES[TYPES[type]] + '"."' + slice.join[type] + '" = "' +
-				TABLES[TYPES[slice.type]] + '"."id"'
-			);
+			joins.push('LEFT OUTER JOIN (', pg.cat([ {
+				$: `SELECT * from ${TABLES[TYPES[type]]} `
+			}, wherePart({
+				type,
+				filter: slice.filter[type] || {}
+			}),
+			`) as ${TABLES[TYPES[type]]}`,
+			' ON "' + TABLES[TYPES[type]] + '"."' + slice.join[type] + '" = "' +
+			TABLES[TYPES[slice.type]] + '"."id"'
+		]));
 			fields.push('row_to_json("' + TABLES[TYPES[type]] + '".*)::jsonb as "' + type + '"');
 		}
 	}
@@ -63,6 +68,7 @@ function wherePart (f) {
 	const filter = Object.create(f.filter);
 
 	for (const prop in filter) {
+		 if (f.join && prop in f.join) continue;
 		const opName = getPropOp(prop);
 		const op = opName[0];
 		let parts, type, name = opName[1];
@@ -134,8 +140,9 @@ function wherePartForSegmentedFilters(f) {
 	const sql = [];
 	const filter = Object.create(f.filter);
 
-	for (const segment in filter) {
+	for (const segment in f.filter) {
 		for (const prop in filter[segment]) {
+			if (segment in f.join) continue;
 			const opName = getPropOp(prop);
 			const op = opName[0];
 			const name = opName[1];
@@ -152,7 +159,7 @@ function wherePartForSegmentedFilters(f) {
 			switch (op) {
 			case 'pref':
 				filter[prop] = filter[prop].toLowerCase() + '%';
-				sql.push(`lower(${tableName}"${name.toLowerCase()}") ${operators[op]} &{${prop}}`);
+				sql.push(`lower(${tableName}"${name.toLowerCase()}") ${operators[op]} &{${filterPlaceHolder.toLowerCase()}}`);
 				break;
 			case 'gt':
 			case 'lt':
@@ -191,7 +198,7 @@ function simpleQuery(slice, limit) {
 	return pg.cat([
 		fromPart(slice),
 		(slice.link || slice.join) ? wherePartForSegmentedFilters(slice) : wherePart(slice),
-		orderPart(slice.type, slice.order, limit),
+		slice.order ? orderPart(slice.type, slice.order, limit) : '',
 	], ' ');
 }
 
@@ -233,7 +240,7 @@ function afterQuery (slice, start, after, exclude) {
 	return query;
 }
 
-export default function(slice, range) {
+export default function s(slice, range) {
 	let query;
 
 	if (slice.order) {
