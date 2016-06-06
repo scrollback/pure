@@ -129,6 +129,53 @@ function wherePart (f) {
 	return filter;
 }
 
+// get better function name.
+function wherePartForSegmentedFilters(f) {
+	const sql = [];
+	const filter = Object.create(f.filter);
+
+	for (const segment in filter) {
+		for (const prop in filter[segment]) {
+			const opName = getPropOp(prop);
+			const op = opName[0];
+			const name = opName[1];
+
+			let tableName = TABLES[TYPES[segment]];
+
+			if (Number.POSITIVE_INFINITY === filter[segment][prop] || Number.NEGATIVE_INFINITY === filter[segment][prop]) {
+				continue;
+			}
+
+			const filterPlaceHolder = segment + '.' + prop;
+			filter[filterPlaceHolder] = filter[segment][prop];
+
+			switch (op) {
+			case 'pref':
+				filter[prop] = filter[prop].toLowerCase() + '%';
+				sql.push(`lower(${tableName}"${name.toLowerCase()}") ${operators[op]} &{${prop}}`);
+				break;
+			case 'gt':
+			case 'lt':
+			case 'neq':
+			case 'gte':
+			case 'lte':
+			case 'in':
+			case 'cts':
+			case 'olp':
+			case 'ctd':
+				sql.push(`${tableName}."${filterPlaceHolder.toLowerCase()}" ${operators[op]} &{${prop}}`);
+				break;
+			default:
+				tableName = TABLES[TYPES[segment]];
+				sql.push(`${tableName}."${filterPlaceHolder.toLowerCase()}" = &{${prop}}`);
+			}
+		}
+	}
+
+	filter.$ = 'WHERE ' + sql.join(' AND ');
+	return filter;
+}
+
 function orderPart(type, order, limit) {
 	const parts = order.split('.');
 	const field = (parts.length === 2) ? parts[1] : parts[0];
@@ -143,7 +190,7 @@ function orderPart(type, order, limit) {
 function simpleQuery(slice, limit) {
 	return pg.cat([
 		fromPart(slice),
-		wherePart(slice),
+		(slice.link || slice.join) ? wherePartForSegmentedFilters(slice) : wherePart(slice),
 		orderPart(slice.type, slice.order, limit),
 	], ' ');
 }
@@ -186,7 +233,7 @@ function afterQuery (slice, start, after, exclude) {
 	return query;
 }
 
-export default function(slice, range) {
+export default function (slice, range) {
 	let query;
 
 	if (slice.order) {
