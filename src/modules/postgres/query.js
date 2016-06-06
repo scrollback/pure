@@ -163,11 +163,11 @@ function wherePartForSegmentedFilters(f) {
 			case 'cts':
 			case 'olp':
 			case 'ctd':
-				sql.push(`${tableName}."${filterPlaceHolder.toLowerCase()}" ${operators[op]} &{${prop}}`);
+				sql.push(`${tableName}."${name.toLowerCase()}" ${operators[op]} &{${filterPlaceHolder.toLowerCase()}}`);
 				break;
 			default:
 				tableName = TABLES[TYPES[segment]];
-				sql.push(`${tableName}."${filterPlaceHolder.toLowerCase()}" = &{${prop}}`);
+				sql.push(`${tableName}."${prop}" = &{${filterPlaceHolder.toLowerCase()}}`);
 			}
 		}
 	}
@@ -233,7 +233,7 @@ function afterQuery (slice, start, after, exclude) {
 	return query;
 }
 
-export default function (slice, range) {
+export default function(slice, range) {
 	let query;
 
 	if (slice.order) {
