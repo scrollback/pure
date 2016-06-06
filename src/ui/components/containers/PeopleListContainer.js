@@ -24,8 +24,10 @@ const PeopleListContainer = (props: any) => (
 							user: 'user',
 						},
 						filter: {
-							item: props.thread,
-							roles_cts: [ ROLE_FOLLOWER ],
+							rel: {
+								item: props.thread,
+								roles_cts: [ ROLE_FOLLOWER ],
+							},
 						},
 						order: 'presenceTime',
 					},

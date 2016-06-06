@@ -129,8 +129,12 @@ export default class ChatMessagesContainer extends Component<void, any, State> {
 									textrel: 'item',
 								},
 								filter: {
-									parents_cts: [ this.props.thread ],
-									user: this.props.user,
+									text: {
+										parents_cts: [ this.props.thread ],
+									},
+									textrel: {
+										user: this.props.user,
+									},
 								},
 								order: 'createTime',
 							},

@@ -62,8 +62,10 @@ class RoomListContainer extends Component {
 									room: 'item',
 								},
 								filter: {
-									user,
-									roles_cts: [ ROLE_FOLLOWER ],
+									roomrel: {
+										user,
+										roles_cts: [ ROLE_FOLLOWER ],
+									},
 								},
 								order: 'createTime',
 							},
