@@ -57,7 +57,7 @@ export function cat (parts, delim) {
 				suffix = 1;
 				while ((paramName + '_' + suffix) in q) { suffix++; }
 
-				part.$ = part.$.replace(/(\&\{|\()([^\}]+)(\}|\))/g, substitute);
+				part.$ = part.$.replace(/(&\{|\()([^\}]+)(\}|\))/g, substitute);
 				q[paramName + '_' + suffix] = part[paramName];
 			} else {
 				q[paramName] = part[paramName];
@@ -187,9 +187,9 @@ export function paramize (query) {
 		throw Error('INVALID_QUERY');
 	}
 
-	const sql = query.$.replace(/\&\{(\w+)\}/g, (m, p) => {
+	const sql = query.$.replace(/&\{([^\}]+)\}/g, (m, p) => {
 		return '$' + (getIndex(p, query[p]) + 1);
-	}).replace(/\&\((\w+)\)/g, (m, p) => {
+	}).replace(/&\(([^\}]+)\)/g, (m, p) => {
 		return paren(p, query[p]);
 	});
 
