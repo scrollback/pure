@@ -8,7 +8,7 @@ export type Route = {
 }
 
 export type NavigationState = {
-	children: Array<Route>;
+	routes: Array<Route>;
 	index: number;
 }
 

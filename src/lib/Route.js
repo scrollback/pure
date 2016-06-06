@@ -118,7 +118,7 @@ export function convertRouteToState(route: Route): NavigationState {
 	const stack = stacks[route.name] || [ 'home', route.name ];
 
 	return {
-		children: stack.map(name => ({
+		routes: stack.map(name => ({
 			name,
 			props: route.props,
 		})),

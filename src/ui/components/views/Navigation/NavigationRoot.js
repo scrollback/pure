@@ -3,7 +3,7 @@
 import { Component, PropTypes } from 'react';
 import { NavigationExperimental } from 'react-native';
 import type { NavigationState, NavigationAction } from '../../../../lib/RouteTypes';
-import v4 from 'node-uuid';
+import { v4 } from 'node-uuid';
 
 const {
 	StateUtils: NavigationStateUtils,
@@ -18,7 +18,7 @@ type State = {
     navigation: NavigationState;
 }
 
-export default class NavigationRootContainer extends Component<void, Props, State> {
+export default class NavigationRoot extends Component<void, Props, State> {
 	static propTypes = {
 		renderNavigator: PropTypes.func.isRequired,
 	};
@@ -26,13 +26,13 @@ export default class NavigationRootContainer extends Component<void, Props, Stat
 	constructor(props: Props) {
 		super(props);
 
-		const { index, children } = this.props.initialState;
+		const { index, routes } = this.props.initialState;
 
 		this.state = {
 			navigation: {
 				index,
 				key: 'root',
-				children: children.map(route => ({ key: v4(), ...route })),
+				routes: routes.map(route => ({ key: v4(), ...route })),
 			},
 		};
 	}
@@ -59,10 +59,7 @@ export default class NavigationRootContainer extends Component<void, Props, Stat
 	_handleNavigate = ({ type, payload }: NavigationAction) => {
 		const nextNavigationState = this._reduceState(this.state.navigation, {
 			type,
-			payload: {
-				key: v4(),
-				...payload,
-			},
+			payload: { key: v4(), ...payload },
 		});
 
 		this.setState({
@@ -72,7 +69,7 @@ export default class NavigationRootContainer extends Component<void, Props, Stat
 
 	render() {
 		return this.props.renderNavigator({
-			onNavigate: (action) => this._handleNavigate(action),
+			onNavigate: action => this._handleNavigate(action),
 			navigationState: this.state.navigation,
 		});
 	}

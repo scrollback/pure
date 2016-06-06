@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
 type Props = {
 	scene: {
 		index: number;
-		navigationState: Route;
+		route: Route;
 	};
 	routeMapper: Function;
 	onNavigate: Function;
@@ -66,7 +66,7 @@ export default class Scene extends Component<void, Props, void> {
 	static propTypes = {
 		scene: PropTypes.shape({
 			index: PropTypes.number.isRequired,
-			navigationState: PropTypes.object.isRequired,
+			route: PropTypes.object.isRequired,
 		}).isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		routeMapper: PropTypes.func.isRequired,
@@ -87,7 +87,7 @@ export default class Scene extends Component<void, Props, void> {
 
 		if (routeDesc.leftComponent) {
 			const LeftComponent = routeDesc.leftComponent;
-			return <LeftComponent onNavigate={onNavigate} {...scene.navigationState.props} />;
+			return <LeftComponent onNavigate={onNavigate} {...scene.route.props} />;
 		}
 
 		if (scene.index !== 0) {
@@ -109,7 +109,7 @@ export default class Scene extends Component<void, Props, void> {
 
 		if (routeDesc.titleComponent) {
 			const TitleComponent = routeDesc.titleComponent;
-			return <TitleComponent onNavigate={onNavigate} {...scene.navigationState.props} />;
+			return <TitleComponent onNavigate={onNavigate} {...scene.route.props} />;
 		}
 
 		if (routeDesc.title) {
@@ -127,7 +127,7 @@ export default class Scene extends Component<void, Props, void> {
 
 		if (routeDesc.rightComponent) {
 			const TitleComponent = routeDesc.rightComponent;
-			return <TitleComponent onNavigate={onNavigate} {...scene.navigationState.props} />;
+			return <TitleComponent onNavigate={onNavigate} {...scene.route.props} />;
 		}
 
 		return null;
@@ -135,10 +135,10 @@ export default class Scene extends Component<void, Props, void> {
 
 	render() {
 		const {
-			navigationState,
+			route,
 		} = this.props.scene;
 
-		const routeDesc = this.props.routeMapper(navigationState);
+		const routeDesc = this.props.routeMapper(route);
 		const SceneChild = routeDesc.component;
 
 		return (
@@ -160,7 +160,7 @@ export default class Scene extends Component<void, Props, void> {
 				}
 				<BannerOfflineContainer />
 				<SceneChild
-					{...navigationState.props}
+					{...route.props}
 					style={styles.content}
 					onNavigate={this.props.onNavigate}
 				/>
