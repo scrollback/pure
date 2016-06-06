@@ -99,8 +99,12 @@ class DiscussionsContainer extends Component<void, any, State> {
 									threadrel: 'item',
 								},
 								filter: {
-									parents_cts: [ this.props.room ],
-									user: this.props.user,
+									thread: {
+										parents_cts: [ this.props.room ],
+									},
+									threadrel: {
+										user: this.props.user,
+									},
 								},
 								order: 'createTime',
 							},

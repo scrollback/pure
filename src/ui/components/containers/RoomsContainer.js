@@ -19,7 +19,7 @@ const mapSubscriptionToProps = {
 	},
 	moderator: {
 		key: 'me',
-		transform: isModerator
+		transform: isModerator,
 	},
 };
 
