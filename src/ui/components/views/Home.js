@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-const PERSISTANCE_KEY = __DEV__ ? 'FLAT_PERSISTENCE_0' : null;
+const PERSISTANCE_KEY = process.env.NODE_ENV !== 'production' ? 'FLAT_PERSISTENCE_0' : null;
 
 type Props = {
 	initialURL: ?string

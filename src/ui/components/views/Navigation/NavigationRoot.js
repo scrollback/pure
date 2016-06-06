@@ -1,7 +1,7 @@
 /* @flow */
 
 import { Component, PropTypes } from 'react';
-import { NavigationExperimental } from 'react-native';
+import { NavigationExperimental, AsyncStorage } from 'react-native';
 import type { NavigationState, NavigationAction } from '../../../../lib/RouteTypes';
 import { v4 } from 'node-uuid';
 
@@ -10,12 +10,14 @@ const {
 } = NavigationExperimental;
 
 type Props = {
+	persistenceKey: ?string;
 	initialState: NavigationState;
 	renderNavigator: Function;
 }
 
 type State = {
-    navigation: NavigationState;
+	restoringState: boolean;
+	navigation: NavigationState;
 }
 
 export default class NavigationRoot extends Component<void, Props, State> {
@@ -29,6 +31,7 @@ export default class NavigationRoot extends Component<void, Props, State> {
 		const { index, routes } = this.props.initialState;
 
 		this.state = {
+			restoringState: false,
 			navigation: {
 				index,
 				key: 'root',
@@ -38,6 +41,45 @@ export default class NavigationRoot extends Component<void, Props, State> {
 	}
 
 	state: State;
+
+	componentWillMount() {
+		this._restoreNavigationState();
+	}
+
+	_persistNavigationState = async (currentState: NavigationState) => {
+		const { persistenceKey } = this.props;
+
+		if (persistenceKey) {
+			await AsyncStorage.setItem(persistenceKey, JSON.stringify(currentState));
+		}
+	};
+
+	_restoreNavigationState = async () => {
+		const { persistenceKey } = this.props;
+
+		if (persistenceKey) {
+			this.setState({
+				restoringState: true,
+			});
+
+			const savedStateString = await AsyncStorage.getItem(persistenceKey);
+
+			try {
+				const savedState = JSON.parse(savedStateString);
+				if (savedState) {
+					this.setState({
+						navigation: savedState,
+					});
+				}
+			} catch (e) {
+				// ignore
+			}
+		}
+
+		this.setState({
+			restoringState: false,
+		});
+	};
 
 	_reduceState = (currentState: NavigationState, { type, payload }: NavigationAction) => {
 		switch (type) {
@@ -65,9 +107,14 @@ export default class NavigationRoot extends Component<void, Props, State> {
 		this.setState({
 			navigation: nextNavigationState,
 		});
+		this._persistNavigationState(nextNavigationState);
 	};
 
 	render() {
+		if (this.state.restoringState) {
+			return null;
+		}
+
 		return this.props.renderNavigator({
 			onNavigate: action => this._handleNavigate(action),
 			navigationState: this.state.navigation,

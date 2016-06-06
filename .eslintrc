@@ -27,8 +27,6 @@
   },
 
   "globals": {
-    "__DEV__": false,
-
     "ReactClass": false,
     "ReactPropsCheckType": false,
     "ReactPropsChainableTypeChecker": false,
