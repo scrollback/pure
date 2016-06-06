@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 
 const {
-	ProgressBarAndroid,
+	ActivityIndicator,
 } = ReactNative;
 
 type Props = {
@@ -14,7 +14,7 @@ type Props = {
 
 export default class Loading extends Component<void, Props, void> {
 	static propTypes = {
-		style: ProgressBarAndroid.propTypes.style,
+		style: ActivityIndicator.propTypes.style,
 		color: PropTypes.string,
 	};
 
@@ -30,7 +30,7 @@ export default class Loading extends Component<void, Props, void> {
 
 	render() {
 		return (
-			<ProgressBarAndroid
+			<ActivityIndicator
 				ref={c => (this._root = c)}
 				style={this.props.style}
 				color={this.props.color}
