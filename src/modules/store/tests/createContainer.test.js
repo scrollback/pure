@@ -82,7 +82,6 @@ test('should update connected component with data', t => {
 		firstName: props.firstName,
 		middleName: {
 			key: props.middleName,
-			transform: name => name ? `'${name}'` : '',
 		},
 		lastName: {
 			key: {
@@ -104,11 +103,11 @@ test('should update connected component with data', t => {
 	firstNameCallback('first');
 	t.is(wrapper.text(), 'first  ');
 	middleNameCallback('middle');
-	t.is(wrapper.text(), 'first \'middle\' ');
+	t.is(wrapper.text(), 'first middle ');
 	lastNameCallback('last');
-	t.is(wrapper.text(), 'first \'middle\' last');
+	t.is(wrapper.text(), 'first middle last');
 	middleNameCallback('hey');
-	t.is(wrapper.text(), 'first \'hey\' last');
+	t.is(wrapper.text(), 'first hey last');
 });
 
 test('should remove subscription on unmount', t => {

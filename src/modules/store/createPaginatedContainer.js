@@ -15,7 +15,7 @@ type SliceFromProps = (props: any) => SubscriptionSlice;
 type State = SubscriptionRange;
 
 export default function(sliceFromProps: SliceFromProps, pageSize: number) {
-	return function(ChildComponent: any) {
+	return function(ChildComponent: ReactClass<any>): ReactClass<any> {
 		const Container = createContainer(
 			({ paginationProps }) => ({
 				data: {

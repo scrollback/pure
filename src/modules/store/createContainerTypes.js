@@ -5,7 +5,6 @@ import SimpleStore from './SimpleStore';
 export type SubscriptionPropsMap = {
 	[key: string]: string | {
 		key: string | { type?: string; };
-		transform?: Function;
 	}
 };
 

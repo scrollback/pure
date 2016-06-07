@@ -18,7 +18,7 @@ type State = {
 }
 
 export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDispatchToProps?: ?MapDispatchToProps) {
-	return function(ChildComponent: any) {
+	return function(ChildComponent: ReactClass<any>): ReactClass<any> {
 		class Container extends Component<void, any, State> {
 			static contextTypes = {
 				store: storeShape.isRequired,
@@ -91,7 +91,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 							listener = store.observe(
 								typeof sub.key === 'string' ? { type: sub.key, source, defer } : { ...sub.key, source, defer },
 							).subscribe(
-								this._createUpdateObserver(item, sub.transform),
+								this._createUpdateObserver(item),
 							);
 							break;
 						default:
@@ -120,10 +120,10 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				this._addSubscriptions(store, subscriptionPropsMap);
 			};
 
-			_createUpdateObserver: Function = (name, transform) => {
+			_createUpdateObserver: Function = (name) => {
 				const next = data => {
 					this.setState({
-						[name]: transform ? transform(data, this.props) : data,
+						[name]: data,
 					});
 				};
 
