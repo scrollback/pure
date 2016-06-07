@@ -14,7 +14,7 @@ import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 type Props = {
 	text: Text;
-	textrel: TextRel;
+	textrel: ?TextRel;
 	unlikeText: Function;
 	likeText: Function;
 }
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
 export default class ChatLikeButton extends Component<void, Props, State> {
 	static propTypes = {
 		text: PropTypes.object.isRequired,
-		textrel: PropTypes.object.isRequired,
+		textrel: PropTypes.object,
 		likeText: PropTypes.func.isRequired,
 		unlikeText: PropTypes.func.isRequired,
 	};
