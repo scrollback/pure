@@ -261,7 +261,12 @@ bus.on('change', change => {
 				cache.query({
 					type: 'roomrel',
 					link: { room: 'item' },
-					filter: { user: id, roles_cts: [ constants.ROLE_FOLLOWER ] },
+					filter: {
+						roomrel: {
+							user: id,
+							roles_cts: [ constants.ROLE_FOLLOWER ]
+						}
+					},
 					order: 'createTime',
 				}, [ -Infinity, Infinity ], (err, results) => {
 					if (err) { reject(err); return; }
