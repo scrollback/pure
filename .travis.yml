@@ -13,3 +13,5 @@ before_script:
   - echo '{}' > config/client.json
   - npm run flow -- check
   - npm run build
+script:
+  - npm test -- --concurrency 5

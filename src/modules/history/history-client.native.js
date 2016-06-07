@@ -8,13 +8,18 @@ const {
 } = ReactNative;
 
 bus.on('state:init', () => {
-	Linking.getInitialURL()
-	.catch(() => null)
-	.then(initialURL => {
-		bus.emit('change', {
-			state: {
-				initialURL,
-			},
+	setTimeout(() => {
+		// FIXME:
+		// currentActivity is undefined on native side
+		// If we put a delay, it somehow gets fixed
+		Linking.getInitialURL()
+		.catch(() => null)
+		.then(initialURL => {
+			bus.emit('change', {
+				state: {
+					initialURL,
+				},
+			});
 		});
-	});
+	}, 300);
 });
