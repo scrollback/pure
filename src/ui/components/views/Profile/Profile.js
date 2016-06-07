@@ -33,6 +33,15 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 	},
 
+	phantom: {
+		position: 'absolute',
+		top: 0,
+		left: 56,
+		right: 56,
+		height: 56,
+		backgroundColor: 'transparent',
+	},
+
 	appbar: {
 		position: 'absolute',
 		top: 0,
@@ -287,6 +296,7 @@ export default class Profile extends Component<void, Props, void> {
 						}
 					</View>
 				</ScrollView>
+				<View style={styles.phantom/* hack to make swipe down to go back work */} />
 			</View>
 		);
 	}
