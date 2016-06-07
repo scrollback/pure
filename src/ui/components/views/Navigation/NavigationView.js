@@ -44,7 +44,7 @@ export default class NavigationView extends Component<void, Props, void> {
 			return true;
 		}
 
-		if (navigationState && navigationState.children && navigationState.children.length > 1) {
+		if (navigationState && navigationState.routes && navigationState.routes.length > 1) {
 			this.props.onNavigate({ type: 'pop' });
 			return true;
 		}
