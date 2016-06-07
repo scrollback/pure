@@ -52,7 +52,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		}).isRequired,
 		threadrel: PropTypes.shape({
 			roles: PropTypes.arrayOf(PropTypes.number),
-		}).isRequired,
+		}),
 		style: View.propTypes.style,
 		unlikeThread: PropTypes.func.isRequired,
 		likeThread: PropTypes.func.isRequired,
