@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	text: Text;
-	textrel: TextRel;
+	textrel: ?TextRel;
 	previousText: Text;
 	isFirst: boolean;
 	isLast: boolean;
@@ -126,7 +126,7 @@ export default class ChatItem extends Component<void, Props, State> {
 			createTime: PropTypes.number.isRequired,
 			meta: PropTypes.object,
 		}).isRequired,
-		textrel: PropTypes.object.isRequired,
+		textrel: PropTypes.object,
 		previousText: PropTypes.shape({
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
