@@ -1,11 +1,10 @@
 /* @flow */
 
 import React, { PropTypes, Component } from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import UserSwitcher from '../views/UserSwitcher';
 import { bus } from '../../../core-client';
 import { initializeSession } from '../../../modules/store/actions';
-
 
 type Props = {
 	user: string;
@@ -43,7 +42,7 @@ class UserSwitcherContainerInner extends Component<void, Props, void> {
 	}
 }
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = () => ({
 	user: {
 		key: {
 			type: 'state',
@@ -56,29 +55,23 @@ const mapSubscriptionToProps = {
 			path: 'sessionList',
 		},
 	},
-};
+});
 
-const mapActionsToProps = {
-	switchUser: (store, result) => item => {
+const mapDispatchToProps = dispatch => ({
+	switchUser: (user, item) => {
 		bus.emit('signout');
 
-		const { me } = result;
-
-		if (me && me.id === item.user) {
+		if (item && user === item.user) {
 			return;
 		}
 
-		store.put(initializeSession(item.session));
+		if (item && item.session) {
+			dispatch(initializeSession(item.session));
+		}
 	},
-};
+});
 
-const UserSwitcherContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		mapActionsToProps={mapActionsToProps}
-		passProps={props}
-		component={UserSwitcherContainerInner}
-	/>
-);
-
-export default UserSwitcherContainer;
+export default createContainer(
+	mapSubscriptionToProps,
+	mapDispatchToProps,
+)(UserSwitcherContainerInner);

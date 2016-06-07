@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { PropTypes, Component } from 'react';
-import uuid from 'node-uuid';
+import { v4 } from 'node-uuid';
 import ImageUploadHelper from '../../../modules/image-upload/ImageUploadHelper';
 
 type UploadResult = {
@@ -53,7 +53,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 
 	_startUpload: Function = async () => {
 		const { photo } = this.props;
-		const id = uuid.v4();
+		const id = v4();
 		const upload = ImageUploadHelper.create({
 			uploadType: 'content',
 			generateThumb: true,

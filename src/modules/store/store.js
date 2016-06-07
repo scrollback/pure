@@ -79,7 +79,7 @@ const watch = (options: SubscriptionOptions, callback: Function) => {
 					if (arr.length === 1 && arr[0] && arr[0].type === 'loading') {
 						callback(LOADING_ITEMS);
 					} else {
-						callback(arr);
+						callback(arr.map(item => item.type === 'loading' ? LOADING : item));
 					}
 				});
 			};

@@ -1,8 +1,9 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
+import flowRight from 'lodash/flowRight';
 import { config } from '../../../core-client';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import ShareButton from '../views/Appbar/ShareButton';
 import { convertRouteToURL } from '../../../lib/Route';
 
@@ -16,24 +17,29 @@ const transformThreadToUrl = thread => thread && thread.type !== 'loading' ? pro
 	},
 }) : null;
 
-const ShareButtonContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			url: {
-				key: {
-					type: 'entity',
-					id: props.thread,
-				},
-				transform: transformThreadToUrl,
+function mapSubscriptionToProps({ thread }) {
+	return {
+		data: {
+			key: {
+				type: 'entity',
+				id: thread,
 			},
-		}}
-		passProps={props}
-		component={ShareButton}
-	/>
-);
+			transform: transformThreadToUrl,
+		},
+	};
+}
 
-ShareButtonContainer.propTypes = {
-	thread: PropTypes.string.isRequired,
-};
+function transformFunction(props) {
+	if (props.data) {
+		return {
+			...props,
+			url: transformThreadToUrl(props.data),
+		};
+	}
+	return props;
+}
 
-export default ShareButtonContainer;
+export default flowRight(
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(ShareButton);

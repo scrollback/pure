@@ -1,44 +1,44 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import NotificationCenter from '../views/Notification/NotificationCenter';
 import { dismissNote } from '../../../modules/store/actions';
 
-const mapActionsToProps = {
-	dismissNote: store => id => store.put(dismissNote(id)),
+const transformFunction = props => {
+	return {
+		...props,
+		data: [],
+	};
 };
 
-const NotificationCenterContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			data: {
-				key: {
-					slice: {
-						type: 'note',
-						filter: {
-							user: props.user,
-						},
-						order: 'updateTime',
-					},
-					range: {
-						start: Infinity,
-						before: 100,
-						after: 0,
-					},
+const mapDispatchToProps = dispatch => ({
+	dismissNote: id => dispatch(dismissNote(id)),
+});
+
+const mapSubscriptionToProps = ({ user }) => ({
+	data: {
+		key: {
+			slice: {
+				type: 'note',
+				filter: {
+					user,
 				},
-				transform: () => [], // TODO: handle notifications properly
+				order: 'updateTime',
 			},
-		}}
-		mapActionsToProps={mapActionsToProps}
-		passProps={props}
-		component={NotificationCenter}
-	/>
-);
+			range: {
+				start: Infinity,
+				before: 100,
+				after: 0,
+			},
+		},
+	},
+});
 
-NotificationCenterContainer.propTypes = {
-	user: PropTypes.string,
-};
-
-export default PassUserProp(NotificationCenterContainer);
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps, mapDispatchToProps),
+	createTransformPropsContainer(transformFunction)
+)(NotificationCenter);

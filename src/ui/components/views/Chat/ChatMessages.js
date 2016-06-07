@@ -138,6 +138,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 					<ListView
 						removeClippedSubviews
 						keyboardShouldPersistTaps={false}
+						scrollRenderAheadDistance={300}
 						style={styles.inverted}
 						contentContainerStyle={styles.container}
 						dataSource={this.state.dataSource}

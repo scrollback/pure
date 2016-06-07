@@ -1,26 +1,29 @@
 /* @flow */
 
-import React, { Component } from 'react';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import RoomsFooter from '../views/Homescreen/RoomsFooter';
 
-const mapSubscriptionToProps = {
-	places: {
+const getPlacesFromUser = user => user.params && user.params.places ? user.params.places : {};
+
+const mapSubscriptionToProps = () => ({
+	user: {
 		key: 'me',
-		transform: user => user.params && user.params.places ? user.params.places : {},
 	},
+});
+
+const transformFunction = props => {
+	if (props.user) {
+		return {
+			...props,
+			places: getPlacesFromUser(props.user),
+		};
+	}
+	return props;
 };
 
-class RoomsFooterContainer extends Component {
-	render() {
-		return (
-			<Connect
-				mapSubscriptionToProps={mapSubscriptionToProps}
-				passProps={this.props}
-				component={RoomsFooter}
-			/>
-		);
-	}
-}
-
-export default RoomsFooterContainer;
+export default flowRight(
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(RoomsFooter);

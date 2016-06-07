@@ -1,26 +1,15 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import RoomItem from '../views/Homescreen/RoomItem';
 
-const RoomItemContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			room: {
-				key: {
-					type: 'entity',
-					id: props.room,
-				},
-			},
-		}}
-		passProps={props}
-		component={RoomItem}
-	/>
-);
+const mapSubscriptionToProps = props => ({
+	room: {
+		key: {
+			type: 'entity',
+			id: props.room,
+		},
+	},
+});
 
-RoomItemContainer.propTypes = {
-	room: PropTypes.string,
-};
-
-export default RoomItemContainer;
+export default createContainer(mapSubscriptionToProps)(RoomItem);

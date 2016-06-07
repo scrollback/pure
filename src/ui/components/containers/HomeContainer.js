@@ -1,24 +1,15 @@
 /* @flow */
 
-import React from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import Home from '../views/Home';
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = () => ({
 	initialURL: {
 		key: {
 			type: 'state',
 			path: 'initialURL',
 		},
 	},
-};
+});
 
-const HomeContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		passProps={props}
-		component={Home}
-	/>
-);
-
-export default HomeContainer;
+export default createContainer(mapSubscriptionToProps)(Home);

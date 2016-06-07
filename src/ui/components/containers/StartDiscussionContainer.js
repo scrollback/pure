@@ -2,7 +2,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import StartDiscussion from '../views/StartDiscussion/StartDiscussion';
 import { startThread } from '../../../modules/store/actions';
 
@@ -61,4 +61,4 @@ class StartDiscussionContainer extends Component<void, Props, State> {
 	}
 }
 
-export default PassUserProp(StartDiscussionContainer);
+export default createUserContainer()(StartDiscussionContainer);

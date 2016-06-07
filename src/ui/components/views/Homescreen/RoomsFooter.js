@@ -83,6 +83,12 @@ export default class RoomsFooter extends Component<void, Props, State> {
 		button: DEFAULT_BUTTON,
 	};
 
+	componentWillMount() {
+		this.setState({
+			button: this._getPlaceLabel(this.props),
+		});
+	}
+
 	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
 			button: this._getPlaceLabel(nextProps),

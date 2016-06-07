@@ -1,30 +1,15 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import DiscussionDetails from '../views/Discussion/DiscussionDetails';
 
-type Props = {
-	thread: string;
-}
+const mapSubscriptionToProps = ({ thread }) => ({
+	thread: {
+		key: {
+			type: 'entity',
+			id: thread,
+		},
+	},
+});
 
-const DiscussionDetailsContainer = (props: Props) => (
-	<Connect
-		mapSubscriptionToProps={{
-			thread: {
-				key: {
-					type: 'entity',
-					id: props.thread,
-				},
-			},
-		}}
-		passProps={props}
-		component={DiscussionDetails}
-	/>
-);
-
-DiscussionDetailsContainer.propTypes = {
-	thread: PropTypes.string.isRequired,
-};
-
-export default DiscussionDetailsContainer;
+export default createContainer(mapSubscriptionToProps)(DiscussionDetails);

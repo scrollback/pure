@@ -1,18 +1,26 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createPaginatedContainer from '../../../modules/store/createPaginatedContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import Discussions from '../views/Discussion/Discussions';
-import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
-import type { SubscriptionRange } from '../../../modules/store/SimpleStoreTypes';
+import {
+	TYPE_THREAD,
+	TAG_POST_HIDDEN,
+	TAG_USER_ADMIN,
+} from '../../../lib/Constants';
 
 const CTA = { type: 'cta' };
 
 const transformThreads = (results, me) => {
-	const data = me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(item => {
-		return (me.id === item.creator) || !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
+	const data = me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(({ type, thread }) => {
+		if (thread && thread.type === TYPE_THREAD) {
+			const isHidden = me.id !== thread.creator && thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
+			return !isHidden;
+		}
+		return type === 'loading';
 	}).reverse();
 
 	if (data.length > 3) {
@@ -22,108 +30,48 @@ const transformThreads = (results, me) => {
 	return data;
 };
 
-class DiscussionsContainerInner extends Component<void, any, void> {
-	static propTypes = {
-		data: PropTypes.arrayOf(PropTypes.object).isRequired,
-		me: PropTypes.shape({
-			tags: PropTypes.arrayOf(PropTypes.number),
-		}).isRequired,
-	};
-
-	render() {
-		const {
-			data,
-			me,
-		} = this.props;
-
-		return <Discussions {...this.props} data={transformThreads(data, me)} />;
+function transformFunction(props) {
+	if (props.data && props.me) {
+		return {
+			...props,
+			data: transformThreads(props.data, props.me),
+		};
 	}
+	return props;
 }
 
-type State = {
-	range: SubscriptionRange;
-	defer: boolean;
-}
-
-class DiscussionsContainer extends Component<void, any, State> {
-	static propTypes = {
-		room: PropTypes.string.isRequired,
-		user: PropTypes.string.isRequired,
-	};
-
-	state: State = {
-		range: {
-			start: Infinity,
-			before: 20,
-			after: 0,
-		},
-		defer: true,
-	};
-
-	shouldComponentUpdate(nextProps: any, nextState: State): boolean {
-		return shallowCompare(this, nextProps, nextState);
-	}
-
-	componentWillUpdate() {
-		if (this.state.defer) {
-			this.setState({ defer: false });
-		}
-	}
-
-	_loadMore: Function = (count: number) => {
-		const { range } = this.state;
-		const { before } = range;
-
-		this.setState({
-			range: {
-				...range,
-				before: before && before > (count + 10) ? before : count + 20,
+function mapSubscriptionToProps(props) {
+	return {
+		me: {
+			key: {
+				type: 'entity',
+				id: props.user,
 			},
-		});
+		},
 	};
-
-	render() {
-		const {
-			range,
-			defer,
-		} = this.state;
-
-		return (
-			<Connect
-				mapSubscriptionToProps={{
-					data: {
-						key: {
-							slice: {
-								type: 'thread',
-								join: {
-									threadrel: 'item',
-								},
-								filter: {
-									thread: {
-										parents_cts: [ this.props.room ],
-									},
-									threadrel: {
-										user: this.props.user,
-									},
-								},
-								order: 'createTime',
-							},
-							range,
-						},
-						defer,
-					},
-					me: {
-						key: {
-							type: 'entity',
-							id: this.props.user,
-						},
-					},
-				}}
-				passProps={{ ...this.props, loadMore: count => this._loadMore(count) }}
-				component={DiscussionsContainerInner}
-			/>
-		);
-	}
 }
 
-export default PassUserProp(DiscussionsContainer);
+function sliceFromProps(props) {
+	return {
+		type: 'thread',
+		join: {
+			threadrel: 'item',
+		},
+		filter: {
+			thread: {
+				parents_cts: [ props.room ],
+			},
+			threadrel: {
+				user: props.user,
+			},
+		},
+		order: 'createTime',
+	};
+}
+
+export default flowRight(
+	createUserContainer(),
+	createPaginatedContainer(sliceFromProps, 10),
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(Discussions);

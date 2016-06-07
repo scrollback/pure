@@ -1,7 +1,8 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import AppbarTitle from '../views/Appbar/AppbarTitle';
 
 const transformTitle = room => {
@@ -14,24 +15,26 @@ const transformTitle = room => {
 	}
 };
 
-const RoomTitleContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			title: {
-				key: {
-					type: 'entity',
-					id: props.room,
-				},
-				transform: transformTitle,
-			},
-		}}
-		passProps={props}
-		component={AppbarTitle}
-	/>
-);
-
-RoomTitleContainer.propTypes = {
-	room: PropTypes.string.isRequired,
+const transformFunction = props => {
+	if (props.data) {
+		return {
+			...props,
+			title: transformTitle(props.data),
+		};
+	}
+	return props;
 };
 
-export default RoomTitleContainer;
+const mapSubscriptionToProps = ({ room }) => ({
+	data: {
+		key: {
+			type: 'entity',
+			id: room,
+		},
+	},
+});
+
+export default flowRight(
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction)
+)(AppbarTitle);

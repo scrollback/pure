@@ -46,7 +46,8 @@ type Props = {
 			title: string;
 			description: string;
 		}
-	}
+	};
+	user: string;
 }
 
 type State = {
@@ -58,6 +59,7 @@ export default class PlaceManager extends Component<void, Props, State> {
 		onPlaceAdded: PropTypes.func.isRequired,
 		onPlaceRemoved: PropTypes.func.isRequired,
 		places: PropTypes.objectOf(PropTypes.object).isRequired,
+		user: PropTypes.string.isRequired,
 	};
 
 	state: State = {
@@ -75,7 +77,7 @@ export default class PlaceManager extends Component<void, Props, State> {
 	};
 
 	_handleSelectItem: Function = (place) => {
-		this.props.onPlaceAdded(this.state.currentType, {
+		this.props.onPlaceAdded(this.props.user, this.state.currentType, {
 			id: place.placeId,
 			title: place.primaryText || '',
 			description: place.secondaryText || '',
@@ -84,7 +86,7 @@ export default class PlaceManager extends Component<void, Props, State> {
 	};
 
 	_handleRemoveLocality: Function = (type: string) => {
-		this.props.onPlaceRemoved(type, this.props.places[type]);
+		this.props.onPlaceRemoved(this.props.user, type, this.props.places[type]);
 	};
 
 	_handlePress: Function = currentType => {

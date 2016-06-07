@@ -1,8 +1,9 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import NotificationBadge from '../views/Notification/NotificationBadge';
 
 const transformNotesToCount = (/* data */) => {
@@ -19,34 +20,37 @@ const transformNotesToCount = (/* data */) => {
 	return 0;
 };
 
-const NotificationBadgeContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			count: {
-				key: {
-					slice: {
-						type: 'note',
-						filter: {
-							user: props.user,
-						},
-						order: 'updateTime',
-					},
-					range: {
-						start: Infinity,
-						before: 100,
-						after: 0,
-					},
-				},
-				transform: transformNotesToCount,
-			},
-		}}
-		passProps={props}
-		component={NotificationBadge}
-	/>
-);
-
-NotificationBadgeContainer.propTypes = {
-	user: PropTypes.string.isRequired,
+const transformFunction = props => {
+	if (props.data) {
+		return {
+			...props,
+			count: transformNotesToCount(props.data),
+		};
+	}
+	return props;
 };
 
-export default PassUserProp(NotificationBadgeContainer);
+const mapSubscriptionToProps = ({ user }) => ({
+	data: {
+		key: {
+			slice: {
+				type: 'note',
+				filter: {
+					user,
+				},
+				order: 'updateTime',
+			},
+			range: {
+				start: Infinity,
+				before: 100,
+				after: 0,
+			},
+		},
+	},
+});
+
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(NotificationBadge);

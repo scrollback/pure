@@ -1,7 +1,8 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import Profile from '../views/Profile/Profile';
 import { bus } from '../../../core-client';
 import {
@@ -69,103 +70,87 @@ const normalizePlaces = results => {
 	return roles;
 };
 
-class ProfileContainerInner extends Component {
-	static propTypes = {
-		areas: PropTypes.array.isRequired,
-		cities: PropTypes.array.isRequired,
-	};
-
-	render() {
-		const {
-			areas,
-			cities,
-			...rest,
-		} = this.props;
-
-		return <Profile {...rest} places={normalizePlaces([ ...areas, ...cities ])} />;
+const transformFunction = props => {
+	if (props.areas && props.cities) {
+		return {
+			...props,
+			places: normalizePlaces([
+				...roomRelsToPlaces(props.areas),
+				...roomRelsToPlaces(props.cities),
+			]),
+		};
 	}
-}
-
-const mapActionsToProps = {
-	signOut: () => () => bus.emit('signout'),
+	return props;
 };
 
-export default class ProfileContainer extends Component {
-	static propTypes = {
-		user: PropTypes.string.isRequired,
-	};
+const mapDispatchToProps = () => ({
+	signOut: () => bus.emit('signout'),
+});
 
-	render() {
-		const {
-			props,
-		} = this;
+const mapSubscriptionToProps = ({ user }) => ({
+	currentUser: {
+		key: {
+			type: 'state',
+			path: 'user',
+		},
+	},
+	user: {
+		key: {
+			type: 'entity',
+			id: user,
+		},
+	},
+	areas: {
+		key: {
+			slice: {
+				type: 'roomrel',
+				link: {
+					room: 'item',
+				},
+				filter: {
+					roomrel: {
+						user,
+						roles_cts: [ ROLE_FOLLOWER ],
+					},
+					room: {
+						tags_cts: [ TAG_ROOM_AREA ],
+					},
+				},
+				order: 'createTime',
+			},
+			range: {
+				start: -Infinity,
+				end: Infinity,
+			},
+		},
+	},
+	cities: {
+		key: {
+			slice: {
+				type: 'roomrel',
+				link: {
+					room: 'item',
+				},
+				filter: {
+					roomrel: {
+						user,
+						roles_cts: [ ROLE_FOLLOWER ],
+					},
+					room: {
+						tags_cts: [ TAG_ROOM_CITY ],
+					},
+				},
+				order: 'createTime',
+			},
+			range: {
+				start: -Infinity,
+				end: Infinity,
+			},
+		},
+	},
+});
 
-		return (
-			<Connect
-				mapSubscriptionToProps={{
-					currentUser: {
-						key: {
-							type: 'state',
-							path: 'user',
-						},
-					},
-					user: {
-						key: {
-							type: 'entity',
-							id: props.user,
-						},
-					},
-					areas: {
-						key: {
-							slice: {
-								type: 'roomrel',
-								link: {
-									room: 'item',
-								},
-								filter: {
-									roomrel: {
-										user: props.user,
-										roles_cts: [ ROLE_FOLLOWER ],
-									},
-									room: {
-										tags_cts: [ TAG_ROOM_AREA ],
-									},
-								},
-								order: 'createTime',
-							},
-							range: {
-								start: -Infinity,
-								end: Infinity,
-							},
-						},
-						transform: roomRelsToPlaces,
-					},
-					cities: {
-						key: {
-							slice: {
-								type: 'roomrel',
-								link: {
-									room: 'item',
-								},
-								filter: {
-									user: props.user,
-									roles_cts: [ ROLE_FOLLOWER ],
-									tags_cts: [ TAG_ROOM_CITY ],
-								},
-								order: 'createTime',
-							},
-							range: {
-								start: -Infinity,
-								end: Infinity,
-							},
-						},
-						transform: roomRelsToPlaces,
-					},
-				}}
-				mapActionsToProps={mapActionsToProps}
-				passProps={props}
-				component={ProfileContainerInner}
-			/>
-		);
-	}
-}
+export default flowRight(
+	createContainer(mapSubscriptionToProps, mapDispatchToProps),
+	createTransformPropsContainer(transformFunction),
+)(Profile);

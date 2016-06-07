@@ -85,7 +85,6 @@ const styles = StyleSheet.create({
 type Props = {
 	user: { type: 'loading' } | User | null;
 	saveUser: () => void;
-	saveParams: () => void;
 	signOut: () => void;
 	onNavigate: () => void;
 }
@@ -108,7 +107,6 @@ export default class Account extends Component<void, Props, State> {
 			}),
 		]),
 		saveUser: PropTypes.func.isRequired,
-		saveParams: PropTypes.func.isRequired,
 		signOut: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
@@ -184,7 +182,7 @@ export default class Account extends Component<void, Props, State> {
 
 		email.notifications = value;
 
-		this.props.saveParams({ ...params, email });
+		this.props.saveUser({ ...user, params: { ...params, email } });
 	};
 
 	_handleEmailFrequencyChange: Function = (value: string) => {
@@ -197,7 +195,7 @@ export default class Account extends Component<void, Props, State> {
 
 		email.frequency = value;
 
-		this.props.saveParams({ ...params, email });
+		this.props.saveUser({ ...user, params: { ...params, email } });
 	};
 
 	_getSelectFrequencyHandler: Function = value => {

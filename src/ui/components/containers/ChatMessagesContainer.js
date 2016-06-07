@@ -1,32 +1,40 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import shallowCompare from 'react-addons-shallow-compare';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createPaginatedContainer from '../../../modules/store/createPaginatedContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import ChatMessages from '../views/Chat/ChatMessages';
-import { TAG_POST_HIDDEN, TAG_USER_ADMIN } from '../../../lib/Constants';
-import type { SubscriptionRange } from '../../../modules/store/SimpleStoreTypes';
+import {
+	TYPE_TEXT,
+	TYPE_THREAD,
+	TAG_POST_HIDDEN,
+	TAG_USER_ADMIN,
+} from '../../../lib/Constants';
 
 const transformTexts = (texts, thread, threadrel) => {
 	const data = [];
 
 	for (let l = texts.length - 1, i = l; i >= 0; i--) {
-		if (texts[i].type === 'loading') {
+		const { text, textrel, type } = texts[i];
+		if (type === 'loading') {
 			data.push(texts[i]);
-		} else {
+		} else if (text && text.type === TYPE_TEXT) {
+			const previousText = texts[i - 1];
 			data.push({
-				text: texts[i].text,
-				textrel: texts[i].textrel,
-				previousText: texts[i - 1],
+				text,
+				textrel,
+				previousText,
 				isLast: i === l,
 			});
 		}
 	}
 
-	if (thread && thread.type !== 'loading') {
+	if (thread && thread.type === TYPE_THREAD) {
 		const first = data[data.length - 1];
 
-		if (first && first.text) {
+		if (first && first.text && first.text.type === TYPE_TEXT) {
 			data[data.length - 1] = {
 				text: first.text,
 				textrel: first.textrel,
@@ -44,126 +52,75 @@ const transformTexts = (texts, thread, threadrel) => {
 	return data;
 };
 
-const filterHidden = (results, me) => me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) > -1 ? results : results.filter(item => {
-	return (me.id === item.creator) || !(item.tags && item.tags.indexOf(TAG_POST_HIDDEN) > -1);
+const filterHidden = (results, me) => me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) > -1 ? results : results.filter(({ text, type }) => {
+	if (text && text.type === TYPE_TEXT) {
+		const isHidden = me.id !== text.creator && (text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1);
+		return !isHidden;
+	}
+	return type === 'loading';
 });
 
-class ChatMessagesContainerInner extends Component<void, any, void> {
-	static propTypes = {
-		data: PropTypes.arrayOf(PropTypes.object).isRequired,
-		thread: PropTypes.object,
-		threadrel: PropTypes.object,
-		me: PropTypes.shape({
-			tags: PropTypes.arrayOf(PropTypes.number),
-		}).isRequired,
-	};
+function transformFunction(props) {
+	const {
+		data,
+		me,
+		thread,
+		threadrel,
+	} = props;
 
-	render() {
-		const {
-			thread,
-			threadrel,
-			data,
-			me,
-		} = this.props;
-
-		return <ChatMessages {...this.props} data={transformTexts(filterHidden(data, me), thread, threadrel)} />;
+	if (data && me && thread) {
+		return {
+			...props,
+			data: transformTexts(filterHidden(data, me), thread, threadrel),
+		};
 	}
+	return props;
 }
 
-type State = {
-	range: SubscriptionRange;
-	defer: boolean;
-}
-
-export default class ChatMessagesContainer extends Component<void, any, State> {
-	static propTypes = {
-		thread: PropTypes.string.isRequired,
-		user: PropTypes.string.isRequired,
-	};
-
-	state: State = {
-		range: {
-			start: Infinity,
-			before: 20,
-			after: 0,
-		},
-		defer: true,
-	};
-
-	shouldComponentUpdate(nextProps: any, nextState: State): boolean {
-		return shallowCompare(this, nextProps, nextState);
-	}
-
-	componentWillUpdate() {
-		if (this.state.defer) {
-			this.setState({ defer: false });
-		}
-	}
-
-	_loadMore: Function = (count: number) => {
-		const { range } = this.state;
-		const { before } = range;
-
-		this.setState({
-			range: {
-				...range,
-				before: before && before > (count + 20) ? before : count + 40,
+function mapSubscriptionToProps({ user, thread }) {
+	return {
+		thread: {
+			key: {
+				type: 'entity',
+				id: thread,
 			},
-		});
+		},
+		threadrel: {
+			key: {
+				type: 'entity',
+				id: `${user}_${thread}`,
+			},
+		},
+		me: {
+			key: {
+				type: 'entity',
+				id: user,
+			},
+		},
 	};
-
-	render() {
-		const {
-			range,
-			defer,
-		} = this.state;
-
-		return (
-			<Connect
-				mapSubscriptionToProps={{
-					data: {
-						key: {
-							slice: {
-								type: 'text',
-								join: {
-									textrel: 'item',
-								},
-								filter: {
-									text: {
-										parents_cts: [ this.props.thread ],
-									},
-									textrel: {
-										user: this.props.user,
-									},
-								},
-								order: 'createTime',
-							},
-							range,
-						},
-						defer,
-					},
-					thread: {
-						key: {
-							type: 'entity',
-							id: this.props.thread,
-						},
-					},
-					threadrel: {
-						key: {
-							type: 'entity',
-							id: `${this.props.user}_${this.props.thread}`,
-						},
-					},
-					me: {
-						key: {
-							type: 'entity',
-							id: this.props.user,
-						},
-					},
-				}}
-				passProps={{ ...this.props, loadMore: count => this._loadMore(count) }}
-				component={ChatMessagesContainerInner}
-			/>
-		);
-	}
 }
+
+function sliceFromProps({ user, thread }) {
+	return {
+		type: 'text',
+		join: {
+			textrel: 'item',
+		},
+		filter: {
+			text: {
+				parents_cts: [ thread ],
+			},
+			textrel: {
+				user,
+			},
+		},
+		order: 'createTime',
+	};
+}
+
+export default flowRight(
+	createUserContainer(),
+	createPaginatedContainer(sliceFromProps, 20),
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(ChatMessages);

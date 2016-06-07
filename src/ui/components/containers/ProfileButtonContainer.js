@@ -1,6 +1,6 @@
 /* @flow */
 
-import PassUserProp from '../../../modules/store/PassUserProp';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import ProfileButton from '../views/Profile/ProfileButton';
 
-export default PassUserProp(ProfileButton);
+export default createUserContainer()(ProfileButton);

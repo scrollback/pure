@@ -1,11 +1,11 @@
 /* @flow */
 
-import React from 'react';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import App from '../views/App';
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = () => ({
 	connection: {
 		key: {
 			type: 'state',
@@ -18,14 +18,9 @@ const mapSubscriptionToProps = {
 			path: 'session',
 		},
 	},
-};
+});
 
-const AppContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		passProps={props}
-		component={App}
-	/>
-);
-
-export default PassUserProp(AppContainer);
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps),
+)(App);

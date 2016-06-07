@@ -1,30 +1,35 @@
 /* @flow */
 
-import React from 'react';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import MyPlaces from '../views/Account/MyPlaces';
 import { addPlace, removePlace } from '../../../modules/store/actions';
 
-const mapSubscriptionToProps = {
-	places: {
+const transformFunction = (props) => {
+	if (props.data) {
+		return {
+			...props,
+			places: props.data.params && props.data.params.places ? props.data.params.places : {},
+		};
+	}
+	return props;
+};
+
+const mapDispatchToProps = dispatch => ({
+	addPlace: (user, type, place) => dispatch(addPlace(user, type, place)),
+	removePlace: (user, type, place) => dispatch(removePlace(user, type, place)),
+});
+
+const mapSubscriptionToProps = () => ({
+	data: {
 		key: 'me',
-		transform: user => user.params && user.params.places ? user.params.places : {},
 	},
-};
+});
 
-const mapActionsToProps = {
-	addPlace: (store, result, props) => (type, place) => store.put(addPlace(props.user, type, place)),
-	removePlace: (store, result, props) => (type, place) => store.put(removePlace(props.user, type, place)),
-};
-
-const MyPlacesContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		mapActionsToProps={mapActionsToProps}
-		passProps={props}
-		component={MyPlaces}
-	/>
-);
-
-export default PassUserProp(MyPlacesContainer);
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps, mapDispatchToProps),
+	createTransformPropsContainer(transformFunction),
+)(MyPlaces);

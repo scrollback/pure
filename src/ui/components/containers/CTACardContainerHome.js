@@ -1,10 +1,9 @@
 /* @flow */
 
-import React from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import CTACard from '../views/Card/CTACard';
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = () => ({
 	user: {
 		key: 'me',
 	},
@@ -14,14 +13,6 @@ const mapSubscriptionToProps = {
 			path: 'ctahome',
 		},
 	},
-};
+});
 
-const CTACardContainerHome = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		passProps={props}
-		component={CTACard}
-	/>
-);
-
-export default CTACardContainerHome;
+export default createContainer(mapSubscriptionToProps)(CTACard);

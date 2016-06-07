@@ -1,7 +1,8 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import ChatTitle from '../views/Chat/ChatTitle';
 import {
 	ROLE_FOLLOWER,
@@ -20,46 +21,48 @@ const getOnlineCount = result => {
 	}
 };
 
-const ChatTitleContainer = (props: any) => {
-	return (
-		<Connect
-			mapSubscriptionToProps={{
-				thread: {
-					key: {
-						type: 'entity',
-						id: props.thread,
-					},
-				},
-				online: {
-					key: {
-						slice: {
-							type: 'rel',
-							link: {
-								user: 'user',
-							},
-							filter: {
-								item: props.thread,
-								roles_cts: [ ROLE_FOLLOWER ],
-							},
-							order: 'presenceTime',
-						},
-						range: {
-							start: Infinity,
-							before: 100,
-							after: 0,
-						},
-					},
-					transform: getOnlineCount,
-				},
-			}}
-			passProps={props}
-			component={ChatTitle}
-		/>
-	);
+const transformFunction = props => {
+	if (props.data) {
+		return {
+			...props,
+			online: getOnlineCount(props.data),
+		};
+	}
+	return props;
 };
 
-ChatTitleContainer.propTypes = {
-	thread: PropTypes.string.isRequired,
-};
+const mapSubscriptionToProps = ({ thread }) => ({
+	thread: {
+		key: {
+			type: 'entity',
+			id: thread,
+		},
+	},
+	data: {
+		key: {
+			slice: {
+				type: 'rel',
+				link: {
+					user: 'user',
+				},
+				filter: {
+					rel: {
+						item: thread,
+						roles_cts: [ ROLE_FOLLOWER ],
+					},
+				},
+				order: 'presenceTime',
+			},
+			range: {
+				start: Infinity,
+				before: 100,
+				after: 0,
+			},
+		},
+	},
+});
 
-export default ChatTitleContainer;
+export default flowRight(
+	createContainer(mapSubscriptionToProps),
+	createTransformPropsContainer(transformFunction),
+)(ChatTitle);

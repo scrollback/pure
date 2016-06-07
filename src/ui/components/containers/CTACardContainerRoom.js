@@ -1,10 +1,9 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import CTACard from '../views/Card/CTACard';
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = ({ room }) => ({
 	user: {
 		key: 'me',
 	},
@@ -14,26 +13,12 @@ const mapSubscriptionToProps = {
 			path: 'ctaroom',
 		},
 	},
-};
+	room: {
+		key: {
+			type: 'entity',
+			id: room,
+		},
+	},
+});
 
-const CTACardContainerRoom = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			...mapSubscriptionToProps,
-			room: {
-				key: {
-					type: 'entity',
-					id: props.room,
-				},
-			},
-		}}
-		passProps={props}
-		component={CTACard}
-	/>
-);
-
-CTACardContainerRoom.propTypes = {
-	room: PropTypes.string,
-};
-
-export default CTACardContainerRoom;
+export default createContainer(mapSubscriptionToProps)(CTACard);

@@ -1,6 +1,6 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import memoize from 'lodash/memoize';
 import createContainer from './createContainer';
@@ -16,6 +16,31 @@ type State = SubscriptionRange;
 
 export default function(sliceFromProps: SliceFromProps, pageSize: number) {
 	return function(ChildComponent: ReactClass<any>): ReactClass<any> {
+		class ChildComponentWrapper extends Component<void, any, void> {
+			static propTypes = {
+				data: PropTypes.array.isRequired,
+				loadMore: PropTypes.func.isRequired,
+			};
+
+			_loadMore = () => {
+				const {
+					data,
+					loadMore,
+				} = this.props;
+
+				loadMore(data ? data.length : pageSize);
+			};
+
+			render() {
+				return (
+					<ChildComponent
+						{...this.props}
+						loadMore={this._loadMore}
+					/>
+				);
+			}
+		}
+
 		const Container = createContainer(
 			({ paginationProps }) => ({
 				data: {
@@ -26,7 +51,7 @@ export default function(sliceFromProps: SliceFromProps, pageSize: number) {
 					defer: paginationProps.defer,
 				},
 			})
-		)(ChildComponent);
+		)(ChildComponentWrapper);
 
 		class PaginatedContainer extends Component<void, any, State> {
 			state: State = {
@@ -62,6 +87,7 @@ export default function(sliceFromProps: SliceFromProps, pageSize: number) {
 				return (
 					<Container
 						{...this.props}
+						loadMore={this._loadMore}
 						paginationProps={{
 							slice: this._sliceFromProps(this.props),
 							range: this.state,

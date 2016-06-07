@@ -91,10 +91,6 @@ export default class Discussions extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_loadMore: Function = () => {
-		this.props.loadMore(this.props.data.length);
-	};
-
 	_isWide: Function = () => {
 		return Dimensions.get('window').width > 400;
 	};
@@ -157,8 +153,9 @@ export default class Discussions extends Component<void, Props, State> {
 				{placeHolder ? placeHolder :
 					<ListView
 						removeClippedSubviews
+						scrollRenderAheadDistance={300}
 						contentContainerStyle={Dimensions.get('window').width > 400 ? styles.grid : styles.column}
-						onEndReached={this._loadMore}
+						onEndReached={this.props.loadMore}
 						dataSource={this.state.dataSource}
 						renderRow={this._renderRow}
 					/>

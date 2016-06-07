@@ -128,9 +128,8 @@ export default class ChatItem extends Component<void, Props, State> {
 		}).isRequired,
 		textrel: PropTypes.object,
 		previousText: PropTypes.shape({
-			body: PropTypes.string.isRequired,
-			creator: PropTypes.string.isRequired,
-			createTime: PropTypes.number.isRequired,
+			creator: PropTypes.string,
+			createTime: PropTypes.number,
 		}),
 		isFirst: PropTypes.bool,
 		isLast: PropTypes.bool,
@@ -193,7 +192,7 @@ export default class ChatItem extends Component<void, Props, State> {
 
 		const hidden = text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1;
 		const received = text.creator !== user;
-		const links = parseURLs(text.body, 1);
+		const links = text.body ? parseURLs(text.body, 1) : null;
 
 		let cover;
 
@@ -209,7 +208,7 @@ export default class ChatItem extends Component<void, Props, State> {
 					openOnPress={false}
 				/>
 			);
-		} else if (links.length) {
+		} else if (links && links.length) {
 			cover = (
 				<Embed
 					url={links[0]}

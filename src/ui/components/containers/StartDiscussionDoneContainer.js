@@ -1,39 +1,26 @@
 /* @flow */
 
-import React, { Component, PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import flowRight from 'lodash/flowRight';
+import createContainer from '../../../modules/store/createContainer';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import StartDiscussionDone from '../views/StartDiscussion/StartDiscussionDone';
 
-type Props = {
-	thread: ?string
-}
-
-class StartDiscussionDoneContainer extends Component<void, Props, void> {
-	static propTypes = {
-		thread: PropTypes.string,
-	};
-
-	render() {
-		if (!this.props.thread) {
-			return null;
-		}
-
-		return (
-			<Connect
-				mapSubscriptionToProps={{
-					thread: {
-						key: {
-							type: 'entity',
-							id: this.props.thread,
-						},
-					},
-				}}
-				passProps={this.props}
-				component={StartDiscussionDone}
-			/>
-		);
+function mapSubscriptionToProps({ thread }) {
+	if (!thread) {
+		return {};
 	}
+
+	return {
+		thread: {
+			key: {
+				type: 'entity',
+				id: thread,
+			},
+		},
+	};
 }
 
-export default PassUserProp(StartDiscussionDoneContainer);
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps)
+)(StartDiscussionDone);

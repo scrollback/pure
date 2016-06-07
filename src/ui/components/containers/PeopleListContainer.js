@@ -1,7 +1,8 @@
 /* @flow */
 
-import React, { PropTypes } from 'react';
-import Connect from '../../../modules/store/Connect';
+import flowRight from 'lodash/flowRight';
+import createPaginatedContainer from '../../../modules/store/createPaginatedContainer';
+import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import PeopleList from '../views/PeopleList/PeopleList';
 import {
 	ROLE_FOLLOWER,
@@ -13,40 +14,31 @@ const filterInvalidRels = data => data.filter(result => (
 	(result.rel && typeof result.rel.type !== 'string')
 ));
 
-const PeopleListContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={{
-			data: {
-				key: {
-					slice: {
-						type: 'rel',
-						link: {
-							user: 'user',
-						},
-						filter: {
-							rel: {
-								item: props.thread,
-								roles_cts: [ ROLE_FOLLOWER ],
-							},
-						},
-						order: 'presenceTime',
-					},
-					range: {
-						start: Infinity,
-						before: 100,
-						after: 0,
-					},
-				},
-				transform: filterInvalidRels,
-			},
-		}}
-		passProps={props}
-		component={PeopleList}
-	/>
-);
-
-PeopleListContainer.propTypes = {
-	thread: PropTypes.string.isRequired,
+const transformFunction = props => {
+	if (props.data) {
+		return {
+			...props,
+			data: filterInvalidRels(props.data),
+		};
+	}
+	return props;
 };
 
-export default PeopleListContainer;
+const sliceFromProps = ({ thread }) => ({
+	type: 'rel',
+	link: {
+		user: 'user',
+	},
+	filter: {
+		rel: {
+			item: thread,
+			roles_cts: [ ROLE_FOLLOWER ],
+		},
+	},
+	order: 'presenceTime',
+});
+
+export default flowRight(
+	createPaginatedContainer(sliceFromProps, 10),
+	createTransformPropsContainer(transformFunction),
+)(PeopleList);

@@ -1,24 +1,15 @@
 /* @flow */
 
-import React from 'react';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import PlacesSelector from '../views/Account/PlacesSelector';
 
-const mapSubscriptionToProps = {
+const mapSubscriptionToProps = () => ({
 	location: {
 		key: {
 			type: 'state',
 			path: 'location',
 		},
 	},
-};
+});
 
-const PlaceSelectorContainer = (props: any) => (
-	<Connect
-		mapSubscriptionToProps={mapSubscriptionToProps}
-		passProps={props}
-		component={PlacesSelector}
-	/>
-);
-
-export default PlaceSelectorContainer;
+export default createContainer(mapSubscriptionToProps)(PlacesSelector);

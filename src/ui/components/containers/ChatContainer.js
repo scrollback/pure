@@ -2,7 +2,7 @@
 
 import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
-import PassUserProp from '../../../modules/store/PassUserProp';
+import createUserContainer from '../../../modules/store/createUserContainer';
 import Chat from '../views/Chat/Chat';
 import { sendMessage } from '../../../modules/store/actions';
 
@@ -39,4 +39,4 @@ ChatContainer.propTypes = {
 	thread: PropTypes.string.isRequired,
 };
 
-export default PassUserProp(ChatContainer);
+export default createUserContainer()(ChatContainer);
