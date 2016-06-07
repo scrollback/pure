@@ -15,6 +15,7 @@ const {
 	host,
 } = config.server;
 
+const version = 'v1';
 const poll = 'document' in window && 'createElement' in window.document; // Disable polling in non-web environments, e.g.- react-native
 
 // engine.io needs the userAgent string to be present
@@ -77,6 +78,13 @@ function connect() {
 	client.on('message', onMessage);
 }
 
+function send(data) {
+	client.send(packer.encode({
+		version,
+		...data,
+	}));
+}
+
 const props = [ 'queries', 'entities', 'auth' ];
 
 bus.on('postchange', changes => {
@@ -95,11 +103,11 @@ bus.on('postchange', changes => {
 	if (Object.keys(frame).length) {
 		console.trace('<--', frame);
 		frame.id = uuid.v4();
-		client.send(packer.encode({
+		send({
 			type: 'change',
 			message: frame,
 			id: uuid.v4(),
-		}));
+		});
 	}
 });
 
@@ -132,5 +140,5 @@ bus.on('s3/getPolicy', (policy, next) => {
 		next,
 	};
 
-	client.send(packer.encode(frame));
+	send(frame);
 }, 1);
