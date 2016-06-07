@@ -4,7 +4,7 @@ import type { Route } from './RouteTypes';
 
 export function processURL(url: string): string {
 	return url
-			.replace(/^([a-z]+\:)?\/\/[^\/]+/, '') // strip host and protocol
+			.replace(/^([a-z]+:)?\/\/[^\/]+/, '') // strip host and protocol
 			.replace(/^\/|\/$/g, ''); // strip leading and trailing slash
 }
 

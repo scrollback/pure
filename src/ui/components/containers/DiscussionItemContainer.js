@@ -4,6 +4,8 @@ import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import DiscussionItem from '../views/Discussion/DiscussionItem';
 import {
+	likeThread,
+	unlikeThread,
 	hideThread,
 	unhideThread,
 	banUser,
@@ -18,26 +20,34 @@ const mapSubscriptionToProps = {
 		key: 'me',
 		transform: hasAdminTag,
 	},
+	user: {
+		key: {
+			type: 'state',
+			path: 'user',
+		},
+	},
 };
 
 const mapActionsToProps = {
-	hideThread: (store, result) => () => store.put(hideThread(result.thread)),
-	unhideThread: (store, result) => () => store.put(unhideThread(result.thread)),
-	banUser: (store, result) => () => store.put(banUser(result.thread.creator)),
-	unbanUser: (store, result) => () => store.put(unbanUser(result.thread.creator)),
+	likeThread: (store, result, props) => () => {
+		store.put(
+			likeThread(props.thread.id, result.user, props.threadrel && props.threadrel.roles ? props.threadrel.roles : [])
+		);
+	},
+	unlikeThread: (store, result, props) => () => {
+		store.put(
+			unlikeThread(props.thread.id, result.user, props.threadrel && props.threadrel.roles ? props.threadrel.roles : [])
+		);
+	},
+	hideThread: (store, result, props) => () => store.put(hideThread(props.thread)),
+	unhideThread: (store, result, props) => () => store.put(unhideThread(props.thread)),
+	banUser: (store, result, props) => () => store.put(banUser(props.thread.creator)),
+	unbanUser: (store, result, props) => () => store.put(unbanUser(props.thread.creator)),
 };
 
 const DiscussionItemContainer = (props: any) => (
 	<Connect
-		mapSubscriptionToProps={{
-			...mapSubscriptionToProps,
-			thread: {
-				key: {
-					type: 'entity',
-					id: props.thread,
-				},
-			},
-		}}
+		mapSubscriptionToProps={mapSubscriptionToProps}
 		mapActionsToProps={mapActionsToProps}
 		passProps={props}
 		component={DiscussionItem}
@@ -45,7 +55,7 @@ const DiscussionItemContainer = (props: any) => (
 );
 
 DiscussionItemContainer.propTypes = {
-	thread: PropTypes.string,
+	thread: PropTypes.object,
 };
 
 export default DiscussionItemContainer;

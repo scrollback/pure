@@ -23,7 +23,7 @@ type Props = {
 	thread: string;
 	user: string;
 	sendMessage: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class Chat extends Component<void, Props, void> {
@@ -32,7 +32,7 @@ export default class Chat extends Component<void, Props, void> {
 		thread: PropTypes.string.isRequired,
 		user: PropTypes.string.isRequired,
 		sendMessage: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -63,7 +63,7 @@ export default class Chat extends Component<void, Props, void> {
 					user={this.props.user}
 					quoteMessage={this._quoteMessage}
 					replyToMessage={this._replyToMessage}
-					onNavigation={this.props.onNavigation}
+					onNavigate={this.props.onNavigate}
 				/>
 
 				<ChatInput

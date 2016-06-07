@@ -6,25 +6,19 @@ import shallowCompare from 'react-addons-shallow-compare';
 import Card from '../Card/Card';
 import CardTitle from '../Card/CardTitle';
 import DiscussionSummary from './DiscussionSummary';
-import DiscussionFooter from './DiscussionFooter';
+import DiscussionAuthor from './DiscussionAuthor';
+import DiscussionActions from './DiscussionActions';
 import TouchFeedback from '../Core/TouchFeedback';
 import Icon from '../Core/Icon';
-import ActionSheet from '../Core/ActionSheet';
-import ActionSheetItem from '../Core/ActionSheetItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
-import Share from '../../../modules/Share';
+import DiscussionActionSheet from './DiscussionActionSheet';
 import Colors from '../../../Colors';
-import { convertRouteToURL } from '../../../../lib/Route';
-import { config } from '../../../../core-client';
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
-import type { Thread } from '../../../../lib/schemaTypes';
+import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
-	Clipboard,
-	Linking,
-	ToastAndroid,
 	StyleSheet,
 	TouchableOpacity,
+	PixelRatio,
 	View,
 } = ReactNative;
 
@@ -33,24 +27,24 @@ const styles = StyleSheet.create({
 		marginHorizontal: 16,
 	},
 
-	footer: {
-		marginTop: 8,
-		marginBottom: 12,
+	separator: {
+		borderTopWidth: 1 / PixelRatio.get(),
+		borderTopColor: Colors.separator,
 	},
 
 	topArea: {
 		flexDirection: 'row',
 	},
 
-	title: {
+	author: {
 		flex: 1,
-		marginTop: 16,
+		marginHorizontal: 16,
 	},
 
 	expand: {
 		marginHorizontal: 16,
 		marginVertical: 12,
-		color: Colors.fadedBlack,
+		color: Colors.grey,
 	},
 
 	hidden: {
@@ -60,12 +54,15 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
+	threadrel: ?ThreadRel;
 	isUserAdmin: boolean;
 	hideThread: Function;
 	unhideThread: Function;
+	likeThread: Function;
+	unlikeThread: Function;
 	banUser: Function;
 	unbanUser: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -81,10 +78,13 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			creator: PropTypes.string.isRequired,
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		threadrel: PropTypes.object,
+		onNavigate: PropTypes.func.isRequired,
 		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,
 		unhideThread: PropTypes.func.isRequired,
+		likeThread: PropTypes.func.isRequired,
+		unlikeThread: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 	};
@@ -96,60 +96,6 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
-
-	_copyToClipboard: Function = text => {
-		Clipboard.setString(text);
-		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
-	};
-
-	_getDiscussionLink: Function = () => {
-		const { thread } = this.props;
-
-		return config.server.protocol + '//' + config.server.host + convertRouteToURL({
-			name: 'chat',
-			props: {
-				room: thread.parents[0],
-				thread: thread.id,
-				title: thread.name,
-			},
-		});
-	};
-
-	_handleOpenImage: Function = () => {
-		const { thread } = this.props;
-
-		if (thread.meta) {
-			const { photo } = thread.meta;
-
-			Linking.openURL(photo.url);
-		}
-	};
-
-	_handleCopyImageLink: Function = () => {
-		const { thread } = this.props;
-
-		if (thread.meta) {
-			const { photo } = thread.meta;
-
-			this._copyToClipboard(photo.url);
-		}
-	};
-
-	_handleCopyTitle: Function = () => {
-		this._copyToClipboard(this.props.thread.name);
-	};
-
-	_handleCopySummary: Function = () => {
-		this._copyToClipboard(this.props.thread.body);
-	};
-
-	_handleShare: Function = () => {
-		Share.shareItem('Share discussion', this._getDiscussionLink());
-	};
-
-	_handleCopyLink: Function = () => {
-		this._copyToClipboard(this._getDiscussionLink());
-	};
 
 	_handleShowMenu: Function = () => {
 		this.setState({
@@ -166,19 +112,24 @@ export default class DiscussionItem extends Component<void, Props, State> {
 	_handlePress: Function = () => {
 		const { thread } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'chat',
-			props: {
-				thread: thread.id,
-				room: thread.parents[0],
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'chat',
+				props: {
+					thread: thread.id,
+					room: thread.parents[0],
+				},
 			},
-		}));
+		});
 	};
 
 	render() {
 		const {
 			thread,
+			threadrel,
 			isUserAdmin,
+			onNavigate,
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
@@ -193,10 +144,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 				<TouchFeedback onPress={this._handlePress}>
 					<View style={hidden ? styles.hidden : null}>
 						<View style={styles.topArea}>
-							<CardTitle style={[ styles.item, styles.title ]}>
-								{this.props.thread.name}
-							</CardTitle>
-
+							<DiscussionAuthor {...this.props} style={styles.author} />
 							<TouchableOpacity onPress={this._handleShowMenu}>
 								<Icon
 									name='expand-more'
@@ -205,48 +153,35 @@ export default class DiscussionItem extends Component<void, Props, State> {
 								/>
 							</TouchableOpacity>
 						</View>
-
-						<DiscussionSummary text={thread.body} meta={thread.meta} />
-						<DiscussionFooter {...this.props} style={[ styles.item, styles.footer ]} />
+						<CardTitle style={styles.item}>
+							{thread.name}
+						</CardTitle>
+						<DiscussionSummary
+							text={thread.body}
+							meta={thread.meta}
+						/>
+						<View style={styles.separator} />
+						<DiscussionActions
+							thread={thread}
+							threadrel={threadrel}
+							likeThread={this.props.likeThread}
+							unlikeThread={this.props.unlikeThread}
+							onNavigate={onNavigate}
+						/>
 					</View>
 				</TouchFeedback>
 
-				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
-					<ActionSheetItem onPress={this._handleCopyTitle}>
-						Copy title
-					</ActionSheetItem>
-
-					{thread.meta && thread.meta.photo ? [
-						<ActionSheetItem key='open-image' onPress={this._handleOpenImage}>
-							Open image in browser
-						</ActionSheetItem>,
-						<ActionSheetItem key='copy-imagelink' onPress={this._handleCopyImageLink}>
-							Copy image link
-						</ActionSheetItem>,
-					] :
-						<ActionSheetItem onPress={this._handleCopySummary}>
-							Copy summary
-						</ActionSheetItem>
-					}
-
-					<ActionSheetItem onPress={this._handleCopyLink}>
-						Copy discussion link
-					</ActionSheetItem>
-
-					<ActionSheetItem onPress={this._handleShare}>
-						Share discussion
-					</ActionSheetItem>
-
-					{isUserAdmin ?
-						hidden ?
-							<ActionSheetItem onPress={this.props.unhideThread}>
-								Unhide discussion
-							</ActionSheetItem> :
-							<ActionSheetItem onPress={this.props.hideThread}>
-								Hide discussion
-							</ActionSheetItem> : null
-					}
-				</ActionSheet>
+				<DiscussionActionSheet
+					thread={thread}
+					threadrel={threadrel}
+					isUserAdmin={isUserAdmin}
+					hideThread={this.props.hideThread}
+					unhideThread={this.props.unhideThread}
+					banUser={this.props.banUser}
+					unbanUser={this.props.unbanUser}
+					visible={this.state.actionSheetVisible}
+					onRequestClose={this._handleRequestClose}
+				/>
 			</Card>
 		);
 	}

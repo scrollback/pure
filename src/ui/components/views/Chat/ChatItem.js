@@ -8,27 +8,23 @@ import ChatBubble from './ChatBubble';
 import Embed from '../Embed/Embed';
 import Icon from '../Core/Icon';
 import Time from '../Core/Time';
-import ActionSheet from '../Core/ActionSheet';
-import ActionSheetItem from '../Core/ActionSheetItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
-import Colors from '../../../Colors';
+import ChatLikeButton from './ChatLikeButton';
+import ChatActionSheet from './ChatActionSheet';
 import { parseURLs } from '../../../../lib/URL';
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
-import type { Text } from '../../../../lib/schemaTypes';
+import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 const {
-	Clipboard,
-	Linking,
-	ToastAndroid,
 	PixelRatio,
 	StyleSheet,
 	TouchableOpacity,
 	View,
 } = ReactNative;
 
+const FADED_GREY = '#b2b2b2';
+
 const styles = StyleSheet.create({
 	container: {
-		marginHorizontal: 8,
 		marginVertical: 4,
 	},
 	chat: {
@@ -51,17 +47,15 @@ const styles = StyleSheet.create({
 		alignSelf: 'flex-end',
 	},
 	timestampIcon: {
-		color: Colors.black,
+		color: FADED_GREY,
 		marginVertical: 2,
-		opacity: 0.3,
 	},
 	timestampText: {
-		color: Colors.black,
+		color: FADED_GREY,
 		fontSize: 12,
 		lineHeight: 18,
 		marginHorizontal: 6,
 		paddingHorizontal: 8,
-		opacity: 0.3,
 	},
 	avatar: {
 		position: 'absolute',
@@ -82,19 +76,27 @@ const styles = StyleSheet.create({
 	embedThumbnail: {
 		marginBottom: 8,
 	},
-	bubbleReceived: {
-		marginRight: 8,
+	chatReceived: {
+		paddingRight: 52,
 	},
-	bubbleSent: {
-		marginLeft: 8,
+	chatSent: {
+		marginHorizontal: 8,
 	},
 	hidden: {
 		opacity: 0.3,
+	},
+	like: {
+		position: 'absolute',
+		top: 2,
+		right: 0,
+		width: 52,
+		alignItems: 'center',
 	},
 });
 
 type Props = {
 	text: Text;
+	textrel: ?TextRel;
 	previousText: Text;
 	isFirst: boolean;
 	isLast: boolean;
@@ -104,14 +106,16 @@ type Props = {
 	isUserAdmin: boolean;
 	hideText: Function;
 	unhideText: Function;
+	likeText: Function;
+	unlikeText: Function;
 	banUser: Function;
 	unbanUser: Function;
 	style?: any;
-	onNavigation: Function;
+	onNavigate: Function;
 };
 
 type State = {
-	actionSheetVisible: boolean
+	actionSheetVisible: boolean;
 }
 
 export default class ChatItem extends Component<void, Props, State> {
@@ -122,6 +126,7 @@ export default class ChatItem extends Component<void, Props, State> {
 			createTime: PropTypes.number.isRequired,
 			meta: PropTypes.object,
 		}).isRequired,
+		textrel: PropTypes.object,
 		previousText: PropTypes.shape({
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
@@ -135,10 +140,12 @@ export default class ChatItem extends Component<void, Props, State> {
 		isUserAdmin: PropTypes.bool.isRequired,
 		hideText: PropTypes.func.isRequired,
 		unhideText: PropTypes.func.isRequired,
+		likeText: PropTypes.func.isRequired,
+		unlikeText: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 		style: View.propTypes.style,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -152,49 +159,15 @@ export default class ChatItem extends Component<void, Props, State> {
 	_goToProfile: Function = () => {
 		const { text } = this.props;
 
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'profile',
-			props: {
-				user: text.creator,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'profile',
+				props: {
+					user: text.creator,
+				},
 			},
-		}));
-	};
-
-	_copyToClipboard: Function = text => {
-		Clipboard.setString(text);
-		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
-	};
-
-	_handleOpenImage: Function = () => {
-		const { text } = this.props;
-
-		if (text.meta) {
-			const { photo } = text.meta;
-
-			Linking.openURL(photo.url);
-		}
-	};
-
-	_handleCopyImageLink: Function = () => {
-		const { text } = this.props;
-
-		if (text.meta) {
-			const { photo } = text.meta;
-
-			this._copyToClipboard(photo.url);
-		}
-	};
-
-	_handleCopyMessage: Function = () => {
-		this._copyToClipboard(this.props.text.body);
-	};
-
-	_handleQuoteMessage: Function = () => {
-		this.props.quoteMessage(this.props.text);
-	};
-
-	_handleReplyToMessage: Function = () => {
-		this.props.replyToMessage(this.props.text);
+		});
 	};
 
 	_handleShowMenu: Function = () => {
@@ -271,18 +244,30 @@ export default class ChatItem extends Component<void, Props, State> {
 						null
 					}
 
-					<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
-						<ChatBubble
-							body={text.meta && text.meta.photo ? null : text.body}
-							creator={text.creator}
-							type={received ? 'left' : 'right'}
-							showAuthor={showAuthor}
-							showArrow={received ? showAuthor : true}
-							style={received ? styles.bubbleReceived : styles.bubbleSent}
-						>
-							{cover}
-						</ChatBubble>
-					</TouchableOpacity>
+					<View style={received ? styles.chatReceived : styles.chatSent}>
+						<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
+							<ChatBubble
+								body={text.meta && text.meta.photo ? null : text.body}
+								creator={text.creator}
+								type={received ? 'left' : 'right'}
+								showAuthor={showAuthor}
+								showArrow={received ? showAuthor : true}
+							>
+								{cover}
+							</ChatBubble>
+						</TouchableOpacity>
+
+						{received ?
+							<ChatLikeButton
+								style={styles.like}
+								text={this.props.text}
+								textrel={this.props.textrel}
+								likeText={this.props.likeText}
+								unlikeText={this.props.unlikeText}
+							/> :
+							null
+						}
+					</View>
 				</View>
 
 				{showTime ?
@@ -301,39 +286,19 @@ export default class ChatItem extends Component<void, Props, State> {
 					null
 				}
 
-				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
-					{text.meta && text.meta.photo ? [
-						<ActionSheetItem key='open-image' onPress={this._handleOpenImage}>
-							Open image in browser
-						</ActionSheetItem>,
-						<ActionSheetItem key='copy-imagelink' onPress={this._handleCopyImageLink}>
-							Copy image link
-						</ActionSheetItem>,
-					] : [
-						<ActionSheetItem key='copy-text' onPress={this._handleCopyMessage}>
-							Copy message text
-						</ActionSheetItem>,
-						<ActionSheetItem key='quote-text' onPress={this._handleQuoteMessage}>
-							Quote message
-						</ActionSheetItem>,
-					]}
-
-					{user !== text.creator ?
-						<ActionSheetItem onPress={this._handleReplyToMessage}>
-							{'Reply to @' + text.creator}
-						</ActionSheetItem> : null
-					}
-
-					{isUserAdmin ?
-						hidden ?
-							<ActionSheetItem onPress={this.props.unhideText}>
-								Unhide message
-							</ActionSheetItem> :
-							<ActionSheetItem onPress={this.props.hideText}>
-								Hide message
-							</ActionSheetItem> : null
-					}
-				</ActionSheet>
+				<ChatActionSheet
+					text={text}
+					user={user}
+					isUserAdmin={isUserAdmin}
+					quoteMessage={this.props.quoteMessage}
+					replyToMessage={this.props.replyToMessage}
+					hideText={this.props.hideText}
+					unhideText={this.props.unhideText}
+					banUser={this.props.banUser}
+					unbanUser={this.props.unbanUser}
+					visible={this.state.actionSheetVisible}
+					onRequestClose={this._handleRequestClose}
+				/>
 			</View>
 		);
 	}

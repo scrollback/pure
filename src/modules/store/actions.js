@@ -4,10 +4,18 @@ import type { User, Text, Thread } from '../../lib/schemaTypes';
 import UserModel from '../../models/user';
 import ThreadModel from '../../models/thread';
 import TextModel from '../../models/text';
+import TextRelModel from '../../models/textrel';
 import RoomRelModel from '../../models/roomrel';
 import ThreadRelModel from '../../models/threadrel';
 import uuid from 'node-uuid';
-import { PRESENCE_FOREGROUND, PRESENCE_NONE, TAG_POST_PHOTO, TAG_POST_HIDDEN } from '../../lib/Constants';
+import {
+	PRESENCE_FOREGROUND,
+	PRESENCE_NONE,
+	TAG_POST_PHOTO,
+	TAG_POST_HIDDEN,
+	ROLE_UPVOTE,
+	ROLE_FOLLOWER,
+} from '../../lib/Constants';
 
 /*
  * User related actions
@@ -114,6 +122,11 @@ export const sendMessage = (
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
 			}),
+			[`${data.creator}_${id}`]: new TextRelModel({
+				item: id,
+				user: data.creator,
+				roles: [ ROLE_FOLLOWER ],
+			}),
 		},
 	};
 };
@@ -132,6 +145,11 @@ export const startThread = (
 				createTime: Date.now(),
 				updateTime: Date.now(),
 				tags: data.meta && data.meta.photo ? [ TAG_POST_PHOTO ] : [],
+			}),
+			[`${data.creator}_${id}`]: new ThreadRelModel({
+				item: id,
+				user: data.creator,
+				roles: [ ROLE_FOLLOWER ],
 			}),
 		},
 	};
@@ -167,6 +185,46 @@ export const unhideText = (text: Text): Object => {
 	return {};
 };
 
+export function likeText(text: string, user: string, roles: Array<number>): Object {
+	if (roles.indexOf(ROLE_UPVOTE) === -1) {
+		const id = `${user}_${text}`;
+		const textrel = new TextRelModel({
+			id,
+			roles: roles.concat(ROLE_UPVOTE),
+			item: text,
+			user,
+		});
+
+		return {
+			entities: {
+				[id]: textrel,
+			},
+		};
+	}
+
+	return {};
+}
+
+export const unlikeText = (text: string, user: string, roles: Array<number>): Object => {
+	if (roles.indexOf(ROLE_UPVOTE) > -1) {
+		const id = `${user}_${text}`;
+		const textrel = new TextRelModel({
+			id,
+			roles: roles.filter(role => role !== ROLE_UPVOTE),
+			item: text,
+			user,
+		});
+
+		return {
+			entities: {
+				[id]: textrel,
+			},
+		};
+	}
+
+	return {};
+};
+
 export const hideThread = (thread: Thread): Object => ({
 	entities: {
 		[thread.id]: new ThreadModel({
@@ -193,6 +251,46 @@ export const unhideThread = (thread: Thread): Object => {
 				},
 			};
 		}
+	}
+
+	return {};
+};
+
+export function likeThread(thread: string, user: string, roles: Array<number>): Object {
+	if (roles.indexOf(ROLE_UPVOTE) === -1) {
+		const id = `${user}_${thread}`;
+		const threadrel = new ThreadRelModel({
+			id,
+			roles: roles.concat(ROLE_UPVOTE),
+			item: thread,
+			user,
+		});
+
+		return {
+			entities: {
+				[id]: threadrel,
+			},
+		};
+	}
+
+	return {};
+}
+
+export const unlikeThread = (thread: string, user: string, roles: Array<number>): Object => {
+	if (roles.indexOf(ROLE_UPVOTE) > -1) {
+		const id = `${user}_${thread}`;
+		const threadrel = new ThreadRelModel({
+			id,
+			roles: roles.filter(role => role !== ROLE_UPVOTE),
+			item: thread,
+			user,
+		});
+
+		return {
+			entities: {
+				[id]: threadrel,
+			},
+		};
 	}
 
 	return {};

@@ -5,10 +5,12 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ProfileField from './ProfileField';
 import AppText from '../Core/AppText';
+import AppbarTouchable from '../Appbar/AppbarTouchable';
+import AppbarIcon from '../Appbar/AppbarIcon';
 import AvatarRound from '../Avatar/AvatarRound';
 import PageLoading from '../Page/PageLoading';
 import PageEmpty from '../Page/PageEmpty';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
+import ProfileEditButtonContainer from '../../containers/ProfileEditButtonContainer';
 import Colors from '../../../Colors';
 import {
 	ROLE_HOME,
@@ -31,11 +33,31 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 	},
 
+	phantom: {
+		position: 'absolute',
+		top: 0,
+		left: 56,
+		right: 56,
+		height: 56,
+		backgroundColor: 'transparent',
+	},
+
+	appbar: {
+		position: 'absolute',
+		top: 0,
+		left: 0,
+		right: 0,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		height: 56,
+	},
+
 	cover: {
 		height: null,
 		width: null,
 		alignItems: 'stretch',
 		justifyContent: 'center',
+		padding: 16,
 	},
 
 	avatarContainer: {
@@ -111,7 +133,7 @@ type Props = {
 	places: {
 		[type: number]: Array<string>;
 	};
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 const PLACE_TYPES = [ ROLE_HOME, ROLE_WORK, ROLE_HOMETOWN ];
@@ -142,23 +164,35 @@ export default class Profile extends Component<void, Props, void> {
 			}),
 		]),
 		places: PropTypes.any.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
+	_handleGoBack = () => {
+		this.props.onNavigate({
+			type: 'pop',
+		});
+	};
+
 	_goToAccount: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'account',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'account',
+			},
+		});
 	};
 
 	_goToPlaces: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'places',
-		}));
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'places',
+			},
+		});
 	};
 
 	render() {
@@ -166,6 +200,7 @@ export default class Profile extends Component<void, Props, void> {
 			currentUser,
 			user,
 			places,
+			onNavigate,
 		} = this.props;
 
 		if (!user) {
@@ -200,6 +235,12 @@ export default class Profile extends Component<void, Props, void> {
 							</View>
 						</View>
 					</Image>
+					<View style={styles.appbar}>
+						<AppbarTouchable onPress={this._handleGoBack}>
+							<AppbarIcon name='arrow-back' />
+						</AppbarTouchable>
+						<ProfileEditButtonContainer user={user.id} onNavigate={onNavigate} />
+					</View>
 					<View style={styles.achievements}>
 						<View style={styles.score}>
 							<AppText style={styles.scoreCount}>
@@ -255,6 +296,7 @@ export default class Profile extends Component<void, Props, void> {
 						}
 					</View>
 				</ScrollView>
+				<View style={styles.phantom/* hack to make swipe down to go back work */} />
 			</View>
 		);
 	}

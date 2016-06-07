@@ -4,8 +4,6 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import FloatingActionButton from '../Core/FloatingActionButton';
-import Modal from '../Core/Modal';
-import StartDiscussionContainer from '../../containers/StartDiscussionContainer';
 
 const {
 	View,
@@ -24,38 +22,28 @@ const styles = StyleSheet.create({
 
 type Props = {
 	room: string;
-	user: string;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
-type State = {
-	modalVisible: boolean
-}
-
-export default class StartDiscussionButton extends Component<void, Props, State> {
+export default class StartDiscussionButton extends Component<void, Props, void> {
 	static propTypes = {
 		room: PropTypes.string.isRequired,
-		user: PropTypes.string.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
-	state: State = {
-		modalVisible: false,
-	};
-
-	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleRequestClose: Function = () => {
-		this.setState({
-			modalVisible: false,
-		});
-	};
-
 	_handlePress: Function = () => {
-		this.setState({
-			modalVisible: true,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'compose',
+				props: {
+					room: this.props.room,
+				},
+			},
 		});
 	};
 
@@ -67,14 +55,6 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 					icon='create'
 					onPress={this._handlePress}
 				/>
-
-				<Modal
-					visible={this.state.modalVisible}
-					onRequestClose={this._handleRequestClose}
-					animationType='fade'
-				>
-					<StartDiscussionContainer {...this.props} dismiss={this._handleRequestClose} />
-				</Modal>
 			</View>
 		);
 	}

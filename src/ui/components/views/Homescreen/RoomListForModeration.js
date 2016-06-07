@@ -5,17 +5,16 @@ import shallowCompare from 'react-addons-shallow-compare';
 import RoomListContainer from '../../containers/RoomListContainer';
 import SearchableList from '../Search/SearchableList';
 import RoomItem from './RoomItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 
 type Props = {
 	getResults: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class RoomListForModeration extends Component<void, Props, void> {
 	static propTypes = {
 		getResults: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -23,12 +22,15 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 	}
 
 	_handleSelectLocality: Function = room => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'room',
-			props: {
-				room: room.id,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'room',
+				props: {
+					room: room.id,
+				},
 			},
-		}));
+		});
 	};
 
 	_renderRow: Function = room => {

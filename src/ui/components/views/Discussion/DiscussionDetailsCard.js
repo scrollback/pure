@@ -6,7 +6,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import Card from '../Card/Card';
 import CardTitle from '../Card/CardTitle';
 import DiscussionSummary from './DiscussionSummary';
-import DiscussionFooter from './DiscussionFooter';
+import DiscussionAuthor from './DiscussionAuthor';
 import type { Thread } from '../../../../lib/schemaTypes';
 
 const {
@@ -15,25 +15,21 @@ const {
 
 const styles = StyleSheet.create({
 	details: {
-		paddingVertical: 4,
 		marginVertical: 0,
 	},
 
 	title: {
-		marginVertical: 8,
 		marginHorizontal: 16,
 	},
 
-	footer: {
+	author: {
 		marginHorizontal: 16,
-		marginTop: 8,
-		marginBottom: 12,
 	},
 });
 
 type Props = {
 	thread: Thread;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class DiscussionDetailsCard extends Component<void, Props, void> {
@@ -44,7 +40,7 @@ export default class DiscussionDetailsCard extends Component<void, Props, void> 
 			meta: PropTypes.object,
 			creator: PropTypes.string.isRequired,
 		}),
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -58,9 +54,9 @@ export default class DiscussionDetailsCard extends Component<void, Props, void> 
 
 		return (
 			<Card style={styles.details}>
+				<DiscussionAuthor { ...this.props } style={styles.author} />
 				<CardTitle style={styles.title}>{thread.name}</CardTitle>
 				<DiscussionSummary text={thread.body} meta={thread.meta} />
-				<DiscussionFooter { ...this.props } style={styles.footer} />
 			</Card>
 		);
 	}

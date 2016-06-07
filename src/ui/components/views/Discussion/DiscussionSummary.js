@@ -14,11 +14,13 @@ const {
 
 const styles = StyleSheet.create({
 	image: {
-		marginVertical: 4,
+		marginTop: 8,
 		height: 180,
 		width: null,
 	},
 	item: {
+		marginTop: 4,
+		marginBottom: 8,
 		marginHorizontal: 16,
 	},
 });

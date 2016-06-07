@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AvatarRound from '../Avatar/AvatarRound';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 
 const {
@@ -22,13 +21,13 @@ const styles = StyleSheet.create({
 
 type Props = {
 	user: string;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class ProfileButton extends Component<void, Props, void> {
 	static propTypes = {
 		user: PropTypes.string.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -36,12 +35,15 @@ export default class ProfileButton extends Component<void, Props, void> {
 	}
 
 	_handlePress: Function = () => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'profile',
-			props: {
-				user: this.props.user,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'profile',
+				props: {
+					user: this.props.user,
+				},
 			},
-		}));
+		});
 	};
 
 	render() {

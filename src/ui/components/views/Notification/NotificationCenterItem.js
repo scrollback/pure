@@ -8,7 +8,6 @@ import Icon from '../Core/Icon';
 import AvatarRound from '../Avatar/AvatarRound';
 import Time from '../Core/Time';
 import TouchFeedback from '../Core/TouchFeedback';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { NOTE_MENTION, NOTE_THREAD, NOTE_REPLY } from '../../../../lib/Constants';
 import type { Note } from '../../../../lib/schemaTypes';
@@ -93,7 +92,7 @@ const styles = StyleSheet.create({
 type Props = {
 	note: Note;
 	dismissNote: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 export default class NotificationCenterItem extends Component<void, Props, void> {
@@ -111,7 +110,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			user: PropTypes.string,
 		}).isRequired,
 		dismissNote: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -218,48 +217,60 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 	};
 
 	_handlePress: Function = () => {
-		const { note, onNavigation } = this.props;
+		const { note, onNavigate } = this.props;
 
 		const { data, event, count } = note;
 
 		switch (event) {
 		case NOTE_MENTION:
 		case NOTE_REPLY:
-			onNavigation(new NavigationActions.Push({
-				name: 'chat',
-				props: {
-					thread: data.thread ? data.thread.id : null,
-					room: data.room ? data.room.id : null,
-				},
-			}));
-
-			break;
-		case NOTE_THREAD:
-			if (count > 1) {
-				onNavigation(new NavigationActions.Push({
-					name: 'room',
-					props: {
-						room: data.room ? data.room.id : null,
-					},
-				}));
-			} else {
-				onNavigation(new NavigationActions.Push({
+			onNavigate({
+				type: 'push',
+				payload: {
 					name: 'chat',
 					props: {
 						thread: data.thread ? data.thread.id : null,
 						room: data.room ? data.room.id : null,
 					},
-				}));
+				},
+			});
+
+			break;
+		case NOTE_THREAD:
+			if (count > 1) {
+				onNavigate({
+					type: 'push',
+					payload: {
+						name: 'room',
+						props: {
+							room: data.room ? data.room.id : null,
+						},
+					},
+				});
+			} else {
+				onNavigate({
+					type: 'push',
+					payload: {
+						name: 'chat',
+						props: {
+							thread: data.thread ? data.thread.id : null,
+							room: data.room ? data.room.id : null,
+						},
+					},
+				});
 			}
 
 			break;
 		default:
-			onNavigation(new NavigationActions.Push({
-				name: 'room',
-				props: {
-					room: data.room ? data.room.id : null,
+			onNavigate({
+				type: 'push',
+				payload: {
+					name: 'room',
+					props: {
+						room: data.room ? data.room.id : null,
+					},
 				},
-			}));
+			});
 		}
 	};
 

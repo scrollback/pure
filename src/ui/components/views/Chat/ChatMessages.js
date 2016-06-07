@@ -7,7 +7,7 @@ import ChatItemContainer from '../../containers/ChatItemContainer';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
-import type { Text } from '../../../../lib/schemaTypes';
+import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
 type Props = {
 	data: Array<{
 		text: Text;
+		textrel: TextRel;
 		previousText: Text;
 		isLast: boolean;
 		type: any;
@@ -40,7 +41,7 @@ type Props = {
 	loadMore: (count: number) => void;
 	quoteMessage: Function;
 	replyToMessage: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -54,7 +55,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 		loadMore: PropTypes.func.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -88,12 +89,13 @@ export default class ChatMessages extends Component<void, Props, State> {
 			return <LoadingItem />;
 		}
 
-		const { text, previousText } = item;
+		const { text, textrel, previousText } = item;
 
 		return (
 			<ChatItemContainer
 				key={text.id}
-				text={text.id}
+				text={text}
+				textrel={textrel}
 				isFirst={item.isFirst}
 				isLast={item.isLast}
 				previousText={previousText}
@@ -101,7 +103,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 				quoteMessage={this.props.quoteMessage}
 				user={this.props.user}
 				style={[ styles.item, styles.inverted ]}
-				onNavigation={this.props.onNavigation}
+				onNavigate={this.props.onNavigate}
 			/>
 		);
 	};

@@ -90,10 +90,10 @@ ServerHTML.propTypes = {
 	image: PropTypes.string.isRequired,
 	permalink: PropTypes.string.isRequired,
 	styles: PropTypes.arrayOf(PropTypes.string),
-	analytics: {
+	analytics: PropTypes.shape({
 		google: PropTypes.string,
 		optimizely: PropTypes.string,
-	},
+	}),
 };
 
 ServerHTML.defaultProps = {

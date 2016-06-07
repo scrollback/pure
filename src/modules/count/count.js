@@ -5,7 +5,7 @@ import { bus, cache } from '../../core-server';
 import * as Constants from '../../lib/Constants';
 import promisify from '../../lib/promisify';
 import log from 'winston';
-import User from '../../models/user';
+import { user as User } from '../../models/models';
 import jsonop from 'jsonop';
 
 const getEntityAsync = promisify(cache.getEntity.bind(cache));
@@ -67,39 +67,32 @@ bus.on('change', (changes, next) => {
 		) {
 			if (!entity.id) entity.id = entity.user + '_' + entity.item;
 			promises.push(getEntityAsync(entity.id).then(result => {
-				let exist = [], inc = 1;
+				let rolesToInc = [], upvote, user;
+				const rolesToDec = [], newArr = [];
 
 				// console.log("result: ", result);
+				// console.log('entty: ', entity)
 				if (result) {
 					entity.roles.forEach((role) => {
 						if (result.roles.indexOf(role) === -1) {
-							exist.push(role);
+							rolesToInc.push(role);
 						}
 					});
 
-					if (entity.roles.length === 0) {
-						// console.log('got roles empty');
-						inc = -1;
-						exist = result.roles;
-					}
+					result.roles.forEach(role => {
+						if (entity.roles.indexOf(role) === -1) {
+							rolesToDec.push(role);
+						}
+					});
 
-					if (exist.length === 0) {
-						return;
+					if (rolesToInc.length === 0 && rolesToDec.length === 0) {
+						return null;
 					}
 				} else {
-					exist = entity.roles;
+					rolesToInc = entity.roles;
 				}
 
 				const item = changes.entities[entity.item] || {};
-
-				item.counts = item.counts || {};
-
-				exist.forEach((role) => {
-					if (ROLES[role]) {
-						item.counts[ROLES[role]] = [ inc, '$add' ];
-					}
-				});
-
 				item.id = entity.item;
 
 				switch (entity.type) {
@@ -119,7 +112,38 @@ bus.on('change', (changes, next) => {
 					item.type = Constants.TYPE_TOPIC;
 					break;
 				}
+				item.counts = item.counts || {};
+
+				rolesToInc.forEach((role) => {
+					if (role === Constants.ROLE_UPVOTE) {
+						upvote = 1;
+					}
+					if (ROLES[role]) {
+						item.counts[ROLES[role]] = [ 1, '$add' ];
+					}
+				});
+
+				rolesToDec.forEach((role) => {
+					if (role === Constants.ROLE_UPVOTE) {
+						upvote = -1;
+					}
+					if (ROLES[role]) {
+						item.counts[ROLES[role]] = [ -1, '$add' ];
+					}
+				});
+				// console.log("count module: ", item)
 				changes.entities[entity.item] = item;
+				if (upvote) {
+					newArr.push(getEntityAsync(entity.item).then(rsult => {
+						user = new User({ id: rsult.creator });
+						user.counts = {
+							upvotes: {}
+						};
+						user.counts.upvotes[TABLES[item.type]] = [ upvote, '$add' ];
+						changes.entities[rsult.creator] = user;
+					}));
+				}
+				return Promise.all(newArr);
 			}));
 		}
 	}

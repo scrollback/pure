@@ -123,9 +123,13 @@ export default class ProfileContainer extends Component {
 									room: 'item',
 								},
 								filter: {
-									user: props.user,
-									roles_cts: [ ROLE_FOLLOWER ],
-									tags_cts: [ TAG_ROOM_AREA ],
+									roomrel: {
+										user: props.user,
+										roles_cts: [ ROLE_FOLLOWER ],
+									},
+									room: {
+										tags_cts: [ TAG_ROOM_AREA ],
+									},
 								},
 								order: 'createTime',
 							},

@@ -95,8 +95,16 @@ class DiscussionsContainer extends Component<void, any, State> {
 						key: {
 							slice: {
 								type: 'thread',
+								join: {
+									threadrel: 'item',
+								},
 								filter: {
-									parents_cts: [ this.props.room ],
+									thread: {
+										parents_cts: [ this.props.room ],
+									},
+									threadrel: {
+										user: this.props.user,
+									},
 								},
 								order: 'createTime',
 							},

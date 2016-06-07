@@ -8,7 +8,6 @@ import RoomsFooterContainer from '../../containers/RoomsFooterContainer';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import type { RoomRel, Room } from '../../../../lib/schemaTypes';
 
 const {
@@ -24,7 +23,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-	onNavigation: Function;
+	onNavigate: Function;
 	data: Array<{ roomrel: RoomRel; room: Room } | { type: 'loading' } | { type: 'failed' }>;
 }
 
@@ -34,7 +33,7 @@ type State = {
 
 export default class Rooms extends Component<void, Props, State> {
 	static propTypes = {
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 	};
 
@@ -61,12 +60,15 @@ export default class Rooms extends Component<void, Props, State> {
 	}
 
 	_handleSelectLocality: Function = room => {
-		this.props.onNavigation(new NavigationActions.Push({
-			name: 'room',
-			props: {
-				room: room.id,
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'room',
+				props: {
+					room: room.id,
+				},
 			},
-		}));
+		});
 	};
 
 	_renderRow: Function = result => {
@@ -90,7 +92,7 @@ export default class Rooms extends Component<void, Props, State> {
 	};
 
 	_renderFooter: Function = () => {
-		return <RoomsFooterContainer onNavigation={this.props.onNavigation} />;
+		return <RoomsFooterContainer onNavigate={this.props.onNavigate} />;
 	};
 
 	render() {

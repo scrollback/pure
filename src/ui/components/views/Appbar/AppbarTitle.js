@@ -17,8 +17,7 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		lineHeight: 27,
 		marginVertical: 14,
-		marginRight: 64,
-		paddingHorizontal: 4,
+		marginHorizontal: 16,
 	},
 });
 

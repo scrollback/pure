@@ -19,7 +19,6 @@ import AvatarRound from '../Avatar/AvatarRound';
 import Banner from '../Banner/Banner';
 import ImageUploadDiscussion from '../ImageUpload/ImageUploadDiscussion';
 import Facebook from '../../../modules/Facebook';
-import NavigationActions from '../../../navigation-rfc/Navigation/NavigationActions';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -141,9 +140,8 @@ type Props = {
 	user: string;
 	room: string;
 	thread: string;
-	dismiss: Function;
 	startThread: Function;
-	onNavigation: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -171,14 +169,13 @@ type State = {
 const PERMISSION_PUBLISH_ACTIONS = 'publish_actions';
 const PERMISSION_PUBLISH_ERROR = 'ERR_REQUEST_PERMISSION';
 
-export default class StartDiscussionButton extends Component<void, Props, State> {
+export default class StartDiscussion extends Component<void, Props, State> {
 	static propTypes = {
 		user: PropTypes.string.isRequired,
 		room: PropTypes.string.isRequired,
-		dismiss: PropTypes.func.isRequired,
 		thread: PropTypes.string,
 		startThread: PropTypes.func.isRequired,
-		onNavigation: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -300,6 +297,12 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		});
 	};
 
+	_handleGoBack = () => {
+		this.props.onNavigate({
+			type: 'pop',
+		});
+	};
+
 	_handlePosted: Function = thread => {
 		const route = {
 			name: 'chat',
@@ -316,10 +319,8 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 			});
 		}
 
-		this.props.onNavigation(new NavigationActions.Push(route));
-
 		setTimeout(() => {
-			this.props.dismiss();
+			this._handleGoBack();
 		}, 1000);
 	};
 
@@ -454,7 +455,7 @@ export default class StartDiscussionButton extends Component<void, Props, State>
 		return (
 			<View style={styles.container}>
 				<AppbarSecondary>
-					<AppbarTouchable type='secondary' onPress={this.props.dismiss}>
+					<AppbarTouchable type='secondary' onPress={this._handleGoBack}>
 						<AppbarIcon name='close' style={styles.icon} />
 					</AppbarTouchable>
 

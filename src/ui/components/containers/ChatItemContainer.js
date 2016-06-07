@@ -4,8 +4,12 @@ import React, { PropTypes } from 'react';
 import Connect from '../../../modules/store/Connect';
 import ChatItem from '../views/Chat/ChatItem';
 import {
+	likeText,
+	unlikeText,
 	hideText,
 	unhideText,
+	likeThread,
+	unlikeThread,
 	hideThread,
 	unhideThread,
 	banUser,
@@ -20,38 +24,58 @@ const mapSubscriptionToProps = {
 		key: 'me',
 		transform: hasAdminTag,
 	},
+	user: {
+		key: {
+			type: 'state',
+			path: 'user',
+		},
+	},
 };
 
 const mapActionsToProps = {
-	hideText: (store, result) => () => {
-		if (result.text.type === TYPE_THREAD) {
-			store.put(hideThread(result.text));
+	likeText: (store, result, props) => () => {
+		if (props.text.type === TYPE_THREAD) {
+			store.put(
+				likeThread(props.text.id, result.user, props.textrel && props.textrel.roles ? props.textrel.roles : [])
+			);
 		} else {
-			store.put(hideText(result.text));
+			store.put(
+				likeText(props.text.id, result.user, props.textrel && props.textrel.roles ? props.textrel.roles : [])
+			);
 		}
 	},
-	unhideText: (store, result) => () => {
-		if (result.text.type === TYPE_THREAD) {
-			store.put(unhideThread(result.text));
+	unlikeText: (store, result, props) => () => {
+		if (props.text.type === TYPE_THREAD) {
+			store.put(
+				unlikeThread(props.text.id, result.user, props.textrel && props.textrel.roles ? props.textrel.roles : [])
+			);
 		} else {
-			store.put(unhideText(result.text));
+			store.put(
+				unlikeText(props.text.id, result.user, props.textrel && props.textrel.roles ? props.textrel.roles : [])
+			);
 		}
 	},
-	banUser: (store, result) => () => store.put(banUser(result.text.creator)),
-	unbanUser: (store, result) => () => store.put(unbanUser(result.text.creator)),
+	hideText: (store, result, props) => () => {
+		if (props.text.type === TYPE_THREAD) {
+			store.put(hideThread(props.text));
+		} else {
+			store.put(hideText(props.text));
+		}
+	},
+	unhideText: (store, result, props) => () => {
+		if (props.text.type === TYPE_THREAD) {
+			store.put(unhideThread(props.text));
+		} else {
+			store.put(unhideText(props.text));
+		}
+	},
+	banUser: (store, result, props) => () => store.put(banUser(props.text.creator)),
+	unbanUser: (store, result, props) => () => store.put(unbanUser(props.text.creator)),
 };
 
 const ChatItemContainer = (props: any) => (
 	<Connect
-		mapSubscriptionToProps={{
-			...mapSubscriptionToProps,
-			text: {
-				key: {
-					type: 'entity',
-					id: props.text,
-				},
-			},
-		}}
+		mapSubscriptionToProps={mapSubscriptionToProps}
 		mapActionsToProps={mapActionsToProps}
 		passProps={props}
 		component={ChatItem}
@@ -59,7 +83,7 @@ const ChatItemContainer = (props: any) => (
 );
 
 ChatItemContainer.propTypes = {
-	text: PropTypes.string,
+	text: PropTypes.object.isRequired,
 };
 
 export default ChatItemContainer;
