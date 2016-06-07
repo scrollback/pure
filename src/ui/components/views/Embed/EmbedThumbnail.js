@@ -94,9 +94,9 @@ export default class EmbedThumbnail extends Component<void, Props, State> {
 		let displayWidth;
 
 		if (thumbnail_height && thumbnail_width) {
-			displayWidth = Math.min(thumbnail_width, win.width - 120);
+			displayWidth = Math.min(thumbnail_width, win.width - 140);
 		} else if (height && width) {
-			displayWidth = Math.min(width, win.width - 120);
+			displayWidth = Math.min(width, win.width - 140);
 		} else {
 			displayWidth = 160;
 		}
