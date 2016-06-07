@@ -7,11 +7,11 @@ import RoomsFooter from '../views/Homescreen/RoomsFooter';
 
 const getPlacesFromUser = user => user.params && user.params.places ? user.params.places : {};
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	user: {
 		key: 'me',
 	},
-});
+};
 
 const transformFunction = props => {
 	if (props.user) {

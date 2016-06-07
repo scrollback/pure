@@ -10,10 +10,10 @@ const mapDispatchToProps = dispatch => ({
 	signOut: () => bus.emit('signout'),
 });
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	user: {
 		key: 'me',
 	},
-});
+};
 
 export default createContainer(mapSubscriptionToProps, mapDispatchToProps)(Account);

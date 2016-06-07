@@ -5,7 +5,7 @@ import createContainer from '../../../modules/store/createContainer';
 import createUserContainer from '../../../modules/store/createUserContainer';
 import App from '../views/App';
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	connection: {
 		key: {
 			type: 'state',
@@ -18,7 +18,7 @@ const mapSubscriptionToProps = () => ({
 			path: 'session',
 		},
 	},
-});
+};
 
 export default flowRight(
 	createUserContainer(),

@@ -41,7 +41,7 @@ test('should not render connected component without data', t => {
 	});
 
 	const Container = createContainer(
-		() => ({ name: 'name' })
+		{ name: 'name' }
 	)(NameComponent);
 	const wrapper = mount(
 		<Provider store={store}>
@@ -128,9 +128,9 @@ test('should remove subscription on unmount', t => {
 		put: () => null,
 	});
 
-	const Container = createContainer(() => ({
+	const Container = createContainer({
 		textContent: 'text'
-	}))(TextComponent);
+	})(TextComponent);
 
 	ReactDOM.render(
 		<Provider store={store}>

@@ -3,7 +3,7 @@
 import createContainer from '../../../modules/store/createContainer';
 import CTACard from '../views/Card/CTACard';
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	user: {
 		key: 'me',
 	},
@@ -13,6 +13,6 @@ const mapSubscriptionToProps = () => ({
 			path: 'ctahome',
 		},
 	},
-});
+};
 
 export default createContainer(mapSubscriptionToProps)(CTACard);

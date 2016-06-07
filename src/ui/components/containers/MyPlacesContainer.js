@@ -22,11 +22,11 @@ const mapDispatchToProps = dispatch => ({
 	removePlace: (user, type, place) => dispatch(removePlace(user, type, place)),
 });
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	data: {
 		key: 'me',
 	},
-});
+};
 
 export default flowRight(
 	createUserContainer(),

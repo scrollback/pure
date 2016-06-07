@@ -11,7 +11,7 @@ const isModerator = user => {
 	return user && user.tags && (user.tags.indexOf(TAG_USER_ADMIN) > -1 || user.tags.indexOf(TAG_USER_CONTENT) > -1);
 };
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	rooms: {
 		key: {
 			type: 'state',
@@ -21,7 +21,7 @@ const mapSubscriptionToProps = () => ({
 	data: {
 		key: 'me',
 	},
-});
+};
 
 const transformFunction = props => {
 	if (props.data) {

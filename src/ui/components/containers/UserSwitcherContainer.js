@@ -42,7 +42,7 @@ class UserSwitcherContainerInner extends Component<void, Props, void> {
 	}
 }
 
-const mapSubscriptionToProps = () => ({
+const mapSubscriptionToProps = {
 	user: {
 		key: {
 			type: 'state',
@@ -55,7 +55,7 @@ const mapSubscriptionToProps = () => ({
 			path: 'sessionList',
 		},
 	},
-});
+};
 
 const mapDispatchToProps = dispatch => ({
 	switchUser: (user, item) => {
