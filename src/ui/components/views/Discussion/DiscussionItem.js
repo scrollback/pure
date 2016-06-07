@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
-	threadrel: ThreadRel;
+	threadrel: ?ThreadRel;
 	isUserAdmin: boolean;
 	hideThread: Function;
 	unhideThread: Function;
@@ -79,7 +79,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			creator: PropTypes.string.isRequired,
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
-		threadrel: PropTypes.object.isRequired,
+		threadrel: PropTypes.object,
 		onNavigation: PropTypes.func.isRequired,
 		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,

@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	thread: Thread;
-	threadrel: ThreadRel;
+	threadrel: ?ThreadRel;
 	unlikeThread: Function;
 	likeThread: Function;
 	onNavigation: Function;

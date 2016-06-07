@@ -18,7 +18,7 @@ const {
 
 type Props = {
 	thread: Thread;
-	threadrel: ThreadRel;
+	threadrel: ?ThreadRel;
 	isUserAdmin: boolean;
 	hideThread: Function;
 	unhideThread: Function;
@@ -35,7 +35,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			creator: PropTypes.string.isRequired,
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
-		threadrel: PropTypes.object.isRequired,
+		threadrel: PropTypes.object,
 		isUserAdmin: PropTypes.bool,
 		hideThread: PropTypes.func.isRequired,
 		unhideThread: PropTypes.func.isRequired,
