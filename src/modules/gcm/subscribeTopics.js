@@ -170,7 +170,12 @@ function mapRelsAndSubscriptions(entity) {
 		const tokens = values(user.params.gcm);
 		cache.query({
 			type: 'roomrel',
-			filter: { user: user.id, roles_cts: [ Constants.ROLE_FOLLOWER ] },
+			filter: {
+				roomrel: {
+					user: user.id,
+					roles_cts: [ Constants.ROLE_FOLLOWER ]
+				}
+			},
 			order: 'createTime',
 		}, [ -Infinity, Infinity ], (error, rels) => {
 			if (err) { return; }
