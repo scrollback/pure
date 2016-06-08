@@ -7,7 +7,7 @@ import {
 } from '../../../lib/Constants';
 import {
 	isMentioned,
-	createMention,
+	createNote,
 	getRolesFromChanges,
 } from '../note';
 
@@ -64,7 +64,7 @@ test('should create mention', t => {
 
 	const time = Date.now();
 
-	t.deepEqual(createMention(
+	t.deepEqual(createNote(
 		{ user: 'jane' },
 		{ id: 'abcde', creator: 'john', body: 'The answer is 42' },
 		{
