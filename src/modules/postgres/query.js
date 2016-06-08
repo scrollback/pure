@@ -93,8 +93,8 @@ function wherePart (f) {
 	case 'notes':
 		sql.push(`"${TABLES[TYPES[f.type]]}".deletetime IS NULL`);
 	}
-
-	filter.$ = 'WHERE ' + sql.join(' AND ');
+	if (sql.length) filter.$ = 'WHERE ' + sql.join(' AND ');
+	else filter.$ = '';
 	return filter;
 }
 
