@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
 	},
 	like: {
 		position: 'absolute',
-		top: 2,
+		top: 0,
 		right: 0,
 		width: 52,
 		alignItems: 'center',
