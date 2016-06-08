@@ -63,8 +63,7 @@ export type Text = Item & {
 	creator: string;
 }
 
-export type Thread = Item & {
-	body: string;
+export type Thread = Text & {
 	name: string;
 	score: number;
 }

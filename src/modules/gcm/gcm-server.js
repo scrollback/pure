@@ -154,7 +154,7 @@ function sendStanza(changes, entity) {
 		});
 	}
 	if (entity.type === Constants.TYPE_NOTE) {
-		log.info('sending pushnotification for mention');
+		log.info('sending pushnotification for note');
 		client.send(createStanza(uid(), entity));
 	}
 }
