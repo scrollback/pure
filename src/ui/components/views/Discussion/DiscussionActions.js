@@ -33,6 +33,7 @@ type Props = {
 	threadrel: ?ThreadRel;
 	unlikeThread: Function;
 	likeThread: Function;
+	user: string;
 	onNavigate: Function;
 	style?: any;
 }
@@ -56,6 +57,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		style: View.propTypes.style,
 		unlikeThread: PropTypes.func.isRequired,
 		likeThread: PropTypes.func.isRequired,
+		user: PropTypes.string.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
 
@@ -103,14 +105,17 @@ export default class DiscussionActions extends Component<void, Props, State> {
 	};
 
 	_handleLike: Function = () => {
+		const { thread, threadrel, user } = this.props;
+		const roles = threadrel ? threadrel.roles : [];
+
 		let { likes } = this.state;
 
 		if (this._isLiked()) {
 			likes--;
-			this.props.unlikeThread();
+			this.props.unlikeThread(thread.id, user, roles);
 		} else {
 			likes++;
-			this.props.likeThread();
+			this.props.likeThread(thread.id, user, roles);
 		}
 
 		if (likes >= 0) {

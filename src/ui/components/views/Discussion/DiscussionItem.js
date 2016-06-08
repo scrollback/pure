@@ -3,14 +3,14 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import Card from '../Card/Card';
-import CardTitle from '../Card/CardTitle';
+import DiscussionActionSheetContainer from '../../containers/DiscussionActionSheetContainer';
+import DiscussionActionsContainer from '../../containers/DiscussionActionsContainer';
 import DiscussionSummary from './DiscussionSummary';
 import DiscussionAuthor from './DiscussionAuthor';
-import DiscussionActions from './DiscussionActions';
+import Card from '../Card/Card';
+import CardTitle from '../Card/CardTitle';
 import TouchFeedback from '../Core/TouchFeedback';
 import Icon from '../Core/Icon';
-import DiscussionActionSheet from './DiscussionActionSheet';
 import Colors from '../../../Colors';
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
 import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
@@ -55,13 +55,6 @@ const styles = StyleSheet.create({
 type Props = {
 	thread: Thread;
 	threadrel: ?ThreadRel;
-	isUserAdmin: boolean;
-	hideThread: Function;
-	unhideThread: Function;
-	likeThread: Function;
-	unlikeThread: Function;
-	banUser: Function;
-	unbanUser: Function;
 	onNavigate: Function;
 }
 
@@ -80,13 +73,6 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		}).isRequired,
 		threadrel: PropTypes.object,
 		onNavigate: PropTypes.func.isRequired,
-		isUserAdmin: PropTypes.bool,
-		hideThread: PropTypes.func.isRequired,
-		unhideThread: PropTypes.func.isRequired,
-		likeThread: PropTypes.func.isRequired,
-		unlikeThread: PropTypes.func.isRequired,
-		banUser: PropTypes.func.isRequired,
-		unbanUser: PropTypes.func.isRequired,
 	};
 
 	state: State = {
@@ -128,7 +114,6 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		const {
 			thread,
 			threadrel,
-			isUserAdmin,
 			onNavigate,
 		} = this.props;
 
@@ -161,24 +146,17 @@ export default class DiscussionItem extends Component<void, Props, State> {
 							meta={thread.meta}
 						/>
 						<View style={styles.separator} />
-						<DiscussionActions
+						<DiscussionActionsContainer
 							thread={thread}
 							threadrel={threadrel}
-							likeThread={this.props.likeThread}
-							unlikeThread={this.props.unlikeThread}
 							onNavigate={onNavigate}
 						/>
 					</View>
 				</TouchFeedback>
 
-				<DiscussionActionSheet
+				<DiscussionActionSheetContainer
 					thread={thread}
 					threadrel={threadrel}
-					isUserAdmin={isUserAdmin}
-					hideThread={this.props.hideThread}
-					unhideThread={this.props.unhideThread}
-					banUser={this.props.banUser}
-					unbanUser={this.props.unbanUser}
 					visible={this.state.actionSheetVisible}
 					onRequestClose={this._handleRequestClose}
 				/>

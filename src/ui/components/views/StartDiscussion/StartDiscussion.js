@@ -14,7 +14,6 @@ import AppbarSecondary from '../Appbar/AppbarSecondary';
 import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AppbarIcon from '../Appbar/AppbarIcon';
 import ImageUploadContainer from '../../containers/ImageUploadContainer';
-import StartDiscussionDone from '../../containers/StartDiscussionDoneContainer';
 import AvatarRound from '../Avatar/AvatarRound';
 import Banner from '../Banner/Banner';
 import ImageUploadDiscussion from '../ImageUpload/ImageUploadDiscussion';
@@ -386,12 +385,26 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		this.setState({
 			status: 'loading',
 		}, () => {
-			this.props.startThread(
+			const threadObservable = this.props.startThread({
 				id,
-				this.state.name,
 				body,
-				meta
-			);
+				meta,
+				name: this.state.name,
+				room: this.props.room,
+				user: this.props.user,
+			});
+			const subscription = threadObservable.subscribe({
+				next: (thread) => {
+					if (thread) {
+						this._handlePosted(thread);
+						subscription.unsubscribe();
+					}
+				},
+				error: e => {
+					this._handleError(e.message);
+					subscription.unsubscribe();
+				},
+			});
 		});
 	};
 
@@ -541,7 +554,6 @@ export default class StartDiscussion extends Component<void, Props, State> {
 						}
 					</View>
 				</View>
-				<StartDiscussionDone thread={this.props.thread} onPosted={this._handlePosted} />
 			</View>
 		);
 	}

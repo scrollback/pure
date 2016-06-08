@@ -3,7 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import ChatItemContainer from '../../containers/ChatItemContainer';
+import ChatItem from './ChatItem';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
@@ -92,7 +92,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 		const { text, textrel, previousText } = item;
 
 		return (
-			<ChatItemContainer
+			<ChatItem
 				key={text.id}
 				text={text}
 				textrel={textrel}

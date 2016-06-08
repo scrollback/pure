@@ -9,7 +9,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import AppText from '../Core/AppText';
 import Icon from '../Core/Icon';
 import Colors from '../../../Colors';
-import { ROLE_UPVOTE } from '../../../../lib/Constants';
+import { ROLE_UPVOTE, TYPE_THREAD } from '../../../../lib/Constants';
 import type { Text, TextRel } from '../../../../lib/schemaTypes';
 
 type Props = {
@@ -17,6 +17,9 @@ type Props = {
 	textrel: ?TextRel;
 	unlikeText: Function;
 	likeText: Function;
+	unlikeThread: Function;
+	likeThread: Function;
+	user: string;
 }
 
 type State = {
@@ -45,6 +48,9 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 		textrel: PropTypes.object,
 		likeText: PropTypes.func.isRequired,
 		unlikeText: PropTypes.func.isRequired,
+		likeThread: PropTypes.func.isRequired,
+		unlikeThread: PropTypes.func.isRequired,
+		user: PropTypes.string.isRequired,
 	};
 
 	state: State = {
@@ -91,14 +97,26 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 	};
 
 	_handleLike: Function = () => {
+		const { text, textrel, user } = this.props;
+		const { id, type } = text;
+		const roles = textrel ? textrel.roles : [];
+
 		let { likes } = this.state;
 
 		if (this._isLiked()) {
 			likes--;
-			this.props.unlikeText();
+			if (type === TYPE_THREAD) {
+				this.props.unlikeThread(id, user, roles);
+			} else {
+				this.props.unlikeText(id, user, roles);
+			}
 		} else {
 			likes++;
-			this.props.likeText();
+			if (type === TYPE_THREAD) {
+				this.props.likeThread(id, user, roles);
+			} else {
+				this.props.likeText(id, user, roles);
+			}
 		}
 
 		if (likes >= 0) {

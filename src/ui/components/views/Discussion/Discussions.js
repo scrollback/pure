@@ -3,11 +3,11 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import DiscussionItemContainer from '../../containers/DiscussionItemContainer';
 import CTACardContainerRoom from '../../containers/CTACardContainerRoom';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
+import DiscussionItem from './DiscussionItem';
 import StartDiscussionButton from '../StartDiscussion/StartDiscussionButton';
 import type { Thread } from '../../../../lib/schemaTypes';
 
@@ -111,7 +111,7 @@ export default class Discussions extends Component<void, Props, State> {
 			}
 
 			return (
-				<DiscussionItemContainer
+				<DiscussionItem
 					key={thread.id}
 					thread={thread}
 					threadrel={threadrel}

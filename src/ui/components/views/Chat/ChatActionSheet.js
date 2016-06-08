@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
-import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
+import { TAG_POST_HIDDEN, TYPE_THREAD } from '../../../../lib/Constants';
 import type { Text } from '../../../../lib/schemaTypes';
 
 const {
@@ -22,11 +22,13 @@ type Props = {
 	isUserAdmin: boolean;
 	hideText: Function;
 	unhideText: Function;
+	hideThread: Function;
+	unhideThread: Function;
 	banUser: Function;
 	unbanUser: Function;
 };
 
-export default class ChatItem extends Component<void, Props, void> {
+export default class ChatActionSheet extends Component<void, Props, void> {
 	static propTypes = {
 		text: PropTypes.object.isRequired,
 		user: PropTypes.string.isRequired,
@@ -35,6 +37,8 @@ export default class ChatItem extends Component<void, Props, void> {
 		isUserAdmin: PropTypes.bool.isRequired,
 		hideText: PropTypes.func.isRequired,
 		unhideText: PropTypes.func.isRequired,
+		hideThread: PropTypes.func.isRequired,
+		unhideThread: PropTypes.func.isRequired,
 		banUser: PropTypes.func.isRequired,
 		unbanUser: PropTypes.func.isRequired,
 	};
@@ -48,7 +52,27 @@ export default class ChatItem extends Component<void, Props, void> {
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};
 
-	_handleOpenImage: Function = () => {
+	_handleHide = () => {
+		const { id, tags, type } = this.props.text;
+
+		if (type === TYPE_THREAD) {
+			this.props.hideThread(id, tags);
+		} else {
+			this.props.hideText(id, tags);
+		}
+	};
+
+	_handleUnhide = () => {
+		const { id, tags, type } = this.props.text;
+
+		if (type === TYPE_THREAD) {
+			this.props.unhideThread(id, tags);
+		} else {
+			this.props.unhideText(id, tags);
+		}
+	};
+
+	_handleOpenImage = () => {
 		const { text } = this.props;
 
 		if (text.meta) {
@@ -58,7 +82,7 @@ export default class ChatItem extends Component<void, Props, void> {
 		}
 	};
 
-	_handleCopyImageLink: Function = () => {
+	_handleCopyImageLink = () => {
 		const { text } = this.props;
 
 		if (text.meta) {
@@ -68,15 +92,15 @@ export default class ChatItem extends Component<void, Props, void> {
 		}
 	};
 
-	_handleCopyMessage: Function = () => {
+	_handleCopyMessage = () => {
 		this._copyToClipboard(this.props.text.body);
 	};
 
-	_handleQuoteMessage: Function = () => {
+	_handleQuoteMessage = () => {
 		this.props.quoteMessage(this.props.text);
 	};
 
-	_handleReplyToMessage: Function = () => {
+	_handleReplyToMessage = () => {
 		this.props.replyToMessage(this.props.text);
 	};
 
@@ -115,10 +139,10 @@ export default class ChatItem extends Component<void, Props, void> {
 
 				{isUserAdmin ?
 					hidden ?
-						<ActionSheetItem onPress={this.props.unhideText}>
+						<ActionSheetItem onPress={this._handleUnhide}>
 							Unhide message
 						</ActionSheetItem> :
-						<ActionSheetItem onPress={this.props.hideText}>
+						<ActionSheetItem onPress={this._handleHide}>
 							Hide message
 						</ActionSheetItem> : null
 				}

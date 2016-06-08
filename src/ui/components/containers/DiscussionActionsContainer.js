@@ -3,14 +3,18 @@
 import flowRight from 'lodash/flowRight';
 import createContainer from '../../../modules/store/createContainer';
 import createUserContainer from '../../../modules/store/createUserContainer';
-import Chat from '../views/Chat/Chat';
-import { sendMessage } from '../../../modules/store/actions';
+import DiscussionActions from '../views/Discussion/DiscussionActions';
+import {
+	likeThread,
+	unlikeThread,
+} from '../../../modules/store/actions';
 
 const mapDispatchToProps = dispatch => ({
-	sendMessage: data => dispatch(sendMessage(data)),
+	likeThread: (thread, user, roles) => dispatch(likeThread(thread, user, roles)),
+	unlikeThread: (thread, user, roles) => dispatch(unlikeThread(thread, user, roles)),
 });
 
 export default flowRight(
 	createUserContainer(),
 	createContainer(null, mapDispatchToProps),
-)(Chat);
+)(DiscussionActions);
