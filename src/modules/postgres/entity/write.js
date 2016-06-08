@@ -12,7 +12,7 @@ export default function (entity) {
 	// TODO: add validation for type else this code crashes.
 	if (!entity) return [];
 	const isRel = (RELATION_TYPES.indexOf(entity.type) >= 0), now = Date.now();
-	const isNote = entity.type === Constant.TYPE_NOTE;
+	const isNote = entity.type === Constants.TYPE_NOTE;
 
 	if (entity.presence) entity.presenceTime = now;
 
