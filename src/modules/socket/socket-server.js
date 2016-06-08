@@ -56,6 +56,20 @@ function handleChange(socket, message, resourceId, err) {
 	}
 
 	if (message.response) {
+		if (message.changedQueries) {
+			for (const key in message.changedQueries) {
+				const oldKey = message.changedQueries[key];
+				if (message.response.indexes) {
+					message.response.indexes[oldKey] = message.response.indexes[key];
+					delete message.response.indexes[key];
+				}
+
+				if (message.response.knowledge) {
+					message.response.knowledge[oldKey] = message.response.knowledge[key];
+					delete message.response.knowledge[key];
+				}
+			}
+		}
 		if (message.auth && message.auth.user) {
 			bus.emit('presence/online', {
 				resource: resourceId,
@@ -99,7 +113,7 @@ bus.on('http/init', app => {
 			}
 
 			const message = frame.message;
-
+			message.version = frame.version;
 			if (typeof message !== 'object') {
 				sendError(socket, 'ERR_UNKNOWN', 'invalid');
 				return;

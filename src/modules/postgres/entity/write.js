@@ -12,6 +12,7 @@ export default function (entity) {
 	// TODO: add validation for type else this code crashes.
 	if (!entity) return [];
 	const isRel = (RELATION_TYPES.indexOf(entity.type) >= 0), now = Date.now();
+	const isNote = entity.type === Constants.TYPE_NOTE;
 
 	if (entity.presence) entity.presenceTime = now;
 
@@ -73,7 +74,7 @@ export default function (entity) {
 			}), ', '),
 			{
 				$: ') RETURNING &{id}::text as "id"',
-				id: isRel ? entity.user + '_' + entity.item : entity.id,
+				id: isRel ? entity.user + '_' + entity.item : (isNote ? entity.user + '_' + entity.event + '_' + entity.group :entity.id),
 			},
 		], ' ');
 	} else { // UPDATE
@@ -124,7 +125,7 @@ export default function (entity) {
 			}).filter(sql => sql), ', '),
 
 			'WHERE',
-			entity.id && !isRel ? {
+			entity.id && !isRel && !isNote? {
 				$: '"id" = &{id}',
 				id: entity.id,
 			} :
