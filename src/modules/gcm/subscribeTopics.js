@@ -238,10 +238,7 @@ function handleSubscription(changes, next) {
 	for (const i in changes.entities) {
 		const entity = changes.entities[i];
 
-		if (
-				entity.type === Constants.TYPE_THREADREL ||
-				entity.type === Constants.TYPE_ROOMREL
-			) {
+		if (entity.type === Constants.TYPE_ROOMREL) {
 			// console.log('ksdfhjhadf : ', entity);
 			mapRelsAndSubscriptions(entity);
 			if (!entity.createTime || entity.createTime !== entity.updateTime) {
