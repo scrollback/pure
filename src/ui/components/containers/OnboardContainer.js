@@ -4,18 +4,24 @@
 import React, { PropTypes, Component } from 'react';
 import isEmpty from 'lodash/isEmpty';
 import shallowCompare from 'react-addons-shallow-compare';
-import Connect from '../../../modules/store/Connect';
+import createContainer from '../../../modules/store/createContainer';
 import Onboard from '../views/Onboard/Onboard';
 import { validate } from '../../../lib/UserValidator';
 import uploadContacts from '../../../modules/contacts/uploadContacts';
-import { signIn, signUp, cancelSignUp, clearSignUpError, saveUser } from '../../../modules/store/actions';
+import {
+	signIn,
+	signUp,
+	cancelSignUp,
+	clearSignUpError,
+	saveUser,
+} from '../../../modules/store/actions';
 import { ERRORS } from '../../../lib/Constants';
 import type { User } from '../../../lib/schemaTypes';
+import { bus } from '../../../core-client';
 
 type Props = {
-	me: ?string;
-	user: User;
-	error?: { message: string; code: string };
+	user: ?string;
+	me: User;
 	pendingUser: {
 		signedIdentities: string;
 		params: {
@@ -24,6 +30,7 @@ type Props = {
 				name?: string;
 			};
 		};
+		error?: { message: string; code: string };
 	};
 	signIn: Function;
 	signUp: Function;
@@ -61,16 +68,16 @@ const FIELD_NAMES = {
 
 class OnboardContainer extends Component<void, Props, State> {
 	static propTypes = {
-		me: PropTypes.string,
-		user: PropTypes.shape({
+		user: PropTypes.string,
+		me: PropTypes.shape({
 			id: PropTypes.string,
-		}),
-		error: PropTypes.shape({
-			message: PropTypes.string,
-			code: PropTypes.string,
 		}),
 		pendingUser: PropTypes.shape({
 			params: PropTypes.object,
+			error: PropTypes.shape({
+				message: PropTypes.string,
+				code: PropTypes.string,
+			}),
 		}),
 		signIn: PropTypes.func.isRequired,
 		signUp: PropTypes.func.isRequired,
@@ -106,8 +113,7 @@ class OnboardContainer extends Component<void, Props, State> {
 
 	_setUserDetails: Function = (props: Props) => {
 		const {
-			user,
-			error,
+			me,
 			pendingUser,
 		} = props;
 
@@ -125,9 +131,9 @@ class OnboardContainer extends Component<void, Props, State> {
 
 				const places = {};
 
-				if (isEmpty(fields.places) && user.params && user.params.places) {
-					for (const type in user.params.places) {
-						const place = user.params.places[type];
+				if (isEmpty(fields.places) && me.params && me.params.places) {
+					for (const type in me.params.places) {
+						const place = me.params.places[type];
 
 						places[type] = {
 							placeId: place.id,
@@ -138,6 +144,8 @@ class OnboardContainer extends Component<void, Props, State> {
 				}
 
 				let message;
+
+				const { error } = pendingUser;
 
 				if (error) {
 					if (error.message) {
@@ -178,8 +186,8 @@ class OnboardContainer extends Component<void, Props, State> {
 				onboarding: true,
 			});
 		} else {
-			if (me && user && user.type !== 'loading') {
-				if (user.params && user.params.places) {
+			if (user && me && me.type !== 'loading') {
+				if (me.params && me.params.places) {
 					if (this.state.onboarding) {
 						this.setState({
 							page: PAGE_GET_STARTED,
@@ -281,7 +289,7 @@ class OnboardContainer extends Component<void, Props, State> {
 
 		if (type === 'nick' && !fields.nick.error) {
 			setTimeout(() => {
-				this.props.clearSignUpError();
+				this.props.clearSignUpError(this.props.pendingUser);
 			}, 0);
 		}
 	};
@@ -293,10 +301,10 @@ class OnboardContainer extends Component<void, Props, State> {
 
 		switch (page) {
 		case PAGE_USER_DETAILS:
-			this.props.signUp(fields.nick.value, fields.name.value);
+			this.props.signUp(fields.nick.value, fields.name.value, this.props.pendingUser);
 			break;
 		case PAGE_PLACES:
-			this.props.savePlaces(fields.places.value);
+			this.props.savePlaces(fields.places.value, this.props.me);
 			break;
 		case PAGE_GET_STARTED:
 			this._finishOnboarding(fields.invite.value);
@@ -344,14 +352,17 @@ class OnboardContainer extends Component<void, Props, State> {
 	}
 }
 
-const mapActionsToProps = {
-	clearSignUpError: (store, result) => () => store.put(clearSignUpError(result.pendingUser)),
-	signIn: (store) => (provider, auth) => store.put(signIn(provider, auth)),
-	cancelSignUp: (store) => () => store.put(cancelSignUp()),
-	signUp: (store, result) => (id: string, name: string) => {
-		const { error, ...user } = result.pendingUser; // eslint-disable-line no-unused-vars
+const mapDispatchToProps = dispatch => ({
+	clearSignUpError: pendingUser => dispatch(clearSignUpError(pendingUser)),
+	signIn: (provider, auth) => dispatch(signIn(provider, auth)),
+	cancelSignUp: () => {
+		bus.emit('signout');
+		dispatch(cancelSignUp());
+	},
+	signUp: (id: string, name: string, pendingUser) => {
+		const { error, ...user } = pendingUser; // eslint-disable-line no-unused-vars
 
-		store.put(signUp({
+		dispatch(signUp({
 			...user,
 			id,
 			name,
@@ -360,11 +371,7 @@ const mapActionsToProps = {
 			},
 		}));
 	},
-	savePlaces: (store, result) => results => {
-		const {
-			user,
-		} = result;
-
+	savePlaces: (results, user) => {
 		const params = user.params ? { ...user.params } : {};
 		const places = params.places ? { ...params.places } : {};
 
@@ -378,55 +385,39 @@ const mapActionsToProps = {
 			};
 		}
 
-		store.put(saveUser({
-			...result.user,
+		dispatch(saveUser({
+			...user,
 			params: {
 				...params,
 				places,
 			},
 		}));
 	},
-};
+});
 
-const mapSubscriptionToProps = {
-	pendingUser: {
-		key: {
-			type: 'state',
-			path: 'signup',
+const mapSubscriptionToProps = ({ user }) => {
+	const queries = {
+		pendingUser: {
+			key: {
+				type: 'state',
+				path: 'signup',
+			},
 		},
-	},
-	error: {
-		key: {
-			type: 'state',
-			path: 'signup',
-		},
-		transform: signup => signup ? signup.error : null,
-	},
-};
-
-export default class OnboardContainerOuter extends Component<void, { user: ?string }, void> {
-	static propTypes = {
-		user: PropTypes.string,
 	};
 
-	render() {
-		const { user } = this.props;
-
-		return (
-			<Connect
-				mapActionsToProps={mapActionsToProps}
-				mapSubscriptionToProps={typeof user === 'string' ? {
-					...mapSubscriptionToProps,
-					user: {
-						key: {
-							type: 'entity',
-							id: user,
-						},
-					},
-				} : mapSubscriptionToProps}
-				component={OnboardContainer}
-				passProps={{ me: this.props.user }}
-			/>
-		);
+	if (typeof user === 'string') {
+		return {
+			...queries,
+			me: {
+				key: {
+					type: 'entity',
+					id: user,
+				},
+			},
+		};
 	}
-}
+
+	return queries;
+};
+
+export default createContainer(mapSubscriptionToProps, mapDispatchToProps)(OnboardContainer);

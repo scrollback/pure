@@ -7,7 +7,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 const {
 	Animated,
 	View,
-	DeviceEventEmitter,
+	Keyboard,
 } = ReactNative;
 
 type Props = {
@@ -47,8 +47,8 @@ export default class KeyboardSpacer extends Component<Props, Props, State> {
 	_keyboardDidHideSubscription: { remove: Function };
 
 	_registerEvents: Function = () => {
-		this._keyboardDidShowSubscription = DeviceEventEmitter.addListener('keyboardDidShow', e => this._keyboardDidShow(e));
-		this._keyboardDidHideSubscription = DeviceEventEmitter.addListener('keyboardDidHide', e => this._keyboardDidHide(e));
+		this._keyboardDidShowSubscription = Keyboard.addListener('keyboardDidShow', e => this._keyboardDidShow(e));
+		this._keyboardDidHideSubscription = Keyboard.addListener('keyboardDidHide', e => this._keyboardDidHide(e));
 	};
 
 	_unRegisterEvents: Function = () => {

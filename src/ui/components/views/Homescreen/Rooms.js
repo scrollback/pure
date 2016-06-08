@@ -11,7 +11,7 @@ type Props = {
 
 export default class Rooms extends Component<void, Props, void> {
 	static propTypes = {
-		moderator: PropTypes.bool.isRequired,
+		moderator: PropTypes.bool,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
