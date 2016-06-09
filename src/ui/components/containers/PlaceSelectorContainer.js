@@ -1,15 +1,22 @@
 /* @flow */
 
+import flowRight from 'lodash/flowRight';
 import createContainer from '../../../modules/store/createContainer';
-import PlacesSelector from '../views/Account/PlacesSelector';
+import createUserContainer from '../../../modules/store/createUserContainer';
+import PlaceSelector from '../views/Account/PlaceSelector';
+import { addPlace } from '../../../modules/store/actions';
+
+const mapDispatchToProps = dispatch => ({
+	addPlace: (user, type, place) => dispatch(addPlace(user, type, place)),
+});
 
 const mapSubscriptionToProps = {
-	location: {
-		key: {
-			type: 'state',
-			path: 'location',
-		},
+	data: {
+		key: 'me',
 	},
 };
 
-export default createContainer(mapSubscriptionToProps)(PlacesSelector);
+export default flowRight(
+	createUserContainer(),
+	createContainer(mapSubscriptionToProps, mapDispatchToProps),
+)(PlaceSelector);

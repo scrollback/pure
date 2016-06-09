@@ -17,6 +17,7 @@ import ProfileContainer from './components/containers/ProfileContainer';
 import OnboardContainer from './components/containers/OnboardContainer';
 import StartDiscussionContainer from './components/containers/StartDiscussionContainer';
 import MyPlacesContainer from './components/containers/MyPlacesContainer';
+import PlaceSelectorContainer from './components/containers/PlaceSelectorContainer';
 import { config } from '../core-client';
 
 export type RouteDescription = {
@@ -62,6 +63,12 @@ export default function(route: Route): RouteDescription {
 		return {
 			title: 'My places',
 			component: MyPlacesContainer,
+		};
+	case 'addplace':
+		return {
+			title: 'Add place',
+			component: PlaceSelectorContainer,
+			appbar: false,
 		};
 	case 'details':
 		return {

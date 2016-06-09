@@ -3,8 +3,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import PlacesSelectorTip from '../Account/PlacesSelectorTip';
-import PlacesSelectorContainer from '../../containers/PlaceSelectorContainer';
+import PlaceSelectorTip from '../Account/PlaceSelectorTip';
+import PlaceSearchContainer from '../../containers/PlaceSearchContainer';
 import LocationListener from '../../../modules/LocationListener';
 
 type Props = {
@@ -36,11 +36,11 @@ export default class PlacesDetails extends Component<void, Props, void> {
 		setTimeout(() => this.props.submitPlaceDetails(), 100);
 	};
 
-	_renderBlankslate: Function = () => <PlacesSelectorTip type='home' />;
+	_renderBlankslate: Function = () => <PlaceSelectorTip type='home' />;
 
 	render() {
 		return (
-			<PlacesSelectorContainer
+			<PlaceSearchContainer
 				renderBlankslate={this._renderBlankslate}
 				onSelectPlace={this._handleSelectPlace}
 				searchHint='Search for your apartment'

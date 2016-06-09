@@ -3,11 +3,8 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import PlacesSelectorContainer from '../../containers/PlaceSelectorContainer';
 import PlaceItem from './PlaceItem';
 import PlaceButton from './PlaceButton';
-import PlacesSelectorTip from './PlacesSelectorTip';
-import Modal from '../Core/Modal';
 
 const {
 	View,
@@ -38,8 +35,8 @@ const TYPES = [
 ];
 
 type Props = {
-	onPlaceAdded: Function;
-	onPlaceRemoved: Function;
+	onNavigate: Function;
+	removePlace: Function;
 	places: {
 		[key: string]: {
 			id: string;
@@ -50,69 +47,32 @@ type Props = {
 	user: string;
 }
 
-type State = {
-	currentType: ?'home' | 'work' | 'hometown';
-}
-
-export default class PlaceManager extends Component<void, Props, State> {
+export default class PlaceManager extends Component<void, Props, void> {
 	static propTypes = {
-		onPlaceAdded: PropTypes.func.isRequired,
-		onPlaceRemoved: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
+		removePlace: PropTypes.func.isRequired,
 		places: PropTypes.objectOf(PropTypes.object).isRequired,
 		user: PropTypes.string.isRequired,
 	};
 
-	state: State = {
-		currentType: null,
-	};
-
-	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleRequestClose: Function = () => {
-		this.setState({
-			currentType: null,
+	_handleRemoveLocality = (type: string) => {
+		this.props.removePlace(this.props.user, type, this.props.places[type]);
+	};
+
+	_handlePress = (type: string) => {
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'addplace',
+				props: {
+					type,
+				},
+			},
 		});
-	};
-
-	_handleSelectItem: Function = (place) => {
-		this.props.onPlaceAdded(this.props.user, this.state.currentType, {
-			id: place.placeId,
-			title: place.primaryText || '',
-			description: place.secondaryText || '',
-		});
-		this._handleRequestClose();
-	};
-
-	_handleRemoveLocality: Function = (type: string) => {
-		this.props.onPlaceRemoved(this.props.user, type, this.props.places[type]);
-	};
-
-	_handlePress: Function = currentType => {
-		this.setState({
-			currentType,
-		});
-	};
-
-	_renderBlankSlate: Function = () => {
-		const type = this.state.currentType;
-
-		if (type) {
-			return <PlacesSelectorTip type={type} />;
-		}
-
-		return null;
-	};
-
-	_getSearchHint: Function = () => {
-		const types = TYPES.filter(c => c.type === this.state.currentType);
-
-		if (types && types.length) {
-			return types[0].search;
-		}
-
-		return null;
 	};
 
 	render() {
@@ -142,19 +102,6 @@ export default class PlaceManager extends Component<void, Props, State> {
 						/>
 					);
 				})}
-
-				<Modal
-					visible={!!this.state.currentType}
-					animationType='fade'
-					onRequestClose={this._handleRequestClose}
-				>
-					<PlacesSelectorContainer
-						onCancel={this._handleRequestClose}
-						onSelectPlace={this._handleSelectItem}
-						renderBlankslate={this._renderBlankSlate}
-						searchHint={this._getSearchHint()}
-					/>
-				</Modal>
 			</View>
 		);
 	}

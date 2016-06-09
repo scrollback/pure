@@ -27,16 +27,18 @@ const styles = StyleSheet.create({
 
 type Props = {
 	places: Object;
-	addPlace: Function;
+	onNavigate: Function;
 	removePlace: Function;
+	user: string;
 	style?: any;
 }
 
 export default class MyPlaces extends Component<void, Props, void> {
 	static propTypes = {
 		places: PropTypes.object,
-		addPlace: PropTypes.func.isRequired,
+		onNavigate: PropTypes.func.isRequired,
 		removePlace: PropTypes.func.isRequired,
+		user: PropTypes.string.isRequired,
 		style: View.propTypes.style,
 	};
 
@@ -51,12 +53,15 @@ export default class MyPlaces extends Component<void, Props, void> {
 	render() {
 		if (this.props.places) {
 			return (
-				<PlaceManager
-					{...this.props}
-					onPlaceAdded={this.props.addPlace}
-					onPlaceRemoved={this.props.removePlace}
-					style={[ styles.container, this.props.style ]}
-				/>
+				<View {...this.props}>
+					<PlaceManager
+						user={this.props.user}
+						places={this.props.places}
+						onNavigate={this.props.onNavigate}
+						removePlace={this.props.removePlace}
+						style={styles.container}
+					/>
+				</View>
 			);
 		}
 

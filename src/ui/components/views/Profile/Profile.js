@@ -177,7 +177,7 @@ export default class Profile extends Component<void, Props, void> {
 		});
 	};
 
-	_goToAccount: Function = () => {
+	_goToAccount = () => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
@@ -186,11 +186,14 @@ export default class Profile extends Component<void, Props, void> {
 		});
 	};
 
-	_goToPlaces: Function = () => {
+	_goToPlaces = (type: string) => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
-				name: 'places',
+				name: 'addplace',
+				props: {
+					type,
+				},
 			},
 		});
 	};
@@ -281,7 +284,7 @@ export default class Profile extends Component<void, Props, void> {
 									}
 									header={PLACE_HEADERS[type]}
 									value={names ? names[0] : null}
-									onEdit={this._goToPlaces}
+									onEdit={() => this._goToPlaces(PLACE_HEADERS[type])}
 								/>
 							);
 						})}

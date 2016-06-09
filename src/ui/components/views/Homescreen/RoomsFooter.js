@@ -54,6 +54,7 @@ type Props = {
 type State = {
 	button: {
 		icon: string;
+		type: 'home' | 'work' | 'hometown' | null;
 		label: string;
 	}
 }
@@ -69,6 +70,7 @@ const PLACE_LABELS = {
 
 const DEFAULT_BUTTON = {
 	icon: 'my-location',
+	type: null,
 	label: PLACE_LABELS.default.toUpperCase(),
 	highlight: false,
 };
@@ -99,7 +101,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getPlaceLabel: Function = ({ places }: Props) => {
+	_getPlaceLabel = ({ places }: Props) => {
 		for (let i = 0, l = PLACE_TYPES.length; i < l; i++) {
 			const place = PLACE_TYPES[i];
 
@@ -109,6 +111,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 
 			return {
 				icon: 'add-circle',
+				type: place,
 				label: PLACE_LABELS[place].toUpperCase(),
 				highlight: true,
 			};
@@ -117,16 +120,30 @@ export default class RoomsFooter extends Component<void, Props, State> {
 		return DEFAULT_BUTTON;
 	};
 
-	_handleManagePlaces: Function = () => {
-		this.props.onNavigate({
-			type: 'push',
-			payload: {
-				name: 'places',
-			},
-		});
+	_handleAddPlace = () => {
+		const { button } = this.state;
+
+		if (button.type) {
+			this.props.onNavigate({
+				type: 'push',
+				payload: {
+					name: 'addplace',
+					props: {
+						type: button.type,
+					},
+				},
+			});
+		} else {
+			this.props.onNavigate({
+				type: 'push',
+				payload: {
+					name: 'places',
+				},
+			});
+		}
 	};
 
-	_handleGoToAccount: Function = () => {
+	_handleGoToAccount = () => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
@@ -135,7 +152,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 		});
 	};
 
-	_handleReportIssue: Function = () => {
+	_handleReportIssue = () => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
@@ -155,7 +172,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 		return (
 			<View style={styles.footer}>
 				<View style={styles.footerInner}>
-					<ListItem containerStyle={styles.footerItem} onPress={this._handleManagePlaces}>
+					<ListItem containerStyle={styles.footerItem} onPress={this._handleAddPlace}>
 						<Icon
 							style={[ styles.footerIcon, button.highlight ? styles.highlightLabel : null ]}
 							name={button.icon}

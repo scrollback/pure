@@ -75,7 +75,7 @@ const TYPES = {
 	},
 };
 
-export default class PlacesSelectorTip extends Component<void, Props, void> {
+export default class PlaceSelectorTip extends Component<void, Props, void> {
 	static propTypes = {
 		type: PropTypes.oneOf([ 'home', 'work', 'hometown' ]).isRequired,
 		style: View.propTypes.style,

@@ -38,7 +38,7 @@ type Props = {
 	searchHint: string;
 }
 
-export default class PlacesSelector extends Component<void, Props, void> {
+export default class PlaceSearch extends Component<void, Props, void> {
 	static propTypes = {
 		location: PropTypes.shape({
 			latitude: PropTypes.number,
