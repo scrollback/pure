@@ -1,7 +1,7 @@
 /* @flow */
 
-import React, { Component, PropTypes, Children } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import React, { Component, PropTypes } from 'react';
+import { Animated, View, StyleSheet } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ModalHost from './ModalHost';
 
@@ -50,27 +50,24 @@ export default class Modal extends Component<void, Props, State> {
 		this._updateChild(this.props);
 	}
 
-	_handle: ?{ remove: Function; } = null;
-
-	_fadeIn: Function = (cb: Function) => {
-		Animated.timing(this.state.fadeAnim, {
-			toValue: 1,
-			duration: this.props.animationType === 'fade' ? 300 : 0,
-		}).start(cb);
+	_spring = (anim: Animated.Value, toValue: number) => {
+		return new Promise(resolve => {
+			Animated.spring(anim, {
+				toValue,
+			}).start(resolve);
+		});
 	};
 
-	_fadeOut: Function = (cb: Function) => {
-		Animated.timing(this.state.fadeAnim, {
-			toValue: 0,
-			duration: this.props.animationType === 'fade' ? 300 : 0,
-		}).start(cb);
+	_fadeIn = () => {
+		return this._spring(this.state.fadeAnim, 1);
 	};
 
-	_updateChild: Function = (props, cb) => {
-		if (this._handle) {
-			this._handle.remove();
-			this._handle = null;
-		}
+	_fadeOut = () => {
+		return this._spring(this.state.fadeAnim, 0);
+	};
+
+	_updateChild = async (props: Props) => {
+		await ModalHost.removeModal(this);
 
 		const {
 			visible,
@@ -79,40 +76,56 @@ export default class Modal extends Component<void, Props, State> {
 
 		if (visible) {
 			const element = this._getChild(props);
-			this._handle = ModalHost.render({
+			await ModalHost.renderModal(this, {
 				element,
 				onRequestClose,
-			}, cb);
+			});
 		}
 	};
 
-	_renderChild: Function = (props) => {
-		const { visible } = props;
+	_renderChild = async (props: Props) => {
+		const { visible, animationType } = props;
 
 		if (visible) {
-			this._updateChild(props, () => {
-				this._fadeIn();
-			});
+			await this._updateChild(props);
+			switch (animationType) {
+			case 'fade':
+				await this._fadeIn();
+				break;
+			}
 		} else {
-			if (this._handle) {
-				this._fadeOut(() => {
-					this._updateChild(props);
-				});
+			if (ModalHost.isModalRendered(this)) {
+				switch (animationType) {
+				case 'fade':
+					await this._fadeOut();
+					await this._updateChild(props);
+					break;
+				default:
+					await this._updateChild(props);
+				}
 			}
 		}
 	};
 
-	_getChild: Function = ({ children }) => {
-		return (
-			<Animated.View
-				style={[
-					styles.container,
-					{ opacity: this.state.fadeAnim },
-				]}
-			>
-				{Children.only(children)}
-			</Animated.View>
-		);
+	_getChild = ({ children, animationType, visible }: Props) => {
+		switch (animationType) {
+		case 'fade':
+			return (
+				<Animated.View style={[ styles.container, { opacity: this.state.fadeAnim } ]}>
+					{children}
+				</Animated.View>
+			);
+		default:
+			if (visible) {
+				return (
+					<View style={styles.container}>
+						{children}
+					</View>
+				);
+			} else {
+				return null;
+			}
+		}
 	};
 
 	render() {

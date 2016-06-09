@@ -11,7 +11,6 @@ const {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		position: 'absolute',
 		top: 0,
 		left: 0,
@@ -21,29 +20,53 @@ const styles = StyleSheet.create({
 });
 
 type Options = {
-	element: React.Element;
+	element: ?React.Element;
 	onRequestClose: Function;
 }
 
 type State = {
-	stack: Array<Options>;
+	stack: Array<{
+		instance: React.Component;
+		options: Options;
+	}>;
 }
 
 export default class ModalHost extends Component<void, any, State> {
-	static render(options: Options, callback: Function) {
-		if (ModalHost._pushChild) {
-			ModalHost._pushChild(options, callback);
+	static renderModal(instance: React.Component, options: Options): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (ModalHost._pushChild) {
+				ModalHost._pushChild(instance, options, resolve);
+			} else {
+				reject();
+			}
+		});
+	}
 
-			return {
-				remove: (cb) => {
-					if (ModalHost._removeChild) {
-						ModalHost._removeChild(options, cb);
-					}
-				},
-			};
+	static removeModal(instance: React.Component): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (ModalHost._removeChild) {
+				ModalHost._removeChild(instance, resolve);
+			} else {
+				reject();
+			}
+		});
+	}
+
+	static isModalRendered(instance: React.Component): boolean {
+		if (ModalHost._isChildRendered) {
+			return ModalHost._isChildRendered(instance);
 		}
+		return false;
+	}
 
-		return null;
+	static remove(instance: React.Component): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (ModalHost._removeChild) {
+				ModalHost._removeChild(instance, resolve);
+			} else {
+				reject();
+			}
+		});
 	}
 
 	static requestClose() {
@@ -62,6 +85,7 @@ export default class ModalHost extends Component<void, any, State> {
 
 	static _pushChild: ?Function;
 	static _removeChild: ?Function;
+	static _isChildRendered: ?Function;
 	static _requestClose: ?Function;
 	static _isOpen: ?Function;
 
@@ -72,6 +96,7 @@ export default class ModalHost extends Component<void, any, State> {
 	componentDidMount() {
 		ModalHost._pushChild = this._pushChild;
 		ModalHost._removeChild = this._removeChild;
+		ModalHost._isChildRendered = this._isChildRendered;
 		ModalHost._requestClose = this._requestClose;
 		ModalHost._isOpen = this._isOpen;
 	}
@@ -83,40 +108,42 @@ export default class ModalHost extends Component<void, any, State> {
 	componentWillUnmount() {
 		ModalHost._pushChild = null;
 		ModalHost._removeChild = null;
+		ModalHost._isChildRendered = null;
 		ModalHost._requestClose = null;
 		ModalHost._isOpen = null;
 	}
 
-	_pushChild: Function = (options, cb) => {
+	_pushChild = (instance: React.Component, options: Options, cb: Function) => {
 		this.setState({
-			stack: [ ...this.state.stack, options ],
+			stack: [ ...this.state.stack, { instance, options } ],
 		}, cb);
 	};
 
-	_removeChild: Function = (options, cb) => {
-		const { stack } = this.state;
-		const newstack = [];
+	_removeChild = (instance: React.Component, cb: Function) => {
+		this.setState({
+			stack: this.state.stack.filter(op => op.instance !== instance),
+		}, cb);
+	};
 
-		for (const op of stack) {
-			if (op !== options) {
-				newstack.push(op);
+	_isChildRendered = (instance: React.Component) => {
+		const { stack } = this.state;
+		for (let i = 0, l = stack.length; i < l; i++) {
+			if (stack[i].instance === instance) {
+				return true;
 			}
 		}
-
-		this.setState({
-			stack: newstack,
-		}, cb);
+		return false;
 	};
 
-	_requestClose: Function = () => {
+	_requestClose = () => {
 		const { stack } = this.state;
 
 		if (stack.length) {
-			stack[stack.length - 1].onRequestClose();
+			stack[stack.length - 1].options.onRequestClose();
 		}
 	};
 
-	_isOpen: Function = () => {
+	_isOpen = () => {
 		return this.state.stack.length > 0;
 	};
 
@@ -129,7 +156,7 @@ export default class ModalHost extends Component<void, any, State> {
 
 		return (
 			<View style={styles.container}>
-				{stack[stack.length - 1].element}
+				{stack[stack.length - 1].options.element}
 			</View>
 		);
 	}
