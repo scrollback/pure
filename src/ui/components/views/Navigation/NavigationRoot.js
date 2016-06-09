@@ -3,7 +3,6 @@
 import { Component, PropTypes } from 'react';
 import { AsyncStorage } from 'react-native';
 import type { NavigationState, NavigationAction } from '../../../../lib/RouteTypes';
-import { v4 } from 'node-uuid';
 
 type Props = {
 	persistenceKey: ?string;
@@ -31,7 +30,7 @@ export default class NavigationRoot extends Component<void, Props, State> {
 			navigation: {
 				index,
 				key: 'root',
-				routes: routes.map(route => ({ key: v4(), ...route })),
+				routes: routes.map(route => ({ key: Date.now().toString(), ...route })),
 			},
 		};
 	}
@@ -114,7 +113,7 @@ export default class NavigationRoot extends Component<void, Props, State> {
 	_handleNavigate = ({ type, payload }: NavigationAction) => {
 		const nextNavigationState = this._reduceState(this.state.navigation, {
 			type,
-			payload: { key: v4(), ...payload },
+			payload: { key: Date.now().toString(), ...payload },
 		});
 
 		this.setState({
