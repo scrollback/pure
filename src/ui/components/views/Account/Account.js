@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
 
 type Props = {
 	user: { type: 'loading' } | User | null;
-	saveUser: () => void;
-	signOut: () => void;
-	onNavigate: () => void;
+	saveUser: Function;
+	signOut: Function;
+	onNavigate: Function;
 }
 
 type State = {
@@ -124,9 +124,18 @@ export default class Account extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_saveUser: Function = debounce(user => this.props.saveUser(user), 1000);
+	_handleManagePlaces = () => {
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'places',
+			},
+		});
+	}
 
-	_updateGCMValue: Function = async (): Promise<void> => {
+	_saveUser = debounce(user => this.props.saveUser(user), 1000);
+
+	_updateGCMValue = async (): Promise<void> => {
 		let value = true;
 
 		try {
@@ -140,7 +149,7 @@ export default class Account extends Component<void, Props, State> {
 		});
 	};
 
-	_handleMetaItemChange: Function = (key: string, value: string) => {
+	_handleMetaItemChange = (key: string, value: string) => {
 		const {
 			user,
 		} = this.props;
@@ -152,19 +161,19 @@ export default class Account extends Component<void, Props, State> {
 		this._saveUser({ ...this.props.user, meta });
 	};
 
-	_handleStatusChange: Function = (description: string) => {
+	_handleStatusChange = (description: string) => {
 		this._handleMetaItemChange('description', description);
 	};
 
-	_handleOccupationChange: Function = (occupation: string) => {
+	_handleOccupationChange = (occupation: string) => {
 		this._handleMetaItemChange('occupation', occupation);
 	};
 
-	_handleNameChange: Function = (name: string) => {
+	_handleNameChange = (name: string) => {
 		this._saveUser({ ...this.props.user, name });
 	};
 
-	_handleGCMChange: Function = (value: boolean) => {
+	_handleGCMChange = (value: boolean) => {
 		GCMPreferences.setPreference(PUSH_NOTIFICATION_ENABLED_KEY, value ? 'true' : 'false');
 
 		this.setState({
@@ -172,7 +181,7 @@ export default class Account extends Component<void, Props, State> {
 		});
 	};
 
-	_handleEmailNotificationChange: Function = (value: string) => {
+	_handleEmailNotificationChange = (value: string) => {
 		const {
 			user,
 		} = this.props;
@@ -185,7 +194,7 @@ export default class Account extends Component<void, Props, State> {
 		this.props.saveUser({ ...user, params: { ...params, email } });
 	};
 
-	_handleEmailFrequencyChange: Function = (value: string) => {
+	_handleEmailFrequencyChange = (value: string) => {
 		const {
 			user,
 		} = this.props;
@@ -198,23 +207,23 @@ export default class Account extends Component<void, Props, State> {
 		this.props.saveUser({ ...user, params: { ...params, email } });
 	};
 
-	_getSelectFrequencyHandler: Function = value => {
+	_getSelectFrequencyHandler = (value: string) => {
 		return () => this._handleEmailFrequencyChange(value);
 	};
 
-	_handleShowFrequencySheet: Function = () => {
+	_handleShowFrequencySheet = () => {
 		this.setState({
 			frequencySheetVisible: true,
 		});
 	};
 
-	_handleRequestCloseFrequencySheet: Function = () => {
+	_handleRequestCloseFrequencySheet = () => {
 		this.setState({
 			frequencySheetVisible: false,
 		});
 	};
 
-	_handleSignOut: Function = () => {
+	_handleSignOut = () => {
 		this.props.signOut();
 	};
 
@@ -329,6 +338,16 @@ export default class Account extends Component<void, Props, State> {
 									Never
 								</ActionSheetItem>
 							</ActionSheet>
+						</View>
+					</TouchFeedback>
+				</View>
+				<View style={styles.section}>
+					<AppText style={styles.header}>Places</AppText>
+					<TouchFeedback onPress={this._handleManagePlaces}>
+						<View style={styles.item}>
+							<View style={styles.itemLabel}>
+								<AppText style={styles.itemText}>Add or remove places</AppText>
+							</View>
 						</View>
 					</TouchFeedback>
 				</View>
