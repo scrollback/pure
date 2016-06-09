@@ -17,18 +17,13 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.white,
 		borderColor: Colors.separator,
 		borderWidth: 1 / PixelRatio.get(),
-		height: 36,
-		width: 36,
-		borderRadius: 18,
+		height: 32,
+		width: 32,
+		borderRadius: 16,
 		alignItems: 'center',
 		justifyContent: 'center',
 		margin: 24,
 		elevation: 1,
-	},
-
-	loading: {
-		height: 24,
-		width: 24,
 	},
 });
 
@@ -48,7 +43,7 @@ export default class LoadingFancy extends Component<void, Props, void> {
 	render() {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
-				<Loading style={styles.loading} />
+				<Loading size='small' style={styles.loading} />
 			</View>
 		);
 	}

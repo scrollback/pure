@@ -18,11 +18,13 @@ const styles = StyleSheet.create({
 		position: 'absolute',
 		right: 0,
 		bottom: 0,
-		padding: 8,
 	},
 
 	thumbnailContainer: {
 		elevation: 4,
+		margin: 8,
+		borderWidth: StyleSheet.hairlineWidth,
+		borderColor: Colors.separator,
 	},
 
 	thumbnailStyle: {

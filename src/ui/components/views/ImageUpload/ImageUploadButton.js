@@ -51,10 +51,8 @@ const styles = StyleSheet.create({
 
 	loading: {
 		position: 'absolute',
-		left: 2,
-		top: 2,
-		height: 52,
-		width: 52,
+		left: 10,
+		top: 10,
 	},
 });
 
@@ -127,7 +125,14 @@ export default class ImageUploadButton extends Component<void, Props, void> {
 						size={24}
 					/>
 
-					{this.props.status === 'loading' ? <Loading style={styles.loading} /> : null}
+					{this.props.status === 'loading' ?
+						<Loading
+							size='large'
+							color={Colors.white}
+							style={styles.loading}
+						/> : null
+					}
+
 				</View>
 			</TouchableHighlight>
 		);

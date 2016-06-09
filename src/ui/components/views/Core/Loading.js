@@ -27,11 +27,20 @@ const dash = Radium.keyframes({
 
 const styles = {
 	spinner: {
-		height: 24,
-		width: 24,
 		animation: `x ${duration} linear infinite`,
 		animationName: rotator,
 	},
+
+	small: {
+		height: 20,
+		width: 20,
+	},
+
+	large: {
+		height: 36,
+		width: 36,
+	},
+
 	path: {
 		stroke: Colors.accent,
 		strokeDasharray: offset,
@@ -43,14 +52,16 @@ const styles = {
 };
 
 type Props = {
-	style?: any;
 	color?: string;
+	size?: 'small' | 'large';
+	style?: any;
 }
 
 class Loading extends Component<void, Props, void> {
 	static propTypes = {
-		style: PropTypes.any,
 		color: PropTypes.string,
+		size: PropTypes.oneOf([ 'small', 'large' ]),
+		style: PropTypes.any,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
