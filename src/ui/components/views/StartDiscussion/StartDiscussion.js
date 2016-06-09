@@ -92,10 +92,12 @@ const styles = StyleSheet.create({
 		fontWeight: 'bold',
 		textAlign: 'center',
 	},
+	socialItemContainer: {
+		margin: 12,
+	},
 	socialItem: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		margin: 12,
 	},
 	socialIconContainer: {
 		height: 28,
@@ -511,7 +513,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 						/>
 					}
 
-					<TouchableOpacity onPress={this._handleSharePress}>
+					<TouchableOpacity style={styles.socialItemContainer} onPress={this._handleSharePress}>
 						<View style={styles.socialItem}>
 							<View style={[ styles.socialIconContainer, this.state.shareOnFacebook ? styles.socialIconContainerSelected : null ]}>
 								<EvilIcons name='sc-facebook' style={styles.socialIcon} />
