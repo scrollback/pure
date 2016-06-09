@@ -1,13 +1,9 @@
 /* @flow */
 
 import { Component, PropTypes } from 'react';
-import { NavigationExperimental, AsyncStorage } from 'react-native';
+import { AsyncStorage } from 'react-native';
 import type { NavigationState, NavigationAction } from '../../../../lib/RouteTypes';
 import { v4 } from 'node-uuid';
-
-const {
-	StateUtils: NavigationStateUtils,
-} = NavigationExperimental;
 
 type Props = {
 	persistenceKey: ?string;
@@ -82,17 +78,34 @@ export default class NavigationRoot extends Component<void, Props, State> {
 	};
 
 	_reduceState = (currentState: NavigationState, { type, payload }: NavigationAction) => {
+		const {
+			index,
+			routes,
+		} = currentState;
+
 		switch (type) {
 		case 'push':
 			if (payload) {
-				return NavigationStateUtils.push(currentState, payload);
+				return {
+					...currentState,
+					routes: [
+						...routes,
+						payload,
+					],
+					index: index + 1,
+				};
 			}
 			return currentState;
 		case 'pop':
 		case 'back':
-			return currentState.index > 0 ?
-				NavigationStateUtils.pop(currentState) :
-				currentState;
+			if (index > 0 && routes.length > 1) {
+				return {
+					...currentState,
+					routes: routes.slice(0, routes.length - 1),
+					index: index - 1,
+				};
+			}
+			return currentState;
 		default:
 			return currentState;
 		}
