@@ -129,6 +129,16 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 	render() {
 		const liked = this._isLiked();
 
+		let count;
+
+		if (this.state.likes) {
+			count = this.state.likes;
+		} else if (liked) {
+			count = 1;
+		} else {
+			count = 0;
+		}
+
 		return (
 			<TouchableOpacity {...this.props} onPress={this._handleLike}>
 				<Icon
@@ -137,7 +147,7 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 					size={24}
 				/>
 				<AppText style={[ styles.likeCount, liked ? styles.liked : null ]}>
-					{this.state.likes ? this.state.likes : ''}
+					{count ? count : ''}
 				</AppText>
 			</TouchableOpacity>
 		);

@@ -160,10 +160,20 @@ export default class DiscussionActions extends Component<void, Props, State> {
 
 		const liked = this._isLiked();
 
+		let likeCount;
+
+		if (this.state.likes) {
+			likeCount = this.state.likes;
+		} else if (liked) {
+			likeCount = 1;
+		} else {
+			likeCount = 0;
+		}
+
 		return (
 			<View {...this.props} style={[ styles.actions, this.props.style ]}>
 				<DiscussionActionItem
-					label={`Like ${this.state.likes ? '(' + this.state.likes + ')' : ''}`}
+					label={`Like ${likeCount ? '(' + likeCount + ')' : ''}`}
 					icon={liked ? 'favorite' : 'favorite-border'}
 					onPress={this._handleLike}
 					iconStyle={liked ? styles.liked : null}
