@@ -53,7 +53,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 			}
 
 			componentWillReceiveProps(nextProps: any) {
-				if (this._mapSubscriptionToProps === 'function') {
+				if (typeof this._mapSubscriptionToProps === 'function') {
 					const nextSubscriptionPropsMap = this._mapSubscriptionToProps(nextProps);
 
 					if (this._currentSubscriptionPropsMap !== nextSubscriptionPropsMap) {

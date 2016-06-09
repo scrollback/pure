@@ -79,7 +79,7 @@ export default function(sliceFromProps: SliceFromProps, pageSize: number) {
 				const { before } = this.state;
 
 				this.setState({
-					before: before && before > (count + (pageSize / 2)) ? before : count + pageSize,
+					before: before && before > count + 1 ? before : count + pageSize,
 				});
 			};
 

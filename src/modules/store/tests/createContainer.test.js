@@ -1,5 +1,5 @@
 import test from 'ava';
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { mount } from 'enzyme';
 import SimpleStore from '../SimpleStore';
@@ -27,6 +27,58 @@ test('should render component with no data', t => {
 	);
 
 	t.is(wrapper.text(), 'Hey!');
+});
+
+test('should renew subscription when props change', t => {
+	t.plan(4);
+
+	let i = 0;
+
+	const NameComponent = ({ name }) => {
+		if (i === 0) {
+			i++;
+			t.is(name, 'jane');
+		} else {
+			t.is(name, 30);
+		}
+		return null;
+	};
+	const store = new SimpleStore({
+		watch: (options, cb) => {
+			if (i === 0) {
+				t.is(options.type, 'name');
+				cb('jane');
+			} else {
+				t.is(options.type, 'age');
+				cb(30);
+			}
+		},
+		put: () => null,
+	});
+
+	const Container = createContainer(({ type }) => ({
+		name: type,
+	}))(NameComponent);
+
+	class MyComponent extends Component {
+		state = { type: 'name' };
+
+		componentDidMount() {
+			this.setState({ // eslint-disable-line react/no-did-mount-set-state
+				type: 'age',
+			});
+		}
+
+		render() {
+			return (
+				<Provider store={store}>
+					<Container type={this.state.type} />
+				</Provider>
+			);
+		}
+	}
+
+	mount(<MyComponent />);
 });
 
 test('should not render connected component without data', t => {
