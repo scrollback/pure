@@ -8,6 +8,18 @@ import promisify from '../../lib/promisify';
 
 const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
+function getItemFromFilter(filter) {
+	if (filter) {
+		if (filter.thread && filter.thread.parents_cts) {
+			return filter.thread.parents_cts[0];
+		} else if (filter.text && filter.text.parents_cts) {
+			return filter.text.parents_cts[0];
+		}
+	}
+
+	return null;
+}
+
 async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offline') {
 	let type;
 
@@ -20,9 +32,9 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 	}
 
 	const user = cache.getState('user');
+	const item = getItemFromFilter(slice.filter);
 
-	if (slice.filter && slice.filter.parents_cts) {
-		const item = slice.filter.parents_cts[0];
+	if (item) {
 		const result = await getEntityAsync(`${user}_${item}`);
 
 		global.requestIdleCallback(() => {
