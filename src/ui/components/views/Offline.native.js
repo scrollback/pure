@@ -16,18 +16,18 @@ const {
 const styles = StyleSheet.create({
 	container: {
 		padding: 16,
-		backgroundColor: Colors.primary,
+		backgroundColor: Colors.white,
 	},
 	image: {
 		marginHorizontal: 16,
 		marginVertical: 48,
 	},
 	header: {
-		color: Colors.white,
+		color: Colors.darkGrey,
 		fontSize: 20,
 	},
 	footer: {
-		color: Colors.white,
+		color: Colors.darkGrey,
 	},
 });
 
@@ -47,9 +47,9 @@ export default class Offline extends Component<void, Props, void> {
 	render() {
 		return (
 			<Page {...this.props} style={[ styles.container, this.props.style ]}>
-				<StatusBar backgroundColor={Colors.primaryDark} />
+				<StatusBar backgroundColor={Colors.grey} />
 				<AppText style={styles.header}>Network unavailable!</AppText>
-				<Image style={styles.image} source={require('../../../../assets/astronaut.png')} />
+				<Image style={styles.image} source={require('../../../../assets/offline-balloon.png')} />
 				<AppText style={styles.footer}>Waiting for connection…</AppText>
 			</Page>
 		);

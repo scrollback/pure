@@ -9,7 +9,7 @@ import Page from './Page/Page';
 const styles = {
 	container: {
 		padding: 16,
-		backgroundColor: Colors.primary,
+		backgroundColor: Colors.white,
 	},
 	image: {
 		marginLeft: 16,
@@ -18,11 +18,11 @@ const styles = {
 		marginBottom: 48,
 	},
 	header: {
-		color: Colors.white,
+		color: Colors.darkGrey,
 		fontSize: 20,
 	},
 	footer: {
-		color: Colors.white,
+		color: Colors.darkGrey,
 	},
 };
 
@@ -43,7 +43,7 @@ class Offline extends Component<void, Props, void> {
 		return (
 			<Page {...this.props} style={[ styles.container, this.props.style ]}>
 				<div style={styles.header}>Network unavailable!</div>
-				<img style={styles.image} src={require('../../../../assets/astronaut.png')} />
+				<img style={styles.image} src={require('../../../../assets/offline-balloon.png')} />
 				<div style={styles.footer}>Waiting for connection…</div>
 			</Page>
 		);

@@ -30,14 +30,14 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		margin: 8,
+		margin: 16,
 	},
 
 	title: {
 		color: Colors.darkGrey,
 		fontWeight: 'bold',
 		fontSize: 16,
-		margin: 8,
+		margin: 16,
 		textAlign: 'center',
 	},
 
@@ -58,19 +58,19 @@ const TYPES = {
 		title: 'Where do you live?',
 		summary: 'Type and pick your apartment, street or neighborhood.',
 		icon: 'location-city',
-		image: require('../../../../../assets/house-and-tree.png'), // eslint-disable-line import/no-commonjs
+		image: require('../../../../../assets/place-home.png'), // eslint-disable-line import/no-commonjs
 	},
 	work: {
 		title: 'Where do you work or study?',
 		summary: 'Type and pick your office or college.',
 		icon: 'work',
-		image: require('../../../../../assets/office-building.png'), // eslint-disable-line import/no-commonjs
+		image: require('../../../../../assets/place-office.png'), // eslint-disable-line import/no-commonjs
 	},
 	hometown: {
 		title: 'Where are you from?',
 		summary: 'Type and pick your hometown.',
 		icon: 'home',
-		image: require('../../../../../assets/village-house.png'), // eslint-disable-line import/no-commonjs
+		image: require('../../../../../assets/place-hometown.png'), // eslint-disable-line import/no-commonjs
 	},
 };
 

@@ -6,6 +6,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import NextButton from './NextButton';
 import OnboardTitle from './OnboardTitle';
 import OnboardParagraph from './OnboardParagraph';
+import CheckedLabel from './CheckedLabel';
 import TouchFeedback from '../Core/TouchFeedback';
 import Icon from '../Core/Icon';
 import AppText from '../Core/AppText';
@@ -35,7 +36,11 @@ const styles = StyleSheet.create({
 	},
 
 	image: {
-		margin: 8,
+		margin: 16,
+	},
+
+	checklist: {
+		alignItems: 'flex-start',
 	},
 
 	checkboxContainer: {
@@ -113,7 +118,12 @@ export default class GetStarted extends Component<void, Props, void> {
 					<OnboardParagraph style={styles.text}>
 						You're now connected to your
 					</OnboardParagraph>
-					<Image style={styles.image} source={require('../../../../../assets/connected-world.png')} />
+					<View style={styles.checklist}>
+						<CheckedLabel label='Apartment' />
+						<CheckedLabel label='Locality' />
+						<CheckedLabel label='City' />
+					</View>
+					<Image style={styles.image} source={require('../../../../../assets/place-connected.png')} />
 					<View style={styles.invite}>
 						<TouchFeedback onPress={this._handleInvitePress} borderless>
 							<View style={styles.checkboxContainer}>
