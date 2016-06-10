@@ -6,13 +6,13 @@ declare interface Subscription {
     closed: Boolean;
 }
 
-declare interface Observer {
+declare interface Observer<T> {
 
     // Receives the subscription object when `subscribe` is called
     start?: (subscription: Subscription) => void;
 
     // Sends the next value in the sequence
-    next?: (value: any) => void;
+    next?: (value: T) => void;
 
     // Sends the sequence error
     error?: (errorValue: any) => void;
@@ -21,10 +21,10 @@ declare interface Observer {
     complete?: (completeValue: any) => void;
 }
 
-declare interface SubscriptionObserver {
+declare interface SubscriptionObserver<T> {
 
     // Sends the next value in the sequence
-    next(value: any): void;
+    next(value: T): void;
 
     // Sends the sequence error
     error(errorValue: any): void;
@@ -36,16 +36,16 @@ declare interface SubscriptionObserver {
     closed: Boolean;
 }
 
-declare function SubscriberFunction(observer: SubscriptionObserver) : Function | Subscription;
+declare function SubscriberFunction<T>(observer: SubscriptionObserver<T>) : Function | Subscription;
 
-declare class Observable {
-    constructor(subscriber: SubscriberFunction): void;
+declare class Observable<T> {
+    constructor(subscriber: SubscriberFunction<T>): void;
 
     // Subscribes to the sequence
-    subscribe(observer: Observer): Subscription;
+    subscribe(observer: Observer<T>): Subscription;
 
     // Subscribes to the sequence with a callback, returning a promise
-    forEach(onNext: Function): Promise<any>;
+    forEach(onNext: (value: T) => void): Promise<any>;
 
     // Converts items to an Observable
     static of(...items: Array<any>): Observable;
