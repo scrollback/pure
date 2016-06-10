@@ -16,7 +16,7 @@ export function formatShort(time: number, now: number = Date.now()): string {
 
 	if (diff <= 0) {
 		if (Math.abs(diff) > msPerMin) {
-			return 'future';
+			return 'recently';
 		} else {
 			return 'now';
 		}
@@ -40,7 +40,7 @@ export function formatLong(time: number, now: number = Date.now()): string {
 
 	if (diff <= 0) {
 		if (Math.abs(diff) > msPerMin) {
-			return 'Future';
+			return 'Recently';
 		} else {
 			return 'Just now';
 		}

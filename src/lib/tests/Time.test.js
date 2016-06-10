@@ -7,7 +7,7 @@ test('should format short date for now', t => {
 });
 
 test('should format short date for future', t => {
-	t.is(formatShort(1462728830074, 1462728770073), 'future');
+	t.is(formatShort(1462728830074, 1462728770073), 'recently');
 });
 
 test('should format short date for sometime ago', t => {
@@ -25,7 +25,7 @@ test('should format long date for now', t => {
 });
 
 test('should format long date for future', t => {
-	t.is(formatLong(1462728830074, 1462728770073), 'Future');
+	t.is(formatLong(1462728830074, 1462728770073), 'Recently');
 });
 
 test('should format long date for sometime ago', t => {
