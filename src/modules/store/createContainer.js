@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
-import memoize from 'lodash/memoize';
+import shallowEqual from 'shallowequal';
 import storeShape from './storeShape';
 
 import type {
@@ -38,7 +38,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				if (mapSubscriptionToProps) {
 					switch (typeof mapSubscriptionToProps) {
 					case 'function':
-						this._mapSubscriptionToProps = memoize(mapSubscriptionToProps);
+						this._mapSubscriptionToProps = mapSubscriptionToProps;
 						this._currentSubscriptionPropsMap = mapSubscriptionToProps(this.props);
 						break;
 					case 'object':
@@ -53,13 +53,11 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 			}
 
 			componentWillReceiveProps(nextProps: any) {
-				if (typeof this._mapSubscriptionToProps === 'function') {
+				if (!shallowEqual(this.props, nextProps) && typeof this._mapSubscriptionToProps === 'function') {
 					const nextSubscriptionPropsMap = this._mapSubscriptionToProps(nextProps);
 
-					if (this._currentSubscriptionPropsMap !== nextSubscriptionPropsMap) {
-						this._currentSubscriptionPropsMap = nextSubscriptionPropsMap;
-						this._renewSubscriptions(this.context.store, nextSubscriptionPropsMap);
-					}
+					this._currentSubscriptionPropsMap = nextSubscriptionPropsMap;
+					this._renewSubscriptions(this.context.store, nextSubscriptionPropsMap);
 				}
 			}
 

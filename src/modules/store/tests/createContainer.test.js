@@ -81,6 +81,46 @@ test('should renew subscription when props change', t => {
 	mount(<MyComponent />);
 });
 
+test('should not renew subscription when props are same', t => {
+	t.plan(2);
+
+	const NameComponent = ({ name }) => {
+		t.is(name, 'jane');
+		return null;
+	};
+	const store = new SimpleStore({
+		watch: (options, cb) => {
+			t.is(options.type, 'name');
+			cb('jane');
+		},
+		put: () => null,
+	});
+
+	const Container = createContainer(({ type }) => ({
+		name: type,
+	}))(NameComponent);
+
+	class MyComponent extends Component {
+		state = { type: 'name' };
+
+		componentDidMount() {
+			this.setState({ // eslint-disable-line react/no-did-mount-set-state
+				type: 'name',
+			});
+		}
+
+		render() {
+			return (
+				<Provider store={store}>
+					<Container type={this.state.type} />
+				</Provider>
+			);
+		}
+	}
+
+	mount(<MyComponent />);
+});
+
 test('should not render connected component without data', t => {
 	t.plan(2);
 
