@@ -27,12 +27,20 @@ const styles = StyleSheet.create({
 	},
 });
 
+type Place = {
+	fullText: string;
+	primaryText: string;
+	secondaryText: string;
+	placeId: string;
+	placeTypes: Array<number>;
+}
+
 type Props = {
 	location: {
 		latitude: number;
 		longitude: number;
 	};
-	onSelectPlace: Function;
+	onSelectPlace: (place: Place) => void;
 	onCancel?: Function;
 	renderBlankslate?: Function;
 	searchHint: string;
@@ -54,11 +62,11 @@ export default class PlaceSearch extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getResults: Function = (query: string) => GooglePlaces.getAutoCompletePredictions(
+	_getResults = (query: string) => GooglePlaces.getAutoCompletePredictions(
 		query, [ this.props.location ], []
 	);
 
-	_renderRow: Function = place => <LocationItem place={place} onPress={() => this.props.onSelectPlace(place)} />;
+	_renderRow = (place: Place) => <LocationItem place={place} onPress={() => this.props.onSelectPlace(place)} />;
 
 	render() {
 		return (

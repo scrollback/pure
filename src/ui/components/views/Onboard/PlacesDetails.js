@@ -7,9 +7,17 @@ import PlaceSelectorTip from '../Account/PlaceSelectorTip';
 import PlaceSearchContainer from '../../containers/PlaceSearchContainer';
 import LocationListener from '../../../modules/LocationListener';
 
+type Place = {
+	fullText: string;
+	primaryText: string;
+	secondaryText: string;
+	placeId: string;
+	placeTypes: Array<number>;
+}
+
 type Props = {
-	onChangeField: (type: string, value: { [key: string]: string }) => void;
-	submitPlaceDetails: () => void;
+	onChangeField: Function;
+	submitPlaceDetails: Function;
 }
 
 const {
@@ -30,13 +38,13 @@ export default class PlacesDetails extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleSelectPlace: Function = place => {
+	_handleSelectPlace = (place: Place) => {
 		this.props.onChangeField('places', { home: place });
 
 		setTimeout(() => this.props.submitPlaceDetails(), 100);
 	};
 
-	_renderBlankslate: Function = () => <PlaceSelectorTip type='home' />;
+	_renderBlankslate = () => <PlaceSelectorTip type='home' />;
 
 	render() {
 		return (

@@ -87,11 +87,11 @@ export default class PlaceItem extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleRemove: Function = () => {
+	_handleRemove = () => {
 		this.props.onRemove(this.props.type, this.props.place);
 	};
 
-	_capitalizeText: Function = (text: string) => {
+	_capitalizeText = (text: string) => {
 		return text
 			.replace(/-+/g, ' ')
 			.replace(/\w\S*/g, s => s.charAt(0).toUpperCase() + s.slice(1))

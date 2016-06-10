@@ -21,6 +21,7 @@ import Facebook from '../../../modules/Facebook';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
+import type { Thread } from '../../../../lib/schemaTypes';
 
 const {
 	AsyncStorage,
@@ -133,6 +134,18 @@ const styles = StyleSheet.create({
 
 const FACEBOOK_SHARE_CHECKED_KEY = 'start_discussion_facebook_share_checked';
 
+type Upload = {
+	id: string;
+	result: {
+		url: ?string;
+		thumbnail: ?string;
+	}
+}
+
+type ShareContent = {
+	link: string;
+}
+
 type Props = {
 	user: string;
 	room: string;
@@ -144,13 +157,7 @@ type Props = {
 type State = {
 	name: string;
 	body: string;
-	upload: ?{
-		id: string;
-		result: {
-			url: ?string;
-			thumbnail: ?string;
-		}
-	};
+	upload: ?Upload;
 	photo: ?{
 		uri: string;
 		size: number;
@@ -194,7 +201,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getPublishPermissions: Function = async () => {
+	_getPublishPermissions = async () => {
 		try {
 			const result = await Facebook.logInWithPublishPermissions([ PERMISSION_PUBLISH_ACTIONS ]);
 
@@ -209,7 +216,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_isFacebookPermissionGranted: Function = async (): Promise<boolean> => {
+	_isFacebookPermissionGranted = async (): Promise<boolean> => {
 		try {
 			const token = await Facebook.getCurrentAccessToken();
 
@@ -219,7 +226,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_requestFacebookPermissions: Function = async () => {
+	_requestFacebookPermissions = async () => {
 		let requested;
 
 		try {
@@ -238,7 +245,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_shareOnFacebook: Function = async content => {
+	_shareOnFacebook = async (content: ShareContent) => {
 		try {
 			const token = await Facebook.getCurrentAccessToken();
 
@@ -252,7 +259,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_handleSharePress: Function = () => {
+	_handleSharePress = () => {
 		global.requestAnimationFrame(async () => {
 			let shareOnFacebook = !this.state.shareOnFacebook;
 
@@ -272,7 +279,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		});
 	};
 
-	_setShareCheckbox: Function = async (): Promise<any> => {
+	_setShareCheckbox = async (): Promise<any> => {
 		let shareOnFacebook;
 
 		try {
@@ -300,7 +307,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		});
 	};
 
-	_handlePosted: Function = thread => {
+	_handlePosted = (thread: Thread) => {
 		const route = {
 			name: 'chat',
 			props: {
@@ -321,14 +328,14 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}, 1000);
 	};
 
-	_handleError: Function = message => {
+	_handleError = (message: string) => {
 		this.setState({
 			error: message,
 			status: null,
 		});
 	};
 
-	_postDiscussion: Function = () => {
+	_postDiscussion = () => {
 		const SHORT_TITLE_MESSAGE = 'Title needs be at least 2 words';
 		const LONG_TITLE_MESSAGE = 'Title needs be less than 10 words';
 		const NO_TITLE_MESSAGE = 'Enter a title in 2 to 10 words';
@@ -406,7 +413,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		});
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		if (this.state.status === 'loading') {
 			return;
 		}
@@ -414,21 +421,21 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		this._postDiscussion();
 	};
 
-	_handleChangeName: Function = name => {
+	_handleChangeName = (name: string) => {
 		this.setState({
 			name,
 			error: null,
 		});
 	};
 
-	_handleChangeBody: Function = body => {
+	_handleChangeBody = (body: string) => {
 		this.setState({
 			body,
 			error: null,
 		});
 	};
 
-	_handleUploadImage: Function = async () => {
+	_handleUploadImage = async () => {
 		try {
 			this.setState({
 				photo: null,
@@ -444,14 +451,14 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_handleUploadFinish: Function = upload => {
+	_handleUploadFinish = (upload: Upload) => {
 		this.setState({
 			upload,
 			error: null,
 		});
 	};
 
-	_handleUploadClose: Function = () => {
+	_handleUploadClose = () => {
 		this.setState({
 			photo: null,
 			upload: null,

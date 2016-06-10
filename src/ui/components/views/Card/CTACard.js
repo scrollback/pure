@@ -83,7 +83,7 @@ export default class CTACard extends Component<void, Props, State> {
 
 	_subscription: ?Subscription;
 
-	_checkImageExists: Function = (url: string): Promise<boolean> => {
+	_checkImageExists = (url: string): Promise<boolean> => {
 		return new Promise(resolve => {
 			const req = new XMLHttpRequest();
 
@@ -97,7 +97,7 @@ export default class CTACard extends Component<void, Props, State> {
 		});
 	};
 
-	_checkImageList: Function = function(urls: Array<string>): Observable {
+	_checkImageList = function(urls: Array<string>): Observable<string> {
 		return new Observable(observer => {
 			const promises = urls.map(async url => {
 				const exists = await this._checkImageExists(url);
@@ -123,7 +123,7 @@ export default class CTACard extends Component<void, Props, State> {
 		});
 	}
 
-	_setImage: Function = (props: Props) => {
+	_setImage = (props: Props) => {
 		const {
 			room,
 			user,
@@ -159,7 +159,7 @@ export default class CTACard extends Component<void, Props, State> {
 		}
 	};
 
-	_handleShare: Function = () => {
+	_handleShare = () => {
 		const {
 			data,
 			room,
@@ -175,7 +175,7 @@ export default class CTACard extends Component<void, Props, State> {
 		}
 	};
 
-	_handleView: Function = async () => {
+	_handleView = async () => {
 		const {
 			room,
 			user,
@@ -197,7 +197,7 @@ export default class CTACard extends Component<void, Props, State> {
 		}
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		const {
 			data,
 		} = this.props;

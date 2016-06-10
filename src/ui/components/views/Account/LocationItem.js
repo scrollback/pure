@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
 type Props = {
 	place: {
 		primaryText: string;
-		secondaryText?: string;
-		fullText?: string;
+		secondaryText: string;
+		fullText: string;
 	}
 }
 

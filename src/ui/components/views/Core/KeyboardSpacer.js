@@ -46,23 +46,23 @@ export default class KeyboardSpacer extends Component<Props, Props, State> {
 	_keyboardDidShowSubscription: { remove: Function };
 	_keyboardDidHideSubscription: { remove: Function };
 
-	_registerEvents: Function = () => {
+	_registerEvents = () => {
 		this._keyboardDidShowSubscription = Keyboard.addListener('keyboardDidShow', e => this._keyboardDidShow(e));
 		this._keyboardDidHideSubscription = Keyboard.addListener('keyboardDidHide', e => this._keyboardDidHide(e));
 	};
 
-	_unRegisterEvents: Function = () => {
+	_unRegisterEvents = () => {
 		this._keyboardDidShowSubscription.remove();
 		this._keyboardDidHideSubscription.remove();
 	};
 
-	_keyboardDidShow: Function = e => {
+	_keyboardDidShow = (e: any) => {
 		Animated.spring(this.state.keyboardHeightAnim, {
 			toValue: e.endCoordinates.height - (this.props.offset || 0),
 		}).start();
 	};
 
-	_keyboardDidHide: Function = () => {
+	_keyboardDidHide = () => {
 		Animated.spring(this.state.keyboardHeightAnim, {
 			toValue: 0,
 		}).start();

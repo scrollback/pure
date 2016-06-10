@@ -87,7 +87,7 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 		}
 	};
 
-	_isLiked: Function = () => {
+	_isLiked = () => {
 		const {
 			textrel,
 		} = this.props;
@@ -95,7 +95,7 @@ export default class ChatLikeButton extends Component<void, Props, State> {
 		return textrel && textrel.roles ? textrel.roles.indexOf(ROLE_UPVOTE) > -1 : false;
 	};
 
-	_handleLike: Function = () => {
+	_handleLike = () => {
 		const { text, textrel, user } = this.props;
 		const { id, type } = text;
 		const roles = textrel ? textrel.roles : [];

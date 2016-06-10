@@ -39,7 +39,7 @@ export default class ActionSheetItem extends Component<void, Props, void> {
 		children: PropTypes.string.isRequired,
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		global.requestAnimationFrame(() => {
 			this.props.onPress();
 

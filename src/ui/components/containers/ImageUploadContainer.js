@@ -51,7 +51,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 		this._closeUpload();
 	}
 
-	_startUpload: Function = async () => {
+	_startUpload = async () => {
 		const { photo } = this.props;
 		const id = v4();
 		const upload = ImageUploadHelper.create({
@@ -90,7 +90,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 		}
 	};
 
-	_cancelUpload: Function = () => {
+	_cancelUpload = () => {
 		if (this.state.upload) {
 			this.state.upload.cancel();
 			this.setState({
@@ -101,7 +101,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 		}
 	};
 
-	_closeUpload: Function = () => {
+	_closeUpload = () => {
 		this._cancelUpload();
 
 		if (this.props.onUploadClose) {

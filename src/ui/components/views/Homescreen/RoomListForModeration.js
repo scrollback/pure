@@ -5,6 +5,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import RoomListContainer from '../../containers/RoomListContainer';
 import SearchableList from '../Search/SearchableList';
 import RoomItem from './RoomItem';
+import type { Room } from '../../../../lib/schemaTypes';
 
 type Props = {
 	getResults: Function;
@@ -21,7 +22,7 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleSelectLocality: Function = room => {
+	_handleSelectLocality = (room: Room) => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
@@ -33,7 +34,7 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 		});
 	};
 
-	_renderRow: Function = room => {
+	_renderRow = (room: Room) => {
 		return (
 			<RoomItem
 				key={room.id}
@@ -43,7 +44,7 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 		);
 	};
 
-	_getResults: Function = (filter: string) => {
+	_getResults = (filter: string) => {
 		return new Observable(observer => {
 			return this.props.getResults(filter).subscribe({
 				next(results) {
@@ -67,7 +68,7 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 		});
 	};
 
-	_renderBlankslate: Function = () => {
+	_renderBlankslate = () => {
 		const { getResults, ...rest } = this.props; // eslint-disable-line no-unused-vars
 
 		return <RoomListContainer {...rest} />;

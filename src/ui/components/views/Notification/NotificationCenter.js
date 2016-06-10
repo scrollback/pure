@@ -51,7 +51,7 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_renderRow: Function = (note: Note) => (
+	_renderRow = (note: Note) => (
 		<NotificationCenterItem
 			key={`${note.user}_${note.event}_${note.group}`}
 			note={note}

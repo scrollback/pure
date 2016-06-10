@@ -108,21 +108,21 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_animateIn: Function = cb => {
+	_animateIn = (cb: ?Function) => {
 		Animated.timing(this.state.heightAnim, {
 			toValue: 45,
 			duration: 200,
 		}).start(cb);
 	};
 
-	_animateOut: Function = cb => {
+	_animateOut = (cb: ?Function) => {
 		Animated.timing(this.state.heightAnim, {
 			toValue: 0,
 			duration: 200,
 		}).start(cb);
 	};
 
-	_handleCloseBanner: Function = () => {
+	_handleCloseBanner = () => {
 		this._animateOut(() => {
 			this.setState({
 				text: null,

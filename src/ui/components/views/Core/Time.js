@@ -53,7 +53,7 @@ export default class Time extends Component<void, Props, State> {
 		this._root.setNativeProps(nativeProps);
 	};
 
-	_setTimer: Function = time => {
+	_setTimer = (time: number) => {
 		const diff = time - this.props.time;
 
 		let interval;

@@ -85,11 +85,11 @@ export default class ImageUploadChat extends Component {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_onClose: Function = () => {
+	_onClose = () => {
 		this.props.closeUpload();
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		switch (this.props.status) {
 		case 'idle':
 		case 'error':

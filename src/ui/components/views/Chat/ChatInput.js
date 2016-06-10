@@ -11,6 +11,7 @@ import ChatSuggestionsContainer from '../../containers/ChatSuggestionsContainer'
 import ImageUploadContainer from '../../containers/ImageUploadContainer';
 import ImageUploadChat from '../ImageUpload/ImageUploadChat';
 import Colors from '../../../Colors';
+import type { Text } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -86,14 +87,14 @@ export default class ChatInput extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	setQuotedText: Function = (text) => {
+	setQuotedText: Function = (text: Text) => {
 		this._computeAndSetText({
 			replyTo: text.creator,
 			quotedText: text.body,
 		});
 	};
 
-	setReplyTo: Function = (text) => {
+	setReplyTo: Function = (text: Text) => {
 		this._computeAndSetText({
 			replyTo: text.creator,
 		});
@@ -101,7 +102,7 @@ export default class ChatInput extends Component<void, Props, State> {
 
 	_input: Object;
 
-	_sendMessage: Function = () => {
+	_sendMessage = () => {
 		const {
 			room,
 			thread,
@@ -120,7 +121,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		});
 	};
 
-	_handleUploadImage: Function = async () => {
+	_handleUploadImage = async () => {
 		try {
 			this.setState({
 				photo: null,
@@ -136,7 +137,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		}
 	};
 
-	_handleUploadFinish: Function = ({ id, result }) => {
+	_handleUploadFinish = ({ id, result }: { id: string; result: { url: ?string; thumbnail: ?string; } }) => {
 		const {
 			room,
 			thread,
@@ -176,20 +177,20 @@ export default class ChatInput extends Component<void, Props, State> {
 		setTimeout(() => this._handleUploadClose(), 500);
 	};
 
-	_handleUploadClose: Function = () => {
+	_handleUploadClose = () => {
 		this.setState({
 			photo: null,
 		});
 	};
 
-	_handleSuggestionSelect: Function = (user: { id: string }) => {
+	_handleSuggestionSelect = (user: { id: string }) => {
 		this.setState({
 			text: '@' + user.id + ' ',
 			query: '',
 		});
 	};
 
-	_handleChangeText: Function = text => {
+	_handleChangeText = (text: string) => {
 		const query = /^@[a-z0-9]*$/.test(text) ? text.replace(/^@/, '') : '';
 
 		this.setState({
@@ -198,7 +199,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		});
 	};
 
-	_computeAndSetText: Function = opts => {
+	_computeAndSetText = (opts: { quotedText?: string; replyTo?: string;}) => {
 		const quotedText = opts.quotedText ? opts.quotedText.replace(/\n/g, ' ') : null;
 
 		let newValue = this.state.text;

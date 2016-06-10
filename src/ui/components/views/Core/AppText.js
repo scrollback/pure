@@ -27,13 +27,13 @@ export default class AppText extends Component<void, Props, void> {
 		style: Text.propTypes.style,
 	};
 
-	_root: Object;
-
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	setNativeProps: Function = (nativeProps: Props) => {
+	_root: Object;
+
+	setNativeProps: Function = (nativeProps: Props): void => {
 		this._root.setNativeProps(nativeProps);
 	};
 

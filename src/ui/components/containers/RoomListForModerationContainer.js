@@ -5,7 +5,7 @@ import RoomListForModeration from '../views/Homescreen/RoomListForModeration';
 import store from '../../../modules/store/store';
 
 export default class RoomListForModerationContainer extends Component<void, any, void> {
-	_getResults: Function = (filter: string) => {
+	_getResults = (filter: string) => {
 		return store.observe({
 			slice: {
 				type: 'room',

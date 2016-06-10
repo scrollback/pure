@@ -112,7 +112,7 @@ class SignIn extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_setFailureMessage: Function = (message: string) => {
+	_setFailureMessage = (message: string) => {
 		this.setState({
 			failureMessage: message,
 		}, () => {
@@ -126,15 +126,15 @@ class SignIn extends Component<void, Props, State> {
 		});
 	};
 
-	_showFailureMessage: Function = () => {
+	_showFailureMessage = () => {
 		this._setFailureMessage('Failed to sign in');
 	};
 
-	_onSignInSuccess: Function = (provider: string, auth: Token) => {
+	_onSignInSuccess = (provider: string, auth: Token) => {
 		this.props.signIn(provider, auth);
 	};
 
-	_onSignInFailure: Function = (provider: string) => {
+	_onSignInFailure = (provider: string) => {
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			this.setState({
@@ -149,7 +149,7 @@ class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithFacebook: Function = async (): Promise => {
+	_signInWithFacebook = async (): Promise => {
 		try {
 			const result = await Facebook.logInWithReadPermissions([
 				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL,
@@ -174,7 +174,7 @@ class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithGoogle: Function = async (): Promise => {
+	_signInWithGoogle = async (): Promise => {
 		try {
 			const result = await GoogleSignIn.signIn();
 
@@ -192,7 +192,7 @@ class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_handleFacebookPress: Function = (): void => global.requestAnimationFrame(() => {
+	_handleFacebookPress = (): void => global.requestAnimationFrame(() => {
 		this.setState({
 			facebookLoading: true,
 		});
@@ -200,7 +200,7 @@ class SignIn extends Component<void, Props, State> {
 		this._signInWithFacebook();
 	});
 
-	_handleGooglePress: Function = (): void => global.requestAnimationFrame(() => {
+	_handleGooglePress = (): void => global.requestAnimationFrame(() => {
 		this.setState({
 			googleLoading: true,
 		});

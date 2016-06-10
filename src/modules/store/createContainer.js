@@ -74,7 +74,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 			_actions: ?{ [key: string]: Function };
 			_subscriptions: Array<Subscription> = [];
 
-			_addSubscriptions: Function = (store, subscriptionPropsMap) => {
+			_addSubscriptions = (store, subscriptionPropsMap) => {
 				if (typeof store !== 'object') {
 					throw new Error('No store was found. Have you wrapped the root component in <StoreProvider /> ?');
 				}
@@ -82,7 +82,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				if (subscriptionPropsMap) {
 					for (const item in subscriptionPropsMap) {
 						const sub = subscriptionPropsMap[item];
-						const defer = sub.defer !== false;
+						const defer = typeof sub === 'object' ? sub.defer !== false : false;
 						const source = ChildComponent.displayName || ChildComponent.name;
 
 						let listener;
@@ -115,7 +115,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				}
 			};
 
-			_removeSubscriptions: Function = () => {
+			_removeSubscriptions = () => {
 				if (this._subscriptions) {
 					for (let i = 0, l = this._subscriptions.length; i < l; i++) {
 						this._subscriptions[i].unsubscribe();
@@ -125,12 +125,12 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				}
 			};
 
-			_renewSubscriptions: Function = (store, subscriptionPropsMap) => {
+			_renewSubscriptions = (store, subscriptionPropsMap) => {
 				this._removeSubscriptions();
 				this._addSubscriptions(store, subscriptionPropsMap);
 			};
 
-			_createUpdateObserver: Function = (name) => {
+			_createUpdateObserver = (name) => {
 				const next = data => {
 					this.setState({
 						[name]: data,

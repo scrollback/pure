@@ -102,11 +102,11 @@ export default class SignIn extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_showFailureMessage: Function = () => {
+	_showFailureMessage = () => {
 		ToastAndroid.show('Failed to sign in', ToastAndroid.SHORT);
 	};
 
-	_onSignInSuccess: Function = (provider: string, auth: Token) => {
+	_onSignInSuccess = (provider: string, auth: Token) => {
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			ToastAndroid.show('Signing in with Google', ToastAndroid.SHORT);
@@ -119,7 +119,7 @@ export default class SignIn extends Component<void, Props, State> {
 		this.props.signIn(provider, auth);
 	};
 
-	_onSignInFailure: Function = (provider: string) => {
+	_onSignInFailure = (provider: string) => {
 		switch (provider) {
 		case PROVIDER_GOOGLE:
 			this.setState({
@@ -134,7 +134,7 @@ export default class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithFacebook: Function = async (): Promise => {
+	_signInWithFacebook = async (): Promise => {
 		try {
 			const result = await Facebook.logInWithReadPermissions([
 				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL,
@@ -168,7 +168,7 @@ export default class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithGoogle: Function = async (): Promise => {
+	_signInWithGoogle = async (): Promise => {
 		try {
 			const result = await GoogleSignIn.signIn();
 
@@ -186,7 +186,7 @@ export default class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_handleFacebookPress: Function = (): void => global.requestAnimationFrame(() => {
+	_handleFacebookPress = (): void => global.requestAnimationFrame(() => {
 		this.setState({
 			facebookLoading: true,
 		});
@@ -194,7 +194,7 @@ export default class SignIn extends Component<void, Props, State> {
 		this._signInWithFacebook();
 	});
 
-	_handleGooglePress: Function = (): void => global.requestAnimationFrame(() => {
+	_handleGooglePress = (): void => global.requestAnimationFrame(() => {
 		this.setState({
 			googleLoading: true,
 		});

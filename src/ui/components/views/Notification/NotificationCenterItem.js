@@ -117,11 +117,11 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getSummary: Function = note => {
+	_getSummary = (note: Note) => {
 		const { data, event, count } = note;
 		const { room, thread } = data;
 
-		const summary = [];
+		const summary: Array<React.Element | string> = [];
 
 		switch (event) {
 		case NOTE_MENTION:
@@ -186,7 +186,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		return summary;
 	};
 
-	_getIconColor: Function = () => {
+	_getIconColor = () => {
 		const { note } = this.props;
 
 		switch (note.event) {
@@ -201,7 +201,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		}
 	};
 
-	_getIconName: Function = () => {
+	_getIconName = () => {
 		const { note } = this.props;
 
 		switch (note.event) {
@@ -216,7 +216,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		}
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		const { note, onNavigate } = this.props;
 
 		const { data, event, count } = note;
@@ -274,7 +274,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		}
 	};
 
-	_handleDismiss: Function = () => {
+	_handleDismiss = () => {
 		this.props.dismissNote(this.props.note);
 	};
 

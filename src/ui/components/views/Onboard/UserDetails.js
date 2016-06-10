@@ -100,11 +100,11 @@ export default class UserDetails extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleChangeNick: Function = (nick: string): void => {
+	_handleChangeNick = (nick: string): void => {
 		this.props.onChangeField('nick', nick.toLowerCase());
 	};
 
-	_handleChangeName: Function = (name: string): void => {
+	_handleChangeName = (name: string): void => {
 		this.props.onChangeField('name', name);
 	};
 

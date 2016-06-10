@@ -43,7 +43,7 @@ export default class AccountPhotoChooserItem extends Component<void, Props, void
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		this.props.onPress(this.props.uri);
 	};
 

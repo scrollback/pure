@@ -46,7 +46,7 @@ export default class Link extends Component<DefaultProps, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_openLink: Function = url => {
+	_openLink = (url: ?string) => {
 		const event = {
 			preventDefault() {
 				this.defaultPrevented = true;
@@ -60,7 +60,7 @@ export default class Link extends Component<DefaultProps, Props, void> {
 			this.props.onOpen(event);
 		}
 
-		if (/^#/.test(url)) {
+		if (typeof url === 'string' && /^#/.test(url)) {
 			return;
 		}
 
@@ -69,7 +69,7 @@ export default class Link extends Component<DefaultProps, Props, void> {
 		}
 	};
 
-	_handlePress: Function = e => {
+	_handlePress = (e: SyntheticEvent) => {
 		if (this.props.onPress) {
 			this.props.onPress(e);
 		}

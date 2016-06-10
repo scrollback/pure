@@ -11,4 +11,6 @@ export type Embed = {
 	thumbnail_url?: string;
 	thumbnail_width?: number;
 	thumbnail_height?: number;
+	width?: number;
+	height?: number;
 }

@@ -71,7 +71,7 @@ export default class GrowingTextInput extends Component<void, Props, State> {
 
 	_input: Object;
 
-	_handleChange: Function = e => {
+	_handleChange = (e: any) => {
 		if (this.props.onChange) {
 			this.props.onChange(e);
 		}
@@ -85,7 +85,7 @@ export default class GrowingTextInput extends Component<void, Props, State> {
 		this.setState({ value });
 	};
 
-	_handleLayout: Function = e => {
+	_handleLayout = (e: any) => {
 		this._input.setNativeProps({ height: e.nativeEvent.layout.height });
 	};
 

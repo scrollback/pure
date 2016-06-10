@@ -53,9 +53,9 @@ export default class PeopleList extends Component<void, Props, State> {
 
 	_dataSource: ListView.DataSource = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
-	_renderHeader: Function = () => <ListHeader>People talking</ListHeader>;
+	_renderHeader = () => <ListHeader>People talking</ListHeader>;
 
-	_renderRow: Function = (relation: { rel: RoomRel | ThreadRel; user: User }) => (
+	_renderRow = (relation: { rel: RoomRel | ThreadRel; user: User }) => (
 		<PeopleListItem
 			key={relation.user}
 			user={relation.user}

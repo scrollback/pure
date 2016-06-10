@@ -70,7 +70,7 @@ export default class PeopleListItem extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_goToProfile: Function = () => {
+	_goToProfile = () => {
 		const { user } = this.props;
 
 		this.props.onNavigate({

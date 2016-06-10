@@ -47,7 +47,7 @@ export default class ChatActionSheet extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_copyToClipboard: Function = text => {
+	_copyToClipboard = (text: string) => {
 		Clipboard.setString(text);
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};

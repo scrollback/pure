@@ -47,12 +47,12 @@ export default class DiscussionItem extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_copyToClipboard: Function = text => {
+	_copyToClipboard = (text: string) => {
 		Clipboard.setString(text);
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
 	};
 
-	_handleOpenImage: Function = () => {
+	_handleOpenImage = () => {
 		const { thread } = this.props;
 
 		if (thread.meta) {
@@ -62,7 +62,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 		}
 	};
 
-	_handleCopyImageLink: Function = () => {
+	_handleCopyImageLink = () => {
 		const { thread } = this.props;
 
 		if (thread.meta) {
@@ -72,15 +72,15 @@ export default class DiscussionItem extends Component<void, Props, void> {
 		}
 	};
 
-	_handleCopyTitle: Function = () => {
+	_handleCopyTitle = () => {
 		this._copyToClipboard(this.props.thread.name);
 	};
 
-	_handleCopySummary: Function = () => {
+	_handleCopySummary = () => {
 		this._copyToClipboard(this.props.thread.body);
 	};
 
-	_handleCopyLink: Function = () => {
+	_handleCopyLink = () => {
 		const { thread } = this.props;
 
 		this._copyToClipboard(config.server.protocol + '//' + config.server.host + convertRouteToURL({

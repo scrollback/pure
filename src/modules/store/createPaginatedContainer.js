@@ -75,7 +75,7 @@ export default function(sliceFromProps: SliceFromProps, pageSize: number) {
 			_updated: ?boolean;
 			_sliceFromProps: SliceFromProps;
 
-			_loadMore: Function = (count: number) => {
+			_loadMore = (count: number) => {
 				const { before } = this.state;
 
 				this.setState({

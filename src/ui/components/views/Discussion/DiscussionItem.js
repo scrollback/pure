@@ -83,19 +83,19 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleShowMenu: Function = () => {
+	_handleShowMenu = () => {
 		this.setState({
 			actionSheetVisible: true,
 		});
 	};
 
-	_handleRequestClose: Function = () => {
+	_handleRequestClose = () => {
 		this.setState({
 			actionSheetVisible: false,
 		});
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		const { thread } = this.props;
 
 		this.props.onNavigate({

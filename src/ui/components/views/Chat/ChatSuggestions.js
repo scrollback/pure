@@ -69,7 +69,7 @@ export default class ChatSuggestions extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_renderUser: Function = (user: User) => (
+	_renderUser = (user: User) => (
 		<TouchableHighlight
 			key={user.id}
 			underlayColor={Colors.underlay}

@@ -22,7 +22,7 @@ export default class AccountButton extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {

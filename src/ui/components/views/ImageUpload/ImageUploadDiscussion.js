@@ -79,7 +79,7 @@ export default class ImageUploadDiscussion extends Component<void, Props, void> 
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		switch (this.props.status) {
 		case 'idle':
 		case 'error':

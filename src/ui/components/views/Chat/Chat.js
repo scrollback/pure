@@ -41,11 +41,11 @@ export default class Chat extends Component<void, Props, void> {
 
 	_input: Object;
 
-	_quoteMessage: Function = (text: string) => {
+	_quoteMessage = (text: string) => {
 		this._input.setQuotedText(text);
 	};
 
-	_replyToMessage: Function = (user: string) => {
+	_replyToMessage = (user: string) => {
 		this._input.setReplyTo(user);
 	};
 

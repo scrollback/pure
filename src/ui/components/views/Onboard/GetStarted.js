@@ -99,7 +99,7 @@ export default class GetStarted extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleInvitePress: Function = () => {
+	_handleInvitePress = () => {
 		this.props.onChangeField('invite', !this.props.fields.invite.value);
 	};
 

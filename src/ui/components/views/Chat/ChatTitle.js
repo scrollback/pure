@@ -49,7 +49,7 @@ export default class ChatTitle extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		const { thread } = this.props;
 
 		if (thread && thread.id) {

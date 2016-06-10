@@ -29,11 +29,11 @@ type SearchResults = Array<any> | '@@blankslate' | '@@loading' | '@@failed';
 
 type Props = {
 	autoFocus?: boolean;
-	getResults: (filter: string) => SearchResults | Observable | Promise<SearchResults>;
+	getResults: (filter: string) => any;
 	renderRow: (data: any) => React.Element;
 	renderHeader?: ?(filter: string, data: any) => ?Element;
 	renderFooter?: ?(filter: string, data: any) => ?Element;
-	renderBlankslate?: ?() => ?Element;
+	renderBlankslate?: ?() => ?React.Element;
 	onCancel?: ?(data: any) => React.Element;
 	searchHint: string;
 	style?: any;
@@ -73,13 +73,13 @@ export default class SearchableList extends Component<void, Props, State> {
 	_subscription: ?Subscription;
 	_cachedResults: Object = {};
 
-	_cacheResults: Function = (filter: string, data: SearchResults) => {
+	_cacheResults = (filter: string, data: SearchResults) => {
 		if (Array.isArray(data)) {
 			this._cachedResults[filter] = data;
 		}
 	};
 
-	_setFilterAndResults: Function = (filter: string, data: SearchResults) => {
+	_setFilterAndResults = (filter: string, data: SearchResults) => {
 		this.setState({
 			filter,
 			data,
@@ -87,7 +87,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		});
 	};
 
-	_cacheAndSetResults: Function = (filter: string, data: SearchResults) => {
+	_cacheAndSetResults = (filter: string, data: SearchResults) => {
 		this._cacheResults(filter, data);
 
 		if (filter === this.state.filter) {
@@ -95,7 +95,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		}
 	};
 
-	_fetchResults: Function = debounce(async (filter: string): Promise<void> => {
+	_fetchResults = debounce(async (filter: string): Promise<void> => {
 		try {
 			const data = this.props.getResults(filter);
 
@@ -119,7 +119,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		}
 	});
 
-	_handleChangeSearch: Function = (filter: string) => {
+	_handleChangeSearch = (filter: string) => {
 		if (filter) {
 			const data = this._cachedResults[filter];
 
@@ -140,7 +140,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		}
 	};
 
-	_renderHeader: Function = (): ?Element => {
+	_renderHeader = (): ?Element => {
 		if (this.props.renderHeader) {
 			return this.props.renderHeader(this.state.filter, this.state.data);
 		}
@@ -148,7 +148,7 @@ export default class SearchableList extends Component<void, Props, State> {
 		return null;
 	};
 
-	_renderFooter: Function = (): ?Element => {
+	_renderFooter = (): ?Element => {
 		if (this.props.renderFooter) {
 			return this.props.renderFooter(this.state.filter, this.state.data);
 		}

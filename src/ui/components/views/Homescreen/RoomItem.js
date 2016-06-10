@@ -13,6 +13,7 @@ import Share from '../../../modules/Share';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
+import type { Room } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -64,11 +65,7 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-	room: {
-		id: string;
-		name: string;
-		updateTime?: number;
-	};
+	room: Room;
 	unread?: boolean;
 	onSelect: Function;
 }
@@ -95,7 +92,7 @@ export default class RoomItem extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getRoomLink: Function = () => {
+	_getRoomLink = () => {
 		const { room } = this.props;
 
 		return config.server.protocol + '//' + config.server.host + convertRouteToURL({
@@ -106,29 +103,29 @@ export default class RoomItem extends Component<void, Props, State> {
 		});
 	};
 
-	_getShareText: Function = () => {
+	_getShareText = () => {
 		const { room } = this.props;
 
 		return `Hey! Join me in the ${room.name} group on ${config.app_name}.\n${this._getRoomLink()}`;
 	};
 
-	_handleInvite: Function = () => {
+	_handleInvite = () => {
 		Share.shareItem('Share group', this._getShareText());
 	};
 
-	_handleShowMenu: Function = () => {
+	_handleShowMenu = () => {
 		this.setState({
 			actionSheetVisible: true,
 		});
 	};
 
-	_handleRequestClose: Function = () => {
+	_handleRequestClose = () => {
 		this.setState({
 			actionSheetVisible: false,
 		});
 	};
 
-	_handlePress: Function = () => {
+	_handlePress = () => {
 		if (this.props.onSelect) {
 			this.props.onSelect(this.props.room);
 		}

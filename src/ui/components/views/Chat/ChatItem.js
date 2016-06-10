@@ -138,7 +138,7 @@ export default class ChatItem extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_goToProfile: Function = () => {
+	_goToProfile = () => {
 		const { text } = this.props;
 
 		this.props.onNavigate({
@@ -152,13 +152,13 @@ export default class ChatItem extends Component<void, Props, State> {
 		});
 	};
 
-	_handleShowMenu: Function = () => {
+	_handleShowMenu = () => {
 		this.setState({
 			actionSheetVisible: true,
 		});
 	};
 
-	_handleRequestClose: Function = () => {
+	_handleRequestClose = () => {
 		this.setState({
 			actionSheetVisible: false,
 		});

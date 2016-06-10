@@ -56,6 +56,7 @@ export type Item = Entity & {
 
 export type Room = Item & {
 	identities?: Array<string>;
+	updateTime?: number;
 }
 
 export type Text = Item & {

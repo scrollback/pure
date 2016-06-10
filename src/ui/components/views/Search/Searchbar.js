@@ -56,7 +56,7 @@ export default class SearchBar extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleChange: Function = query => {
+	_handleChange = (query: string) => {
 		this.setState({
 			query,
 		});
@@ -64,7 +64,7 @@ export default class SearchBar extends Component<void, Props, State> {
 		this.props.onChangeSearch(query);
 	};
 
-	_handleClearInput: Function = () => {
+	_handleClearInput = () => {
 		this.setState({
 			query: '',
 		});

@@ -89,7 +89,7 @@ export default class UserSwitcher extends Component<void, Props, State> {
 		this.props.switchUser(this.props.user, item);
 	};
 
-	_renderRow: Function = (item: SessionItem) => {
+	_renderRow = (item: SessionItem) => {
 		const {
 			user,
 		} = this.props;

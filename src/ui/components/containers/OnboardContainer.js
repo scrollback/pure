@@ -111,7 +111,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_setUserDetails: Function = (props: Props) => {
+	_setUserDetails = (props: Props) => {
 		const {
 			me,
 			pendingUser,
@@ -172,7 +172,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_setCurrentPage: Function = (props: Props) => {
+	_setCurrentPage = (props: Props) => {
 		const {
 			me,
 			user,
@@ -211,11 +211,11 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_isFieldRequired: Function = (field: string) => {
+	_isFieldRequired = (field: string) => {
 		return [ 'nick', 'name', 'places' ].indexOf(field) > -1;
 	};
 
-	_getPageForField: Function = (field: string) => {
+	_getPageForField = (field: string) => {
 		switch (field) {
 		case 'nick':
 		case 'name':
@@ -230,7 +230,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_canGoForward: Function = (fields: Fields, page: string): boolean => {
+	_canGoForward = (fields: Fields, page: string): boolean => {
 		for (const field in fields) {
 			const item = fields[field];
 
@@ -242,7 +242,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		return true;
 	};
 
-	_ensureAllFields: Function = (fields: Fields): Fields => {
+	_ensureAllFields = (fields: Fields): Fields => {
 		for (const field in fields) {
 			const item = fields[field];
 
@@ -257,7 +257,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		return fields;
 	};
 
-	_validateFields: Function = (fields: Fields): Fields => {
+	_validateFields = (fields: Fields): Fields => {
 		for (const field in fields) {
 			const item = fields[field];
 
@@ -280,7 +280,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		return fields;
 	};
 
-	_onChangeField: Function = (type: string, value: any) => {
+	_onChangeField = (type: string, value: any) => {
 		const fields = this._validateFields({ ...this.state.fields, [type]: { value, error: null } });
 
 		this.setState({
@@ -294,7 +294,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_saveData: Function = (fields: Fields, page: string) => {
+	_saveData = (fields: Fields, page: string) => {
 		if (!this._canGoForward(fields, page)) {
 			return;
 		}
@@ -312,7 +312,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_finishOnboarding: Function = (invite: boolean) => {
+	_finishOnboarding = (invite: boolean) => {
 		this.setState({
 			page: PAGE_HOME,
 			onboarding: false,
@@ -323,7 +323,7 @@ class OnboardContainer extends Component<void, Props, State> {
 		}
 	};
 
-	_submitPage: Function = (page: string): void => {
+	_submitPage = (page: string): void => {
 		const fields = this._ensureAllFields(this._validateFields({ ...this.state.fields }));
 
 		this.setState({
@@ -331,11 +331,11 @@ class OnboardContainer extends Component<void, Props, State> {
 		}, () => this._saveData(this.state.fields, page));
 	};
 
-	_submitUserDetails: Function = (): void => this._submitPage(PAGE_USER_DETAILS);
+	_submitUserDetails = (): void => this._submitPage(PAGE_USER_DETAILS);
 
-	_submitPlaceDetails: Function = (): void => this._submitPage(PAGE_PLACES);
+	_submitPlaceDetails = (): void => this._submitPage(PAGE_PLACES);
 
-	_submitGetStarted: Function = (): void => this._submitPage(PAGE_GET_STARTED);
+	_submitGetStarted = (): void => this._submitPage(PAGE_GET_STARTED);
 
 	render() {
 		return (

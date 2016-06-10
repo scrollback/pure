@@ -59,7 +59,7 @@ export default class Rooms extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleSelectLocality: Function = room => {
+	_handleSelectLocality = (room: Room) => {
 		this.props.onNavigate({
 			type: 'push',
 			payload: {
@@ -71,7 +71,7 @@ export default class Rooms extends Component<void, Props, State> {
 		});
 	};
 
-	_renderRow: Function = result => {
+	_renderRow = (result: { room: Room; roomrel: RoomRel; type?: string; }) => {
 		if (result && result.type === 'loading') {
 			return <LoadingItem />;
 		}
@@ -83,15 +83,15 @@ export default class Rooms extends Component<void, Props, State> {
 
 		return (
 			<RoomItemContainer
-				key={roomrel.item}
-				room={roomrel.item}
+				key={roomrel.item || room.id}
+				room={roomrel.item || room.id}
 				unread={room && roomrel.presenceTime ? room.updateTime > roomrel.presenceTime : false}
 				onSelect={this._handleSelectLocality}
 			/>
 		);
 	};
 
-	_renderFooter: Function = () => {
+	_renderFooter = () => {
 		return <RoomsFooterContainer onNavigate={this.props.onNavigate} />;
 	};
 

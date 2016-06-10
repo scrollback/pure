@@ -71,7 +71,7 @@ export default class EmbedThumbnail extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getOptimalDimensions: Function = (embed) => {
+	_getOptimalDimensions = (embed: Embed) => {
 		const {
 			height,
 			width,

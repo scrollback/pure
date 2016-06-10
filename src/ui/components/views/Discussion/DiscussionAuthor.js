@@ -64,7 +64,7 @@ export default class DiscussionAuthor extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_goToProfile: Function = () => {
+	_goToProfile = () => {
 		const { thread } = this.props;
 
 		this.props.onNavigate({

@@ -96,7 +96,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		}
 	};
 
-	_isLiked: Function = () => {
+	_isLiked = () => {
 		const {
 			threadrel,
 		} = this.props;
@@ -104,7 +104,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		return threadrel && threadrel.roles ? threadrel.roles.indexOf(ROLE_UPVOTE) > -1 : false;
 	};
 
-	_handleLike: Function = () => {
+	_handleLike = () => {
 		const { thread, threadrel, user } = this.props;
 		const roles = threadrel ? threadrel.roles : [];
 
@@ -125,7 +125,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		}
 	};
 
-	_handleReply: Function = () => {
+	_handleReply = () => {
 		const { thread } = this.props;
 
 		this.props.onNavigate({
@@ -140,7 +140,7 @@ export default class DiscussionActions extends Component<void, Props, State> {
 		});
 	};
 
-	_handleShare: Function = () => {
+	_handleShare = () => {
 		const { thread } = this.props;
 
 		Share.shareItem('Share discussion', config.server.protocol + '//' + config.server.host + convertRouteToURL({
