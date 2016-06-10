@@ -43,7 +43,6 @@ const styles = StyleSheet.create({
 	threadName: {
 		fontWeight: 'bold',
 		fontSize: 20,
-		lineHeight: 30,
 	},
 	threadSummary: {
 		fontSize: 16,
@@ -117,7 +116,6 @@ const styles = StyleSheet.create({
 	socialTextContainer: {
 		marginHorizontal: 12,
 		color: Colors.fadedBlack,
-		bottom: -3,
 	},
 	socialTextSelected: {
 		color: Colors.facebook,
@@ -125,11 +123,9 @@ const styles = StyleSheet.create({
 	},
 	socialLabel: {
 		fontSize: 12,
-		lineHeight: 18,
 	},
 	socialTip: {
 		fontSize: 10,
-		lineHeight: 15,
 		opacity: 0.5,
 		fontWeight: 'normal',
 	},

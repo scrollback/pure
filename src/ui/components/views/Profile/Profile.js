@@ -95,13 +95,11 @@ const styles = StyleSheet.create({
 	scoreCount: {
 		color: Colors.primary,
 		fontSize: 24,
-		lineHeight: 36,
 	},
 
 	scoreLabel: {
 		color: Colors.darkGrey,
 		fontSize: 8,
-		lineHeight: 12,
 		opacity: 0.7,
 	},
 
@@ -109,14 +107,12 @@ const styles = StyleSheet.create({
 		color: Colors.white,
 		fontWeight: 'bold',
 		fontSize: 24,
-		lineHeight: 36,
 		textAlign: 'center',
 	},
 
 	name: {
 		color: Colors.white,
 		fontSize: 14,
-		lineHeight: 21,
 		textAlign: 'center',
 		opacity: 0.7,
 	},

@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
 	action: {
 		color: Colors.info,
 		fontSize: 12,
-		lineHeight: 18,
 		fontWeight: 'bold',
 		marginHorizontal: 8,
 	},
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
 		color: Colors.fadedBlack,
 		fontWeight: 'bold',
 		fontSize: 12,
-		lineHeight: 18,
 	},
 
 	text: {

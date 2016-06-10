@@ -26,20 +26,17 @@ const styles = StyleSheet.create({
 		color: Colors.info,
 		fontWeight: 'bold',
 		fontSize: 12,
-		lineHeight: 18,
 		marginLeft: 8,
 	},
 
 	label: {
 		color: Colors.grey,
 		fontSize: 10,
-		lineHeight: 15,
 	},
 
 	dot: {
 		color: Colors.grey,
 		fontSize: 3,
-		lineHeight: 3,
 		marginHorizontal: 8,
 	},
 });

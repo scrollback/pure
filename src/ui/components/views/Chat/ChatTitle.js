@@ -26,7 +26,6 @@ const styles = StyleSheet.create({
 	subtitle: {
 		color: Colors.fadedWhite,
 		fontSize: 12,
-		lineHeight: 18,
 		width: 160,
 	},
 });

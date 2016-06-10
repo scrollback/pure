@@ -13,6 +13,8 @@ const {
 const styles = StyleSheet.create({
 	summary: {
 		color: Colors.grey,
+		fontSize: 14,
+		lineHeight: 21,
 	},
 });
 

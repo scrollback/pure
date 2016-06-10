@@ -53,7 +53,6 @@ const styles = StyleSheet.create({
 	timestampText: {
 		color: FADED_GREY,
 		fontSize: 12,
-		lineHeight: 18,
 		marginHorizontal: 6,
 		paddingHorizontal: 8,
 	},

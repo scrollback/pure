@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
 	},
 	header: {
 		fontSize: 12,
-		lineHeight: 18,
 		marginHorizontal: 16,
 		marginTop: 12,
 		marginBottom: 4,
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
 	},
 	itemValueText: {
 		fontSize: 12,
-		lineHeight: 18,
 	},
 });
 

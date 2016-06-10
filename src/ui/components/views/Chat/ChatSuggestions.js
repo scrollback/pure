@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
 
 	name: {
 		fontSize: 12,
-		lineHeight: 18,
 		color: Colors.fadedBlack,
 		marginHorizontal: 12,
 	},

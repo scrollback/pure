@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
 	},
 	status: {
 		fontSize: 12,
-		lineHeight: 18,
 		marginHorizontal: 16,
 		paddingHorizontal: 4,
 		color: Colors.darkGrey,

@@ -23,14 +23,12 @@ const styles = StyleSheet.create({
 
 	label: {
 		fontSize: 12,
-		lineHeight: 18,
 		fontWeight: 'bold',
 		color: Colors.info,
 	},
 
 	hint: {
 		fontSize: 12,
-		lineHeight: 18,
 		color: Colors.info,
 	},
 

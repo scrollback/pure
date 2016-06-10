@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
 	header: {
 		color: Colors.white,
 		fontSize: 20,
-		lineHeight: 30,
 	},
 	footer: {
 		color: Colors.white,

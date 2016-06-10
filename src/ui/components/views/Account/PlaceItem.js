@@ -23,14 +23,12 @@ const styles = StyleSheet.create({
 
 	name: {
 		fontSize: 14,
-		lineHeight: 21,
 		fontWeight: 'bold',
 		color: Colors.darkGrey,
 	},
 
 	type: {
 		fontSize: 12,
-		lineHeight: 18,
 		color: Colors.fadedBlack,
 	},
 

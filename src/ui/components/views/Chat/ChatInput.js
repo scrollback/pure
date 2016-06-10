@@ -36,6 +36,8 @@ const styles = StyleSheet.create({
 		margin: 0,
 		backgroundColor: 'transparent',
 		color: Colors.black,
+		fontSize: 14,
+		lineHeight: 21,
 	},
 	iconContainer: {
 		alignItems: 'center',

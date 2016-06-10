@@ -27,7 +27,6 @@ const styles = StyleSheet.create({
 		color: Colors.black,
 		opacity: 0.5,
 		fontSize: 12,
-		lineHeight: 18,
 	},
 });
 

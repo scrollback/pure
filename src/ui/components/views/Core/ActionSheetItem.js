@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
 	},
 	menuItemText: {
 		fontSize: 16,
-		lineHeight: 24,
 		color: Colors.darkGrey,
 		margin: 20,
 		paddingHorizontal: 4,

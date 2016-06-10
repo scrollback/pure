@@ -37,6 +37,8 @@ const styles = StyleSheet.create({
 	},
 	text: {
 		color: Colors.darkGrey,
+		fontSize: 14,
+		lineHeight: 21,
 		paddingHorizontal: 4,
 	},
 	triangle: {
@@ -76,7 +78,6 @@ const styles = StyleSheet.create({
 	},
 	author: {
 		fontSize: 12,
-		lineHeight: 18,
 		paddingBottom: 4,
 		paddingHorizontal: 4,
 		opacity: 0.5,

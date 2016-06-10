@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 	title: {
 		color: Colors.darkGrey,
 		fontSize: 28,
-		lineHeight: 42,
 		margin: 16,
 		textAlign: 'center',
 	},

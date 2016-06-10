@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
 
 	footerLabel: {
 		fontSize: 12,
-		lineHeight: 18,
 		fontWeight: 'bold',
 		color: Colors.fadedBlack,
 	},

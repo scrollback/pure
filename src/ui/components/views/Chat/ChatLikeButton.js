@@ -35,7 +35,6 @@ const styles = StyleSheet.create({
 	likeCount: {
 		color: FADED_GREY,
 		fontSize: 10,
-		lineHeight: 15,
 	},
 	liked: {
 		color: Colors.accent,

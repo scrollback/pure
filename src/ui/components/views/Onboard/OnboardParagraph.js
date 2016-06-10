@@ -14,7 +14,6 @@ const styles = StyleSheet.create({
 	paragraph: {
 		color: Colors.darkGrey,
 		fontSize: 16,
-		lineHeight: 24,
 		textAlign: 'center',
 		margin: 16,
 	},

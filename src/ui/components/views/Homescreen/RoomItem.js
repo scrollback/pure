@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
 	label: {
 		color: Colors.grey,
 		fontSize: 10,
-		lineHeight: 15,
 	},
 
 	dot: {

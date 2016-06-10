@@ -33,7 +33,6 @@ const styles = StyleSheet.create({
 	nick: {
 		color: Colors.white,
 		fontSize: 12,
-		lineHeight: 18,
 		textAlign: 'center',
 		marginVertical: 4,
 	},
