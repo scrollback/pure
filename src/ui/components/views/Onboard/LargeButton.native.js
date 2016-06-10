@@ -18,17 +18,15 @@ const styles = StyleSheet.create({
 		marginVertical: 16,
 	},
 	loader: {
-		height: 21,
-		width: 21,
 		marginHorizontal: 16,
 	},
 	button: {
-		backgroundColor: Colors.info,
-		padding: 12,
-		borderRadius: 3,
+		height: 44,
 		flexDirection: 'row',
 		alignItems: 'center',
 		justifyContent: 'center',
+		borderRadius: 3,
+		backgroundColor: Colors.info,
 	},
 	buttonText: {
 		color: Colors.white,
