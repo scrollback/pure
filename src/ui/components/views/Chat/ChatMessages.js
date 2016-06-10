@@ -12,6 +12,7 @@ import type { Text, TextRel } from '../../../../lib/schemaTypes';
 const {
 	StyleSheet,
 	ListView,
+	RecyclerViewBackedScrollView,
 	View,
 } = ReactNative;
 
@@ -29,14 +30,16 @@ const styles = StyleSheet.create({
 	},
 });
 
+type DataItem = {
+	text: Text;
+	textrel: ?TextRel;
+	previousText: ?Text;
+	isLast: ?boolean;
+	type?: 'loading';
+}
+
 type Props = {
-	data: Array<{
-		text: Text;
-		textrel: TextRel;
-		previousText: Text;
-		isLast: boolean;
-		type: any;
-	} | { type: 'loading' } | { type: 'failed' }>;
+	data: Array<DataItem>;
 	user: string;
 	loadMore: (count: number) => void;
 	quoteMessage: Function;
@@ -80,11 +83,11 @@ export default class ChatMessages extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_loadMore: Function = () => {
+	_loadMore = () => {
 		this.props.loadMore(this.props.data.length);
 	};
 
-	_renderRow: Function = item => {
+	_renderRow = (item: DataItem) => {
 		if (item && item.type === 'loading') {
 			return <LoadingItem />;
 		}
@@ -96,7 +99,6 @@ export default class ChatMessages extends Component<void, Props, State> {
 				key={text.id}
 				text={text}
 				textrel={textrel}
-				isFirst={item.isFirst}
 				isLast={item.isLast}
 				previousText={previousText}
 				replyToMessage={this.props.replyToMessage}
@@ -106,6 +108,10 @@ export default class ChatMessages extends Component<void, Props, State> {
 				onNavigate={this.props.onNavigate}
 			/>
 		);
+	};
+
+	_renderScrollComponent = (props: any) => {
+		return <RecyclerViewBackedScrollView {...props} />;
 	};
 
 	render() {
@@ -138,12 +144,14 @@ export default class ChatMessages extends Component<void, Props, State> {
 					<ListView
 						removeClippedSubviews
 						keyboardShouldPersistTaps={false}
-						scrollRenderAheadDistance={300}
+						initialListSize={10}
+						pageSize={10}
+						renderRow={this._renderRow}
+						renderScrollComponent={this._renderScrollComponent}
+						onEndReached={this._loadMore}
+						dataSource={this.state.dataSource}
 						style={styles.inverted}
 						contentContainerStyle={styles.container}
-						dataSource={this.state.dataSource}
-						onEndReached={this._loadMore}
-						renderRow={this._renderRow}
 					/>
 				}
 			</View>

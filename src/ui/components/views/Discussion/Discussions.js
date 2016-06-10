@@ -9,12 +9,13 @@ import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
 import DiscussionItem from './DiscussionItem';
 import StartDiscussionButton from '../StartDiscussion/StartDiscussionButton';
-import type { Thread } from '../../../../lib/schemaTypes';
+import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
 	PixelRatio,
 	Dimensions,
 	StyleSheet,
+	RecyclerViewBackedScrollView,
 	ListView,
 	View,
 } = ReactNative;
@@ -48,10 +49,16 @@ const styles = StyleSheet.create({
 	},
 });
 
+type DataItem = {
+	thread: Thread;
+	threadrel: ?ThreadRel;
+	type?: 'loading'
+};
+
 type Props = {
 	user: string;
 	room: string;
-	data: Array<Thread | { type: 'loading' } | { type: 'failed' }>;
+	data: Array<DataItem>;
 	loadMore: (count: number) => void;
 	onNavigate: (count: number) => void;
 }
@@ -91,11 +98,11 @@ export default class Discussions extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_isWide: Function = () => {
+	_isWide = () => {
 		return Dimensions.get('window').width > 400;
 	};
 
-	_renderRow: Function = ({ thread, threadrel, type }) => {
+	_renderRow = ({ thread, threadrel, type }: DataItem) => {
 		switch (type) {
 		case 'loading':
 			return <LoadingItem />;
@@ -120,6 +127,10 @@ export default class Discussions extends Component<void, Props, State> {
 				/>
 			);
 		}
+	};
+
+	_renderScrollComponent = (props: any) => {
+		return <RecyclerViewBackedScrollView {...props} />;
 	};
 
 	render() {
@@ -153,11 +164,13 @@ export default class Discussions extends Component<void, Props, State> {
 				{placeHolder ? placeHolder :
 					<ListView
 						removeClippedSubviews
-						scrollRenderAheadDistance={300}
-						contentContainerStyle={Dimensions.get('window').width > 400 ? styles.grid : styles.column}
+						initialListSize={3}
+						pageSize={3}
+						renderScrollComponent={this._renderScrollComponent}
+						renderRow={this._renderRow}
 						onEndReached={this.props.loadMore}
 						dataSource={this.state.dataSource}
-						renderRow={this._renderRow}
+						contentContainerStyle={this._isWide() ? styles.grid : styles.column}
 					/>
 				}
 
