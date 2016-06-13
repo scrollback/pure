@@ -11,10 +11,17 @@ import {
 	TAG_POST_HIDDEN,
 	TAG_USER_ADMIN,
 } from '../../../lib/Constants';
+import type {
+	Thread,
+	ThreadRel,
+	User,
+} from '../../../lib/schemaTypes';
+
+type ThreadData = Array<{ thread?: Thread; threadrel?: ThreadRel; type?: 'loading' | 'cta' }>
 
 const CTA = { type: 'cta' };
 
-const transformThreads = (results, me) => {
+export const transformThreads = (results: ThreadData, me: User): ThreadData => {
 	const data = me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) >= 0 ? results.reverse() : results.filter(({ type, thread }) => {
 		if (thread && thread.type === TYPE_THREAD) {
 			const isHidden = me.id !== thread.creator && thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
