@@ -212,6 +212,18 @@ export default class Profile extends Component<void, Props, void> {
 
 		const own = currentUser === user.id;
 
+		let likes = 0;
+
+		if (user.counts && user.counts.upvotes) {
+			if (user.counts.upvotes.texts) {
+				likes += user.counts.upvotes.texts;
+			}
+
+			if (user.counts.upvotes.threads) {
+				likes += user.counts.upvotes.threads;
+			}
+		}
+
 		return (
 			<View style={styles.container}>
 				<ScrollView>
@@ -246,6 +258,12 @@ export default class Profile extends Component<void, Props, void> {
 								{user.counts && user.counts.texts ? user.counts.texts : 0}
 							</AppText>
 							<AppText style={styles.scoreLabel}>MESSAGES</AppText>
+						</View>
+						<View style={styles.score}>
+							<AppText style={styles.scoreCount}>
+								{likes}
+							</AppText>
+							<AppText style={styles.scoreLabel}>LIKES</AppText>
 						</View>
 						<View style={styles.score}>
 							<AppText style={styles.scoreCount}>
