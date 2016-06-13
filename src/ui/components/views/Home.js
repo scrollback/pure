@@ -51,7 +51,13 @@ export default class Home extends Component<void, Props, void> {
 	};
 
 	_renderScene = (props: any) => {
-		return <NavigationScene {...props} routeMapper={routeMapper} />;
+		return (
+			<NavigationScene
+				{...props}
+				key={props.scene.key}
+				routeMapper={routeMapper}
+			/>
+		);
 	};
 
 	_renderNavigator = (props: any) => {

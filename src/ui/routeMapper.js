@@ -26,6 +26,7 @@ export type RouteDescription = {
 	leftComponent?: ReactClass<any>;
 	rightComponent?: ReactClass<any>;
 	component: ReactClass<any>;
+	type?: 'modal';
 }
 
 export default function(route: Route): RouteDescription {
@@ -52,7 +53,7 @@ export default function(route: Route): RouteDescription {
 		return {
 			title: `${route.props ? route.props.user : 'someone'}'s profile`,
 			component: ProfileContainer,
-			appbar: false,
+			type: 'modal',
 		};
 	case 'account':
 		return {
@@ -68,7 +69,7 @@ export default function(route: Route): RouteDescription {
 		return {
 			title: 'Add place',
 			component: PlaceSelectorContainer,
-			appbar: false,
+			type: 'modal',
 		};
 	case 'details':
 		return {
@@ -85,7 +86,7 @@ export default function(route: Route): RouteDescription {
 		return {
 			title: 'Start new discussion',
 			component: StartDiscussionContainer,
-			appbar: false,
+			type: 'modal',
 		};
 	default:
 		return {

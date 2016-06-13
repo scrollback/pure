@@ -1,10 +1,12 @@
 /* @flow */
+/* eslint-disable no-undefined */
 
 import React, { Component, PropTypes } from 'react';
 import {
 	View,
 	StyleSheet,
 	StatusBar,
+	NavigationExperimental,
 } from 'react-native';
 import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AppbarIcon from '../Appbar/AppbarIcon';
@@ -12,6 +14,10 @@ import AppbarTitle from '../Appbar/AppbarTitle';
 import BannerOfflineContainer from '../../containers/BannerOfflineContainer';
 import Colors from '../../../Colors';
 import type { Route } from '../../../../lib/RouteTypes';
+
+const {
+	Card: NavigationCard,
+} = NavigationExperimental;
 
 const styles = StyleSheet.create({
 	container: {
@@ -133,7 +139,7 @@ export default class Scene extends Component<void, Props, void> {
 		return null;
 	};
 
-	render() {
+	_renderScene = () => {
 		const {
 			route,
 		} = this.props.scene;
@@ -144,7 +150,7 @@ export default class Scene extends Component<void, Props, void> {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
 				<StatusBar backgroundColor={Colors.primaryDark} />
-				{routeDesc.appbar !== false ?
+				{routeDesc.type !== 'modal' ?
 					<View style={styles.appbar}>
 						<View style={styles.left}>
 							{this._renderLeftComponent(routeDesc)}
@@ -165,6 +171,29 @@ export default class Scene extends Component<void, Props, void> {
 					onNavigate={this.props.onNavigate}
 				/>
 			</View>
+		);
+	};
+
+	render() {
+		const {
+			route,
+		} = this.props.scene;
+
+		const routeDesc = this.props.routeMapper(route);
+
+		return (
+			<NavigationCard
+				{...this.props}
+				style={routeDesc.type === 'modal' ?
+					NavigationCard.CardStackStyleInterpolator.forVertical(this.props) :
+					undefined
+				}
+				panHandlers={routeDesc.type === 'modal' ?
+					NavigationCard.CardStackPanResponder.forVertical(this.props) :
+					undefined
+				}
+				renderScene={this._renderScene}
+			/>
 		);
 	}
 }

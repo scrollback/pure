@@ -7,16 +7,24 @@ import type { NavigationState } from '../../../../lib/RouteTypes';
 const {
 	NavigationExperimental,
 	BackAndroid,
+	StyleSheet,
 } = ReactNative;
 
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+	},
+});
+
 const {
-	CardStack: NavigationCardStack,
+	Transitioner: NavigationTransitioner,
 } = NavigationExperimental;
 
 type Props = {
 	navigationState: NavigationState;
 	onNavigate: Function;
 	onGoBack: Function;
+	style?: any;
 }
 
 export default class NavigationView extends Component<void, Props, void> {
@@ -24,6 +32,7 @@ export default class NavigationView extends Component<void, Props, void> {
 		navigationState: PropTypes.object.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		onGoBack: PropTypes.func,
+		style: PropTypes.any,
 	};
 
 	componentDidMount() {
@@ -53,6 +62,6 @@ export default class NavigationView extends Component<void, Props, void> {
 	};
 
 	render() {
-		return <NavigationCardStack direction='vertical' {...this.props} />;
+		return <NavigationTransitioner {...this.props} style={[ styles.container, this.props.style ]} />;
 	}
 }
