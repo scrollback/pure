@@ -30,7 +30,8 @@ export const transformTexts = (texts: TextData, thread: ?Thread, threadrel: ?Thr
 		if (type === 'loading') {
 			data.push(texts[i]);
 		} else if (text && text.type === TYPE_TEXT) {
-			const previousText = texts[i - 1].text;
+			const previousItem = texts[i - 1];
+			const previousText = previousItem ? previousItem.text : null;
 			data.push({
 				text,
 				textrel,
