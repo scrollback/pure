@@ -12,8 +12,17 @@ import {
 	TAG_POST_HIDDEN,
 	TAG_USER_ADMIN,
 } from '../../../lib/Constants';
+import type {
+	Text,
+	Thread,
+	TextRel,
+	ThreadRel,
+	User,
+} from '../../../lib/schemaTypes';
 
-const transformTexts = (texts, thread, threadrel) => {
+type TextData = Array<{ text: Text; textrel: TextRel; type?: 'loading' }>
+
+export const transformTexts = (texts: TextData, thread: ?Thread, threadrel: ?ThreadRel): any => {
 	const data = [];
 
 	for (let l = texts.length - 1, i = l; i >= 0; i--) {
@@ -21,7 +30,7 @@ const transformTexts = (texts, thread, threadrel) => {
 		if (type === 'loading') {
 			data.push(texts[i]);
 		} else if (text && text.type === TYPE_TEXT) {
-			const previousText = texts[i - 1];
+			const previousText = texts[i - 1].text;
 			data.push({
 				text,
 				textrel,
@@ -52,7 +61,7 @@ const transformTexts = (texts, thread, threadrel) => {
 	return data;
 };
 
-const filterHidden = (results, me) => me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) > -1 ? results : results.filter(({ text, type }) => {
+export const filterHidden = (results: TextData, me: User) => me && me.tags && me.tags.indexOf(TAG_USER_ADMIN) > -1 ? results : results.filter(({ text, type }) => {
 	if (text && text.type === TYPE_TEXT) {
 		const isHidden = me.id !== text.creator && (text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1);
 		return !isHidden;
