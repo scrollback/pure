@@ -15,6 +15,7 @@ const {
 	PixelRatio,
 	Dimensions,
 	StyleSheet,
+	ScrollView,
 	RecyclerViewBackedScrollView,
 	ListView,
 	View,
@@ -130,7 +131,8 @@ export default class Discussions extends Component<void, Props, State> {
 	};
 
 	_renderScrollComponent = (props: any) => {
-		return <RecyclerViewBackedScrollView {...props} />;
+		// FIXME: RecyclerViewBackedScrollView doesn't support multi-column mode
+		return this._isWide() ? <ScrollView {...props} /> : <RecyclerViewBackedScrollView {...props} />;
 	};
 
 	render() {
