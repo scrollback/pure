@@ -59,7 +59,7 @@ export default class AvatarRound extends Component<void, Props, void> {
 
 		return (
 			<View {...this.props} style={[ styles.avatar, { height: size, width: size, borderRadius: size / 2 }, this.props.style ]}>
-				<AppText style={[ styles.letter, { fontSize: size / 2, top: -(size / 32) } ]}>{user.charAt(0).toUpperCase()}</AppText>
+				<AppText style={[ styles.letter, { fontSize: size / 2, top: -(size / 72) } ]}>{user.charAt(0).toUpperCase()}</AppText>
 				<AvatarContainer
 					size={this.props.size * PixelRatio.get()}
 					user={this.props.user}
