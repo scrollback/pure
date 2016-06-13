@@ -13,7 +13,8 @@ const operators = {
 	cts: '@>',
 	ctd: '<@',
 	pref: 'like',
-	olp: '&&'
+	olp: '&&',
+	first: '[1] = '
 };
 
 function getPropOp(prop) {
@@ -66,6 +67,7 @@ function wherePart (f) {
 		case 'cts':
 		case 'olp':
 		case 'ctd':
+		case 'first':
 			sql.push(`${tableName}"${name.toLowerCase()}" ${operators[op]} &{${prop}}`);
 			break;
 		default:

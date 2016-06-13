@@ -118,7 +118,7 @@ function sliceFromProps({ user, thread }) {
 		},
 		filter: {
 			text: {
-				parents_cts: [ thread ],
+				parents_first: thread,
 			},
 			textrel: {
 				user,

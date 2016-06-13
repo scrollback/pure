@@ -10,10 +10,10 @@ const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
 function getItemFromFilter(filter) {
 	if (filter) {
-		if (filter.thread && filter.thread.parents_cts) {
-			return filter.thread.parents_cts[0];
-		} else if (filter.text && filter.text.parents_cts) {
-			return filter.text.parents_cts[0];
+		if (filter.thread && filter.thread.parents_first) {
+			return filter.thread.parents_first;
+		} else if (filter.text && filter.text.parents_first) {
+			return filter.text.parents_first;
 		}
 	}
 

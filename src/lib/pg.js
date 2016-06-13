@@ -57,7 +57,7 @@ export function cat (parts, delim) {
 				suffix = 1;
 				while ((paramName + '_' + suffix) in q) { suffix++; }
 
-				part.$ = part.$.replace(/(&\{|\()([^\}\)]+)(\}|\))/g, substitute);
+				part.$ = part.$.replace(/(&(?:\{|\())([^\}\)]+)(\}|\))/g, substitute);
 				q[paramName + '_' + suffix] = part[paramName];
 			} else {
 				q[paramName] = part[paramName];
