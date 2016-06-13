@@ -115,19 +115,21 @@ if (config.s3) {
 				if (entity.type !== TYPE_USER) {
 					continue;
 				} else {
-					if (!isS3Url(entity.meta.picture)) {
-						const imageName = 'avatar';
-						const url = entity.meta.picture;
-						const userName = entity.id;
-						promises.push(
-							urlTos3(
-								buildAvatarURLForSize(url, 1024),
-								'/a/' + userName + '/' + imageName
-							).then(res => ({
-								upload: res,
-								id: userName
-							}))
-						);
+					if (entity.meta) {
+						if (!isS3Url(entity.meta.picture)) {
+							const imageName = 'avatar';
+							const url = entity.meta.picture;
+							const userName = entity.id;
+							promises.push(
+								urlTos3(
+									buildAvatarURLForSize(url, 1024),
+									'/a/' + userName + '/' + imageName
+								).then(res => ({
+									upload: res,
+									id: userName
+								}))
+							);
+						}
 					}
 				}
 			}

@@ -26,6 +26,7 @@ import '../modules/postgres/postgres';
 import '../modules/image-upload/image-upload';
 import '../modules/query-compatability/query-compatability';
 import '../modules/email/unsubscribe';
+import '../modules/urlShortener/urlOperations';
 import '../modules/contacts/contacts';
 import '../modules/avatar/avatar';
 import '../modules/client/client';
@@ -34,6 +35,7 @@ import '../modules/debug/debug-server';
 
 import '../modules/belong/belong';
 import '../modules/content-seeding/content-seeding';
+import '../modules/content-seeding/news-aggregator';
 
 // Email server
 import '../modules/email/email-daemon';

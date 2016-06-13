@@ -31,6 +31,10 @@ const chars = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
 const doReadQuery = promisify(pg.read.bind(pg, config.connStr));
 const doWriteQuery = promisify(pg.write.bind(pg, config.connStr));
 
+const isNativeURL = (longURL: string): boolean => {
+	return /https?:\/\/bel\.ng\//.test(longURL);
+};
+
 const isShortURL = (shortURL: string): boolean => {
 	if (shortURL.length === 6 || shortURL.length === 7) {
 		return /^[A-Za-z0-9\-_]+$/.test(shortURL);
@@ -64,48 +68,58 @@ const insertLongURL = (shortURL: string, longURL: string): Promise<Array<{rowCou
 export const getShortURL = (longURL: string): Promise<string> => {
 	const pathFromLongURL = getPathFromURL(longURL);
 	const shortURL = makeURLSafeHash(pathFromLongURL);
-	// Try inserting long URL and its hash as the short URL.
-	return insertLongURL(shortURL, pathFromLongURL)
-		// in case of a successful insertion, simply return the hash.
-		.then((result) => {
-			// result: [{.., rowcount: _, ...}, ..]
-			if (result[0].rowCount === 1) {
-				winston.info('Insert operation performed successfully.');
-				return shortURL;
-			}
-			return null;
-		})
-		// in case of an error, take proper measures.
-		.catch((error) => {
-			winston.info(`something went wrong while perfoming insertion, ${error}`);
-			return doReadQuery({
-				$: 'SELECT shorturl, longurl FROM urls WHERE shorturl LIKE &{shortURL}',
-				shortURL: shortURL + '%'
+
+	// check if the url is a valid 'https://bel.ng/' url.
+	if (!isNativeURL(longURL)) {
+		throw new Error('The url is not a bel.ng url');
+	}
+
+	if (pathFromLongURL === '/') {
+		return Promise.resolve('');
+	} else {
+		// Try inserting long URL and its hash as the short URL.
+		return insertLongURL(shortURL, pathFromLongURL)
+			// in case of a successful insertion, simply return the hash.
+			.then((result) => {
+				// result: [{.., rowCount: _, ...}, ..]
+				if (result[0].rowCount === 1) {
+					winston.info('Insert operation performed successfully.');
+					return shortURL;
+				}
+				return null;
 			})
-			.then((links) => {
-				// links: [{shorturl: _, longurl: _}, ...]
-				let maxIndex = 0;
-				for (const link of links) {
-					if (link.longurl === pathFromLongURL) {
-						winston.info('The long url already exists');
-						return link.shorturl;
-					} else if (link.shorturl.length === 7) {
-						const indexInChar = chars.indexOf(link.shorturl[6]);
-						if (indexInChar >= maxIndex) {
-							if (indexInChar < chars.length - 1) {
-								maxIndex = indexInChar + 1;
-							} else {
-								throw new Error(`Max collisions exceeded for hash: ${shortURL}`);
+			// in case of an error, take proper measures.
+			.catch((error) => {
+				winston.info(`something went wrong while perfoming insertion, ${error}`);
+				return doReadQuery({
+					$: 'SELECT shorturl, longurl FROM urls WHERE shorturl LIKE &{shortURL}',
+					shortURL: shortURL + '%'
+				})
+				.then((links) => {
+					// links: [{shorturl: _, longurl: _}, ...]
+					let maxIndex = 0;
+					for (const link of links) {
+						if (link.longurl === pathFromLongURL) {
+							winston.info('The long url already exists');
+							return link.shorturl;
+						} else if (link.shorturl.length === 7) {
+							const indexInChar = chars.indexOf(link.shorturl[6]);
+							if (indexInChar >= maxIndex) {
+								if (indexInChar < chars.length - 1) {
+									maxIndex = indexInChar + 1;
+								} else {
+									throw new Error(`Max collisions exceeded for hash: ${shortURL}`);
+								}
 							}
 						}
 					}
-				}
-				return insertLongURL(shortURL + chars[maxIndex], pathFromLongURL)
-					.then(() => {
-						return shortURL + chars[maxIndex];
-					});
+					return insertLongURL(shortURL + chars[maxIndex], pathFromLongURL)
+						.then(() => {
+							return shortURL + chars[maxIndex];
+						});
+				});
 			});
-		});
+	}
 };
 
 export const getLongURL = (shortURL: string): Promise<string> => {
@@ -142,6 +156,19 @@ export const getLongURL = (shortURL: string): Promise<string> => {
 */
 
 bus.on('http/init', app => {
+	app.use(route.get('/x/shorten-url', function *() {
+		const query = this.request.query;
+		if (query && query.longurl) {
+			try {
+				this.body = yield getShortURL(query.longurl);
+			} catch (e) {
+				this.throw(500, e.message);
+			}
+		} else {
+			this.throw(400, 'long URL was not provided !!');
+		}
+	}));
+
 	app.use(route.get('*', function *() {
 		const path = this.request.url.slice(1).match(/^[^\/?]*/, '')[0];
 		try {
