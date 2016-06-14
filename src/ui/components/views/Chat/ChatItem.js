@@ -87,9 +87,14 @@ const styles = StyleSheet.create({
 	like: {
 		position: 'absolute',
 		top: 0,
-		right: 0,
 		width: 52,
 		alignItems: 'center',
+	},
+	likeReceived: {
+		right: 0,
+	},
+	likeSent: {
+		left: -52,
 	},
 });
 
@@ -238,14 +243,11 @@ export default class ChatItem extends Component<void, Props, State> {
 							</ChatBubble>
 						</TouchableOpacity>
 
-						{received ?
-							<ChatLikeButtonContainer
-								style={styles.like}
-								text={this.props.text}
-								textrel={this.props.textrel}
-							/> :
-							null
-						}
+						<ChatLikeButtonContainer
+							style={[ styles.like, received ? styles.likeReceived : styles.likeSent ]}
+							text={this.props.text}
+							textrel={this.props.textrel}
+						/>
 					</View>
 				</View>
 
