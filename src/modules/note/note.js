@@ -29,10 +29,8 @@ const server = `${config.server.protocol}//${config.server.host}`;
 const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
 export async function getTextParents(text: TextType): Promise<{ room: RoomType; thread: ThreadType; }> {
-	let room: RoomType, thread: ThreadType;
-
-	room = await getEntityAsync(text.parents[1]);
-	thread = await getEntityAsync(text.parents[0]);
+	const room: RoomType = await getEntityAsync(text.parents[1]);
+	const thread: ThreadType = await getEntityAsync(text.parents[0]);
 
 	return { room, thread };
 }
@@ -55,6 +53,7 @@ export function createNote(
 		if (item.type === TYPE_THREAD) {
 			subTitle = 'discussion';
 		}
+
 		event = NOTE_UPVOTE;
 		noteTo = item.creator;
 		noteFrom = rel.user;
@@ -72,7 +71,7 @@ export function createNote(
 		data: {
 			id: item.id,
 			creator: noteFrom,
-			picture: `${server}/i/picture?user=${noteFrom}&size=${128}`,
+			picture: event === NOTE_UPVOTE ? `${server}s/assets/notification-heart.png` : `${server}/i/picture?user=${noteFrom}&size=${128}`,
 			room: {
 				id: room.id,
 				name: room.name,

@@ -62,7 +62,7 @@ bus.on('http/init', app => {
 					title,
 					description,
 				})}
-				image={`${this.request.origin}/s/assets/thumbnail.png`}
+				image={`${this.request.origin}/s/assets/preview-thumbnail.png`}
 				permalink={this.request.href}
 				styles={[
 					'//fonts.googleapis.com/css?family=Alegreya+Sans:300,500,900',
