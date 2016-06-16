@@ -112,7 +112,7 @@ export default class MyActivity extends Component<void, Props, State> {
 				return <LoadingItem />;
 			}
 
-			if (thread.parents.length === 0) {
+			if (thread.parents && thread.parents.length === 0) {
 				return null;
 			}
 
