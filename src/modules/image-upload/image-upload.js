@@ -101,10 +101,22 @@ if (!config.s3) {
 	winston.info('Image upload is ready');
 }
 
-const isS3Url = (url) => {
-	return /https?:\/\/.*\.amazonaws\.com\//.test(url);
+const uploadImage = async (userName: string, imageUrl: string, propName: string) => {
+	const imageName = 'avatar';
+	await urlTos3(buildAvatarURLForSize(imageUrl, 1024), 'a/' + userName + '/' + imageName);
+	const changes = {
+		entities: {
+			[userName]: {
+				type: TYPE_USER,
+				id: userName,
+				[propName]: {
+					picture: [ '$delete' ]
+				}
+			}
+		}
+	};
+	bus.emit('change', changes);
 };
-
 
 if (config.s3) {
 	bus.on('postchange', async ({ entities }) => {
@@ -115,39 +127,18 @@ if (config.s3) {
 				if (entity.type !== TYPE_USER) {
 					continue;
 				} else {
-					if (entity.meta && !isS3Url(entity.meta.picture)) {
-						const imageName = 'avatar';
-						const url = entity.meta.picture;
-						const userName = entity.id;
+					if (entity.params && entity.params.picture) {
 						promises.push(
-							urlTos3(
-								buildAvatarURLForSize(url, 1024),
-								'/a/' + userName + '/' + imageName
-							).then(res => ({
-								upload: res,
-								id: userName
-							}))
+							uploadImage(entity.id, entity.params.picture, 'params')
+						);
+					} else if (entity.meta && entity.meta.picture) {
+						promises.push(
+							uploadImage(entity.id, entity.meta.picture, 'meta')
 						);
 					}
 				}
 			}
 		}
-
-		const results = await Promise.all(promises);
-		const changes = {
-			entities: {}
-		};
-
-		for (const result of results) {
-			changes.entities[result.id] = {
-				id: result.id,
-				type: TYPE_USER,
-				meta: {
-					picture: result.upload.Location
-				}
-			};
-		}
-
-		bus.emit('change', changes);
+		await Promise.all(promises);
 	});
 }
