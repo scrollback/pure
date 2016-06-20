@@ -63,6 +63,7 @@ export const TAG_USER_WNS = 19;
 export const TAG_ROOM_CITY = 21;
 export const TAG_ROOM_AREA = 22;
 export const TAG_ROOM_SPOT = 23;
+export const TAG_ROOM_META = 24;
 
 export const PRESENCE_FOREGROUND = 2;
 export const PRESENCE_BACKGROUND = 1;
