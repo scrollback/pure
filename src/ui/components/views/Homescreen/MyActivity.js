@@ -141,20 +141,11 @@ export default class MyActivity extends Component<void, Props, State> {
 		let placeHolder;
 
 		if (data.length === 0) {
-			placeHolder = <PageEmpty label='No MyActivity yet' image='sad' />;
+			placeHolder = <PageEmpty label="You don't have any activity" image='sad' />;
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':
 				placeHolder = <PageLoading />;
-				break;
-			case 'banned':
-				placeHolder = <PageEmpty label="You're banned in this group" image='meh' />;
-				break;
-			case 'nonexistent':
-				placeHolder = <PageEmpty label="This group doesn't exist" image='sad' />;
-				break;
-			case 'failed':
-				placeHolder = <PageEmpty label='Failed to load MyActivity' image='sad' />;
 				break;
 			}
 		}
