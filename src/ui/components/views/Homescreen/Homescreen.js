@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { TabView, TabBarTop } from 'react-native-tab-view';
+import { TabViewTransitioner, TabView, TabBarTop } from 'react-native-tab-view';
 import RoomsContainer from '../../containers/RoomsContainer';
 import MyActivityContainer from '../../containers/MyActivityContainer';
 import Colors from '../../../Colors';
@@ -17,6 +17,9 @@ const styles = StyleSheet.create({
 	},
 	tablabel: {
 		fontFamily: 'Lato',
+	},
+	indicator: {
+		backgroundColor: Colors.accent,
 	},
 });
 
@@ -51,12 +54,11 @@ export default class Homescreen extends Component<void, any, State> {
 		});
 	};
 
-	_renderHeader = () => {
+	_renderHeader = (props: any) => {
 		return (
 			<TabBarTop
-				navigationState={this.state.navigation}
-				onRequestChangeTab={this._handleChangeTab}
-				indicatorColor={Colors.accent}
+				{...props}
+				indicatorStyle={styles.indicator}
 				labelStyle={styles.tablabel}
 				style={styles.tabbar}
 			/>
@@ -74,12 +76,16 @@ export default class Homescreen extends Component<void, any, State> {
 		}
 	};
 
+	_renderTabView = (props: any) => {
+		return <TabView {...props} renderScene={this._renderScene} />;
+	};
+
 	render() {
 		return (
-			<TabView
+			<TabViewTransitioner
 				style={styles.container}
 				navigationState={this.state.navigation}
-				renderScene={this._renderScene}
+				renderScene={this._renderTabView}
 				renderHeader={this._renderHeader}
 				onRequestChangeTab={this._handleChangeTab}
 			/>
