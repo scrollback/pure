@@ -59,7 +59,7 @@ export default class PeopleList extends Component<void, Props, State> {
 		<PeopleListItem
 			key={relation.user}
 			user={relation.user}
-			status={relation.rel.presence === PRESENCE_FOREGROUND ? 'online' : 'offline'}
+			status={relation.rel && relation.rel.presence === PRESENCE_FOREGROUND ? 'online' : 'offline'}
 			onNavigate={this.props.onNavigate}
 		/>
 	);
