@@ -50,20 +50,21 @@ export default class Modal extends Component<void, Props, State> {
 		this._updateChild(this.props);
 	}
 
-	_spring = (anim: Animated.Value, toValue: number) => {
+	_animate = (anim: Animated.Value, toValue: number) => {
 		return new Promise(resolve => {
-			Animated.spring(anim, {
+			Animated.timing(anim, {
 				toValue,
+				duration: 250,
 			}).start(resolve);
 		});
 	};
 
 	_fadeIn = () => {
-		return this._spring(this.state.fadeAnim, 1);
+		return this._animate(this.state.fadeAnim, 1);
 	};
 
 	_fadeOut = () => {
-		return this._spring(this.state.fadeAnim, 0);
+		return this._animate(this.state.fadeAnim, 0);
 	};
 
 	_updateChild = async (props: Props) => {
