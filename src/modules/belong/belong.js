@@ -11,6 +11,17 @@ import * as pg from '../../lib/pg';
 import type { User } from '../../lib/schemaTypes';
 
 const placesRoles = [ constants.ROLE_WORK, constants.ROLE_HOME, constants.ROLE_HOMETOWN ];
+
+function addOpenHouse(change, user) {
+	if (user.createTime === user.updateTime) {
+		change[user.id + '_' + config.open_house_id] = new RoomRel({
+			user: user.id,
+			item: config.open_house_id,
+			roles: [ constants.ROLE_FOLLOWER ]
+		});
+	}
+}
+
 // postgres mock, because jest is acting up.
 
 // const pg = {
@@ -210,6 +221,7 @@ function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 		updateRels(change, user, updateable);
 		removeRels(change, removable);
 
+		addOpenHouse(change, user);
 		bus.emit('change', { entities: change, source: 'belong' });
 	});
 }
