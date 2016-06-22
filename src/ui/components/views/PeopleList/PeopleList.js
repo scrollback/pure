@@ -73,8 +73,6 @@ export default class PeopleList extends Component<void, Props, State> {
 			switch (data[0] && data[0].type || null) {
 			case 'loading':
 				return <PageLoading />;
-			case 'failed':
-				return <PageEmpty label='Failed to load people list' image='sad' />;
 			}
 		}
 
