@@ -20,10 +20,8 @@ const styles = StyleSheet.create({
 	header: {
 		flexDirection: 'row',
 		alignItems: 'center',
-		borderBottomWidth: 1 / PixelRatio.get(),
-		borderBottomColor: Colors.separator,
-		paddingHorizontal: 16,
-		paddingVertical: 6,
+		marginHorizontal: 16,
+		marginVertical: 6,
 	},
 
 	label: {
@@ -41,6 +39,11 @@ const styles = StyleSheet.create({
 		color: Colors.grey,
 		fontSize: 3,
 		marginHorizontal: 6,
+	},
+
+	item: {
+		borderTopWidth: 1 / PixelRatio.get(),
+		borderTopColor: Colors.separator,
 	},
 });
 
@@ -86,7 +89,7 @@ export default class RoomItem extends Component<void, any, any> {
 					<AppText style={styles.dot}>●</AppText>
 					<AppText style={styles.title}>{room.name} </AppText>
 				</View>
-				<DiscussionItemBase {...rest} />
+				<DiscussionItemBase {...rest} style={styles.item} />
 			</Card>
 		);
 	}
