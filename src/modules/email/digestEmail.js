@@ -2,7 +2,7 @@
 import getMailObj from './buildMailObj';
 import { config } from '../../core-server';
 import * as Constants from '../../lib/Constants';
-import log from '../../lib/logger';
+import Logger from '../../lib/logger';
 import fs from 'fs';
 import handlebars from 'handlebars';
 import * as pg from '../../lib/pg';
@@ -13,7 +13,7 @@ const DIGEST_INTERVAL = 60 * 60 * 1000, DIGEST_DELAY = 24 * 60 * 60 * 1000,
 	template = handlebars.compile(
 		fs.readFileSync(__dirname + '/../../../templates/' + config.app_id + '.digest.hbs', 'utf-8').toString()
 	),
-	connStr = config.connStr, conf = config.email, counter1 = new Counter();
+	connStr = config.connStr, conf = config.email, counter1 = new Counter(), log = new Logger(__filename);
 let lastEmailSent, end, i = 0;
 const fields = [
 		'roomrels.presencetime',

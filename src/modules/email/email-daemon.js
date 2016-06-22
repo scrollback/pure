@@ -1,7 +1,7 @@
 /* @flow */
 
 import * as pg from '../../lib/pg';
-import winston from '../../lib/logger';
+import Logger from '../../lib/logger';
 import { config } from '../../core-server';
 import sendWelcomeEmail from './welcomeEmail';
 import sendMentionEmail from './mentionEmail';
@@ -12,18 +12,18 @@ import {
 	JOB_EMAIL_MENTION,
 } from '../../lib/Constants';
 
-const conf = config.email, connString = config.connStr;
+const conf = config.email, connString = config.connStr, log = new Logger(__filename);
 
 if (!conf.auth.user && !conf.auth.pass) {
-	winston.info('Email module not enabled');
+	log.info('Email module not enabled');
 } else {
-	winston.info('Email module ready.');
+	log.info('Email module ready.');
 	pg.read(connString, {
 		$: 'SELECT * FROM jobs WHERE id in (&(ids))',
 		ids: [ JOB_EMAIL_WELCOME, JOB_EMAIL_DIGEST ],
 	}, (err, results) => {
 		if (err) return;
-		winston.info('Results: ', results);
+		log.info('Results: ', results);
 		results.forEach((row) => {
 			switch (row.id) {
 			case JOB_EMAIL_WELCOME:
@@ -36,7 +36,7 @@ if (!conf.auth.user && !conf.auth.pass) {
 				sendDigestEmail(row);
 				break;
 			default:
-				winston.error('wrong job id');
+				log.error('wrong job id');
 				break;
 			}
 		});

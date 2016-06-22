@@ -1,4 +1,4 @@
-import log from 'winston';
+import Logger from '../../lib/logger';
 import fs from 'fs';
 import jwt from 'jsonwebtoken';
 import handlebars from 'handlebars';
@@ -7,7 +7,7 @@ import Counter from '../../lib/counter';
 import send from './sendEmail';
 import { config } from '../../core-server';
 import * as Constants from '../../lib/Constants';
-
+const log = new Logger(__filename);
 const WELCOME_INTERVAL = 5 * 60 * 1000, WELCOME_DELAY = 5 * 60 * 1000, connStr = config.connStr, conf = config.email,
 	template = handlebars.compile(fs.readFileSync(__dirname + '/../../../templates/' +
 	config.app_id + '.welcome.hbs', 'utf-8').toString());
@@ -16,6 +16,7 @@ let lastEmailSent, end;
 
 function initMailSending(cUserRel) {
 	const counter = new Counter();
+
 	const user = cUserRel.user;
 	log.debug(user);
 	if (!user.identities || !Array.isArray(user.identities)) {

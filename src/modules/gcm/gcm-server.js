@@ -2,7 +2,7 @@
 
 import { connect } from './xmpp';
 import { bus, config, cache } from '../../core-server';
-import log from 'winston';
+import Logger from '../../lib/logger';
 import * as Constants from '../../lib/Constants';
 import uid from '../../lib/uid-server';
 import Counter from '../../lib/counter';
@@ -11,7 +11,7 @@ import createStanza from './createStanza';
 import { convertRouteToURL } from '../../lib/Route';
 import type { Note } from '../../lib/schemaTypes';
 import './subscribeTopics';
-
+const log = new Logger(__filename);
 let client;
 
 if (config.gcm.senderId) {

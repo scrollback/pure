@@ -1,13 +1,13 @@
 /* eslint no-use-before-define: 0 */
 /* @flow */
-import log from 'winston';
+import Logger from '../../lib/logger';
 import { config, bus, cache } from '../../core-server';
 import { ROLE_FOLLOWER } from '../../lib/Constants';
 import { subscribe, getIIDInfo } from './subscribeTopics';
 
 // import util from 'util';
 let client;
-const sessionAndtokens = {};
+const sessionAndtokens = {}, log = new Logger(__filename);
 
 export function getTokenFromSession(session) {
 	if (!session) {

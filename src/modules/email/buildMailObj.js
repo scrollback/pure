@@ -1,7 +1,7 @@
 import { formatShort } from '../../lib/Time';
 import { config } from '../../core-server';
-import log from '../../lib/logger';
-
+import Logger from '../../lib/logger';
+const log  = new Logger(__filename);
 let currentU = {},
 	currentR: Array<Object> = [];
 

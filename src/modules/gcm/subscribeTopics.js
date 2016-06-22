@@ -3,11 +3,11 @@
 import { config, bus, cache } from '../../core-server';
 import * as Constants from '../../lib/Constants';
 import Counter from '../../lib/counter';
-import log from 'winston';
+import Logger from '../../lib/logger';
 import values from 'lodash/values';
 import request from 'request';
 import { getTokenFromSession, updateUser } from './handleUpstreamMessage';
-const authKey = 'key=' + config.gcm.apiKey;
+const authKey = 'key=' + config.gcm.apiKey, log = new Logger(__filename);
 const options = {
 	url: 'https://iid.googleapis.com/iid/v1:batchAdd',
 	json: true,
