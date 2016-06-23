@@ -2,7 +2,7 @@
 	"app_name": "Belong",
 	"app_id": "belong",
 	"package_name": "chat.belong.hello",
-
+	"open_house_id": "a6c02590-7704-41e1-b3ab-6f4b55a94e1c",
 	"session": {
 		"private_key": "put_your_private_key_here"
 	},
