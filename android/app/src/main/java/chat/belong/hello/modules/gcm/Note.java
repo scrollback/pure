@@ -8,7 +8,6 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
@@ -25,9 +24,6 @@ public class Note {
 
     private static final String TAG = "Note";
 
-    private static final String PROP_COUNT = "count";
-    private static final String PROP_TIME = "updateTime";
-    private static final String PROP_DATA = "data";
     private static final String PROP_TITLE = "title";
     private static final String PROP_BODY = "body";
     private static final String PROP_LINK = "link";
@@ -39,25 +35,17 @@ public class Note {
     public final String summary;
     public final String link;
     @Nullable
-    public final Bitmap picture;
+    public final String picture;
 
-    public Note(Context context, Bundle bundle) throws JSONException, NoSuchFieldException {
+    public Note(Context context, JSONObject data) throws JSONException, NoSuchFieldException {
         mContext = context;
-
-        String item = bundle.getString(PROP_DATA);
-
-        if (item == null || item.isEmpty()) {
-            throw new NoSuchFieldException("Bundle doesn't contain data");
-        }
-
-        JSONObject data = new JSONObject(item);
 
         title = data.getString(PROP_TITLE);
         summary = data.getString(PROP_BODY);
         link = data.getString(PROP_LINK);
 
         if (data.has(PROP_PICTURE)) {
-            picture = getBitmap(data.getString(PROP_PICTURE));
+            picture = data.getString(PROP_PICTURE);
         } else {
             picture = null;
         }
@@ -153,6 +141,14 @@ public class Note {
             canvas.drawBitmap(bitmap, rect, rect, paint);
 
             return output;
+        }
+
+        return null;
+    }
+
+    public Bitmap getPicture() {
+        if (picture != null) {
+            return getBitmap(picture);
         }
 
         return null;
