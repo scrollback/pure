@@ -1,6 +1,9 @@
-/* eslint-disable import/no-commonjs */
+import 'react-native-mock/mock';
+import mockery from 'mockery';
 
-import mock from 'mock-require';
+global.__DEV__ = true;
 
-mock('react-native', require('react-native-mock'));
-mock('react-native-vector-icons/MaterialIcons', () => null);
+mockery.enable();
+mockery.warnOnUnregistered(false);
+
+mockery.registerMock('react-native-vector-icons/MaterialIcons', () => null);
