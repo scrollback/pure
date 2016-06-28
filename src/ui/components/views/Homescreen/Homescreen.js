@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
-import { TabViewTransitioner, TabView, TabBarTop } from 'react-native-tab-view';
+import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import RoomsContainer from '../../containers/RoomsContainer';
 import MyActivityContainer from '../../containers/MyActivityContainer';
 import Colors from '../../../Colors';
@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
 	},
 });
 
-type Scene = {
-	label: string;
+type Route = {
+	title: string;
 	key: string;
 }
 
 type NavigationState = {
 	index: number;
-	scenes: Array<Scene>;
+	routes: Array<Route>;
 }
 
 type State = {
@@ -41,9 +41,9 @@ export default class Homescreen extends Component<void, any, State> {
 	state: State = {
 		navigation: {
 			index: 0,
-			scenes: [
-				{ key: 'groups', label: 'My Groups' },
-				{ key: 'threads', label: 'My Activity' },
+			routes: [
+				{ key: 'groups', title: 'My Groups' },
+				{ key: 'threads', title: 'My Activity' },
 			],
 		},
 	};
@@ -65,8 +65,8 @@ export default class Homescreen extends Component<void, any, State> {
 		);
 	};
 
-	_renderScene = ({ scene }: { scene: Scene }) => {
-		switch (scene.key) {
+	_renderScene = ({ route }: { route: Route }) => {
+		switch (route.key) {
 		case 'groups':
 			return <RoomsContainer {...this.props} style={styles.container} />;
 		case 'threads':
@@ -77,12 +77,12 @@ export default class Homescreen extends Component<void, any, State> {
 	};
 
 	_renderTabView = (props: any) => {
-		return <TabView {...props} renderScene={this._renderScene} />;
+		return <TabViewPage {...props} renderScene={this._renderScene} />;
 	};
 
 	render() {
 		return (
-			<TabViewTransitioner
+			<TabViewAnimated
 				style={styles.container}
 				navigationState={this.state.navigation}
 				renderScene={this._renderTabView}
