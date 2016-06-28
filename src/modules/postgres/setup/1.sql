@@ -125,6 +125,7 @@ CREATE INDEX ON texts((parents[1]));
 DROP TABLE IF EXISTS urls;
 DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS feeds;
+DROP TABLE IF EXISTS postednews;
 
 CREATE TABLE urls (
 	shorturl text PRIMARY KEY,
@@ -144,6 +145,14 @@ CREATE TABLE feeds (
 	mtbu float(24) DEFAULT 1 NOT NULL,
 	lastrequesttime bigint NOT NULL DEFAULT (extract(epoch from now())*1000 - (8 * 24 * 60 * 60 * 1000)),
 	lastupdatetime bigint NOT NULL DEFAULT (extract(epoch from now())*1000 - (8 * 24 * 60 * 60 * 1000))
+);
+
+CREATE TABLE postednews (
+	title text NOT NULL,
+	url text NOT NULL,
+	roomid text NOT NULL,
+	roomname text NOT NULL,
+	createtime bigint NOT NULL
 );
 
 INSERT INTO jobs VALUES (1), (2), (3);

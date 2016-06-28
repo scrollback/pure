@@ -4,6 +4,8 @@ import '../lib/node-unhandled-rejection';
 // Setup new relic
 import 'newrelic';
 
+import '../modules/on-start/on-start';
+
 // Socket
 import '../modules/socket/socket-server';
 

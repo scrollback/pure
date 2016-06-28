@@ -9,6 +9,10 @@ function getScore(types) {
 		let score, tag;
 
 		switch (type) {
+		case 'country':
+			tag = constants.TAG_ROOM_COUNTRY;
+			score = 8;
+			break;
 		case 'administrative_area_level_3':
 			tag = constants.TAG_ROOM_CITY;
 			score = 9;
@@ -37,7 +41,6 @@ function getScore(types) {
 			tag = constants.TAG_ROOM_AREA;
 			score = 26;
 			break;
-		case 'country':
 		case 'administrative_area_level_1':
 		case 'administrative_area_level_2':
 		case 'administrative_area_level_4':

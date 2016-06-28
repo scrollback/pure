@@ -231,6 +231,7 @@ bus.on('change', change => {
 				!user.params || !user.params.places
 			) { continue; }
 
+			winston.info('User update: ', user);
 			if (user.params && user.params.places) {
 				const { home, work, hometown } = user.params.places;
 

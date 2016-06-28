@@ -74,17 +74,20 @@ export function updateUser(u, cb) {
 				} else {
 					// subscribe new token to all topics that previous token is subscribed to.
 					getIIDInfo(oldGcm[u.data.uuid], (error, result, body) => {
-						if (error || !body) {
-							log.error(error, body, result);
+						let parsedBody;
+						try {
+							parsedBody = JSON.parse(body);
+						} catch(er) {
+							log.error(er);
+							parsedBody = null;
+						}
+
+						if (error || !parsedBody || !parsedBody.rel) {
+							log.error(error);
 							subscribeAll(user.id);
 							return;
 						}
-						if (body && !JSON.parse(body).rel) {
-							log.error('not found any data for old instance: ', error, JSON.parse(body));
-							subscribeAll(user.id);
-							return;
-						}
-						if (body && JSON.parse(body) && JSON.parse(body).rel) {
+						if (body && parsedBody && parsedBody.rel) {
 							Object.keys(JSON.parse(body).rel.topics).forEach(topic => {
 								log.info('subscribing to new topic: ', topic);
 								subscribe({
@@ -159,7 +162,10 @@ function subscribeAll(id) {
 	log.info('subscribe to all: ', id);
 	cache.getEntity(id, (err, user) => {
 		if (err) return;
-
+		subscribe({
+			params: user.params,
+			topic: 'user-' + id,
+		});
 		cache.query({
 			type: 'roomrel',
 			filter: { user: user.id, roles_cts: [ ROLE_FOLLOWER ] },
