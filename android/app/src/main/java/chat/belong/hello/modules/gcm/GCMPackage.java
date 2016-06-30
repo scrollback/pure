@@ -15,7 +15,7 @@ public class GCMPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.<NativeModule>asList(
-                new GCMPreferencesModule(reactContext)
+                new GCMModule(reactContext)
         );
     }
 

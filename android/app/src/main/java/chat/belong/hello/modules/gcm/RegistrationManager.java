@@ -5,30 +5,31 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.support.v4.content.LocalBroadcastManager;
 
-public class GCMRegistrationManager {
+public class RegistrationManager {
 
-    final private Activity mActivity;
-    final private BroadcastReceiver mRegistrationBroadcastReceiver;
+    public static final String REGISTRATION_COMPLETE = "registration_complete";
+
+    private final Activity mActivity;
+    private final BroadcastReceiver mRegistrationBroadcastReceiver;
 
     private boolean receiverRegistered;
 
-    public GCMRegistrationManager(Activity activity) {
+    public RegistrationManager(Activity activity) {
         mActivity = activity;
 
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                SharedPreferences sharedPreferences = GCMPreferences.get(mActivity.getApplicationContext());
+                // save registration receiver
             }
         };
     }
 
     public void startIntentService() {
         // Start IntentService to register this application with GCM.
-        Intent intent = new Intent(mActivity, GCMRegistrationIntentService.class);
+        Intent intent = new Intent(mActivity, RegistrationIntentService.class);
         mActivity.startService(intent);
     }
 
@@ -40,7 +41,7 @@ public class GCMRegistrationManager {
     public void registerReceiver() {
         if(!receiverRegistered) {
             LocalBroadcastManager.getInstance(mActivity).registerReceiver(mRegistrationBroadcastReceiver,
-                    new IntentFilter(GCMPreferences.SAVED_TO_SERVER));
+                    new IntentFilter(REGISTRATION_COMPLETE));
             receiverRegistered = true;
         }
     }

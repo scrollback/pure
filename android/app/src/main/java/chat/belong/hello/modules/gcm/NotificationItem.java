@@ -1,0 +1,230 @@
+package chat.belong.hello.modules.gcm;
+
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
+import android.support.v4.app.NotificationCompat;
+
+import com.samskivert.mustache.Mustache;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import chat.belong.hello.MainActivity;
+import chat.belong.hello.R;
+
+public class NotificationItem {
+
+    public static NotificationCompat.Builder buildNotification(Context context, JSONArray notifications, JSONObject appearance) throws JSONException {
+
+        int priority;
+
+        switch (appearance.getString("priority")) {
+            case "min":
+                priority = NotificationCompat.PRIORITY_MIN;
+                break;
+            case "low":
+                priority = NotificationCompat.PRIORITY_LOW;
+                break;
+            case "high":
+                priority = NotificationCompat.PRIORITY_HIGH;
+                break;
+            case "max":
+                priority = NotificationCompat.PRIORITY_MAX;
+                break;
+            default:
+                priority = NotificationCompat.PRIORITY_DEFAULT;
+        }
+
+        String category = null;
+
+        switch (appearance.getString("category")) {
+            case "alarm":
+                category = NotificationCompat.CATEGORY_ALARM;
+                break;
+            case "call":
+                category = NotificationCompat.CATEGORY_CALL;
+                break;
+            case "email":
+                category = NotificationCompat.CATEGORY_EMAIL;
+                break;
+            case "error":
+                category = NotificationCompat.CATEGORY_ERROR;
+                break;
+            case "event":
+                category = NotificationCompat.CATEGORY_EVENT;
+                break;
+            case "message":
+                category = NotificationCompat.CATEGORY_MESSAGE;
+                break;
+            case "progress":
+                category = NotificationCompat.CATEGORY_PROGRESS;
+                break;
+            case "promo":
+                category = NotificationCompat.CATEGORY_PROMO;
+                break;
+            case "recommendation":
+                category = NotificationCompat.CATEGORY_RECOMMENDATION;
+                break;
+            case "service":
+                category = NotificationCompat.CATEGORY_SERVICE;
+                break;
+            case "social":
+                category = NotificationCompat.CATEGORY_SOCIAL;
+                break;
+            case "status":
+                category = NotificationCompat.CATEGORY_STATUS;
+                break;
+            case "system":
+                category = NotificationCompat.CATEGORY_SYSTEM;
+                break;
+            case "transport":
+                category = NotificationCompat.CATEGORY_TRANSPORT;
+                break;
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+
+        builder
+                .setPriority(priority)
+                .setCategory(category);
+
+        if (appearance.has("sticky")) {
+            builder.setOngoing(appearance.getBoolean("sticky"));
+        }
+
+        if (appearance.has("slient")) {
+            if (!appearance.getBoolean("slient")) {
+                builder.setDefaults(NotificationCompat.DEFAULT_SOUND);
+            }
+        }
+
+        if (appearance.has("color")) {
+            String color = appearance.getString("color");
+            builder.setColor(Color.parseColor(color));
+        }
+
+        if (appearance.has("vibrate")) {
+            JSONArray vibrate = appearance.getJSONArray("vibrate");
+            long[] pattern = new long[vibrate.length()];
+
+            for (int i = 0; i < vibrate.length(); i++) {
+                pattern[i] = vibrate.getInt(i);
+            }
+
+            builder.setVibrate(pattern);
+        }
+
+        JSONObject template = appearance.getJSONObject("template");
+
+        if (appearance.has("style")) {
+            NotificationCompat.Style style = null;
+
+            switch (appearance.getString("style")) {
+                case "bigtext":
+                    style = new NotificationCompat.BigTextStyle();
+                    break;
+                case "bigpicture":
+                    style = new NotificationCompat.BigPictureStyle();
+                    break;
+                case "inbox":
+                    NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+                    JSONObject options = template.getJSONObject("style");
+
+                    if (options.has("title")) {
+                        String title = buildTemplateForNotifications(options.getString("title"), notifications);
+                        inboxStyle.setBigContentTitle(title);
+                    }
+
+                    if (options.has("summary")) {
+                        String summary = buildTemplateForNotifications(options.getString("summary"), notifications);
+                        inboxStyle.setSummaryText(summary);
+                    }
+
+                    if (options.has("line")) {
+                        for (int i = 0; i < notifications.length(); i++) {
+                            String line = buildTemplateForNotification(options.getString("line"), i, notifications.getJSONObject(i));
+                            inboxStyle.addLine(line);
+                        }
+                    }
+
+                    style = inboxStyle;
+                    break;
+            }
+
+            if (style != null) {
+                builder.setStyle(style);
+            }
+        }
+
+        String title = buildTemplateForNotifications(template.getString("title"), notifications);
+        String body = buildTemplateForNotifications(template.getString("body"), notifications);
+
+        builder.setContentTitle(title);
+        builder.setContentText(body);
+
+        if (template.has("picture")) {
+            String picture = buildTemplateForNotifications(template.getString("picture"), notifications);
+            Bitmap bitmap = BitmapUtils.getBitmap(context, picture, 48);
+
+            if (bitmap != null) {
+                builder.setLargeIcon(bitmap);
+            }
+        }
+
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.setAction(Intent.ACTION_VIEW);
+
+        if (template.has("link")) {
+            String link = buildTemplateForNotifications(template.getString("link"), notifications);
+            intent.setData(Uri.parse(link));
+        }
+
+        PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        builder.setContentIntent(contentIntent);
+        builder.setSmallIcon(R.mipmap.ic_status);
+        builder.setAutoCancel(true);
+
+        return builder;
+    }
+
+    private static String buildTemplateForNotifications(final String raw, final JSONArray notifications) throws JSONException {
+        return Mustache.compiler().escapeHTML(false).compile(raw).execute(new Object() {
+            @SuppressWarnings("unused")
+            public ArrayList items = JSONUtils.jsonToArrayList(notifications);
+            @SuppressWarnings("unused")
+            public int length = notifications.length();
+        });
+    }
+
+    private static String buildTemplateForNotification(String raw, final int i, final JSONObject notification) throws JSONException {
+        return Mustache.compiler().escapeHTML(false).compile(raw).execute(new Object() {
+            @SuppressWarnings("unused")
+            public HashMap item = JSONUtils.jsonToHashMap(notification);
+            @SuppressWarnings("unused")
+            public int index = i;
+        });
+    }
+
+    private static String extractField(JSONObject data, JSONArray path) throws JSONException {
+        String value = null;
+
+        for (int i = 0; i < path.length(); i++) {
+            if (i == path.length() - 1) {
+                value = data.getString(path.getString(i));
+            } else {
+                data = data.getJSONObject(path.getString(i));
+            }
+        }
+
+        return value;
+    }
+}

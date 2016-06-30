@@ -8,50 +8,15 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
-import android.support.annotation.Nullable;
-import android.util.Log;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
-public class Note {
+public class BitmapUtils {
 
-    private static final String TAG = "Note";
-
-    private static final String PROP_TITLE = "title";
-    private static final String PROP_BODY = "body";
-    private static final String PROP_LINK = "link";
-    private static final String PROP_PICTURE = "picture";
-
-    private final Context mContext;
-
-    public final String title;
-    public final String summary;
-    public final String link;
-    @Nullable
-    public final String picture;
-
-    public Note(Context context, JSONObject data) throws JSONException, NoSuchFieldException {
-        mContext = context;
-
-        title = data.getString(PROP_TITLE);
-        summary = data.getString(PROP_BODY);
-        link = data.getString(PROP_LINK);
-
-        if (data.has(PROP_PICTURE)) {
-            picture = data.getString(PROP_PICTURE);
-        } else {
-            picture = null;
-        }
-    }
-
-    private Bitmap decodeStreamToBitmap(InputStream stream, int imageSize) {
+    private static Bitmap decodeStreamToBitmap(InputStream stream, int imageSize) throws IOException {
         final BufferedInputStream is = new BufferedInputStream(stream, 32 * 1024);
 
         try {
@@ -79,45 +44,21 @@ public class Note {
 
             return BitmapFactory.decodeStream(is, null, decodeBitmapOptions);
 
-        } catch (IOException e) {
-            Log.e(TAG, "Failed to decode stream to bitmap", e);
         } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-                // Ignore
-            }
+            is.close();
         }
-
-        return null;
     }
 
-    private Bitmap getScaledBitmap(String link, int imageSize) {
-        URL url = null;
+    private static Bitmap getScaledBitmap(String link, int imageSize) throws IOException {
+        URL url = new URL(link);
+        return decodeStreamToBitmap(url.openConnection().getInputStream(), imageSize);
+    }
+
+    public static Bitmap getBitmap(Context context, String link, int size) {
+        final int IMAGE_SIZE = (int) (size * (context.getResources().getDisplayMetrics().density));
 
         try {
-            url = new URL(link);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed URL: " + picture, e);
-        }
-
-        if (url != null) {
-            try {
-                return decodeStreamToBitmap(url.openConnection().getInputStream(), imageSize);
-            } catch (IOException e) {
-                Log.e(TAG, "Couldn't fetch image: " + picture, e);
-            }
-        }
-
-        return null;
-    }
-
-    private Bitmap getBitmap(String link) {
-        final int IMAGE_SIZE = (int) (48 * (mContext.getResources().getDisplayMetrics().density));
-
-        Bitmap bitmap = getScaledBitmap(link, IMAGE_SIZE);
-
-        if (bitmap != null) {
+            Bitmap bitmap = getScaledBitmap(link, IMAGE_SIZE);
             Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 
             if (output == null) {
@@ -141,16 +82,8 @@ public class Note {
             canvas.drawBitmap(bitmap, rect, rect, paint);
 
             return output;
+        } catch (IOException e) {
+            return null;
         }
-
-        return null;
-    }
-
-    public Bitmap getPicture() {
-        if (picture != null) {
-            return getBitmap(picture);
-        }
-
-        return null;
     }
 }

@@ -13,7 +13,7 @@ import AppTextInput from '../Core/AppTextInput';
 import ActionSheet from '../Core/ActionSheet';
 import ActionSheetItem from '../Core/ActionSheetItem';
 import Colors from '../../../Colors';
-import GCMPreferences from '../../../modules/GCMPreferences';
+import GCM from '../../../modules/GCM';
 import type { User } from '../../../../lib/schemaTypes';
 
 const {
@@ -92,8 +92,6 @@ type State = {
 	frequencySheetVisible: boolean;
 }
 
-const PUSH_NOTIFICATION_ENABLED_KEY = 'enabled';
-
 export default class Account extends Component<void, Props, State> {
 	static propTypes = {
 		user: PropTypes.oneOfType([
@@ -134,16 +132,16 @@ export default class Account extends Component<void, Props, State> {
 	_saveUser = debounce(user => this.props.saveUser(user), 1000);
 
 	_updateGCMValue = async (): Promise<void> => {
-		let value = true;
+		let GCMEnabled = true;
 
 		try {
-			value = await GCMPreferences.getPreference(PUSH_NOTIFICATION_ENABLED_KEY);
+			GCMEnabled = await GCM.isNotificationsEnabled();
 		} catch (e) {
-			// Ignore
+			GCMEnabled = false;
 		}
 
 		this.setState({
-			GCMEnabled: value !== 'false',
+			GCMEnabled,
 		});
 	};
 
@@ -172,7 +170,11 @@ export default class Account extends Component<void, Props, State> {
 	};
 
 	_handleGCMChange = (value: boolean) => {
-		GCMPreferences.setPreference(PUSH_NOTIFICATION_ENABLED_KEY, value ? 'true' : 'false');
+		if (value) {
+			GCM.enableNotifications();
+		} else {
+			GCM.disableNotifications();
+		}
 
 		this.setState({
 			GCMEnabled: value,
