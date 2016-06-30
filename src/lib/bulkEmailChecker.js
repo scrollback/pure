@@ -1,39 +1,48 @@
 /* flow */
-/* eslint-disable no-console, no-param-reassign, no-mixed-spaces-and-tabs */
+/* eslint-disable no-console, no-param-reassign */
 
 import dns from 'dns';
 import { Socket } from 'net';
 import EventEmitter from 'events';
 import winston from 'winston';
-import callbackToPromise from './promisify';
+import promisify from './promisify';
 
-export class BulkEmailChecker extends EventEmitter {
-	_dnsCache = {
-		valid: {},
-		invalid: []
-	};
-	_emailCache = {};
-	_unsureEmailCahce = {};
-	_MAX_RCPT_TO_PER_CONN = 350;
-	_TIMEOUT_LIMIT = 10 * 1000;
-	_fromEmail = 'billgates@gmail.com'
-	_resolveMxPromise = callbackToPromise(dns.resolveMx.bind(dns));
+type MxRecord = {
+    exchange: string;
+    priority: number;
+}
 
-	_getMxWithLowestPriority = (mxRecords: Array<{ exchange: string; priority: number }>) => {
+export default class BulkEmailChecker extends EventEmitter {
+	constructor (maxRcptPerConn: number = 350, timeoutLimit: number = 10 * 1000, fromEmail: string = 'billgates@gmail') {
+		super();
+		this._dnsCache = {
+			valid: {},
+			invalid: []
+		};
+		this._emailCache = {};
+		this._unsureEmailCahce = {};
+		this._MAX_RCPT_TO_PER_CONN = maxRcptPerConn;
+		this._TIMEOUT_LIMIT = timeoutLimit;
+		this._fromEmail = fromEmail;
+		this._LOG_TAG = 'EMAIL-SCRUBBER';
+		this._resolveMxPromise = promisify(dns.resolveMx.bind(dns));
+	}
+
+	_getMxWithLowestPriority (mxRecords: Array<MxRecord>) {
 		return mxRecords.sort((recordA, recordB) => {
 			return recordA.priority - recordB.priority;
 		})[0].exchange;
-	};
+	}
 
-	_writeCommand = (connection: any, command: string, writeIndex: number): number => {
+	_writeCommand (connection: any, command: string, writeIndex: number): number {
 		connection.write(command);
 		connection.write('\r\n');
 		return ++writeIndex;
 	}
 
-	_validateEmail = async (connection: any, email: string, sayHELO: boolean) => {
+	async _validateEmail (connection: any, email: string, sayHELO: boolean) {
 		const [ , domain ] = email.split('@');
-		return new Promise((resolve) => {
+		return new Promise((resolve, reject) => {
 			let writeIndex = 1;
 			let retryCount = 1;
 			if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -62,7 +71,7 @@ export class BulkEmailChecker extends EventEmitter {
 						resolve(true);
 						break;
 					default:
-						resolve('unsure');
+						reject('unsure');
 						break;
 					}
 				} else if (data.indexOf('\n550') !== -1 || data.indexOf('550') === 0) {
@@ -76,31 +85,31 @@ export class BulkEmailChecker extends EventEmitter {
 						- if 452 occurs multiple times, make 5 attempts else reslove to unsure.
                 	*/
 					if (retryCount > 5) {
-						winston.info('Max retry limit exceeded, returning');
-						resolve('unsure');
+						winston.info(this._LOG_TAG, 'Max retry limit exceeded, returning');
+						reject('unsure');
 					}
-					winston.info('retrying...');
+					winston.info(this._LOG_TAG, 'retrying...');
 					writeIndex = 1;
 					writeIndex = this._writeCommand(connection, `mail from: <${this._fromEmail}>`, writeIndex) + 1;
 					++retryCount;
 				} else {
-					resolve('unsure');
+					reject('unsure');
 				}
 			});
 			connection.on('error', () => {
-				resolve('unsure');
+				reject('unsure');
 			});
 			connection.on('timeout', () => {
-				resolve('unsure');
+				reject('unsure');
 			});
 		});
-	};
+	}
 
-	_checkResultsForBucketHelper = async (mx: string, emailBucket: Array<string>) => {
+	async _checkResultsForBucketHelper (mx: string, emailBucket: Array<string>) {
 		const socket = new Socket();
 		const connection = socket.connect(25, mx);
 		connection.setEncoding('ascii');
-		connection.on('connect', () => winston.info(`connection established for ${mx}`));
+		connection.on('connect', () => winston.info(this._LOG_TAG, `connection established for ${mx}`));
 		connection.on('close', () => {
 			socket.connect(25, mx);
 			return;
@@ -108,35 +117,39 @@ export class BulkEmailChecker extends EventEmitter {
 		let sayHELO = true;
 		for (const email of emailBucket) {
 			try {
-				winston.info(`validating email: ${email}`);
+				winston.info(this._LOG_TAG, `validating email: ${email}`);
 				const isValid = await this._validateEmail(connection, email, sayHELO); // eslint-disable-line babel/no-await-in-loop
 				sayHELO = false;
-				winston.info(`{email: ${email}, isValid: ${isValid}}`);
+				winston.info(this._LOG_TAG, `{email: ${email}, isValid: ${isValid}}`);
 				this.emit('data', {
 					email,
 					isValid
 				});
 			} catch (e) {
-				// Do nothing.
+				// emit unsure as response for this email and continue.
+				this.emit('data', {
+					email,
+					isValid: e
+				});
 			}
 		}
 		connection.removeAllListeners();
 		socket.destroy();
-	};
+	}
 
-	_checkResultsForBucket = async (mx: string, emailBucket: Array<string>) => {
+	async _checkResultsForBucket (mx: string, emailBucket: Array<string>) {
 		try {
-			winston.info(`validating emails for ${mx} bucket`);
+			winston.info(this._LOG_TAG, `validating emails for ${mx} bucket`);
 			await this._checkResultsForBucketHelper(mx, emailBucket);
 		} catch (e) {
-			winston.info(`An error occured while connecting to ${mx}: ${e}`);
+			winston.info(this._LOG_TAG, `An error occured while connecting to ${mx}: ${e}`);
 			this._unsureEmailCahce[mx] = emailBucket;
 		} finally {
 			delete this._emailCache[mx];
 		}
 	}
 
-	_buildDnsAndEmailCache = async (email: string) => {
+	async _buildDnsAndEmailCache (email: string) {
 		const [ , domain ] = email.split('@');
 		try {
 			if (!this._dnsCache.valid[domain] && !this._dnsCache.invalid.indexOf(domain) > -1) {
@@ -154,26 +167,26 @@ export class BulkEmailChecker extends EventEmitter {
 			this._emailCache[mx].push(email);
 			if (this._emailCache[mx].length >= this._MAX_RCPT_TO_PER_CONN) {
 				const emailBucket = this._emailCache[mx];
-				winston.info(emailBucket);
+				winston.info(this._LOG_TAG, emailBucket);
 				await this._checkResultsForBucket(mx, emailBucket);
 			}
 		} catch (error) {
 			if (error.code === 'ENOTFOUND') {
 				if (!this._dnsCache.invalid.indexOf(domain) > -1) {
-					winston.info(`Added ${domain} to the list of invalid DNS.`);
+					winston.info(this._LOG_TAG, `Added ${domain} to the list of invalid DNS.`);
 					this._dnsCache.invalid.push(domain);
 				}
 			} else {
 				this.emit('error', error);
 			}
 		}
-	};
+	}
 
-	check = async (email: string) => {
+	async check (email: string) {
 		await this._buildDnsAndEmailCache(email);
-	};
+	}
 
-	done = async () => {
+	async done () {
 		// check all the emails which are less than _MAX_RCPT_TO_PER_CONN in number.
 		for (const mx in this._emailCache) {
 			const emailBucket = this._emailCache[mx];
@@ -185,13 +198,14 @@ export class BulkEmailChecker extends EventEmitter {
 			try {
 				await this._checkResultsForBucketHelper(mx, emailBucket); // eslint-disable-line babel/no-await-in-loop
 			} catch (e) {
-				winston.info(`An error occured while connecting to ${mx}: ${e}`);
+				winston.info(this._LOG_TAG, `An error occured while connecting to ${mx}: ${e}`);
 				// Do Nothing if something if an error occurs this time.
 			} finally {
 				delete this._unsureEmailCahce[mx];
 			}
 		}
-	};
+		this.emit('end', 'END EVENT FIRED: verification complete');
+	}
 }
 
 /*
@@ -205,6 +219,7 @@ export class BulkEmailChecker extends EventEmitter {
 
 	bec.on('data', data => console.log(data));
 	bec.on('error', error => console.log(error));
+	bec.on('end', endMsg => console.log(endMsg));
 
 	validateEmails();
 
