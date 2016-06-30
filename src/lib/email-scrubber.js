@@ -4,6 +4,7 @@
 import dns from 'dns';
 import { Socket } from 'net';
 import EventEmitter from 'events';
+import winston from 'winston';
 import callbackToPromise from './promisify';
 
 export class BulkEmailChecker extends EventEmitter {
@@ -75,10 +76,10 @@ export class BulkEmailChecker extends EventEmitter {
 						- if 452 occurs multiple times, make 5 attempts else reslove to unsure.
                 	*/
 					if (retryCount > 5) {
-						console.log('Max retry limit exceeded, returning');
+						winston.info('Max retry limit exceeded, returning');
 						resolve('unsure');
 					}
-					console.log('retrying...');
+					winston.info('retrying...');
 					writeIndex = 1;
 					writeIndex = this._writeCommand(connection, `mail from: <${this._fromEmail}>`, writeIndex) + 1;
 					++retryCount;
@@ -99,7 +100,7 @@ export class BulkEmailChecker extends EventEmitter {
 		const socket = new Socket();
 		const connection = socket.connect(25, mx);
 		connection.setEncoding('ascii');
-		connection.on('connect', () => console.log(`connection established for ${mx}`));
+		connection.on('connect', () => winston.info(`connection established for ${mx}`));
 		connection.on('close', () => {
 			socket.connect(25, mx);
 			return;
@@ -107,10 +108,10 @@ export class BulkEmailChecker extends EventEmitter {
 		let sayHELO = true;
 		for (const email of emailBucket) {
 			try {
-				console.log(`validating email: ${email}`);
+				winston.info(`validating email: ${email}`);
 				const isValid = await this._validateEmail(connection, email, sayHELO); // eslint-disable-line babel/no-await-in-loop
 				sayHELO = false;
-				console.log(`{email: ${email}, isValid: ${isValid}}`);
+				winston.info(`{email: ${email}, isValid: ${isValid}}`);
 				this.emit('data', {
 					email,
 					isValid
@@ -125,10 +126,10 @@ export class BulkEmailChecker extends EventEmitter {
 
 	_checkResultsForBucket = async (mx: string, emailBucket: Array<string>) => {
 		try {
-			console.log(`validating emails for ${mx} bucket`);
+			winston.info(`validating emails for ${mx} bucket`);
 			await this._checkResultsForBucketHelper(mx, emailBucket);
 		} catch (e) {
-			console.log(`An error occured while connecting to ${mx}: ${e}`);
+			winston.info(`An error occured while connecting to ${mx}: ${e}`);
 			this._unsureEmailCahce[mx] = emailBucket;
 		} finally {
 			delete this._emailCache[mx];
@@ -153,13 +154,13 @@ export class BulkEmailChecker extends EventEmitter {
 			this._emailCache[mx].push(email);
 			if (this._emailCache[mx].length >= this._MAX_RCPT_TO_PER_CONN) {
 				const emailBucket = this._emailCache[mx];
-				console.log(emailBucket);
+				winston.info(emailBucket);
 				await this._checkResultsForBucket(mx, emailBucket);
 			}
 		} catch (error) {
 			if (error.code === 'ENOTFOUND') {
 				if (!this._dnsCache.invalid.indexOf(domain) > -1) {
-					console.log(`Added ${domain} to the list of invalid DNS.`);
+					winston.info(`Added ${domain} to the list of invalid DNS.`);
 					this._dnsCache.invalid.push(domain);
 				}
 			} else {
@@ -184,7 +185,7 @@ export class BulkEmailChecker extends EventEmitter {
 			try {
 				await this._checkResultsForBucketHelper(mx, emailBucket); // eslint-disable-line babel/no-await-in-loop
 			} catch (e) {
-				console.log(`An error occured while connecting to ${mx}: ${e}`);
+				winston.info(`An error occured while connecting to ${mx}: ${e}`);
 				// Do Nothing if something if an error occurs this time.
 			} finally {
 				delete this._unsureEmailCahce[mx];
@@ -192,3 +193,21 @@ export class BulkEmailChecker extends EventEmitter {
 		}
 	};
 }
+
+/*
+	- Api Demo
+	const bec = new BulkEmailChecker();
+
+	async function validateEmails() {
+		await bec.check('someEmail@domain.com');
+		await bec.done();
+	}
+
+	bec.on('data', data => console.log(data));
+	bec.on('error', error => console.log(error));
+
+	validateEmails();
+
+	- Result:
+		{email: someEmail@domain.com, isValid: false}
+*/
