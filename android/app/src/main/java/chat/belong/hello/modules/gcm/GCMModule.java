@@ -34,9 +34,9 @@ public class GCMModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void configureAppearance(final ReadableMap appearance, final Promise promise) {
+    public void configureNotification(final ReadableMap appearance, final Promise promise) {
         try {
-            GCMPreferences.configureAppearance(getReactApplicationContext(), JSONUtils.readableMapToJson(appearance));
+            GCMPreferences.configureNotification(getReactApplicationContext(), JSONUtils.readableMapToJson(appearance));
             promise.resolve(null);
         } catch (Exception e) {
             promise.reject(e);

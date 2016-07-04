@@ -15,12 +15,46 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import chat.belong.hello.MainActivity;
 import chat.belong.hello.R;
 
 public class NotificationItem {
+
+    private static boolean arrayContains(JSONArray array, String value) throws JSONException {
+        for (int i = 0; i < array.length(); i++) {
+            if (value.equals(array.getString(i))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // TODO: Move this to JS
+    private static JSONArray getUniqueRoomNames(JSONArray notifications) {
+        JSONArray rooms = new JSONArray();
+
+        for (int i = 0; i < notifications.length(); i++) {
+            try {
+                String room = notifications
+                        .getJSONObject(i)
+                        .getJSONObject("data")
+                        .getJSONObject("room")
+                        .getString("name");
+
+                if (!arrayContains(rooms, room)) {
+                    rooms.put(room);
+                }
+            } catch (Exception e) {
+                // do nothing
+            }
+        }
+
+        return rooms;
+    }
 
     public static NotificationCompat.Builder buildNotification(Context context, JSONArray notifications, JSONObject appearance) throws JSONException {
 
@@ -124,6 +158,12 @@ public class NotificationItem {
 
         JSONObject template = appearance.getJSONObject("template");
 
+        ArrayList items = JSONUtils.jsonToArrayList(notifications);
+        ArrayList rooms = JSONUtils.jsonToArrayList(getUniqueRoomNames(notifications));
+
+        Collections.reverse(items);
+        Collections.reverse(rooms);
+
         if (appearance.has("style")) {
             NotificationCompat.Style style = null;
 
@@ -139,18 +179,20 @@ public class NotificationItem {
                     JSONObject options = template.getJSONObject("style");
 
                     if (options.has("title")) {
-                        String title = buildTemplateForNotifications(options.getString("title"), notifications);
+                        String title = buildTemplateForNotifications(options.getString("title"), items, rooms);
                         inboxStyle.setBigContentTitle(title);
                     }
 
                     if (options.has("summary")) {
-                        String summary = buildTemplateForNotifications(options.getString("summary"), notifications);
+                        String summary = buildTemplateForNotifications(options.getString("summary"), items, rooms);
                         inboxStyle.setSummaryText(summary);
                     }
 
                     if (options.has("line")) {
-                        for (int i = 0; i < notifications.length(); i++) {
-                            String line = buildTemplateForNotification(options.getString("line"), i, notifications.getJSONObject(i));
+                        for (int i = notifications.length() - 1; i >= 0; i--) {
+                            String line = buildTemplateForNotification(
+                                    options.getString("line"), i,
+                                    JSONUtils.jsonToHashMap(notifications.getJSONObject(i)));
                             inboxStyle.addLine(line);
                         }
                     }
@@ -164,14 +206,14 @@ public class NotificationItem {
             }
         }
 
-        String title = buildTemplateForNotifications(template.getString("title"), notifications);
-        String body = buildTemplateForNotifications(template.getString("body"), notifications);
+        String title = buildTemplateForNotifications(template.getString("title"), items, rooms);
+        String body = buildTemplateForNotifications(template.getString("body"), items, rooms);
 
         builder.setContentTitle(title);
         builder.setContentText(body);
 
         if (template.has("picture")) {
-            String picture = buildTemplateForNotifications(template.getString("picture"), notifications);
+            String picture = buildTemplateForNotifications(template.getString("picture"), items, rooms);
             Bitmap bitmap = BitmapUtils.getBitmap(context, picture, 48);
 
             if (bitmap != null) {
@@ -183,7 +225,7 @@ public class NotificationItem {
         intent.setAction(Intent.ACTION_VIEW);
 
         if (template.has("link")) {
-            String link = buildTemplateForNotifications(template.getString("link"), notifications);
+            String link = buildTemplateForNotifications(template.getString("link"), items, rooms);
             intent.setData(Uri.parse(link));
         }
 
@@ -196,35 +238,25 @@ public class NotificationItem {
         return builder;
     }
 
-    private static String buildTemplateForNotifications(final String raw, final JSONArray notifications) throws JSONException {
+    private static String buildTemplateForNotifications(final String raw, final ArrayList data, final ArrayList rooms) throws JSONException {
         return Mustache.compiler().escapeHTML(false).compile(raw).execute(new Object() {
             @SuppressWarnings("unused")
-            public ArrayList items = JSONUtils.jsonToArrayList(notifications);
+            public ArrayList items = data;
             @SuppressWarnings("unused")
-            public int length = notifications.length();
+            public int length = data.size();
+            @SuppressWarnings("unused")
+            public boolean single = length == 1;
+            @SuppressWarnings("unused")
+            public ArrayList roomNames = rooms;
         });
     }
 
-    private static String buildTemplateForNotification(String raw, final int i, final JSONObject notification) throws JSONException {
+    private static String buildTemplateForNotification(String raw, final int i, final HashMap data) throws JSONException {
         return Mustache.compiler().escapeHTML(false).compile(raw).execute(new Object() {
             @SuppressWarnings("unused")
-            public HashMap item = JSONUtils.jsonToHashMap(notification);
+            public HashMap item = data;
             @SuppressWarnings("unused")
             public int index = i;
         });
-    }
-
-    private static String extractField(JSONObject data, JSONArray path) throws JSONException {
-        String value = null;
-
-        for (int i = 0; i < path.length(); i++) {
-            if (i == path.length() - 1) {
-                value = data.getString(path.getString(i));
-            } else {
-                data = data.getJSONObject(path.getString(i));
-            }
-        }
-
-        return value;
     }
 }

@@ -16,7 +16,7 @@ GCM.configureSchema({
 	createTime: 'number',
 	score: 'number',
 });
-GCM.configureAppearance({
+GCM.configureNotification({
 	style: 'inbox',
 	sticky: false,
 	slient: true,
@@ -29,7 +29,7 @@ GCM.configureAppearance({
 		picture: '{{items.0.data.picture}}',
 		link: '{{items.0.data.link}}',
 		style: {
-			title: '{{length}} notifications in {{items.0.data.room.name}} and other groups',
+			title: '{{length}} new in {{#roomNames.0}}{{roomNames.0}}{{#roomNames.1}}, {{roomNames.1}}{{/roomNames.1}} and other groups{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}',
 			line: '{{item.data.title}} - {{item.data.body}}',
 		},
 	}

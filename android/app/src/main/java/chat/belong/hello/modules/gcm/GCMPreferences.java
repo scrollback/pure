@@ -8,9 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class GCMPreferences {
 
     private static final String STORAGE_KEY = "gcm_shared_preferences";
@@ -84,7 +81,7 @@ public class GCMPreferences {
         return null;
     }
 
-    public static void configureAppearance(Context context, JSONObject appearance) {
+    public static void configureNotification(Context context, JSONObject appearance) {
         SharedPreferences.Editor editor = getEditor(context);
         editor.putString(APPEARANCE_KEY, appearance.toString());
         editor.apply();
@@ -137,22 +134,23 @@ public class GCMPreferences {
     }
 
     public static void addNotification(Context context, JSONObject note) throws JSONException {
-        Set<String> set = getPreferences(context).getStringSet(NOTIFICATIONS_KEY, new HashSet<String>());
-        set.add(note.toString());
+        String items = getPreferences(context).getString(NOTIFICATIONS_KEY, null);
+
+        JSONArray notifications = items == null ? new JSONArray() : new JSONArray(items);
+        notifications.put(note);
         SharedPreferences.Editor editor = getEditor(context);
-        editor.putStringSet(NOTIFICATIONS_KEY, set);
+        editor.putString(NOTIFICATIONS_KEY, notifications.toString());
         editor.apply();
     }
 
     public static JSONArray getCurrentNotifications(Context context) throws JSONException {
-        Set<String> set = getPreferences(context).getStringSet(NOTIFICATIONS_KEY, new HashSet<String>());
-        JSONArray items = new JSONArray();
+        String items = getPreferences(context).getString(NOTIFICATIONS_KEY, null);
 
-        for (String item : set) {
-            items.put(new JSONObject(item));
+        if (items == null) {
+            return new JSONArray();
         }
 
-        return items;
+        return new JSONArray(items);
     }
 
     public static void clearCurrentNotifications(Context context) {

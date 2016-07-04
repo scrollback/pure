@@ -26,7 +26,7 @@ type Appearance = {
 
 export default class GCM {
 	static configureSchema: (schema: Object) => Promise<void>;
-	static configureAppearance: (appearance: Appearance) => Promise<void>;
+	static configureNotification: (appearance: Appearance) => Promise<void>;
 	static setSessionID: (session: string) => void;
 	static enableNotifications: () => void;
 	static disableNotifications: () => void;
