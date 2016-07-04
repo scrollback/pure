@@ -21,16 +21,18 @@ GCM.configureNotification({
 	sticky: false,
 	slient: true,
 	priority: 'normal',
-	category: 'message',
+	category: 'social',
 	color: Colors.primary,
+	count: true,
 	template: {
-		title: '{{items.0.data.title}}',
-		body: '{{items.0.data.body}}',
-		picture: '{{items.0.data.picture}}',
-		link: '{{items.0.data.link}}',
+		title: '{{#single}}{{items.0.data.title}}{{/single}}',
+		body: '{{#single}}{{items.0.data.body}}{{/single}}',
+		picture: '{{{items.0.data.picture}}}',
+		link: '{{{items.0.data.link}}}',
 		style: {
-			title: '{{length}} new in {{#roomNames.0}}{{roomNames.0}}{{#roomNames.1}}, {{roomNames.1}}{{/roomNames.1}} and other groups{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}',
-			line: '{{item.data.title}} - {{item.data.body}}',
+			title: '{{#roomNames.1}}{{#roomNames.0}}{{roomNames.0}}, {{roomNames.1}} and others{{/roomNames.0}}{{/roomNames.1}}{{^roomNames.1}}New notifications in {{#roomNames.0}}{{roomNames.0}}{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}{{/roomNames.1}}',
+			line: '<b>{{item.data.creator}}</b>: {{item.data.title}}',
+			summary: '{{^single}}{{length}} new notifications{{/single}}',
 		},
 	}
 });

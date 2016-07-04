@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
+import android.text.Html;
 
 import com.samskivert.mustache.Mustache;
 
@@ -164,6 +165,10 @@ public class NotificationItem {
         Collections.reverse(items);
         Collections.reverse(rooms);
 
+        if (appearance.has("count") && appearance.getBoolean("count")) {
+            builder.setNumber(items.size());
+        }
+
         if (appearance.has("style")) {
             NotificationCompat.Style style = null;
 
@@ -180,12 +185,17 @@ public class NotificationItem {
 
                     if (options.has("title")) {
                         String title = buildTemplateForNotifications(options.getString("title"), items, rooms);
-                        inboxStyle.setBigContentTitle(title);
+                        if (!title.isEmpty()) {
+                            inboxStyle.setBigContentTitle(Html.fromHtml(title));
+                            builder.setContentTitle(Html.fromHtml(title));
+                        }
                     }
 
                     if (options.has("summary")) {
                         String summary = buildTemplateForNotifications(options.getString("summary"), items, rooms);
-                        inboxStyle.setSummaryText(summary);
+                        if (!summary.isEmpty()) {
+                            inboxStyle.setSummaryText(Html.fromHtml(summary));
+                        }
                     }
 
                     if (options.has("line")) {
@@ -193,7 +203,13 @@ public class NotificationItem {
                             String line = buildTemplateForNotification(
                                     options.getString("line"), i,
                                     JSONUtils.jsonToHashMap(notifications.getJSONObject(i)));
-                            inboxStyle.addLine(line);
+                            if (!line.isEmpty()) {
+                                inboxStyle.addLine(Html.fromHtml(line));
+
+                                if (i == notifications.length() - 1) {
+                                    builder.setContentText(Html.fromHtml(line));
+                                }
+                            }
                         }
                     }
 
@@ -209,15 +225,22 @@ public class NotificationItem {
         String title = buildTemplateForNotifications(template.getString("title"), items, rooms);
         String body = buildTemplateForNotifications(template.getString("body"), items, rooms);
 
-        builder.setContentTitle(title);
-        builder.setContentText(body);
+        if (!title.isEmpty()) {
+            builder.setContentTitle(Html.fromHtml(title));
+        }
+
+        if (!body.isEmpty()) {
+            builder.setContentText(Html.fromHtml(body));
+        }
 
         if (template.has("picture")) {
             String picture = buildTemplateForNotifications(template.getString("picture"), items, rooms);
-            Bitmap bitmap = BitmapUtils.getBitmap(context, picture, 48);
+            if (!picture.isEmpty()) {
+                Bitmap bitmap = BitmapUtils.getBitmap(context, picture, 48);
 
-            if (bitmap != null) {
-                builder.setLargeIcon(bitmap);
+                if (bitmap != null) {
+                    builder.setLargeIcon(bitmap);
+                }
             }
         }
 
@@ -226,7 +249,9 @@ public class NotificationItem {
 
         if (template.has("link")) {
             String link = buildTemplateForNotifications(template.getString("link"), items, rooms);
-            intent.setData(Uri.parse(link));
+            if (!link.isEmpty()) {
+                intent.setData(Uri.parse(link));
+            }
         }
 
         PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
