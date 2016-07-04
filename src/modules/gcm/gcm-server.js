@@ -39,11 +39,8 @@ async function sendStanza(changes, entity) {
 			log.info('not new thread: ', entity);
 			return;
 		}
-		let room = changes.entities[entity.parents[0]];
-		if (!room || !room.name) {
-			room = await getEntityAsync(entity.parents[0]);
-		}
 
+		const room = await getEntityAsync(entity.parents[0]);
 		const title = room.name + ': ' + entity.creator + ' started a discussion';
 		const link = config.server.protocol + '//' + config.server.host + convertRouteToURL({
 			name: 'chat',
@@ -54,6 +51,7 @@ async function sendStanza(changes, entity) {
 		});
 
 		log.info('sending pushnotification for thread', entity, link);
+
 		const pushData: Note = {
 			group: entity.id,
 			count: 1,
@@ -83,25 +81,14 @@ async function sendStanza(changes, entity) {
 	}
 
 	if (entity.type === Constants.TYPE_TEXT) {
-		log.info('push notification for text: ', entity);
 		if (entity.createTime !== entity.updateTime) {
-			log.info('not new text: ', entity);
 			return;
 		}
 
-		let room = changes.entities[entity.parents[1]],
-			thread = changes.entities[entity.parents[0]];
+		log.info('push notification for text: ', entity);
 
-		if (!room || !thread) {
-			if (!room || !room.name) {
-				room = await getEntityAsync(entity.parents[1]);
-			}
-
-			if (!thread || !thread.name) {
-				thread = await getEntityAsync(entity.parents[0]);
-			}
-		}
-
+		const room = await getEntityAsync(entity.parents[1]);
+		const thread = await getEntityAsync(entity.parents[0]);
 		const title = room.name + ': ' + entity.creator + ' replied in ' + thread.name;
 		const link = config.server.protocol + '//' + config.server.host + convertRouteToURL({
 			name: 'chat',
@@ -112,6 +99,7 @@ async function sendStanza(changes, entity) {
 		});
 
 		log.info('pushnotification: ', entity, link);
+
 		const pushData: Note = {
 			group: entity.id,
 			count: 1,
@@ -139,6 +127,7 @@ async function sendStanza(changes, entity) {
 		};
 
 		log.info('sending pushnotification for text', pushData);
+
 		client.send(createStanza(uid(), pushData));
 	}
 
@@ -150,7 +139,7 @@ async function sendStanza(changes, entity) {
 
 
 // console.log("Constants.APP_PRIORITIES.GCM", Constants.APP_PRIORITIES.GCM);
-bus.on('change', (changes) => {
+bus.on('postchange', (changes) => {
 	if (!changes.entities || !config.gcm.senderId) {
 		return;
 	}
