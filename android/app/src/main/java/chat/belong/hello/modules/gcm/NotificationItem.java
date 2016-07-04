@@ -187,7 +187,6 @@ public class NotificationItem {
                         String title = buildTemplateForNotifications(options.getString("title"), items, rooms);
                         if (!title.isEmpty()) {
                             inboxStyle.setBigContentTitle(Html.fromHtml(title));
-                            builder.setContentTitle(Html.fromHtml(title));
                         }
                     }
 
@@ -205,10 +204,6 @@ public class NotificationItem {
                                     JSONUtils.jsonToHashMap(notifications.getJSONObject(i)));
                             if (!line.isEmpty()) {
                                 inboxStyle.addLine(Html.fromHtml(line));
-
-                                if (i == notifications.length() - 1) {
-                                    builder.setContentText(Html.fromHtml(line));
-                                }
                             }
                         }
                     }
