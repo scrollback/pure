@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import RoomsContainer from '../../containers/RoomsContainer';
 import MyActivityContainer from '../../containers/MyActivityContainer';
+import AppText from '../Core/AppText';
 import Colors from '../../../Colors';
 
 const styles = StyleSheet.create({
@@ -16,7 +17,9 @@ const styles = StyleSheet.create({
 		backgroundColor: Colors.primary,
 	},
 	tablabel: {
-		fontFamily: 'Lato',
+		fontSize: 13,
+		color: Colors.white,
+		margin: 8,
 	},
 	indicator: {
 		backgroundColor: Colors.accent,
@@ -54,12 +57,16 @@ export default class Homescreen extends Component<void, any, State> {
 		});
 	};
 
+	_renderLabel = ({ route }: { route: Route }) => {
+		return <AppText style={styles.tablabel}>{route.title.toUpperCase()}</AppText>;
+	};
+
 	_renderHeader = (props: any) => {
 		return (
 			<TabBarTop
 				{...props}
+				renderLabel={this._renderLabel}
 				indicatorStyle={styles.indicator}
-				labelStyle={styles.tablabel}
 				style={styles.tabbar}
 			/>
 		);
