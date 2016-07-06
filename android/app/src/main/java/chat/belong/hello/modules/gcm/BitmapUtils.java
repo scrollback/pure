@@ -59,6 +59,11 @@ public class BitmapUtils {
 
         try {
             Bitmap bitmap = getScaledBitmap(link, IMAGE_SIZE);
+
+            if (bitmap == null) {
+                return null;
+            }
+
             Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
 
             if (output == null) {
