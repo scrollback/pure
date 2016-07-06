@@ -165,7 +165,7 @@ public class NotificationItem {
         Collections.reverse(items);
         Collections.reverse(rooms);
 
-        if (appearance.has("count") && appearance.getBoolean("count")) {
+        if (appearance.has("count") && appearance.getBoolean("count") && items.size() > 1) {
             builder.setNumber(items.size());
         }
 

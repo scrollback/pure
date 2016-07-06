@@ -41,7 +41,7 @@ async function sendStanza(changes, entity) {
 		}
 
 		const room = await getEntityAsync(entity.parents[0]);
-		const title = room.name + ': ' + entity.creator + ' started a discussion';
+		const title = `New discussion in ${room.name}`;
 		const link = config.server.protocol + '//' + config.server.host + convertRouteToURL({
 			name: 'chat',
 			props: {
@@ -89,7 +89,7 @@ async function sendStanza(changes, entity) {
 
 		const room = await getEntityAsync(entity.parents[1]);
 		const thread = await getEntityAsync(entity.parents[0]);
-		const title = room.name + ': ' + entity.creator + ' replied in ' + thread.name;
+		const title = `New reply in ${room.name}`;
 		const link = config.server.protocol + '//' + config.server.host + convertRouteToURL({
 			name: 'chat',
 			props: {

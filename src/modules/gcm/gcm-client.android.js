@@ -4,7 +4,7 @@ import store from '../store/store';
 import GCM from '../../ui/modules/GCM';
 import Colors from '../../ui/Colors';
 
-const TITLE_TEMPLATE = '{{#roomNames.1}}{{#roomNames.0}}{{roomNames.0}}, {{roomNames.1}} and others{{/roomNames.0}}{{/roomNames.1}}{{^roomNames.1}}New notifications in {{#roomNames.0}}{{roomNames.0}}{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}{{/roomNames.1}}';
+const TITLE_TEMPLATE = '{{#roomNames.1}}{{#roomNames.0}}{{roomNames.0}}, {{roomNames.1}} and others{{/roomNames.0}}{{/roomNames.1}}{{^roomNames.1}}New activity in {{#roomNames.0}}{{roomNames.0}}{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}{{/roomNames.1}}';
 
 GCM.clearCurrentNotifications();
 GCM.configureSchema({
@@ -28,7 +28,7 @@ GCM.configureNotification({
 	count: true,
 	template: {
 		title: `{{#single}}{{items.0.data.title}}{{/single}}{{^single}}${TITLE_TEMPLATE}{{/single}}`,
-		body: '{{#single}}{{items.0.data.body}}{{/single}}{{^single}}<b>{{items.0.data.creator}}</b>: {{items.0.data.body}}{{/single}}',
+		body: '<b>{{items.0.data.creator}}</b>: {{items.0.data.body}}',
 		picture: '{{{items.0.data.picture}}}',
 		link: '{{{items.0.data.link}}}',
 		style: {

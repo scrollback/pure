@@ -42,7 +42,7 @@ export function createNote(
 	now: number, type: number
 ): Note {
 	let event = NOTE_MENTION, noteTo = rel.user, noteFrom = item.creator,
-		title = `${room.name}: ${noteFrom} mentioned you in ${thread.name}`;
+		title = `New mention in ${room.name}`;
 
 	if (type === ROLE_UPVOTE) {
 		let subTitle;
