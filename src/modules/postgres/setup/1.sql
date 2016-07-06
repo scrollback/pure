@@ -81,7 +81,7 @@ CREATE TABLE rels (
 	"user" text NOT NULL,
 	roles smallint[], -- mute, upvote, home, work
 	createtime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
-	updatetime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,,
+	updatetime bigint DEFAULT extract(epoch from now())*1000 NOT NULL,
 	admin text,
 	expiretime bigint,
 	interest float(24),
