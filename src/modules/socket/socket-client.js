@@ -1,8 +1,9 @@
 /* @flow */
 
+import uuid from 'node-uuid';
 import { bus, config } from '../../core-client';
 import packer from '../../lib/packer';
-import uuid from 'node-uuid';
+import BuildConfig from '../../ui/modules/BuildConfig';
 
 type Frame = {
 	type: string;
@@ -16,6 +17,8 @@ const {
 } = config.server;
 
 const version = 'v1';
+const app_version_name = BuildConfig.VERSION_NAME;
+const app_version_code = BuildConfig.VERSION_CODE;
 const poll = 'document' in window && 'createElement' in window.document; // Disable polling in non-web environments, e.g.- react-native
 
 // engine.io needs the userAgent string to be present
@@ -80,6 +83,8 @@ function connect() {
 function send(data) {
 	client.send(packer.encode({
 		version,
+		app_version_name,
+		app_version_code,
 		...data,
 	}));
 }
