@@ -72,11 +72,6 @@ type Props = {
 	fields: {
 		invite: { value: boolean };
 	};
-	user: ?{
-		profile: {
-			places: Array<string>;
-		};
-	};
 }
 
 export default class GetStarted extends Component<void, Props, void> {
@@ -88,11 +83,6 @@ export default class GetStarted extends Component<void, Props, void> {
 				value: PropTypes.bool,
 			}),
 		}).isRequired,
-		user: PropTypes.shape({
-			profile: PropTypes.shape({
-				places: PropTypes.arrayOf(PropTypes.string),
-			}),
-		}),
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
