@@ -80,6 +80,7 @@ const styles = StyleSheet.create({
 	},
 	chatSent: {
 		marginHorizontal: 8,
+		paddingLeft: 44,
 	},
 	hidden: {
 		opacity: 0.3,
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
 		right: 0,
 	},
 	likeSent: {
-		left: -52,
+		left: -8,
 	},
 });
 

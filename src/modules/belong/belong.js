@@ -210,6 +210,12 @@ function sendInvitations (resources, user, deletedRels, relRooms, ...stubsets) {
 		updateRels(change, user, updateable);
 		removeRels(change, removable);
 
+		let time = Date.now();
+		// fix times
+		for (const key in change.entities) {
+			change.entities[key].createtime = change.entities[key].updatetime = time++;
+		}
+
 		bus.emit('change', { entities: change, source: 'belong' });
 	});
 }
@@ -220,7 +226,6 @@ bus.on('change', change => {
 	the change to continue immediately and emit a new change when the
 	work is complete. */
 
-	winston.info('Belong: change: ', change);
 	if (change.entities) {
 		for (const id in change.entities) {
 			const user:User = change.entities[id],
@@ -232,6 +237,7 @@ bus.on('change', change => {
 				!user.params || !user.params.places
 			) { continue; }
 
+			winston.info('User update: ', user);
 			if (user.params && user.params.places) {
 				const { home, work, hometown } = user.params.places;
 

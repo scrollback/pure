@@ -1,6 +1,7 @@
 /* @flow */
 
 import type { Route } from '../lib/RouteTypes';
+import Homescreen from './components/views/Homescreen/Homescreen';
 import NotificationIcon from './components/views/Notification/NotificationIcon';
 import ProfileButtonContainer from './components/containers/ProfileButtonContainer';
 import ShareButtonContainer from './components/containers/ShareButtonContainer';
@@ -11,7 +12,6 @@ import RoomTitleContainer from './components/containers/RoomTitleContainer';
 import DiscussionsContainer from './components/containers/DiscussionsContainer';
 import NotificationCenterContainer from './components/containers/NotificationCenterContainer';
 import NotificationClearIconContainer from './components/containers/NotificationClearIconContainer';
-import RoomsContainer from './components/containers/RoomsContainer';
 import AccountContainer from './components/containers/AccountContainer';
 import ProfileContainer from './components/containers/ProfileContainer';
 import OnboardContainer from './components/containers/OnboardContainer';
@@ -93,7 +93,7 @@ export default function(route: Route): RouteDescription {
 			title: config.app_name,
 			leftComponent: ProfileButtonContainer,
 			rightComponent: NotificationIcon,
-			component: RoomsContainer,
+			component: Homescreen,
 		};
 	}
 }

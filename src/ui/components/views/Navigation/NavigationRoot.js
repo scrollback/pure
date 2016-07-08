@@ -2,6 +2,7 @@
 
 import { Component, PropTypes } from 'react';
 import { AsyncStorage } from 'react-native';
+import { v4 } from 'node-uuid';
 import isEqual from 'lodash/isEqual';
 import type { NavigationState, NavigationAction } from '../../../../lib/RouteTypes';
 
@@ -31,7 +32,7 @@ export default class NavigationRoot extends Component<void, Props, State> {
 			navigation: {
 				index,
 				key: 'root',
-				routes: routes.map(route => ({ key: Date.now().toString(), ...route })),
+				routes: routes.map(route => ({ key: v4(), ...route })),
 			},
 		};
 	}
@@ -126,7 +127,7 @@ export default class NavigationRoot extends Component<void, Props, State> {
 	_handleNavigate = ({ type, payload }: NavigationAction) => {
 		const nextNavigationState = this._reduceState(this.state.navigation, {
 			type,
-			payload: { key: Date.now().toString(), ...payload },
+			payload: { key: v4(), ...payload },
 		});
 
 		this.setState({

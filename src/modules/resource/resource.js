@@ -14,7 +14,7 @@ bus.on('presence/offline', presence => {
 
 			u.resources = u.resources || {};
 			u.resources = {
-				[presence.resource]: '$delete',
+				[presence.resource]: [ '$delete' ],
 			};
 
 			bus.emit('change', {

@@ -149,15 +149,6 @@ export default class Discussions extends Component<void, Props, State> {
 			case 'loading':
 				placeHolder = <PageLoading />;
 				break;
-			case 'banned':
-				placeHolder = <PageEmpty label="You're banned in this group" image='meh' />;
-				break;
-			case 'nonexistent':
-				placeHolder = <PageEmpty label="This group doesn't exist" image='sad' />;
-				break;
-			case 'failed':
-				placeHolder = <PageEmpty label='Failed to load discussions' image='sad' />;
-				break;
 			}
 		}
 

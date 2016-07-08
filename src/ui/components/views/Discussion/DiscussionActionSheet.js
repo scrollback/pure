@@ -34,6 +34,7 @@ export default class DiscussionItem extends Component<void, Props, void> {
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
+			tags: PropTypes.arrayOf(PropTypes.number),
 		}).isRequired,
 		threadrel: PropTypes.object,
 		isUserAdmin: PropTypes.bool,
@@ -50,6 +51,16 @@ export default class DiscussionItem extends Component<void, Props, void> {
 	_copyToClipboard = (text: string) => {
 		Clipboard.setString(text);
 		ToastAndroid.show('Copied to clipboard', ToastAndroid.SHORT);
+	};
+
+	_handleHide = () => {
+		const { id, tags } = this.props.thread;
+		this.props.hideThread(id, tags);
+	};
+
+	_handleUnhide = () => {
+		const { id, tags } = this.props.thread;
+		this.props.unhideThread(id, tags);
 	};
 
 	_handleOpenImage = () => {
@@ -131,10 +142,10 @@ export default class DiscussionItem extends Component<void, Props, void> {
 
 				{isUserAdmin ?
 					hidden ?
-						<ActionSheetItem onPress={this.props.unhideThread}>
+						<ActionSheetItem onPress={this._handleUnhide}>
 							Unhide discussion
 						</ActionSheetItem> :
-						<ActionSheetItem onPress={this.props.hideThread}>
+						<ActionSheetItem onPress={this._handleHide}>
 							Hide discussion
 						</ActionSheetItem> : null
 				}

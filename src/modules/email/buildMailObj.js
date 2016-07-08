@@ -1,48 +1,49 @@
 import { formatShort } from '../../lib/Time';
 import { config } from '../../core-server';
-let currentU = false,
-	currentR = false;
+import Logger from '../../lib/logger';
+const log  = new Logger(__filename);
+let currentU = {},
+	currentR: Array<Object> = [];
 
 function userFromUserRel(user) {
 	return {
-		id: user.user,
+		id: user.userid,
 		identities: user.identities,
-		createTime: user.createTime,
-		params: user.params,
-		tags: user.tags,
-		timezone: user.timezone,
 	};
 }
 
 function relFromUserRel(rel) {
 	// console.log("rel: ", rel)
 	return {
-		user: rel.user, // id or identity
-		topics: rel.topics,
-		threadTitle: rel.name || rel.threadTitle,
-		threadId: rel.threadid, // room display name or thread title
-		text: rel.teext || rel.body,
-		parents: rel.textparents || rel.parents,
-		item: rel.titem || rel.item,
-		roles: rel.trole || rel.roles,
-		status: rel.status,
-		interest: rel.interest,
-		reputation: rel.reputation,
-		room: rel.roomName,
-		roomId: rel.roomId,
-		count: rel.textCount || rel.counts.children,
-		displayTime: formatShort(rel.threadTime || rel.tctime),
+		user: rel.userid,
+		threadTitle: rel.threadtitle,
+		threadId: rel.threadid,
+		text: rel.body,
+		parents: rel.parents,
+		item: rel.item,
+		roles: rel.roles,
+		score: rel.score,
+		room: rel.roomname,
+		roomId: rel.roomid,
+		count: rel.textCount || rel.children,
+		displayTime: formatShort(rel.createtime),
 	};
 }
 
 function buildMailObj(userRel) {
 	const rel = relFromUserRel(userRel),
+		thread = {
+			id: rel.threadId,
+			title: rel.threadTitle,
+			score: rel.score,
+			counts: rel.count,
+			displayTime: rel.displayTime
+		},
 		user = userFromUserRel(userRel);
-
 	let cUserRel = false;
 
 	if (user.id !== currentU.id) {
-		if (currentU) {
+		if (Object.keys(currentU).length > 0) {
 			cUserRel = {
 				currentUser: currentU,
 				currentRels: currentR,
@@ -52,8 +53,8 @@ function buildMailObj(userRel) {
 		currentR = [
 			{
 				id: rel.roomId,
-				room: rel.room ? rel.room : rel.parent,
-				threads: [ rel ],
+				room: rel.room,
+				threads: [ thread ],
 				domain: config.server.protocol + '//' + config.server.host,
 			},
 		];
@@ -63,7 +64,7 @@ function buildMailObj(userRel) {
 		for (const item of currentR) {
 			// console.log("item: ", item)
 			if (rel.room === item.room) {
-				item.threads.push(rel);
+				item.threads.push(thread);
 				sameRoom = true;
 				break;
 			}
@@ -72,42 +73,48 @@ function buildMailObj(userRel) {
 		if (!sameRoom) {
 			currentR.push({
 				id: rel.roomId,
-				room: rel.room ? rel.room : rel.parent,
-				threads: [ rel ],
+				room: rel.room,
+				threads: [ thread ],
 				domain: config.server.protocol + '//' + config.server.host,
 			});
 		}
 
-		// console.log("currentR after: ", currentR)
 	}
-	if (cUserRel) {
+	if (cUserRel) {		// sortAndTrim()
 
 		cUserRel.currentRels.sort((a, b) => { // sort according to the no of threads in a room
-			if (a.threads.length > b.threads.length) return -1;
-			if (a.threads.length < b.threads.length) return 1;
-			return 0;
+			return b.threads.length - a.threads.length;
 		});
 
-		for (const i in cUserRel.currentRels) {
-			cUserRel.currentRels[i].threads.sort((a, b) => { // sort threads according to interest
-				return b.interest - a.interest;
+		for (let i = 0; i < cUserRel.currentRels.length; i++) {
+			cUserRel.currentRels[i].threads.sort((a, b) => { // sort threads according to count
+				return b.counts - a.counts;
 			});
+			if (cUserRel.currentRels[i].threads.length > 10) {
+				cUserRel.currentRels[i].threads = cUserRel.currentRels[i].threads.slice(0, 10);
+			}
 		}
 	}
 	return cUserRel;
 }
 
-export default function (userRel) {
-//	console.log(userRel)
+export default function (userRel: Object) {
+	// console.log(userRel.user)
 
 	if (Object.keys(userRel).length === 0) {
-		const cu = currentU, cr = currentR;
-
-		currentU = false;
-		currentR = false;
+		const lastUser = currentU,
+			lastRel = currentR;
+		for (let i = 0; i < lastRel.length; i++) {
+			log.info('lastRel[i].threads.length: ', lastRel[i].threads.length);
+			if (lastRel[i].threads.length > 10) {
+				lastRel[i].threads = lastRel[i].threads.slice(0, 10);
+			}
+		}
+		currentU = {};
+		currentR = [];
 		return {
-			currentUser: cu,
-			currentRels: cr,
+			currentUser: lastUser,
+			currentRels: lastRel,
 		};
 	}
 	const emailObj = buildMailObj(userRel);

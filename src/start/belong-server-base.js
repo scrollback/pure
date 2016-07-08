@@ -1,8 +1,13 @@
 // Log unhandled promise rejections
 import '../lib/node-unhandled-rejection';
 
+// Global settings for winston logger
+import '../lib/winston-globals';
+
 // Setup new relic
 import 'newrelic';
+
+import '../modules/on-start/on-start';
 
 // Socket
 import '../modules/socket/socket-server';

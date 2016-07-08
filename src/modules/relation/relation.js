@@ -16,7 +16,7 @@ bus.on('change', (changes, next) => {
 
 	for (const id in changes.entities) {
 		const entity = changes.entities[id];
-		let text, role, user;
+		let text, roles, user;
 
 		if (entity.type === Constants.TYPE_TEXT) {
 
@@ -104,13 +104,13 @@ bus.on('change', (changes, next) => {
 						return;
 					}
 					text = entity;
-					role = [ Constants.ROLE_FOLLOWER ];
+					roles =  r && r.roles || [];
 					user = entity.creator;
 					const threadRel = {
 						item: text.parents[0],
 						user,
 						type: Constants.TYPE_THREADREL,
-						roles: role,
+						roles: roles.concat([ Constants.ROLE_FOLLOWER ]),
 					};
 					const relation = new threadrel(threadRel);
 

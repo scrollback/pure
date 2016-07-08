@@ -23,13 +23,13 @@ import chat.belong.hello.modules.contacts.ContactsPackage;
 import chat.belong.hello.modules.core.CorePackage;
 import chat.belong.hello.modules.facebook.FacebookPackage;
 import chat.belong.hello.modules.gcm.GCMPackage;
-import chat.belong.hello.modules.gcm.GCMRegistrationManager;
+import chat.belong.hello.modules.gcm.RegistrationManager;
 import chat.belong.hello.modules.google.GooglePackage;
 
 
 public class MainActivity extends ReactActivity {
 
-    GCMRegistrationManager mRegistrationManager = new GCMRegistrationManager(this);
+    RegistrationManager mRegistrationManager = new RegistrationManager(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

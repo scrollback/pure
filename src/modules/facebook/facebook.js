@@ -15,6 +15,7 @@ import path from 'path';
 import handlebars from 'handlebars';
 import encodeURITemplate from '../../lib/encodeURITemplate';
 
+const app_access_token = config.facebook.app_access_token;
 const redirectURL = `${config.server.protocol}//${config.server.host}:${config.server.port}${config.facebook.redirect_path}`;
 const SCRIPT_REDIRECT = encodeURITemplate `location.href='https://www.facebook.com/dialog/oauth?\
 client_id=${config.facebook.client_id}&\
@@ -65,23 +66,27 @@ function getTokenFromCode(code, secret, clientID) {
 
 function verifyToken(token, appId) {
 	return new Promise((resolve, reject) => {
-		request(encodeURITemplate `https://graph.facebook.com/app/?access_token=${token}`,
+		request(encodeURITemplate `https://graph.facebook.com/debug_token?access_token=${app_access_token}&input_token=${token}`,
 		(err, res, body) => {
+			let response;
 			if (err || !res) {
 				reject(err);
 				return;
 			}
 
 			winston.debug('verify response', body);
-			const response = JSON.parse(body);
-
-			winston.debug('verify appId', response.id, appId);
+			try {
+				response = JSON.parse(body);
+			} catch (e) {
+				reject(new Error('PARSE_ERROR: ' + e.message));
+			}
+			if (!response) return;
 			if (response.error) {
 				reject(new Error(response.error.message));
 				return;
 			}
 
-			if (response.id === appId) resolve(token);
+			if (response.data.app_id === appId && response.data.is_valid) resolve(token);
 			else reject(new EnhancedError(Constants.ERRORS.AUDIENCE_MISMATCH_FACEBOOK, 'AUDIENCE_MISMATCH_FACEBOOK'));
 		});
 	});

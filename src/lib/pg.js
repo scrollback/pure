@@ -265,7 +265,7 @@ function rollback(error, client, done) {
 
 export const write = function (connStr, queries, cb) {
 	if (!queries || !queries.length) { return cb(null, []); }
-
+	
 	const start = Date.now();
 
 	logger.log('PgWrite starting ', queries);

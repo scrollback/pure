@@ -4,6 +4,7 @@ import route from 'koa-route';
 import { bus, cache } from '../../core-server';
 import promisify from '../../lib/promisify';
 import buildAvatarURLForSize from '../../lib/buildAvatarURLForSize';
+import buildS3AvatarURL from '../../lib/buildS3AvatarURL';
 
 const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
@@ -23,7 +24,7 @@ bus.on('http/init', app => {
 				if (data && data.meta && data.meta.picture) {
 					this.response.redirect(buildAvatarURLForSize(data.meta.picture, size));
 				} else {
-					this.throw(404, `Couldn't find picture for user: ${user}`);
+					this.response.redirect(buildS3AvatarURL(user, size));
 				}
 			} catch (e) {
 				this.throw(500, e.message);

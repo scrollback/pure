@@ -105,7 +105,7 @@ function extractLink(body) {
 }
 
 async function fetchData(url: string): Promise<Embed> {
-	const body = await fetch(url).then(res => res.text()).then(text => text.replace(/(\r\n|\n|\r)/g, ''));
+	const body = await fetch(url).then(res => res.text()).then(text => text ? text.replace(/(\r\n|\n|\r)/g, '') : '');
 	const dataUrl = extractLink(body);
 
 	let data;

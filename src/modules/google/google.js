@@ -81,14 +81,20 @@ function verifyToken(token, appId) {
 	return new Promise((resolve, reject) => {
 		request(encodeURITemplate `https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=${token}`,
 		(err, res, body) => {
+			let response;
 			winston.error(err, body);
 			if (err || !res) {
 				reject(err);
 				return;
 			}
 
-			const response = JSON.parse(body);
+			try {
+				response = JSON.parse(body);
+			} catch (e) {
+				reject(new Error('PARSE_ERROR: ' + e.message));
+			}
 
+			if (!response) return;
 			if (response.error) {
 				reject(new Error(response.error.message));
 				return;

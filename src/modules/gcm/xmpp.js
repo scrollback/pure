@@ -1,7 +1,7 @@
 /* eslint no-use-before-define: 0 */
 /* @flow */
 import Client from 'node-xmpp-client';
-import log from 'winston';
+import Logger from '../../lib/logger';
 import { config } from '../../core-server';
 let backOff = 1, client;
 const options = {
@@ -13,7 +13,7 @@ const options = {
 	reconnect: false,
 	legacySSL: true,
 	preferred: 'PLAIN',
-};
+}, log = new Logger(__filename);
 
 
 function onStanza (s) {

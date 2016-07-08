@@ -11,16 +11,8 @@ import { TYPE_NAMES, RELATION_TYPES } from '../../lib/schema';
 import * as Types from '../../models/models';
 import winston from 'winston';
 import packer from '../../lib/packer';
+import { getTypeFromId } from '../../lib/id';
 const channel = 'heyneighbor';
-
-function getTypeFromId(id) {
-	const _split = id.split('_');
-
-	if (_split.length === 3) return 'rest';
-	else if (_split.length === 2) return 'rel';
-	else if (id.length >= 36) return 'item';
-	else return 'user';
-}
 
 function broadcast (entity) {
 	pg.notify(config.connStr, channel, packer.encode(entity));
@@ -32,6 +24,7 @@ function onRangeQuery(key, range, err, r) {
 		return;
 	}
 
+	winston.info('onRangeQuery', key, range);
 	const results = r.map(e => {
 		const props = Object.keys(e), propsCount = props.length;
 		let prop;
@@ -92,17 +85,11 @@ cache.onChange((changes) => {
 						item: [],
 						user: [],
 						note: [],
-						rel: [],
-						rest: [],
+						rel: []
 					});
 
-				typeToId.rest.forEach(id => {
-					cache.put({ entities: { [id]: false } });
-				});
-
 				for (const i in typeToId) {
-					// FIXME: Notes only for now
-					if (i === 'rest' || i === 'note' || !typeToId[i].length) continue;
+					if (!typeToId[i].length) continue;
 
 					pg.read(config.connStr,
 						PgEntity.read[i](typeToId[i]),
@@ -153,10 +140,14 @@ bus.on('change', (changes, next) => {
 
 		for (const id in changes.entities) {
 			ids.push(id);
-			sql.push(PgEntity.write(changes.entities[id]));
-			if ('presence' in changes.entities[id] && changes.entities[id].createTime === changes.entities[id].updateTime) {
-				ids.push(id);
-				sql.push(presenceHandler(changes.entities[id]));
+			if (changes.entities[id] !== null) {
+				sql.push(PgEntity.write(changes.entities[id]));
+				if ('presence' in changes.entities[id] && changes.entities[id].createTime === changes.entities[id].updateTime) {
+					ids.push(id);
+					sql.push(presenceHandler(changes.entities[id]));
+				}
+			} else {
+				sql.push(PgEntity.remove(id));
 			}
 		}
 

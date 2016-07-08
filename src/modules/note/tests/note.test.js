@@ -87,7 +87,7 @@ test('should create mention', t => {
 				name: 'The little mermaid',
 			},
 			link: 'http://localhost/efghi/ijklm/',
-			title: 'Hell bent: john mentioned you in The little mermaid',
+			title: 'New mention in Hell bent',
 			body: 'The answer is 42',
 		},
 		event: NOTE_MENTION,

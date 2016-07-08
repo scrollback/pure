@@ -5,11 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import AppText from '../Core/AppText';
 import ListItem from '../Core/ListItem';
-import Icon from '../Core/Icon';
 import Time from '../Core/Time';
-import ActionSheet from '../Core/ActionSheet';
-import ActionSheetItem from '../Core/ActionSheetItem';
-import Share from '../../../modules/Share';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -17,7 +13,6 @@ import type { Room } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
-	TouchableOpacity,
 	View,
 } = ReactNative;
 
@@ -57,11 +52,6 @@ const styles = StyleSheet.create({
 		borderRadius: 3,
 		elevation: 1,
 	},
-
-	expand: {
-		margin: 20,
-		color: Colors.fadedBlack,
-	},
 });
 
 type Props = {
@@ -70,11 +60,7 @@ type Props = {
 	onSelect: Function;
 }
 
-type State = {
-	actionSheetVisible: boolean;
-}
-
-export default class RoomItem extends Component<void, Props, State> {
+export default class RoomItem extends Component<void, Props, void> {
 	static propTypes = {
 		room: PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -84,11 +70,7 @@ export default class RoomItem extends Component<void, Props, State> {
 		onSelect: PropTypes.func,
 	};
 
-	state: State = {
-		actionSheetVisible: false,
-	};
-
-	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+	shouldComponentUpdate(nextProps: Props, nextState: void): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
@@ -100,28 +82,6 @@ export default class RoomItem extends Component<void, Props, State> {
 			props: {
 				room: room.id,
 			},
-		});
-	};
-
-	_getShareText = () => {
-		const { room } = this.props;
-
-		return `Hey! Join me in the ${room.name} group on ${config.app_name}.\n${this._getRoomLink()}`;
-	};
-
-	_handleInvite = () => {
-		Share.shareItem('Share group', this._getShareText());
-	};
-
-	_handleShowMenu = () => {
-		this.setState({
-			actionSheetVisible: true,
-		});
-	};
-
-	_handleRequestClose = () => {
-		this.setState({
-			actionSheetVisible: false,
 		});
 	};
 
@@ -170,20 +130,6 @@ export default class RoomItem extends Component<void, Props, State> {
 						null
 					}
 				</View>
-
-				<TouchableOpacity onPress={this._handleShowMenu}>
-					<Icon
-						name='expand-more'
-						style={styles.expand}
-						size={20}
-					/>
-				</TouchableOpacity>
-
-				<ActionSheet visible={this.state.actionSheetVisible} onRequestClose={this._handleRequestClose}>
-					<ActionSheetItem onPress={this._handleInvite}>
-						Invite friends to group
-					</ActionSheetItem>
-				</ActionSheet>
 			</ListItem>
 		);
 	}

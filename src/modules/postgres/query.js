@@ -1,7 +1,7 @@
 import * as pg from '../../lib/pg';
 import { TABLES, TYPES } from '../../lib/schema';
 
-const MAX_LIMIT = 1024;
+const MAX_LIMIT = 256;
 
 const operators = {
 	gt: '>',

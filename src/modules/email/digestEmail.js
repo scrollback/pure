@@ -2,7 +2,7 @@
 import getMailObj from './buildMailObj';
 import { config } from '../../core-server';
 import * as Constants from '../../lib/Constants';
-import log from 'winston';
+import Logger from '../../lib/logger';
 import fs from 'fs';
 import handlebars from 'handlebars';
 import * as pg from '../../lib/pg';
@@ -10,31 +10,62 @@ import jwt from 'jsonwebtoken';
 import send from './sendEmail';
 import Counter from '../../lib/counter';
 const DIGEST_INTERVAL = 60 * 60 * 1000, DIGEST_DELAY = 24 * 60 * 60 * 1000,
-	template = handlebars.compile(fs.readFileSync(__dirname + '/../../../templates/' + config.app_id + '.digest.hbs', 'utf-8').toString()),
-	connStr = config.connStr, conf = config.email, counter1 = new Counter();
-
-let lastEmailSent, end;
-
+	template = handlebars.compile(
+		fs.readFileSync(__dirname + '/../../../templates/' + config.app_id + '.digest.hbs', 'utf-8').toString()
+	),
+	connStr = config.connStr, conf = config.email, counter1 = new Counter(), log = new Logger(__filename);
+let lastEmailSent, end, i = 0;
+const fields = [
+		'roomrels.presencetime',
+		'users.name',
+		'threads.counts->>\'children\' children',
+		'users.identities', 'users.id userid',
+		'threads.score', 'threads.name threadtitle',
+		'threads.createtime', 'threads.id threadid', 'rooms.name roomname',
+		'rooms.id roomid'
+	], joins = [
+		'users',
+		'roomrels',
+		'threads',
+		'rooms'
+	], conditions = [
+		'users.id=roomrels.user',
+		'threads.parents[1]=roomrels.item',
+		'roomrels.item=rooms.id',
+		'threads.counts IS NOT NULL',
+		'threads.createtime >= extract(epoch from now()-interval \'7 days\')*1000',
+		'(users.params-> \'email\'->>\'frequency\' = \'daily\' OR (users.params->\'email\') is null)',
+		'roles @> \'{3}\'',
+		'users.presencetime >= &{start}',
+		'users.presencetime < &{end}',
+		'timezone >= &{min}',
+		'timezone < &{max}'
+	],
+	query = pg.cat(
+		[
+			'SELECT ', pg.cat(fields, ', '),
+			'FROM ', pg.cat(joins, ', '),
+			'WHERE ', pg.cat(conditions, ' AND '),
+			'ORDER BY users.id'
+		]
+	);
 
 function getSubject() {
-	// const counts = rels.length - 1;
-	// const heading = '[' + rels[0].room + '] ' + rels[0].threads[0].threadTitle + ' +' + counts + ' more';
 	const heading = 'Updates from ' + config.app_name;
 	return heading;
 }
 
-export function initMailSending (userRel) {
-	// console.log("init mio djf: ", userRel)
-	// console.log("counter1.pending: ", counter1.pending)
+export function initMailSending (userRel: Object) {
 	const user = userRel.currentUser;
 	if (!user.identities || !Array.isArray(user.identities)) {
 		log.info('No identities found for user: ', user);
 		return;
 	}
-	const	rels = userRel.currentRels,
+	const	rels = userRel.currentRels/* .splice(0, 4)*/,
 		mailIds = user.identities.filter((el) => {
 			return /mailto:/.test(el);
 		});
+
 	mailIds.forEach((mailId) => {
 		counter1.inc();
 		const emailAdd = mailId.slice(7),
@@ -44,33 +75,35 @@ export function initMailSending (userRel) {
 				rooms: rels,
 			}),
 			emailSub = getSubject(rels);
-// console.log("rels[0].threads: ", rels)
+		log.info('Digest email to: ', emailAdd);
+
 		send(conf.from, emailAdd, emailSub, emailHtml, (e) => {
 			if (!e) {
 				log.info('Digest email successfully sent');
 				counter1.dec();
-				// console.log('counter1.pending: ',counter1.pending)
 			}
 		});
 	});
 	counter1.then(() => {
+		log.info('successfully updated jobs for digest email');
 		pg.write(connStr, [ {
 			$: 'UPDATE jobs SET lastrun=&{end} WHERE id=&{jid}',
 			end,
 			jid: Constants.JOB_EMAIL_DIGEST,
 		} ], (error) => {
-			if (!error) log.info('successfully updated jobs for digest email');
+			if (!error) {
+				log.info('successfully updated jobs for digest email');
+				log.info('Digest email sent to ', i, ' users');
+			}
 		});
 	});
 }
 
 function sendDigestEmail () {
 	log.info('Starting digest email');
-	const startPoint = Date.now() - 2 * DIGEST_DELAY,
-		counter = new Counter();
-
-	end = Date.now() - DIGEST_DELAY;
-	let	start = lastEmailSent < startPoint ? lastEmailSent : startPoint;
+	const startPoint = Date.now() - 30 * DIGEST_DELAY;
+	let	start = /*lastEmailSent < startPoint ? lastEmailSent :*/ startPoint;
+	end = Date.now() - 2 * DIGEST_DELAY;
 
 	function getTimezone(hour) {
 		const UtcHrs = new Date().getUTCHours(),
@@ -80,53 +113,44 @@ function sendDigestEmail () {
 			tzMin = tz - 30,
 			tzMax = tz + 30;
 
-		return { min: parseInt(tzMin), max: parseInt(tzMax) };
+		return { min: tzMin, max: tzMax };
 	}
 
 	const timeZone = getTimezone(conf.digestEmailTime);
 
 	log.info('timezone: ', timeZone);
 	if (conf.debug) {
-		start = 0; end = Date.now(); /* tz.min = 0; tz.max = 1000; */
+		start = 0; end = Date.now();
+		timeZone.min = 0;
+		timeZone.max = 1000;
 	}
 
-	pg.readStream(config.connStr, {
-		$: 'with urel as (select rrls.presencetime ptime, users.name uname, * from users join roomrels rrls on users.id=rrls.user where NOT(params  @> \'{"email":{"frequency": "never", "notifications": false}}\') and roles @> \'{3}\' and rrls.presencetime >= &{start} and rrls.presencetime < &{end} and timezone >= &{min} and timezone < &{max}) select threads.counts, urel.params, urel.tags, threads.createtime tctime, threads.id threadId, * from urel join threads on threads.parents[1]=urel.item order by urel.id', // where threads.createtime > urel.ptime
-		start,
-		end,
-		follower: Constants.ROLE_FOLLOWER,
-		min: timeZone.min,
-		max: timeZone.max,
-	}).on('row', (urel) => {
-	// console.log('Got user for digest email: ', urel);
-		counter.inc();
-		pg.read(config.connStr, {
-			$: 'select * from rooms where id=&{id} ', // and presencetime<&{roletime}
-			id: urel.parents[0],
-		}, (err, room) => {
-			if (err) throw err;
-			urel.roomName = room[0].name;
-			urel.roomId = room[0].id;
-			// console.log(urel)
-			const emailObj = getMailObj(urel) || {};
+	query.start = start;
+	query.end = end;
+	query.min = timeZone.min;
+	query.max = timeZone.max;
+	pg.readStream(config.connStr, query).on('row', (urel) => {
+		// log.info('Got user: ', urel.userid);
+		const emailObj = getMailObj(urel) || {};
 
-// console.log(emailObj)
-			if (Object.keys(emailObj).length !== 0) {
-				initMailSending(emailObj);
-			}
-			counter.dec();
-			counter.then(() => {
-				const c = getMailObj({});
-
-				initMailSending(c);
-			});
-		});
+		if (Object.keys(emailObj).length !== 0) {
+			++i;
+			log.info('send email to: ', emailObj.currentUser);
+			initMailSending(emailObj);
+		}
 	}).on('end', () => {
+		const endUser = getMailObj({});
+		i++;
+		// log.info('Sending to last user: ', endUser);
+		for (const j in endUser.currentRels) {
+			log.debug('c.currentRels[j].threads.length: ', endUser.currentRels[j].threads.length);
+		}
+		initMailSending(endUser);
 		log.info('ended digest email');
 	});
 }
 
-export default function (row) {
+export default function (row: Object) {
 	lastEmailSent = row.lastrun;
 	const UtcMnts = new Date().getUTCMinutes(),
 		delay = UtcMnts < 30 ? 30 : 90,

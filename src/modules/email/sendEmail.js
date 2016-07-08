@@ -1,14 +1,14 @@
 import { config } from '../../core-server';
 import nodemailer from 'nodemailer';
 import smtpTransport from 'nodemailer-smtp-transport';
-import log from 'winston';
+import Logger from '../../lib/logger';
 const transport = nodemailer.createTransport(smtpTransport({
 	host: 'email-smtp.us-west-2.amazonaws.com',
 	protocol: 'smtp',
 	secureConnection: true,
 	port: 465,
 	auth: config && config.email && config.email.auth,
-}));
+})), log = new Logger(__filename);
 
 export default function send (from, to, sub, html, cb) {
 	const email = {

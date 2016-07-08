@@ -11,7 +11,6 @@ import chat.belong.hello.AppState;
 public class GCMListenerService extends GcmListenerService {
 
     private static final String TAG = "GCMListenerService";
-    private static final int NOTIFICATION_ID = 0;
 
     @Override
     public void onMessageReceived(String from, Bundle data) {
@@ -21,7 +20,7 @@ public class GCMListenerService extends GcmListenerService {
         if (AppState.isForeground()) {
             Log.d(TAG, "App is in forground. Not showing notification.");
         } else {
-            GCMNotificationHandler.send(this, NOTIFICATION_ID, data);
+            NotificationHandler.handleNotification(this, data);
         }
     }
 }

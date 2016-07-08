@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
 	dot: {
 		color: Colors.grey,
 		fontSize: 3,
-		marginHorizontal: 8,
+		marginHorizontal: 6,
 	},
 });
 

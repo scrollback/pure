@@ -12,7 +12,7 @@ test('bounds query', t => {
 			}
 		},
 	}, [ 764, 974 ]), {
-		$: 'SELECT  row_to_json("rooms".*)::jsonb as "room",row_to_json("rels".*)::jsonb as "rel" FROM ( SELECT  * FROM "rooms" WHERE "parents" @> &{parents_cts} AND "createtime" <= &{createTime_lte} AND "createtime" >= &{createTime_gte} AND "rooms".deletetime IS NULL ORDER BY "rooms".createtime ASC LIMIT 1024 ) as  rooms LEFT OUTER JOIN ( SELECT  * FROM "rels"   ) as  rels ON "rels"."room" = "rooms"."id"  ORDER BY "rooms".createtime ASC LIMIT 1024',
+		$: 'SELECT  row_to_json("rooms".*)::jsonb as "room",row_to_json("rels".*)::jsonb as "rel" FROM ( SELECT  * FROM "rooms" WHERE "parents" @> &{parents_cts} AND "createtime" <= &{createTime_lte} AND "createtime" >= &{createTime_gte} AND "rooms".deletetime IS NULL ORDER BY "rooms".createtime ASC LIMIT 256 ) as  rooms LEFT OUTER JOIN ( SELECT  * FROM "rels"   ) as  rels ON "rels"."room" = "rooms"."id"  ORDER BY "rooms".createtime ASC LIMIT 256',
 		createTime_gte: 764,
 		createTime_lte: 974,
 		parents_cts: [ 'asdf' ]

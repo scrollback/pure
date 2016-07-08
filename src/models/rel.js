@@ -8,9 +8,17 @@ export default class Relation {
 
 		if (!COLUMNS[data.type]) { throw new Error('INVALID_TYPE'); }
 
-		for (const name of COLUMNS[data.type]) {
-			if (typeof data[name.toLowerCase()] !== 'undefined' || typeof data[name] !== 'undefined') {
-				this[name] = data[name] || data[name.toLowerCase()];
+		for (const n of COLUMNS[data.type]) {
+			const name = n.toLowerCase();
+			if (typeof data[name] !== 'undefined' || typeof data[n] !== 'undefined') {
+				let value = data[n] || data[name];
+
+				if ([ 'createtime', 'updatetime', 'deletetime' ].indexOf(name) >= 0) {
+					value = parseInt(value);
+					if (Number.isNaN(value)) continue;
+				}
+
+				this[n] = value;
 			}
 		}
 

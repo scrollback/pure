@@ -30,6 +30,6 @@ export default function createStanza(id: string, note: Note) {
 	</gcm>
 	</message>
 	`;
-
+	console.log('create stanza: ', stanza);
 	return stanza;
 }

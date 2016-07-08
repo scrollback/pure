@@ -130,6 +130,7 @@ function seedContent(room) {
 			}
 		});
 
+		let time = Date.now();
 		files.forEach((e:?ThreadTemplate) => {
 			const id = uuid.v4();
 
@@ -146,7 +147,7 @@ function seedContent(room) {
 				tags: [ TAG_POST_AUTO_SEED ],
 				parents: [ room.id ],
 				creator: e.creator,
-				createTime: Date.now(),
+				createTime: time++,
 			});
 		});
 
@@ -375,6 +376,13 @@ function saveEntity(entity) {
 
 	seedGAPIContent(entity).then(finalChanges => {
 		let time = Date.now();
+		for (const i in finalChanges.entities) {
+			const newEntity = finalChanges.entities[i];
+			if (newEntity.type === TYPE_THREAD) {
+				newEntity.createTime = newEntity.updateTime = ++time;
+			}
+		}
+
 		for (const i in finalChanges.entities) {
 			const newEntity = finalChanges.entities[i];
 			if (newEntity.type === TYPE_TEXT) {

@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import RoomItemContainer from '../../containers/RoomItemContainer';
 import RoomsFooterContainer from '../../containers/RoomsFooterContainer';
-import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
 import type { RoomRel, Room } from '../../../../lib/schemaTypes';
@@ -96,15 +95,14 @@ export default class Rooms extends Component<void, Props, State> {
 	};
 
 	render() {
+		const { data } = this.props;
+
 		let placeHolder;
 
-		if (this.props.data.length === 1) {
-			switch (this.props.data[0] && this.props.data[0].type || null) {
+		if (data.length === 1) {
+			switch (data[0] && data[0].type || null) {
 			case 'loading':
 				placeHolder = <PageLoading />;
-				break;
-			case 'failed':
-				placeHolder = <PageEmpty label='Failed to load rooms' image='sad' />;
 				break;
 			}
 		}
