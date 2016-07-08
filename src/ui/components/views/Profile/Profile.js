@@ -203,7 +203,7 @@ export default class Profile extends Component<void, Props, void> {
 		} = this.props;
 
 		if (!user) {
-			return <PageEmpty label='Failed to load profile' image='sad' />;
+			return <PageEmpty label='Failed to load profile' image={require('../../../../../assets/fail-experiment.png')} />;
 		}
 
 		if (user && user.type === 'loading') {

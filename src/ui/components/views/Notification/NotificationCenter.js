@@ -64,7 +64,7 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		const { data } = this.props;
 
 		if (data.length === 0) {
-			return <PageEmpty label='No new notifications' image='cool' />;
+			return <PageEmpty label='No new notifications' image={require('../../../../../assets/holiday-chill.png')} />;
 		} else if (data.length === 1 && data[0].type === 'loading') {
 			return <PageLoading />;
 		} else {

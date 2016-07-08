@@ -164,14 +164,14 @@ export default class SearchableList extends Component<void, Props, State> {
 			if (this.props.renderBlankslate) {
 				placeHolder = this.props.renderBlankslate();
 			} else {
-				placeHolder = <PageEmpty label='Come on, type something!' image='happy' />;
+				placeHolder = <PageEmpty label='Come on, type something!' image={require('../../../../../assets/typewriter.png')} />;
 			}
 			break;
 		case '@@loading':
 			placeHolder = <PageLoading />;
 			break;
 		case '@@failed':
-			placeHolder = <PageEmpty label='Failed to load results' image='sad' />;
+			placeHolder = <PageEmpty label='Failed to load results' image={require('../../../../../assets/fail-experiment.png')} />;
 			break;
 		default:
 			if (this.state.data && this.state.data.length) {
@@ -185,7 +185,7 @@ export default class SearchableList extends Component<void, Props, State> {
 					/>
 				);
 			} else {
-				placeHolder = <PageEmpty label='No results found' image='sad' />;
+				placeHolder = <PageEmpty label='No results found' image={require('../../../../../assets/empty-box.png')} />;
 			}
 		}
 

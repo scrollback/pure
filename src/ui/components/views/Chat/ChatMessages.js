@@ -120,7 +120,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 		let placeHolder;
 
 		if (data.length === 0) {
-			placeHolder = <PageEmpty label='No messages yet' image='sad' />;
+			placeHolder = <PageEmpty label='No messages yet' image={require('../../../../../assets/empty-box.png')} />;
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':

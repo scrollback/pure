@@ -46,7 +46,7 @@ export default class DiscussionDetails extends Component<void, Props, void> {
 				</ScrollView>
 			);
 		} else {
-			return <PageEmpty label='Discussion not found' image='sad' />;
+			return <PageEmpty label='Discussion not found' image={require('../../../../../assets/empty-box.png')} />;
 		}
 	}
 }

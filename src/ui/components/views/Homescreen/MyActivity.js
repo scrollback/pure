@@ -141,7 +141,7 @@ export default class MyActivity extends Component<void, Props, State> {
 		let placeHolder;
 
 		if (data.length === 0) {
-			placeHolder = <PageEmpty label="You don't have any activity" image='sad' />;
+			placeHolder = <PageEmpty label="You don't have any activity" image={require('../../../../../assets/empty-box.png')} />;
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':

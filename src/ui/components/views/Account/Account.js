@@ -231,7 +231,7 @@ export default class Account extends Component<void, Props, State> {
 		const { user } = this.props;
 
 		if (!user) {
-			return <PageEmpty label='Failed to load account' image='sad' />;
+			return <PageEmpty label='Failed to load account' image={require('../../../../../assets/fail-experiment.png')} />;
 		}
 
 		if (user && user.type === 'loading') {

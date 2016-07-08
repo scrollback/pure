@@ -68,7 +68,7 @@ export default class PeopleList extends Component<void, Props, State> {
 		const { data } = this.props;
 
 		if (data.length === 0) {
-			return <PageEmpty label='Nobody here' image='sad' />;
+			return <PageEmpty label='Nobody here' image={require('../../../../../assets/empty-box.png')} />;
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type || null) {
 			case 'loading':

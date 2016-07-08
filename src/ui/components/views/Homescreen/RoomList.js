@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
 type Props = {
 	onNavigate: Function;
 	data: Array<{ roomrel: RoomRel; room: Room } | { type: 'loading' } | { type: 'failed' }>;
+	style?: any;
 }
 
 type State = {
@@ -34,6 +35,7 @@ export default class Rooms extends Component<void, Props, State> {
 	static propTypes = {
 		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
+		style: View.propTypes.style,
 	};
 
 	state: State = {
@@ -108,7 +110,7 @@ export default class Rooms extends Component<void, Props, State> {
 		}
 
 		return (
-			<View style={styles.container}>
+			<View {...this.props} style={[ styles.container, this.props.style ]}>
 				{placeHolder ? placeHolder :
 					<ListView
 						keyboardShouldPersistTaps
