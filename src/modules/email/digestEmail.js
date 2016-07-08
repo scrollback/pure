@@ -102,7 +102,7 @@ function sendDigestEmail () {
 	const today = new Date().toString().split(" ")[2],
 		lastEmailSentDay = new Date(parseInt(lastEmailSent, 10)).toString().split(" ")[2];
 
-	if(new Date().getUTCHours() !== 12) { //Send at 3am IST. Move this to config
+	if(new Date().getUTCHours() !== 22) { //Send at 3am IST. Move this to config
 		log.info('Not digest email time: ', new Date().getUTCHours());
 		return;
 	}
