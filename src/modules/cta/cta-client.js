@@ -14,9 +14,8 @@ bus.on('state:init', () => {
 	const types = [ 'home', 'room' ];
 
 	types.forEach(async type => {
-		const res = await fetch(`${protocol}//${host}/s/cta_${type}.json`);
-
 		try {
+			const res = await fetch(`${protocol}//${host}/s/cta_${type}.json`);
 			const data = await res.json();
 
 			bus.emit('change', {

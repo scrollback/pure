@@ -110,7 +110,6 @@ export default class NavigationRoot extends Component<void, Props, State> {
 			}
 			return currentState;
 		case 'pop':
-		case 'back':
 			if (index > 0 && routes.length > 1) {
 				return {
 					...currentState,

@@ -60,7 +60,7 @@ export default class Link extends Component<DefaultProps, Props, void> {
 			this.props.onOpen(event);
 		}
 
-		if (typeof url === 'string' && /^#/.test(url)) {
+		if (typeof url !== 'string' || /^#/.test(url)) {
 			return;
 		}
 

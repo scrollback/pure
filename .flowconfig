@@ -6,6 +6,8 @@
 # Ignore templates with `@flow` in header
 .*/local-cli/generator.*
 
+.*/node_modules/react-native/Libraries/Network/FormData
+
 [include]
 
 [libs]

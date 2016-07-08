@@ -7,24 +7,11 @@ import android.util.Log;
 
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactActivity;
-import com.facebook.react.ReactPackage;
 import com.facebook.react.ReactRootView;
-import com.facebook.react.shell.MainReactPackage;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.imagechooser.ImageChooserPackage;
 
-import java.util.Arrays;
-import java.util.List;
-
-import chat.belong.hello.bundle.JSBundleManager;
-import chat.belong.hello.modules.analytics.AnalyticsPackage;
-import chat.belong.hello.modules.contacts.ContactsPackage;
-import chat.belong.hello.modules.core.CorePackage;
-import chat.belong.hello.modules.facebook.FacebookPackage;
-import chat.belong.hello.modules.gcm.GCMPackage;
 import chat.belong.hello.modules.gcm.RegistrationManager;
-import chat.belong.hello.modules.google.GooglePackage;
 
 
 public class MainActivity extends ReactActivity {
@@ -59,43 +46,8 @@ public class MainActivity extends ReactActivity {
     }
 
     @Override
-    protected String getJSBundleFile() {
-        return new JSBundleManager.Builder()
-                .setBundleAssetName("index.android.bundle")
-                .setMetadataName("metadata.json")
-                .setRequestPath(
-                        getString(R.string.app_protocol) + "//" +
-                        getString(R.string.app_host) + "/s/bundles/android/" + BuildConfig.VERSION_NAME)
-                .setCacheDir(getCacheDir())
-                .setAssetManager(getAssets())
-                .setEnabled(!BuildConfig.DEBUG)
-                .build()
-                .checkUpdate(5000)
-                .getJSBundleFile();
-    }
-
-    @Override
     protected String getMainComponentName() {
         return "Belong";
-    }
-
-    @Override
-    protected List<ReactPackage> getPackages() {
-        return Arrays.asList(
-                new MainReactPackage(),
-                new CorePackage(),
-                new GCMPackage(),
-                new ContactsPackage(),
-                new GooglePackage(),
-                new AnalyticsPackage(),
-                new FacebookPackage(),
-                new ImageChooserPackage()
-        );
-    }
-
-    @Override
-    protected boolean getUseDeveloperSupport() {
-        return BuildConfig.DEBUG;
     }
 
     @Override
@@ -118,10 +70,11 @@ public class MainActivity extends ReactActivity {
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, 9000)
+                apiAvailability
+                        .getErrorDialog(this, resultCode, 9000)
                         .show();
             } else {
-                Log.d("MainActivity", "This device is not supported.");
+                Log.d(this.getClass().getSimpleName(), "Play Services was not found in this device.");
                 finish();
             }
             return false;

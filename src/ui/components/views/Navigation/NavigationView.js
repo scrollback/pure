@@ -23,7 +23,8 @@ const {
 type Props = {
 	navigationState: NavigationState;
 	onNavigate: Function;
-	onGoBack: Function;
+	onBackPress: Function;
+	renderScene: Function;
 	style?: any;
 }
 
@@ -31,37 +32,63 @@ export default class NavigationView extends Component<void, Props, void> {
 	static propTypes = {
 		navigationState: PropTypes.object.isRequired,
 		onNavigate: PropTypes.func.isRequired,
-		onGoBack: PropTypes.func,
+		onBackPress: PropTypes.func.isRequired,
+		renderScene: PropTypes.func.isRequired,
 		style: PropTypes.any,
 	};
 
 	componentDidMount() {
-		BackAndroid.addEventListener('hardwareBackPress', this._handleGoBack);
+		BackAndroid.addEventListener('hardwareBackPress', this._handleBackPress);
 	}
 
 	componentWillUnmount() {
-		BackAndroid.removeEventListener('hardwareBackPress', this._handleGoBack);
+		BackAndroid.removeEventListener('hardwareBackPress', this._handleBackPress);
 	}
 
-	_handleGoBack = () => {
+	_handleNavigateBack = () => {
+		this.props.onNavigate({
+			type: 'pop',
+		});
+	};
+
+	_handleBackPress = () => {
 		const {
-			onGoBack,
+			onBackPress,
 			navigationState,
 		} = this.props;
 
-		if (onGoBack && onGoBack()) {
+		if (onBackPress && onBackPress()) {
 			return true;
 		}
 
 		if (navigationState && navigationState.routes && navigationState.routes.length > 1) {
-			this.props.onNavigate({ type: 'pop' });
+			this._handleNavigateBack();
 			return true;
 		}
 
 		return false;
 	};
 
+	_render = (transitionProps: any): Array<React.Element<any>> => {
+		return transitionProps.scenes.map(scene => {
+			const sceneProps = {
+				...transitionProps,
+				scene,
+				key: scene.route.key,
+				onNavigate: this.props.onNavigate,
+				onNavigateBack: this._handleNavigateBack,
+			};
+			return this.props.renderScene(sceneProps);
+		});
+	};
+
 	render() {
-		return <NavigationTransitioner {...this.props} style={[ styles.container, this.props.style ]} />;
+		return (
+			<NavigationTransitioner
+				{...this.props}
+				render={this._render}
+				style={[ styles.container, this.props.style ]}
+			/>
+		);
 	}
 }

@@ -31,9 +31,8 @@ function removeSessionList() {
  */
 async function fetchUsers(user) {
 	if (user.tags && user.tags.indexOf(TAG_USER_CONTENT) > -1) {
-		const res = await fetch(`${protocol}//${host}/s/session_list.json`);
-
 		try {
+			const res = await fetch(`${protocol}//${host}/s/session_list.json`);
 			const list = await res.json();
 
 			// If current user is not in the list, add it

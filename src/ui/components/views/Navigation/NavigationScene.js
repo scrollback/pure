@@ -57,6 +57,7 @@ type Props = {
 	};
 	routeMapper: Function;
 	onNavigate: Function;
+	onNavigateBack: Function;
 	style?: any;
 }
 
@@ -75,15 +76,10 @@ export default class Scene extends Component<void, Props, void> {
 			route: PropTypes.object.isRequired,
 		}).isRequired,
 		onNavigate: PropTypes.func.isRequired,
+		onNavigateBack: PropTypes.func.isRequired,
 		routeMapper: PropTypes.func.isRequired,
 		style: View.propTypes.style,
 	}
-
-	_handleGoBack = () => {
-		this.props.onNavigate({
-			type: 'pop',
-		});
-	};
 
 	_renderLeftComponent = (routeDesc: RouteDescription) => {
 		const {
@@ -98,7 +94,7 @@ export default class Scene extends Component<void, Props, void> {
 
 		if (scene.index !== 0) {
 			return (
-				<AppbarTouchable onPress={this._handleGoBack}>
+				<AppbarTouchable onPress={this.props.onNavigateBack}>
 					<AppbarIcon name='arrow-back' />
 				</AppbarTouchable>
 			);
@@ -193,6 +189,7 @@ export default class Scene extends Component<void, Props, void> {
 					undefined
 				}
 				renderScene={this._renderScene}
+				onNavigateBack={this.props.onNavigateBack}
 			/>
 		);
 	}

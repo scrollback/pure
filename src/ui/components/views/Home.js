@@ -41,7 +41,7 @@ export default class Home extends Component<void, Props, void> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleGoBack = () => {
+	_handleBackPress = () => {
 		if (ModalHost.isOpen()) {
 			ModalHost.requestClose();
 			return true;
@@ -65,7 +65,7 @@ export default class Home extends Component<void, Props, void> {
 			<NavigationView
 				{...props}
 				renderScene={this._renderScene}
-				onGoBack={this._handleGoBack}
+				onBackPress={this._handleBackPress}
 			/>
 		);
 	};
