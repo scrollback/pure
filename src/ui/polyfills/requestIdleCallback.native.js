@@ -12,8 +12,11 @@ let id = 0;
 global.Promise.prototype.done = () => {}; // FIXME: Without this InteractionManager throws
 global.requestIdleCallback = (callback: Function) => {
 	const handle = id++;
-	pendingTasks[handle] = InteractionManager.runAfterInteractions(() => {
-		callback();
+	pendingTasks[handle] = true;
+	InteractionManager.runAfterInteractions(() => {
+		if (pendingTasks[handle]) {
+			callback();
+		}
 		delete pendingTasks[handle];
 	});
 	return handle;
@@ -21,7 +24,6 @@ global.requestIdleCallback = (callback: Function) => {
 
 global.cancelIdleCallback = (handle: number) => {
 	if (pendingTasks[handle]) {
-		pendingTasks[handle].cancel();
 		delete pendingTasks[handle];
 	}
 };
