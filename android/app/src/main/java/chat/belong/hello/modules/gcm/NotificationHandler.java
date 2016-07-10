@@ -44,7 +44,7 @@ public class NotificationHandler {
         try {
             JSONObject data = JSONUtils.bundleToJson(bundle, schema);
             GCMPreferences.addNotification(context, data);
-        } catch (JSONException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Failed to parse notification", e);
         }
 
@@ -57,7 +57,7 @@ public class NotificationHandler {
             }
 
             showNotifications(context, notifications);
-        } catch (JSONException | IOException | NoSuchFieldException e) {
+        } catch (Exception e) {
             Log.e(TAG, "Failed to show notification", e);
         }
     }
