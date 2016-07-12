@@ -2,24 +2,27 @@
 
 import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
+import createContainer from '../../../modules/store/createContainer';
 import ChatSuggestions from '../views/Chat/ChatSuggestions';
 import store from '../../../modules/store/store';
-import type { User } from '../../../lib/schemaTypes';
+import type { Text } from '../../../lib/schemaTypes';
 
 type Props = {
 	user: string;
 	prefix: string;
+	texts: Array<Text>;
 }
 
 type State = {
 	prefix: string;
-	data: Array<User>;
+	data: Array<{ id: string }>;
 }
 
-export default class ChatSuggestionsContainer extends Component<void, Props, State> {
+class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 	static propTypes = {
-		prefix: PropTypes.string,
-		user: PropTypes.string,
+		prefix: PropTypes.string.isRequired,
+		user: PropTypes.string.isRequired,
+		texts: PropTypes.arrayOf(PropTypes.object).isRequired,
 	};
 
 	state: State = {
@@ -41,7 +44,7 @@ export default class ChatSuggestionsContainer extends Component<void, Props, Sta
 
 	_subscription: ?Subscription;
 
-	_getResults = (prefix: string) => {
+	_getResults = (prefix: string, count: number) => {
 		return store.observe({
 			slice: {
 				type: 'user',
@@ -53,29 +56,59 @@ export default class ChatSuggestionsContainer extends Component<void, Props, Sta
 			range: {
 				start: -Infinity,
 				before: 0,
-				after: 5,
+				after: count,
 			},
 			source: 'ChatSuggestionsContainer',
+		});
+	};
+
+	_getUsersFromTexts = (texts: Array<Text>) => {
+		return texts.map(text => {
+			return text.creator || null;
+		}).filter((value, index, self) => {
+			return self.indexOf(value) === index;
 		});
 	};
 
 	_handlePrefixChange = (prefix: string) => {
 		if (this._subscription) {
 			this._subscription.unsubscribe();
+			this._subscription = null;
 		}
 		if (typeof prefix === 'string' && prefix) {
 			this.setState({
 				prefix,
 			});
-			this._subscription = this._getResults(prefix).subscribe({
-				next: results => {
-					if (prefix === this.state.prefix) {
-						this.setState({
-							data: results.filter(item => item.type !== 'loading' && item.id !== this.props.user),
-						});
-					}
-				},
+			const users = this._getUsersFromTexts(this.props.texts).filter(id => {
+				return typeof id === 'string' && id !== this.props.user && id.indexOf(prefix) === 0;
+			}).map(id => {
+				return { id };
 			});
+			this.setState({
+				data: users,
+			});
+			if (users.length < 4) {
+				this._subscription = this._getResults(prefix, 4 - users.length).subscribe({
+					next: (result) => {
+						if (prefix === this.state.prefix) {
+							const currentIds = [];
+							const items = users
+								.concat(result)
+								.filter((item: any) => item.type !== 'loading' && item.id !== this.props.user);
+
+							items.forEach(user => {
+								currentIds.push(user.id);
+							});
+
+							this.setState({
+								data: items.filter((user, index) => {
+									return currentIds.indexOf(user.id) === index;
+								}),
+							});
+						}
+					},
+				});
+			}
 		} else {
 			this.setState({
 				prefix: '',
@@ -97,3 +130,25 @@ export default class ChatSuggestionsContainer extends Component<void, Props, Sta
 		return <ChatSuggestions data={data} {...this.props} />;
 	}
 }
+
+const mapSubscriptionToProps = ({ thread }) => ({
+	texts: {
+		key: {
+			slice: {
+				type: 'text',
+				filter: {
+					parents_first: thread,
+				},
+				order: 'createTime',
+			},
+			range: {
+				start: Infinity,
+				before: 30,
+				after: 0,
+			},
+		},
+		defer: false,
+	},
+});
+
+export default createContainer(mapSubscriptionToProps)(ChatSuggestionsContainerInner);

@@ -59,7 +59,7 @@ type Props = {
 
 type State = {
 	text: string;
-	query: string;
+	query: ?string;
 	photo: ?{
 		uri: string;
 		size: number;
@@ -79,7 +79,7 @@ export default class ChatInput extends Component<void, Props, State> {
 
 	state: State = {
 		text: '',
-		query: '',
+		query: null, // set to empty string when typing starts to render the component which makes query for texts
 		photo: null,
 	};
 
@@ -226,12 +226,15 @@ export default class ChatInput extends Component<void, Props, State> {
 	render() {
 		return (
 			<View {...this.props}>
-				<ChatSuggestionsContainer
-					user={this.props.user}
-					prefix={this.state.query}
-					style={styles.suggestions}
-					onSelect={this._handleSuggestionSelect}
-				/>
+				{typeof this.state.query === 'string' ?
+					<ChatSuggestionsContainer
+						user={this.props.user}
+						thread={this.props.thread}
+						prefix={this.state.query}
+						style={styles.suggestions}
+						onSelect={this._handleSuggestionSelect}
+					/> : null
+				}
 
 				<View style={styles.container}>
 					<GrowingTextInput
