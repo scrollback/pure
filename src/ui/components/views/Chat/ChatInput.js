@@ -191,11 +191,30 @@ export default class ChatInput extends Component<void, Props, State> {
 	};
 
 	_handleChangeText = (text: string) => {
-		const query = /^@[a-z0-9]*$/.test(text) ? text.replace(/^@/, '') : '';
-
 		this.setState({
 			text,
-			query,
+		});
+	};
+
+	_handleChangeSelection = (e: any) => {
+		const { selection } = e.nativeEvent;
+
+		if (selection && selection.start === selection.end) {
+			const text = this.state.text.substring(0, selection.start);
+
+			// match when there's a @ towards the end of the text
+			// e.g. - '@', 'hey @', 'hey @s'
+			if (/(\s+@|^@)[a-z0-9]?[^@^\s]*$/.test(text)) {
+				const query = text.substring(text.lastIndexOf('@'));
+				this.setState({
+					query,
+				});
+				return;
+			}
+		}
+
+		this.setState({
+			query: '',
 		});
 	};
 
@@ -241,6 +260,7 @@ export default class ChatInput extends Component<void, Props, State> {
 						ref={c => (this._input = c)}
 						value={this.state.text}
 						onChangeText={this._handleChangeText}
+						onSelectionChange={this._handleChangeSelection}
 						underlineColorAndroid='transparent'
 						placeholder='Write a message…'
 						autoCapitalize='sentences'

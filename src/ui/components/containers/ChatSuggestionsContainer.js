@@ -79,16 +79,17 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 			this.setState({
 				prefix,
 			});
-			const users = this._getUsersFromTexts(this.props.texts).filter(id => {
-				return typeof id === 'string' && id !== this.props.user && id.indexOf(prefix) === 0;
-			}).map(id => {
-				return { id };
-			});
+			const users = this._getUsersFromTexts(this.props.texts)
+				.filter(id => {
+					return typeof id === 'string' && id && id !== this.props.user && id.indexOf(prefix.substring(1)) === 0;
+				}).map(id => {
+					return { id };
+				});
 			this.setState({
 				data: users,
 			});
-			if (users.length < 4) {
-				this._subscription = this._getResults(prefix, 4 - users.length).subscribe({
+			if (users.length < 4 && prefix.length > 1) {
+				this._subscription = this._getResults(prefix.substring(1), 4 - users.length).subscribe({
 					next: (result) => {
 						if (prefix === this.state.prefix) {
 							const currentIds = [];
