@@ -62,6 +62,7 @@ type State = {
 	nextId: string;
 	text: string;
 	query: ?string;
+	cursor: number;
 	photo: ?{
 		uri: string;
 		size: number;
@@ -84,8 +85,8 @@ export default class ChatInput extends Component<void, Props, State> {
 		text: '',
 		query: null, // set to empty string when typing starts to render the component which makes query for texts
 		photo: null,
+		cursor: -1,
 	};
-
 
 	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
 		return shallowCompare(this, nextProps, nextState);
@@ -189,8 +190,23 @@ export default class ChatInput extends Component<void, Props, State> {
 	};
 
 	_handleSuggestionSelect = (user: { id: string }) => {
+		const {
+			text,
+			cursor,
+		} = this.state;
+
+		let message;
+
+		if (cursor === -1) {
+			message = text + ' @' + user.id + ' ';
+		} else {
+			let beginning = text.slice(0, cursor);
+			beginning = beginning.slice(0, beginning.lastIndexOf('@'));
+			message = beginning + '@' + user.id + ' ' + text.slice(cursor);
+		}
+
 		this.setState({
-			text: '@' + user.id + ' ',
+			text: message,
 			query: '',
 		});
 	};
@@ -212,6 +228,7 @@ export default class ChatInput extends Component<void, Props, State> {
 			if (/(\s+@|^@)[a-z0-9]?[^@^\s]*$/.test(text)) {
 				const query = text.substring(text.lastIndexOf('@'));
 				this.setState({
+					cursor: selection.start,
 					query,
 				});
 				return;
@@ -219,6 +236,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		}
 
 		this.setState({
+			cursor: -1,
 			query: '',
 		});
 	};
