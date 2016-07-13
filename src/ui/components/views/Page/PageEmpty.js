@@ -5,6 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import AppText from '../Core/AppText';
 import Page from './Page';
+import Colors from '../../../Colors';
 
 const {
 	StyleSheet,
@@ -17,10 +18,12 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		margin: 32,
 	},
-	missing: {
+	label: {
 		margin: 16,
 		textAlign: 'center',
 		fontSize: 16,
+		fontWeight: 'bold',
+		color: Colors.grey,
 	},
 });
 
@@ -53,7 +56,7 @@ export default class PageEmpty extends Component<void, Props, void> {
 						null
 					}
 					{label ?
-						<AppText style={styles.missing}>{label}</AppText> :
+						<AppText style={styles.label}>{label}</AppText> :
 						null
 					}
 				</View>
