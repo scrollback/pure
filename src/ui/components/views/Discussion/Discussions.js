@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
 	grid: {
 		flexDirection: 'row',
 		flexWrap: 'wrap',
+		alignItems: 'flex-start',
 		justifyContent: 'center',
 		paddingTop: 12,
 		paddingBottom: 88,
@@ -47,6 +48,10 @@ const styles = StyleSheet.create({
 		borderLeftWidth: 1 / PixelRatio.get(),
 		borderRightWidth: 1 / PixelRatio.get(),
 		borderRadius: 3,
+	},
+
+	loader: {
+		width: 320,
 	},
 });
 
@@ -106,7 +111,7 @@ export default class Discussions extends Component<void, Props, State> {
 	_renderRow = ({ thread, threadrel, type }: DataItem) => {
 		switch (type) {
 		case 'loading':
-			return <LoadingItem />;
+			return <LoadingItem style={this._isWide() ? styles.loader : null} />;
 		case 'cta':
 			return <CTACardContainerRoom room={this.props.room} style={this._isWide() ? styles.gridItem : styles.columnItem} />;
 		default:
@@ -147,7 +152,7 @@ export default class Discussions extends Component<void, Props, State> {
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':
-				placeHolder = <PageLoading />;
+				placeHolder = <PageLoading loaderStyle={this._isWide() ? styles.loader : null} />;
 				break;
 			}
 		}

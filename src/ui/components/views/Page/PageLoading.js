@@ -6,6 +6,10 @@ import LoadingItem from '../Core/LoadingItem';
 import Page from './Page';
 
 export default class PageLoading extends Component<void, any, void> {
+	static propTypes = {
+		loaderStyle: LoadingItem.propTypes.style,
+	};
+
 	shouldComponentUpdate(nextProps: any, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
@@ -13,7 +17,7 @@ export default class PageLoading extends Component<void, any, void> {
 	render() {
 		return (
 			<Page {...this.props}>
-				<LoadingItem />
+				<LoadingItem style={this.props.loaderStyle} />
 			</Page>
 		);
 	}

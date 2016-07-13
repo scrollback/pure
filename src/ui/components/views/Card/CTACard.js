@@ -17,6 +17,9 @@ const {
 
 const styles = StyleSheet.create({
 	container: {
+		height: 180,
+	},
+	touchable: {
 		flex: 1,
 	},
 	cover: {
@@ -40,7 +43,8 @@ type Props = {
 		content: ?string;
 		url: ?string;
 		type: 'share' | 'view';
-	}
+	};
+	style?: any;
 }
 
 export default class CTACard extends Component<void, Props, State> {
@@ -56,6 +60,7 @@ export default class CTACard extends Component<void, Props, State> {
 			url: PropTypes.string,
 			type: PropTypes.oneOf([ 'share', 'view' ]),
 		}),
+		style: Card.propTypes.style,
 	};
 
 	state: State = {
@@ -220,8 +225,8 @@ export default class CTACard extends Component<void, Props, State> {
 		}
 
 		return (
-			<Card {...this.props}>
-				<TouchableOpacity style={styles.container} onPress={this._handlePress}>
+			<Card {...this.props} style={[ styles.container, this.props.style ]}>
+				<TouchableOpacity style={styles.touchable} onPress={this._handlePress}>
 					<Image
 						style={styles.cover}
 						source={{ uri: this.state.image }}
