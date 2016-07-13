@@ -90,7 +90,7 @@ export default class Homescreen extends Component<void, any, State> {
 	render() {
 		return (
 			<TabViewAnimated
-				style={styles.container}
+				style={[ this.props.style, styles.container ]}
 				navigationState={this.state.navigation}
 				renderScene={this._renderTabView}
 				renderHeader={this._renderHeader}
