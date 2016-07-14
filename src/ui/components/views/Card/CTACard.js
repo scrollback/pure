@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	cover: {
-		height: 180,
+		flex: 1,
 		resizeMode: 'cover',
 	},
 });

@@ -4,6 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import CTACardContainerRoom from '../../containers/CTACardContainerRoom';
+import GridView from '../Core/GridView';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
@@ -12,46 +13,25 @@ import StartDiscussionButton from '../StartDiscussion/StartDiscussionButton';
 import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
-	PixelRatio,
 	Dimensions,
 	StyleSheet,
-	ScrollView,
-	RecyclerViewBackedScrollView,
 	ListView,
 	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
-	column: {
-		paddingTop: 6,
-		paddingBottom: 88,
+	container: {
+		paddingTop: 8,
+		paddingBottom: 88, // FIXME: this doesn't work in `RecyclerViewBackedScrollView`
 	},
 
-	grid: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		alignItems: 'flex-start',
-		justifyContent: 'center',
-		paddingTop: 12,
-		paddingBottom: 88,
-	},
-
-	columnItem: {
+	item: {
 		overflow: 'hidden',
 	},
 
-	gridItem: {
-		overflow: 'hidden',
-		width: 320,
-		marginHorizontal: 12,
-		marginVertical: 12,
-		borderLeftWidth: 1 / PixelRatio.get(),
-		borderRightWidth: 1 / PixelRatio.get(),
+	card: {
 		borderRadius: 3,
-	},
-
-	loader: {
-		width: 320,
+		borderWidth: StyleSheet.hairlineWidth,
 	},
 });
 
@@ -70,7 +50,7 @@ type Props = {
 }
 
 type State = {
-	dataSource: ListView.DataSource
+	dataSource: ListView.DataSource;
 }
 
 export default class Discussions extends Component<void, Props, State> {
@@ -108,12 +88,12 @@ export default class Discussions extends Component<void, Props, State> {
 		return Dimensions.get('window').width > 400;
 	};
 
-	_renderRow = ({ thread, threadrel, type }: DataItem) => {
+	_renderRow = ({ thread, threadrel, type }: DataItem, sectionID: number, rowID: number, highlightRow: boolean, isGrid: boolean) => {
 		switch (type) {
 		case 'loading':
-			return <LoadingItem style={this._isWide() ? styles.loader : null} />;
+			return <LoadingItem />;
 		case 'cta':
-			return <CTACardContainerRoom room={this.props.room} style={this._isWide() ? styles.gridItem : styles.columnItem} />;
+			return <CTACardContainerRoom room={this.props.room} style={[ styles.item, isGrid ? styles.card : null ]} />;
 		default:
 			if (!thread) {
 				return null;
@@ -129,15 +109,10 @@ export default class Discussions extends Component<void, Props, State> {
 					thread={thread}
 					threadrel={threadrel}
 					onNavigate={this.props.onNavigate}
-					style={this._isWide() ? styles.gridItem : styles.columnItem}
+					style={[ styles.item, isGrid ? styles.card : null ]}
 				/>
 			);
 		}
-	};
-
-	_renderScrollComponent = (props: any) => {
-		// FIXME: RecyclerViewBackedScrollView doesn't support multi-column mode
-		return this._isWide() ? <ScrollView {...props} /> : <RecyclerViewBackedScrollView {...props} />;
 	};
 
 	render() {
@@ -152,7 +127,7 @@ export default class Discussions extends Component<void, Props, State> {
 		} else if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':
-				placeHolder = <PageLoading loaderStyle={this._isWide() ? styles.loader : null} />;
+				placeHolder = <PageLoading />;
 				break;
 			}
 		}
@@ -160,15 +135,15 @@ export default class Discussions extends Component<void, Props, State> {
 		return (
 			<View {...this.props}>
 				{placeHolder ? placeHolder :
-					<ListView
+					<GridView
 						removeClippedSubviews
-						initialListSize={3}
-						pageSize={3}
-						renderScrollComponent={this._renderScrollComponent}
+						initialListSize={2}
+						pageSize={4}
 						renderRow={this._renderRow}
 						onEndReached={this.props.loadMore}
 						dataSource={this.state.dataSource}
-						contentContainerStyle={this._isWide() ? styles.grid : styles.column}
+						contentContainerStyle={styles.container}
+						itemStyle={styles.item}
 					/>
 				}
 
