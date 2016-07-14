@@ -18,7 +18,7 @@ const getEntityAsync = promisify(cache.getEntity.bind(cache));
 bus.on('http/init', app => {
 	app.use(function *(next) {
 		const query = this.request.query;
-
+		let room, thread;
 		if (query && query.download_app) {
 			this.response.redirect(query.referrer ? `${PLAY_STORE_LINK}&referrer=${query.referrer}` : PLAY_STORE_LINK);
 			return;
@@ -31,7 +31,7 @@ bus.on('http/init', app => {
 		if (props) {
 			switch (name) {
 			case 'room': {
-				const room = yield getEntityAsync(props.room);
+				room = yield getEntityAsync(props.room);
 
 				if (room) {
 					title = `The ${room.name} community is on ${config.app_name}.`;
@@ -41,7 +41,7 @@ bus.on('http/init', app => {
 				break;
 			}
 			case 'chat': {
-				const thread = yield getEntityAsync(props.thread);
+				[ thread, room ] = yield Promise.all([ getEntityAsync(props.thread), getEntityAsync(props.room) ]);
 
 				if (thread) {
 					title = thread.name;
@@ -53,19 +53,27 @@ bus.on('http/init', app => {
 			}
 		}
 
+		const response = {
+			room,
+			link: PLAY_STORE_LINK
+		};
+		if (thread) {
+			response.thread = thread;
+			response.user = {
+				id: thread.creator || '',
+				picture: `i/picture?user=${thread.creator || ''}&size=48`
+			};
+		}
 		this.body = '<!DOCTYPE html>' + ReactDOMServer.renderToStaticMarkup(
 			<ServerHTML
 				locale='en'
 				title={title || config.app_name}
 				description={description || ''}
-				body={promo({
-					title,
-					description,
-				})}
+				body={promo(response)}
 				image={`${this.request.origin}/s/assets/preview-thumbnail.png`}
 				permalink={this.request.href}
 				styles={[
-					'//fonts.googleapis.com/css?family=Alegreya+Sans:300,500,900',
+					'//fonts.googleapis.com/css?family=Alegreya+Sans:300,500,900|Lato:400,700',
 					'/s/styles/home.css'
 				]}
 				analytics={config.analytics}
