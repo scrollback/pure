@@ -47,13 +47,14 @@ module.exports = {
 		preLoaders: [
 			{
 				test: /\.js$/,
-				loader: 'eslint?quiet=true',
 				exclude: /node_modules/,
+				loader: 'eslint?quiet=true',
 			},
 		],
 		loaders: [
 			{
 				test: /\.js$/,
+				exclude: /node_modules/,
 				loader: 'babel',
 				query: Object.assign({}, babelrc, {
 					presets: babelrc.presets.map(p => p.startsWith('es2015') ? 'es2015-native-modules' : p),
