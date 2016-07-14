@@ -19,7 +19,6 @@ import chat.belong.hello.modules.core.CorePackage;
 import chat.belong.hello.modules.facebook.FacebookPackage;
 import chat.belong.hello.modules.gcm.GCMPackage;
 import chat.belong.hello.modules.google.GooglePackage;
-import chat.belong.hello.modules.network.NetworkingPackage;
 import io.fabric.sdk.android.Fabric;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -59,7 +58,6 @@ public class MainApplication extends Application implements ReactApplication {
         protected List<ReactPackage> getPackages() {
             return Arrays.asList(
                     new MainReactPackage(),
-                    new NetworkingPackage(),
                     new CorePackage(),
                     new GCMPackage(),
                     new ContactsPackage(),
