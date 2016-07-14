@@ -1,3 +1,6 @@
+// flow-typed signature: 4272a425ae20fa816db0631a22a24ff8
+// flow-typed version: 1af476ca4f/radium_v0.17.x/flow_>=v0.23.x
+
 declare module 'radium' {
   declare type PluginResult = {
     // Merged into the component directly. Useful for storing things for which you
@@ -94,11 +97,13 @@ declare module 'radium' {
     userAgent?: string,
   };
   declare class Radium {
-    <T: ReactClass>(reactClass: T): T;
-    <T: ReactClass>(config: RadiumConfig): (reactClass: T) => T;
+    <T: ReactClass<any>>(reactClass: T): T;
+    <T: ReactClass<any>>(config: RadiumConfig): (reactClass: T) => T;
     keyframes(animationObject: Object, name?: string): string;
-    Style: React$Component<{scopeSelector: string}, {config?: ?RadiumConfig, rules: Object, scopeSelector?: ?string}>;
-    StyleRoot: ReactClass;
+    // Style: React$Component<{scopeSelector: string}, {config?: ?RadiumConfig, rules: Object, scopeSelector?: ?string}>;
+    Style: any,
+    // StyleRoot: React$Component<any, any, any>;
+    StyleRoot: any,
     getState(state: Object, componentRef: string, property: ':active' | ':hover' | ':focus'): boolean;
   }
   declare var exports: Radium;
