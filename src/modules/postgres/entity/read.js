@@ -53,7 +53,7 @@ function note(ids) {
 	return pg.cat(ids.map(id => {
 		const [ usr, event, group ] = id.split('_');
 		return {
-			$: `SELECT *, ${Constants.TYPE_NOTE} as type FROM notes WHERE user=&{usr} AND "group"=&{group} AND event=&{event}`,
+			$: `SELECT *, ${Constants.TYPE_NOTE} as type FROM notes WHERE "user"=&{usr} AND "group"=&{group} AND event=&{event}`,
 			usr,
 			group,
 			event
