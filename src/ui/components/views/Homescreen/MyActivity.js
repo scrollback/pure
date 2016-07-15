@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
+import GridView from '../Core/GridView';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
@@ -10,41 +11,25 @@ import MyActivityItemContainer from '../../containers/MyActivityItemContainer';
 import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
-	PixelRatio,
 	Dimensions,
 	StyleSheet,
-	ScrollView,
-	RecyclerViewBackedScrollView,
 	ListView,
 	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
-	column: {
-		paddingTop: 6,
-		paddingBottom: 88,
+	container: {
+		paddingTop: 8,
+		paddingBottom: 88, // FIXME: this doesn't work in `RecyclerViewBackedScrollView`
 	},
 
-	grid: {
-		flexDirection: 'row',
-		flexWrap: 'wrap',
-		justifyContent: 'center',
-		paddingTop: 12,
-		paddingBottom: 88,
-	},
-
-	columnItem: {
+	item: {
 		overflow: 'hidden',
 	},
 
-	gridItem: {
-		overflow: 'hidden',
-		width: 320,
-		marginHorizontal: 12,
-		marginVertical: 12,
-		borderLeftWidth: 1 / PixelRatio.get(),
-		borderRightWidth: 1 / PixelRatio.get(),
+	card: {
 		borderRadius: 3,
+		borderWidth: StyleSheet.hairlineWidth,
 	},
 });
 
@@ -99,7 +84,7 @@ export default class MyActivity extends Component<void, Props, State> {
 		return Dimensions.get('window').width > 400;
 	};
 
-	_renderRow = ({ thread, threadrel, type }: DataItem) => {
+	_renderRow = ({ thread, threadrel, type }: DataItem, sectionID: number, rowID: number, highlightRow: boolean, isGrid: boolean) => {
 		switch (type) {
 		case 'loading':
 			return <LoadingItem />;
@@ -122,15 +107,10 @@ export default class MyActivity extends Component<void, Props, State> {
 					thread={thread}
 					threadrel={threadrel}
 					onNavigate={this.props.onNavigate}
-					style={this._isWide() ? styles.gridItem : styles.columnItem}
+					style={[ styles.item, isGrid ? styles.card : null ]}
 				/>
 			);
 		}
-	};
-
-	_renderScrollComponent = (props: any) => {
-		// FIXME: RecyclerViewBackedScrollView doesn't support multi-column mode
-		return this._isWide() ? <ScrollView {...props} /> : <RecyclerViewBackedScrollView {...props} />;
 	};
 
 	render() {
@@ -153,15 +133,15 @@ export default class MyActivity extends Component<void, Props, State> {
 		return (
 			<View {...this.props}>
 				{placeHolder ? placeHolder :
-					<ListView
+					<GridView
 						removeClippedSubviews
 						initialListSize={3}
 						pageSize={3}
-						renderScrollComponent={this._renderScrollComponent}
 						renderRow={this._renderRow}
 						onEndReached={this.props.loadMore}
 						dataSource={this.state.dataSource}
-						contentContainerStyle={this._isWide() ? styles.grid : styles.column}
+						contentContainerStyle={styles.container}
+						itemStyle={styles.item}
 					/>
 				}
 			</View>
