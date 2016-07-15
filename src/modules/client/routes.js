@@ -41,6 +41,7 @@ bus.on('http/init', app => {
 				break;
 			}
 			case 'chat': {
+				/* $FlowFixMe */
 				[ thread, room ] = yield Promise.all([ getEntityAsync(props.thread), getEntityAsync(props.room) ]);
 
 				if (thread) {
@@ -53,15 +54,23 @@ bus.on('http/init', app => {
 			}
 		}
 
-		const response = {
+		const response: {
+			room: ?Object;
+			thread?: Object;
+			user?: Object;
+			playstore: string;
+			facebook: string;
+		} = {
 			room,
-			link: PLAY_STORE_LINK
+			playstore: PLAY_STORE_LINK,
+			facebook: `https://www.facebook.com/sharer/sharer.php?u=${this.request.href}`,
+			twitter: `http://twitter.com/share?text=${encodeURIComponent(title || '')}&url=${encodeURIComponent(this.request.href)}`,
 		};
 		if (thread) {
 			response.thread = thread;
 			response.user = {
 				id: thread.creator || '',
-				picture: `i/picture?user=${thread.creator || ''}&size=48`
+				picture: `/i/picture?user=${thread.creator || ''}&size=48`
 			};
 		}
 		this.body = '<!DOCTYPE html>' + ReactDOMServer.renderToStaticMarkup(
