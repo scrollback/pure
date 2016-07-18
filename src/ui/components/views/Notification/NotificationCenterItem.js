@@ -9,14 +9,19 @@ import AvatarRound from '../Avatar/AvatarRound';
 import Time from '../Core/Time';
 import TouchFeedback from '../Core/TouchFeedback';
 import Colors from '../../../Colors';
-import { NOTE_MENTION, NOTE_THREAD, NOTE_REPLY } from '../../../../lib/Constants';
+import {
+	NOTE_MENTION,
+	NOTE_THREAD,
+	NOTE_REPLY,
+	NOTE_UPVOTE,
+} from '../../../../lib/Constants';
 import type { Note } from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
 	View,
-	TouchableHighlight,
 	PixelRatio,
+	TouchableOpacity,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -30,18 +35,25 @@ const styles = StyleSheet.create({
 	},
 	avatarContainer: {
 		margin: 16,
+		marginTop: 20,
+		marginRight: 0,
 	},
 	content: {
 		flex: 1,
-		marginVertical: 12,
+		padding: 16,
 	},
 	title: {
+		fontSize: 14,
+		lineHeight: 21,
 		color: Colors.grey,
 	},
 	summary: {
 		fontSize: 12,
 		lineHeight: 18,
 		color: Colors.grey,
+	},
+	link: {
+		color: Colors.info,
 	},
 	strong: {
 		color: Colors.darkGrey,
@@ -55,30 +67,33 @@ const styles = StyleSheet.create({
 		color: Colors.black,
 		marginLeft: 4,
 		paddingHorizontal: 4,
-		opacity: 0.3,
+		opacity: 0.2,
 	},
 	icon: {
 		color: Colors.black,
-		opacity: 0.3,
+		opacity: 0.2,
 	},
 	metaIcon: {
 		marginVertical: 2,
 	},
 	close: {
-		margin: 14,
-	},
-	closeButton: {
-		borderRadius: 22,
-		margin: 2,
+		backgroundColor: 'rgba(0, 0, 0, .1)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		height: 18,
+		width: 18,
+		borderRadius: 9,
+		margin: 20,
 	},
 	badge: {
 		position: 'absolute',
 		alignItems: 'center',
-		top: 23,
+		justifyContent: 'center',
+		top: 21,
 		right: -1,
-		height: 15,
-		width: 15,
-		borderRadius: 8,
+		height: 17,
+		width: 17,
+		borderRadius: 9,
 		borderColor: Colors.white,
 		borderWidth: 1,
 	},
@@ -91,7 +106,7 @@ const styles = StyleSheet.create({
 
 type Props = {
 	note: Note;
-	dismissNote: Function;
+	onDismiss: Function;
 	onNavigate: Function;
 }
 
@@ -109,12 +124,24 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			score: PropTypes.number,
 			user: PropTypes.string,
 		}).isRequired,
-		dismissNote: PropTypes.func.isRequired,
+		onDismiss: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
 		return shallowCompare(this, nextProps, nextState);
+	}
+
+	_goToProfile = () => {
+		this.props.onNavigate({
+			type: 'push',
+			payload: {
+				name: 'profile',
+				props: {
+					user: this.props.note.data.creator,
+				},
+			},
+		});
 	}
 
 	_getSummary = (note: Note) => {
@@ -124,15 +151,34 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		const summary: Array<React.Element | string> = [];
 
 		switch (event) {
+		case NOTE_UPVOTE: {
+			const isDiscussion = thread && data.id === thread.id;
+
+			if (count > 1) {
+				summary.push(<AppText key={1} style={styles.strong}>{count}</AppText>, ' new likes');
+			} else {
+				summary.push(<AppText key={1} style={styles.link}>{data.creator}</AppText>, ' liked your ' + (isDiscussion ? 'discussion' : 'reply'));
+			}
+
+			if (!isDiscussion && thread && thread.name) {
+				summary.push(' in ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
+			}
+
+			if (room && room.name) {
+				summary.push(' - ', <AppText key={3} style={styles.strong}>{room.name}</AppText>);
+			}
+
+			break;
+		}
 		case NOTE_MENTION:
 			if (count > 1) {
-				summary.push(<AppText key={1} style={styles.strong}>{count}</AppText>, ' new mentions in');
+				summary.push(<AppText key={1} style={styles.strong}>{count}</AppText>, ' new mentions');
 			} else {
-				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' mentioned you in');
+				summary.push(<AppText key={1} style={styles.link}>{data.creator}</AppText>, ' mentioned you');
 			}
 
 			if (thread && thread.name) {
-				summary.push(' ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
+				summary.push(' in ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
 			}
 
 			if (room && room.name) {
@@ -144,7 +190,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			if (count > 1) {
 				summary.push(<AppText key={1} style={styles.strong}>{count}</AppText>, ' new replies');
 			} else {
-				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' replied');
+				summary.push(<AppText key={1} style={styles.link}>{data.creator}</AppText>, ' replied');
 			}
 
 			if (thread && thread.name) {
@@ -160,12 +206,9 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			if (count > 1) {
 				summary.push(<AppText key={1} style={styles.strong}>{count}</AppText>, ' new discussions');
 			} else {
-				summary.push(<AppText key={1} style={styles.strong}>{data.creator}</AppText>, ' started a discussion');
-
-				if (thread && thread.name) {
-					summary.push(' on ', <AppText key={2} style={styles.strong}>{thread.name}</AppText>);
-				}
+				summary.push(<AppText key={1} style={styles.link}>{data.creator}</AppText>, ' started a discussion');
 			}
+
 			if (room && room.name) {
 				summary.push(' in ', <AppText key={3} style={styles.strong}>{room.name}</AppText>);
 			}
@@ -190,6 +233,8 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		const { note } = this.props;
 
 		switch (note.event) {
+		case NOTE_UPVOTE:
+			return Colors.accent;
 		case NOTE_MENTION:
 			return '#ff5722';
 		case NOTE_REPLY:
@@ -205,6 +250,8 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		const { note } = this.props;
 
 		switch (note.event) {
+		case NOTE_UPVOTE:
+			return 'favorite';
 		case NOTE_MENTION:
 			return 'person';
 		case NOTE_REPLY:
@@ -222,6 +269,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		const { data, event, count } = note;
 
 		switch (event) {
+		case NOTE_UPVOTE:
 		case NOTE_MENTION:
 		case NOTE_REPLY:
 			onNavigate({
@@ -272,29 +320,29 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 				},
 			});
 		}
-	};
 
-	_handleDismiss = () => {
-		this.props.dismissNote(this.props.note);
+		this.props.onDismiss();
 	};
 
 	render() {
 		const { note } = this.props;
 
 		return (
-			<View style={styles.item}>
-				<TouchFeedback onPress={this._handlePress}>
+			<TouchFeedback onPress={this._handlePress}>
+				<View style={styles.item}>
 					<View style={styles.note}>
 						<View style={styles.avatarContainer}>
-							<AvatarRound
-								user={note.data.creator}
-								size={36}
-							/>
+							<TouchableOpacity onPress={this._goToProfile}>
+								<AvatarRound
+									user={note.data.creator}
+									size={36}
+								/>
+							</TouchableOpacity>
 							<View style={[ styles.badge, { backgroundColor: this._getIconColor() } ]}>
 								<Icon
 									name={this._getIconName()}
 									style={styles.badgeIcon}
-									size={10}
+									size={8}
 								/>
 							</View>
 						</View>
@@ -322,22 +370,18 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 								/>
 							</View>
 						</View>
-							<TouchableHighlight
-								style={styles.closeButton}
-								underlayColor={Colors.underlay}
-								onPress={this._handleDismiss}
-							>
-								<View style={styles.close}>
-									<Icon
-										name='close'
-										style={styles.icon}
-										size={16}
-									/>
-								</View>
-							</TouchableHighlight>
-						</View>
-				</TouchFeedback>
-			</View>
+						<TouchableOpacity onPress={this.props.onDismiss}>
+							<View style={styles.close}>
+								<Icon
+									name='close'
+									style={styles.icon}
+									size={12}
+								/>
+							</View>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</TouchFeedback>
 		);
 	}
 }

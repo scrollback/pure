@@ -1,16 +1,14 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import ReactNative from 'react-native';
+import {
+	ListView,
+} from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import NotificationCenterItem from './NotificationCenterItem';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
 import type { Note } from '../../../../lib/schemaTypes';
-
-const {
-	ListView,
-} = ReactNative;
 
 type Props = {
 	dismissNote: Function;
@@ -31,19 +29,20 @@ export default class NotificationCenter extends Component<void, Props, State> {
 
 	state: State = {
 		dataSource: new ListView.DataSource({
-			rowHasChanged: (r1, r2) => r1 !== r2,
+			sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+			rowHasChanged: (row1, row2) => row1 !== row2,
 		}),
 	};
 
 	componentWillMount() {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(this.props.data),
+			dataSource: this.state.dataSource.cloneWithRowsAndSections({ notes: this.props.data }),
 		});
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
+			dataSource: this.state.dataSource.cloneWithRowsAndSections({ notes: nextProps.data }),
 		});
 	}
 
@@ -51,14 +50,18 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_renderRow = (note: Note) => (
-		<NotificationCenterItem
-			key={`${note.user}_${note.event}_${note.group}`}
-			note={note}
-			onNavigate={this.props.onNavigate}
-			dismissNote={this.props.dismissNote}
-		/>
-	);
+	_renderRow = (note: Note) => {
+		const id = `${note.user}_${note.event}_${note.group}`;
+
+		return (
+			<NotificationCenterItem
+				key={id}
+				note={note}
+				onNavigate={this.props.onNavigate}
+				onDismiss={() => this.props.dismissNote(note)}
+			/>
+		);
+	};
 
 	render() {
 		const { data } = this.props;

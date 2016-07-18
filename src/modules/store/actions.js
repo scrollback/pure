@@ -1,6 +1,9 @@
 /* @flow */
 
-import type { User } from '../../lib/schemaTypes';
+import type {
+	User,
+	Note,
+} from '../../lib/schemaTypes';
 import UserModel from '../../models/user';
 import ThreadModel from '../../models/thread';
 import TextModel from '../../models/text';
@@ -301,12 +304,17 @@ export function unlikeThread(thread: string, user: string, roles: Array<number> 
 /*
  * Notification related actions
  */
-export const dismissAllNotes = (): Object => ({
-
+export const dismissAllNotes = (notes: Array<Note>): Object => ({
+	entities: notes.reduce((acc, note) => ({
+		...acc,
+		[`${note.user}_${note.event}_${note.group}`]: null
+	}), {}),
 });
 
-export const dismissNote = (): Object => ({
-
+export const dismissNote = (note: Note): Object => ({
+	entities: {
+		[`${note.user}_${note.event}_${note.group}`]: null
+	}
 });
 
 /*

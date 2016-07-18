@@ -6,11 +6,13 @@ import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AppbarIcon from '../Appbar/AppbarIcon';
 
 type Props = {
+	notes: Array<Object>;
 	dismissAllNotes: Function;
 }
 
 export default class NotificationClearIcon extends Component<void, Props, void> {
 	static propTypes = {
+		notes: PropTypes.arrayOf(PropTypes.object).isRequired,
 		dismissAllNotes: PropTypes.func.isRequired,
 	};
 
@@ -18,9 +20,13 @@ export default class NotificationClearIcon extends Component<void, Props, void> 
 		return shallowCompare(this, nextProps, nextState);
 	}
 
+	_handlePress = () => {
+		this.props.dismissAllNotes(this.props.notes);
+	};
+
 	render() {
 		return (
-			<AppbarTouchable onPress={this.props.dismissAllNotes}>
+			<AppbarTouchable onPress={this._handlePress}>
 				<AppbarIcon name='clear-all' />
 			</AppbarTouchable>
 		);
