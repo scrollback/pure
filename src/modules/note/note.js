@@ -10,7 +10,7 @@ import {
 	ROLE_UPVOTE,
 	TYPE_THREADREL,
 	TYPE_TEXT,
-	TYPE_THREAD
+	TYPE_THREAD,
 } from '../../lib/Constants';
 import promisify from '../../lib/promisify';
 import { convertRouteToURL } from '../../lib/Route';
@@ -42,6 +42,8 @@ export function createNote(
 ): Note {
 	let event, title, body, picture, user, creator;
 
+	body = item.meta && item.meta.photo ? '📷 [photo]' : item.body;
+
 	if (type === ROLE_UPVOTE) {
 		const likes = item.counts && item.counts.upvote ? item.counts.upvote : 0;
 		event = NOTE_UPVOTE;
@@ -49,14 +51,13 @@ export function createNote(
 		creator = rel.user;
 		picture = `${server}/s/assets/notification-heart.png`;
 		title = likes > 1 ? `${creator} and ${likes - 1} more` : `New like from ${creator} in ${room.name}`;
-		body = `liked '${item.body}'`;
+		body = `liked '${body}'`;
 	} else {
 		event = NOTE_MENTION;
 		user = rel.user;
 		creator = item.creator;
 		picture = `${server}/i/picture?user=${creator}&size=${128}`;
 		title = `New mention in ${room.name}`;
-		body = item.body;
 	}
 
 	const link = server + convertRouteToURL({
