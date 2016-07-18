@@ -6,18 +6,16 @@ import createUserContainer from '../../../modules/store/createUserContainer';
 import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import NotificationBadge from '../views/Notification/NotificationBadge';
 
-const transformNotesToCount = (/* data */) => {
-	// TODO: handle notifications properly
-	// if (data && data.length) {
-	// 	if (data.length === 1 && data[0] && data[0].type === 'loading') {
-	// 		return 0;
-	// 	} else {
-	// 		return data.length;
-	// 	}
-	// } else {
-	// 	return 0;
-	// }
-	return 0;
+const transformNotesToCount = (data) => {
+	if (data && data.length) {
+		if (data.length === 1 && data[0] && data[0].type === 'loading') {
+			return 0;
+		} else {
+			return data.length;
+		}
+	} else {
+		return 0;
+	}
 };
 
 const transformFunction = props => {
