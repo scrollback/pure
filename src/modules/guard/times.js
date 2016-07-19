@@ -1,49 +1,54 @@
+/* @flow */
+
 import { bus, cache } from '../../core-base';
-import * as Constants from '../../lib/Constants';
-import Counter from '../../lib/counter';
+import { APP_PRIORITIES } from '../../lib/Constants';
+import promisify from '../../lib/promisify';
 
-function validateTime(changes, next) {
-	let i = 0;
-	if (!changes.entities) return next();
-	const counter = new Counter(),
-		now = Date.now();
+const getEntityAsync = promisify(cache.getEntity.bind(cache));
 
-	for (const id in changes.entities) {
+async function validateTime(changes, next) {
+	/* eslint-disable array-callback-return */
+	if (!changes.entities) {
+		next();
+		return;
+	}
+
+	let now = Date.now();
+
+	const promises = Object.keys(changes.entities).map(async id => {
 		const entity = changes.entities[id];
 		if (!entity) {
 			delete changes.entities[id];
-			continue;
+			return;
 		}
 
-		counter.inc();
-		cache.getEntity(id, (err, result) => { // eslint-disable-line no-loop-func
-			if (err) {
-				counter.err(err);
-				return;
-			}
+		const result = await getEntityAsync(id);
 
-			i++;
-			entity.createTime = now + i;
-			entity.updateTime = now + i;
-			if (result) {
-				entity.createTime = result.createTime;
-				if (entity.counts && !entity.counts.children) {
-					// We need to retain the old updateTime...
-					entity.updateTime = result.updateTime;
-					if (entity.createTime === entity.updateTime) {
-						// ... if it will cause postgres to do an insert, make a small
-						// increment to prevent that.
-						entity.updateTime++;
-					}
+		now++;
+
+		entity.createTime = now;
+		entity.updateTime = now;
+
+		if (result) {
+			entity.createTime = result.createTime;
+			// if only counts changed, retain the old updateTime
+			// if counts.children changed, don't retain the old updateTime
+			if (Object.keys(entity).length === 1 && (entity.counts && !('children' in entity.counts))) {
+				entity.updateTime = result.updateTime;
+				if (entity.createTime === entity.updateTime) {
+					// ensure we don't make createTime equal to updateTime
+					// otherwise it'll trigger a insert in database
+					entity.updateTime++;
 				}
 			}
+		}
+	});
 
-			counter.dec();
-		});
-	}
-	return counter.then(next);
+	await Promise.all(promises);
+
+	next();
 }
 
-bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION1);
-bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION2);
-bus.on('change', validateTime, Constants.APP_PRIORITIES.TIMES_VALIDATION3);
+bus.on('change', validateTime, APP_PRIORITIES.TIMES_VALIDATION1);
+bus.on('change', validateTime, APP_PRIORITIES.TIMES_VALIDATION2);
+bus.on('change', validateTime, APP_PRIORITIES.TIMES_VALIDATION3);
