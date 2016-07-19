@@ -22,6 +22,7 @@ const {
 	View,
 	PixelRatio,
 	TouchableOpacity,
+	InteractionManager,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -264,9 +265,16 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 	};
 
 	_handlePress = () => {
-		const { note, onNavigate } = this.props;
-
-		const { data, event, count } = note;
+		const {
+			note,
+			onNavigate,
+			onDismiss,
+		} = this.props;
+		const {
+			data,
+			event,
+			count,
+		} = note;
 
 		switch (event) {
 		case NOTE_UPVOTE:
@@ -321,7 +329,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			});
 		}
 
-		this.props.onDismiss();
+		InteractionManager.runAfterInteractions(onDismiss);
 	};
 
 	render() {
