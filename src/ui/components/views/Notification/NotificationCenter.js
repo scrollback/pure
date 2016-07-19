@@ -3,6 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import {
 	ListView,
+	RecyclerViewBackedScrollView,
 } from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import NotificationCenterItem from './NotificationCenterItem';
@@ -11,6 +12,7 @@ import PageLoading from '../Page/PageLoading';
 import type { Note } from '../../../../lib/schemaTypes';
 
 type Props = {
+	loadMore: Function;
 	dismissNote: Function;
 	onNavigate: Function;
 	data: Array<Note | { type: 'loading' } | { type: 'failed' }>;
@@ -22,6 +24,7 @@ type State = {
 
 export default class NotificationCenter extends Component<void, Props, State> {
 	static propTypes = {
+		loadMore: PropTypes.func.isRequired,
 		dismissNote: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -63,6 +66,10 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		);
 	};
 
+	_renderScrollComponent = (props: any) => {
+		return <RecyclerViewBackedScrollView {...props} />;
+	};
+
 	render() {
 		const { data } = this.props;
 
@@ -73,8 +80,14 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		} else {
 			return (
 				<ListView
-					dataSource={this.state.dataSource}
+					removeClippedSubviews
+					keyboardShouldPersistTaps={false}
+					initialListSize={10}
+					pageSize={10}
 					renderRow={this._renderRow}
+					renderScrollComponent={this._renderScrollComponent}
+					onEndReached={this.props.loadMore}
+					dataSource={this.state.dataSource}
 				/>
 			);
 		}
