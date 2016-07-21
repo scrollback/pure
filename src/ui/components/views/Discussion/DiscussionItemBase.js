@@ -25,8 +25,9 @@ const styles = StyleSheet.create({
 		marginHorizontal: 16,
 	},
 
-	topArea: {
+	row: {
 		flexDirection: 'row',
+		alignItems: 'center',
 	},
 
 	author: {
@@ -42,6 +43,17 @@ const styles = StyleSheet.create({
 
 	hidden: {
 		opacity: 0.3,
+	},
+
+	badge: {
+		position: 'absolute',
+		top: 52,
+		left: 5,
+		height: 6,
+		width: 6,
+		borderRadius: 3,
+		backgroundColor: Colors.accent,
+		elevation: 1,
 	},
 });
 
@@ -116,12 +128,13 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		}
 
 		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
+		const unread = threadrel && threadrel.presenceTime && thread.updateTime ? thread.updateTime > threadrel.presenceTime : true;
 
 		return (
 			<View {...this.props}>
 				<TouchFeedback onPress={this._handlePress}>
 					<View style={hidden ? styles.hidden : null}>
-						<View style={styles.topArea}>
+						<View style={styles.row}>
 							<DiscussionAuthor {...this.props} style={styles.author} />
 							<TouchableOpacity onPress={this._handleShowMenu}>
 								<Icon
@@ -131,6 +144,10 @@ export default class DiscussionItem extends Component<void, Props, State> {
 								/>
 							</TouchableOpacity>
 						</View>
+						{unread ?
+							<View style={styles.badge} /> :
+							null
+						}
 						<CardTitle style={styles.item}>
 							{thread.name}
 						</CardTitle>

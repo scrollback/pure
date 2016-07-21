@@ -45,11 +45,11 @@ const styles = StyleSheet.create({
 	},
 
 	badge: {
-		backgroundColor: Colors.accent,
+		marginRight: 8,
 		height: 6,
 		width: 6,
-		marginRight: 8,
 		borderRadius: 3,
+		backgroundColor: Colors.accent,
 		elevation: 1,
 	},
 });
