@@ -1,7 +1,7 @@
 /* @flow */
 
-import { config } from '../../core-client';
-import { open } from '../../lib/Popup';
+import { config } from '../core-client';
+import { open } from './Popup';
 
 type AuthCode = {
 	code: string;
@@ -9,8 +9,8 @@ type AuthCode = {
 
 const url = config.server.protocol + '//' + config.server.host + config.facebook.login_url;
 
-export default class Facebook {
-	static async logInWithReadPermissions(): Promise<AuthCode> {
+export default class FBLoginManager {
+	static async logIn(): Promise<AuthCode> {
 		let code;
 
 		await open(url).forEach(({ data }) => {
@@ -26,19 +26,7 @@ export default class Facebook {
 		}
 	}
 
-	static logInWithPublishPermissions() {
-		return Promise.reject(new Error('Not implemented'));
-	}
-
 	static logOut() {
 		return Promise.resolve(true);
-	}
-
-	static getCurrentAccessToken() {
-		return Promise.reject(new Error('Not implemented'));
-	}
-
-	static sendGraphRequest() {
-		return Promise.reject(new Error('Not implemented'));
 	}
 }

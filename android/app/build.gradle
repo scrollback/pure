@@ -171,6 +171,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-fbsdk')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
@@ -179,7 +180,7 @@ dependencies {
     compile 'com.samskivert:jmustache:1.12'
     compile 'com.facebook.react:react-native:+'  // From node_modules
 
-    compile('com.facebook.android:facebook-android-sdk:4.10.1') {
+    compile('com.facebook.android:facebook-android-sdk:4.14.0') {
         exclude group: 'com.parse.bolts', module: 'bolts-android';
         exclude group: 'com.parse.bolts', module: 'bolts-tasks';
     }

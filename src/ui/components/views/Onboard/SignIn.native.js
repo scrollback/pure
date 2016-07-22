@@ -3,10 +3,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
+import { LoginManager, AccessToken } from 'react-native-fbsdk';
 import AppText from '../Core/AppText';
 import LargeButton from './LargeButton';
 import GoogleSignIn from '../../../modules/GoogleSignIn';
-import Facebook from '../../../modules/Facebook';
 import Colors from '../../../Colors';
 
 const {
@@ -136,34 +136,32 @@ export default class SignIn extends Component<void, Props, State> {
 
 	_signInWithFacebook = async (): Promise => {
 		try {
-			const result = await Facebook.logInWithReadPermissions([
+			const result = await LoginManager.logInWithReadPermissions([
 				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL,
 			]);
 
-			const {
-				permissions_granted,
-				access_token,
-			} = result;
+			if (result.isCancelled) {
+				this._showFailureMessage();
+			} else {
+				const { grantedPermissions } = result;
 
-			if (
-				permissions_granted.length &&
-				permissions_granted.indexOf(PERMISSION_PUBLIC_PROFILE) > -1 &&
-				permissions_granted.indexOf(PERMISSION_EMAIL) > -1
-			) {
+				if (
+					grantedPermissions && grantedPermissions.length &&
+					grantedPermissions.indexOf(PERMISSION_PUBLIC_PROFILE) > -1 &&
+					grantedPermissions.indexOf(PERMISSION_EMAIL) > -1
+				) {
+					const accessToken = await AccessToken.getCurrentAccessToken();
 
-				if (access_token) {
-					this._onSignInSuccess(PROVIDER_FACEBOOK, { accessToken: access_token });
+					if (accessToken) {
+						this._onSignInSuccess(PROVIDER_FACEBOOK, { accessToken: accessToken.accessToken });
+					} else {
+						this._onSignInFailure(PROVIDER_FACEBOOK);
+					}
 				} else {
 					this._onSignInFailure(PROVIDER_FACEBOOK);
 				}
-			} else {
-				this._onSignInFailure(PROVIDER_FACEBOOK);
 			}
 		} catch (e) {
-			if (e.code !== 'ERR_SIGNIN_CANCELLED') {
-				this._showFailureMessage();
-			}
-
 			this._onSignInFailure(PROVIDER_FACEBOOK);
 		}
 	};

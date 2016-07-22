@@ -1,11 +1,11 @@
 package chat.belong.hello;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactRootView;
 import com.google.android.gms.common.ConnectionResult;
@@ -54,14 +54,12 @@ public class MainActivity extends ReactActivity {
     protected void onPause() {
         mRegistrationManager.unRegisterReciever();
         super.onPause();
-        AppEventsLogger.deactivateApp(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         mRegistrationManager.registerReceiver();
-        AppEventsLogger.activateApp(this);
     }
 
 
@@ -80,5 +78,11 @@ public class MainActivity extends ReactActivity {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        MainApplication.getCallbackManager().onActivityResult(requestCode, resultCode, data);
     }
 }

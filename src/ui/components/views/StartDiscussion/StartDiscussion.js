@@ -5,6 +5,12 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import ImageChooser from 'react-native-image-chooser';
+import {
+	LoginManager,
+	AccessToken,
+	GraphRequest,
+	GraphRequestManager,
+} from 'react-native-fbsdk';
 import { v4 } from 'node-uuid';
 import AppText from '../Core/AppText';
 import AppTextInput from '../Core/AppTextInput';
@@ -18,7 +24,6 @@ import ImageUploadContainer from '../../containers/ImageUploadContainer';
 import AvatarRound from '../Avatar/AvatarRound';
 import Banner from '../Banner/Banner';
 import ImageUploadDiscussion from '../ImageUpload/ImageUploadDiscussion';
-import Facebook from '../../../modules/Facebook';
 import Colors from '../../../Colors';
 import { convertRouteToURL } from '../../../../lib/Route';
 import { config } from '../../../../core-client';
@@ -201,15 +206,13 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_getPublishPermissions = async () => {
+	_requestPublishPermissions = async () => {
 		try {
-			const result = await Facebook.logInWithPublishPermissions([ PERMISSION_PUBLISH_ACTIONS ]);
+			const { grantedPermissions } = await LoginManager.logInWithPublishPermissions([ PERMISSION_PUBLISH_ACTIONS ]);
 
-			if (result.permissions_granted.indexOf(PERMISSION_PUBLISH_ACTIONS) === -1) {
+			if (grantedPermissions && grantedPermissions.indexOf(PERMISSION_PUBLISH_ACTIONS) === -1) {
 				throw new Error(PERMISSION_PUBLISH_ERROR);
 			}
-
-			return result;
 		} catch (err) {
 			ToastAndroid.show('Failed to get permission to post on Facebook', ToastAndroid.SHORT);
 			throw err;
@@ -218,9 +221,13 @@ export default class StartDiscussion extends Component<void, Props, State> {
 
 	_isFacebookPermissionGranted = async (): Promise<boolean> => {
 		try {
-			const token = await Facebook.getCurrentAccessToken();
-
-			return token.permissions_granted.indexOf(PERMISSION_PUBLISH_ACTIONS) > -1;
+			const accessToken = await AccessToken.getCurrentAccessToken();
+			if (accessToken) {
+				const permissions = accessToken.getPermissions();
+				return permissions.indexOf(PERMISSION_PUBLISH_ACTIONS) > -1;
+			} else {
+				return false;
+			}
 		} catch (err) {
 			return false;
 		}
@@ -234,26 +241,43 @@ export default class StartDiscussion extends Component<void, Props, State> {
 
 			if (!granted) {
 				requested = true;
-				await this._getPublishPermissions();
+				await this._requestPublishPermissions();
 			}
 		} catch (err) {
 			if (requested) {
 				throw err;
 			} else {
-				await this._getPublishPermissions();
+				await this._requestPublishPermissions();
 			}
 		}
 	};
 
 	_shareOnFacebook = async (content: ShareContent) => {
 		try {
-			const token = await Facebook.getCurrentAccessToken();
+			const accessToken = await AccessToken.getCurrentAccessToken();
+			if (accessToken) {
+				const parameters = {};
+				for (const key in content) {
+					parameters[key] = { string: content[key] };
+				}
+				const infoRequest = new GraphRequest(
+					`/${accessToken.getUserId()}/feed`,
+					{
+						httpMethod: 'POST',
+						accessToken: accessToken.accessToken,
+						parameters,
+					},
+					(error) => {
+						if (error) {
+							ToastAndroid.show('Failed to share post on Facebook', ToastAndroid.SHORT);
+						} else {
+							ToastAndroid.show('Post shared on Facebook', ToastAndroid.SHORT);
+						}
+					},
+				);
 
-			if (token && token.user_id) {
-				await Facebook.sendGraphRequest('POST', `/${token.user_id}/feed`, content);
+				new GraphRequestManager().addRequest(infoRequest).start();
 			}
-
-			ToastAndroid.show('Post shared on Facebook', ToastAndroid.SHORT);
 		} catch (err) {
 			ToastAndroid.show('Failed to share post on Facebook', ToastAndroid.SHORT);
 		}
