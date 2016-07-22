@@ -255,6 +255,10 @@ public class FacebookModule extends ReactContextBaseJavaModule implements Activi
     }
 
     @Override
+    public void onNewIntent(final Intent Intent) {
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }

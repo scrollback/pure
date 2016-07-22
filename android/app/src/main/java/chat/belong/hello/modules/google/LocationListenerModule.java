@@ -256,6 +256,10 @@ public class LocationListenerModule extends ReactContextBaseJavaModule implement
     }
 
     @Override
+    public void onNewIntent(final Intent Intent) {
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         switch (requestCode) {
             case LOCATION_PROMPT_REQUEST_CODE:
