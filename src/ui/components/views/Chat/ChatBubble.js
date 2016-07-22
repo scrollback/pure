@@ -143,7 +143,11 @@ export default class ChatBubble extends Component<DefaultProps, Props, void> {
 					{this.props.children}
 
 					{body ?
-						<RichText text={body} style={styles.text} /> :
+						<RichText
+							selectable
+							text={body}
+							style={styles.text}
+						/> :
 						null
 					}
 				</View>
