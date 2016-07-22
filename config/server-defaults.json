@@ -51,8 +51,23 @@
 	"s3": {
 		"accessKey": "",
 		"secretKey": "",
-		"region": "",
-		"bucket": "belong",
+		"region": "ap-southeast-1",
+		"uploadBucket": "up.bel.ng",
+		"thumbnailsBucket": "s.bel.ng",
+		"generateHostname": "s.bel.ng",
+		"uploadHostname": "up.bel.ng",
+		"acl": "public-read",
+		"service": "s3",
+		"signatureVersion": "aws4_request",
+		"algorithm": "AWS4-HMAC-SHA256",
+		"validity": 600000
+	},
+
+	"oldS3": {
+		"accessKey": "",
+    	"secretKey": "",
+    	"region": "ap-northeast-1",
+    	"bucket": "hey-neighbor",
 		"acl": "public-read",
 		"service": "s3",
 		"signatureVersion": "aws4_request",
