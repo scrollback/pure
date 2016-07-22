@@ -19,10 +19,14 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
         return "AnswersInstallTrackerModule";
     }
 
+    private AnswersInstallTracker getTracker() {
+        return AnswersInstallTracker.getInstance(getReactApplicationContext());
+    }
+
     @ReactMethod
     public void getReferrer(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getReferrer());
+            promise.resolve(getTracker().getReferrer());
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
@@ -31,7 +35,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCampaignName(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_CAMPAIGN));
+            promise.resolve(getTracker().getRefferalParameter(Trackers.UTM_CAMPAIGN));
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
@@ -40,7 +44,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCampaignSource(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_SOURCE));
+            promise.resolve(getTracker().getRefferalParameter(Trackers.UTM_SOURCE));
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
@@ -49,7 +53,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCampaignMedium(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_MEDIUM));
+            promise.resolve(getTracker().getRefferalParameter(Trackers.UTM_MEDIUM));
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
@@ -58,7 +62,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCampaignTerm(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_TERM));
+            promise.resolve(getTracker().getRefferalParameter(Trackers.UTM_TERM));
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
@@ -67,7 +71,7 @@ public class AnswersInstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getCampaignContent(Promise promise) {
         try {
-            promise.resolve(AnswersInstallTracker.getInstance(getReactApplicationContext()).getRefferalParameter(Trackers.UTM_CONTENT));
+            promise.resolve(getTracker().getRefferalParameter(Trackers.UTM_CONTENT));
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }
