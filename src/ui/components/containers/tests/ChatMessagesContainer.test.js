@@ -3,8 +3,6 @@ import { filterHidden, transformTexts } from '../ChatMessagesContainer';
 import {
 	TYPE_TEXT,
 	TYPE_TEXTREL,
-	TYPE_THREAD,
-	TYPE_THREADREL,
 	TAG_POST_HIDDEN,
 	TAG_USER_ADMIN,
 } from '../../../../lib/Constants';
@@ -114,29 +112,21 @@ test('should transform texts', t => {
 			textrel: { type: TYPE_TEXTREL, item: 6 },
 		},
 	];
-	const thread = {
-		id: 8,
-		name: 'hey',
-		type: TYPE_THREAD,
-	};
-	const threadrel = {
-		type: TYPE_THREADREL,
-		item: 8,
-	};
+
 	const result = [
 		{
 			text: {
 				id: 6,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'go',
 			},
 			textrel: {
-				type: TYPE_TEXTREL,
+				type: 22,
 				item: 6,
 			},
 			previousText: {
 				id: 5,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'it',
 			},
 			isLast: true,
@@ -144,7 +134,7 @@ test('should transform texts', t => {
 		{
 			text: {
 				id: 5,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'it',
 			},
 			textrel: {
@@ -153,7 +143,7 @@ test('should transform texts', t => {
 			},
 			previousText: {
 				id: 4,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'let',
 			},
 			isLast: false,
@@ -161,7 +151,7 @@ test('should transform texts', t => {
 		{
 			text: {
 				id: 4,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'let',
 			},
 			textrel: null,
@@ -175,16 +165,16 @@ test('should transform texts', t => {
 		{
 			text: {
 				id: 2,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'ho',
 			},
 			textrel: {
-				type: TYPE_TEXTREL,
+				type: 22,
 				item: 2,
 			},
 			previousText: {
 				id: 1,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'hey',
 			},
 			isLast: false,
@@ -192,32 +182,21 @@ test('should transform texts', t => {
 		{
 			text: {
 				id: 1,
-				type: TYPE_TEXT,
+				type: 2,
 				body: 'hey',
 			},
 			textrel: {
-				type: TYPE_TEXTREL,
+				type: 22,
 				item: 1,
 			},
 			previousText: {
-				id: 8,
-				name: 'hey',
-				type: TYPE_THREAD,
+				id: 0,
+				type: 'loading',
+				createTime: 1465802862050,
 			},
 			isLast: false,
 		},
-		{
-			text: {
-				id: 8,
-				name: 'hey',
-				type: TYPE_THREAD,
-			},
-			textrel: {
-				type: TYPE_THREADREL,
-				item: 8,
-			},
-		},
 	];
 
-	t.deepEqual(transformTexts(texts, thread, threadrel), result);
+	t.deepEqual(transformTexts(texts), result);
 });
