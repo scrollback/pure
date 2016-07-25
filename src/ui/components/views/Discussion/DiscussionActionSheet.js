@@ -26,7 +26,7 @@ type Props = {
 	unbanUser: Function;
 }
 
-export default class DiscussionItem extends Component<void, Props, void> {
+export default class DiscussionActionSheet extends Component<void, Props, void> {
 	static propTypes = {
 		thread: PropTypes.shape({
 			id: PropTypes.string.isRequired,

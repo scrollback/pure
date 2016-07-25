@@ -30,7 +30,7 @@
     "koa-webpack-dev-middleware": "^1.2.1",
     "koa-webpack-hot-middleware": "^1.0.3",
     "lodash": "^4.13.1",
-    "newrelic": "latest",
+    "newrelic": "^1.28.3",
     "node-uuid": "^1.4.7",
     "node-xmpp-client": "^3.0.2",
     "nodemailer": "2.5.0",

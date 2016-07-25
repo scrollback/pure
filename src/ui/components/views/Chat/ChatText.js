@@ -9,28 +9,29 @@ import { parseURLs } from '../../../../lib/URL';
 import Colors from '../../../Colors';
 
 const {
+	View,
 	StyleSheet,
 } = ReactNative;
 
 const styles = StyleSheet.create({
+	container: {
+		margin: 12,
+	},
 	text: {
 		color: Colors.darkGrey,
 		fontSize: 14,
 		lineHeight: 21,
-		marginVertical: 8,
-		marginHorizontal: 12,
-	},
-	thumbnail: {
-		marginVertical: 4,
 	},
 	embed: {
 		borderColor: 'rgba(0, 0, 0, .24)',
 		borderWidth: StyleSheet.hairlineWidth,
 		padding: 8,
-		marginVertical: 4,
 		borderRadius: 2,
 	},
 	embedThumbnail: {
+		marginBottom: 8,
+	},
+	embedWithText: {
 		marginBottom: 8,
 	},
 });
@@ -63,17 +64,24 @@ export default class ChatAvatar extends Component<void, Props, void> {
 					url={photo.url}
 					data={photo}
 					showTitle={false}
-					thumbnailStyle={styles.thumbnail}
+					thumbnailStyle={styles.container}
 					openOnPress={false}
 				/>
 			);
 		} else if (links && links.length) {
 			return (
-				<Embed
-					url={links[0]}
-					style={styles.embed}
-					thumbnailStyle={styles.embedThumbnail}
-				/>
+				<View style={styles.container}>
+					<Embed
+						url={links[0]}
+						style={[ styles.embed, styles.embedWithText ]}
+						thumbnailStyle={styles.embedThumbnail}
+					/>
+					<RichText
+						selectable
+						text={body}
+						style={styles.text}
+					/>
+				</View>
 			);
 		}
 
@@ -81,7 +89,7 @@ export default class ChatAvatar extends Component<void, Props, void> {
 			<RichText
 				selectable
 				text={body}
-				style={styles.text}
+				style={[ styles.text, styles.container ]}
 			/>
 		);
 	}

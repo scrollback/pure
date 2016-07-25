@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
 		fontSize: 12,
 		marginHorizontal: 12,
 		marginTop: 8,
-		marginBottom: 0,
+		marginBottom: -8,
 		opacity: 0.5,
 	},
 });

@@ -5,7 +5,7 @@ import createContainer from '../../../modules/store/createContainer';
 import createUserContainer from '../../../modules/store/createUserContainer';
 import ChatDiscussionItem from '../views/Chat/ChatDiscussionItem';
 
-function mapSubscriptionToProps({ user, thread }) {
+function mapSubscriptionToProps({ user, thread, room }) {
 	return {
 		thread: {
 			key: {
@@ -17,6 +17,12 @@ function mapSubscriptionToProps({ user, thread }) {
 			key: {
 				type: 'entity',
 				id: `${user}_${thread}`,
+			},
+		},
+		room: {
+			key: {
+				type: 'entity',
+				id: `${room}`,
 			},
 		},
 	};

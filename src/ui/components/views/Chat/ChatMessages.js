@@ -45,6 +45,7 @@ type Props = {
 	data: Array<DataItem>;
 	user: string;
 	thread: string;
+	room: string;
 	loadMore: (count: number) => void;
 	quoteMessage: Function;
 	replyToMessage: Function;
@@ -60,6 +61,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		user: PropTypes.string.isRequired,
 		thread: PropTypes.string.isRequired,
+		room: PropTypes.string.isRequired,
 		loadMore: PropTypes.func.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
@@ -96,9 +98,8 @@ export default class ChatMessages extends Component<void, Props, State> {
 		return (
 			<ChatDiscussionItemContainer
 				showTimestamp
+				room={this.props.room}
 				thread={this.props.thread}
-				replyToMessage={this.props.replyToMessage}
-				quoteMessage={this.props.quoteMessage}
 				user={this.props.user}
 				onNavigate={this.props.onNavigate}
 				style={[ styles.item, styles.inverted ]}

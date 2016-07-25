@@ -153,10 +153,7 @@ export default class ChatItem extends Component<void, Props, State> {
 								showAuthor={showAuthor}
 								showArrow={received ? showAuthor : true}
 							>
-								{text.meta && text.meta.photo ?
-									null :
-									<ChatText body={text.body} meta={text.meta} />
-								}
+								<ChatText body={text.body} meta={text.meta} />
 							</ChatBubble>
 						</TouchableOpacity>
 
