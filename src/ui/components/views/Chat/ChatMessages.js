@@ -4,10 +4,13 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ChatItem from './ChatItem';
-import PageEmpty from '../Page/PageEmpty';
+import ChatDiscussionItemContainer from '../../containers/ChatDiscussionItemContainer';
 import PageLoading from '../Page/PageLoading';
 import LoadingItem from '../Core/LoadingItem';
-import type { Text, TextRel } from '../../../../lib/schemaTypes';
+import type {
+	Text,
+	TextRel,
+} from '../../../../lib/schemaTypes';
 
 const {
 	StyleSheet,
@@ -41,6 +44,7 @@ type DataItem = {
 type Props = {
 	data: Array<DataItem>;
 	user: string;
+	thread: string;
 	loadMore: (count: number) => void;
 	quoteMessage: Function;
 	replyToMessage: Function;
@@ -55,6 +59,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		user: PropTypes.string.isRequired,
+		thread: PropTypes.string.isRequired,
 		loadMore: PropTypes.func.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
 		replyToMessage: PropTypes.func.isRequired,
@@ -87,6 +92,20 @@ export default class ChatMessages extends Component<void, Props, State> {
 		this.props.loadMore(this.props.data.length);
 	};
 
+	_renderHeader = () => {
+		return (
+			<ChatDiscussionItemContainer
+				showTimestamp
+				thread={this.props.thread}
+				replyToMessage={this.props.replyToMessage}
+				quoteMessage={this.props.quoteMessage}
+				user={this.props.user}
+				onNavigate={this.props.onNavigate}
+				style={[ styles.item, styles.inverted ]}
+			/>
+		);
+	};
+
 	_renderRow = (item: DataItem) => {
 		if (item && item.type === 'loading') {
 			return <LoadingItem />;
@@ -94,12 +113,18 @@ export default class ChatMessages extends Component<void, Props, State> {
 
 		const { text, textrel, previousText } = item;
 
+		let showTimestamp = item.isLast === true;
+
+		if (previousText && !showTimestamp) {
+			showTimestamp = (text.createTime - previousText.createTime) > 300000;
+		}
+
 		return (
 			<ChatItem
 				key={text.id}
 				text={text}
 				textrel={textrel}
-				isLast={item.isLast}
+				showTimestamp={showTimestamp}
 				previousText={previousText}
 				replyToMessage={this.props.replyToMessage}
 				quoteMessage={this.props.quoteMessage}
@@ -119,9 +144,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 
 		let placeHolder;
 
-		if (data.length === 0) {
-			placeHolder = <PageEmpty label='No messages yet' image={require('../../../../../assets/empty-box.png')} />;
-		} else if (data.length === 1) {
+		if (data.length === 1) {
 			switch (data[0] && data[0].type) {
 			case 'loading':
 				placeHolder = <PageLoading />;
@@ -135,8 +158,9 @@ export default class ChatMessages extends Component<void, Props, State> {
 					<ListView
 						removeClippedSubviews
 						keyboardShouldPersistTaps={false}
-						initialListSize={10}
-						pageSize={10}
+						initialListSize={5}
+						pageSize={5}
+						renderFooter={this._renderHeader}
 						renderRow={this._renderRow}
 						renderScrollComponent={this._renderScrollComponent}
 						onEndReached={this._loadMore}

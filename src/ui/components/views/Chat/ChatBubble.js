@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import Colors from '../../../Colors';
 import AppText from '../Core/AppText';
-import RichText from '../Core/RichText';
 
 const {
 	StyleSheet,
@@ -24,8 +23,6 @@ const styles = StyleSheet.create({
 	},
 	bubble: {
 		backgroundColor: LEFT_BUBBLE_COLOR,
-		paddingHorizontal: 12,
-		paddingVertical: 8,
 		borderRadius: 3,
 	},
 	bubbleLeft: {
@@ -34,12 +31,6 @@ const styles = StyleSheet.create({
 	bubbleRight: {
 		backgroundColor: RIGHT_BUBBLE_COLOR,
 		marginRight: 8,
-	},
-	text: {
-		color: Colors.darkGrey,
-		fontSize: 14,
-		lineHeight: 21,
-		paddingHorizontal: 4,
 	},
 	triangle: {
 		width: 0,
@@ -78,16 +69,16 @@ const styles = StyleSheet.create({
 	},
 	author: {
 		fontSize: 12,
-		paddingBottom: 4,
-		paddingHorizontal: 4,
+		marginHorizontal: 12,
+		marginTop: 8,
+		marginBottom: 0,
 		opacity: 0.5,
 	},
 });
 
 type Props = {
-	body: ?string;
-	creator: string;
-	type: 'left' | 'right';
+	author: string;
+	alignment: 'left' | 'right';
 	showAuthor?: boolean;
 	showArrow?: boolean;
 	onPress?: Function;
@@ -102,9 +93,8 @@ type DefaultProps = {
 
 export default class ChatBubble extends Component<DefaultProps, Props, void> {
 	static propTypes = {
-		body: PropTypes.string,
-		creator: PropTypes.string.isRequired,
-		type: PropTypes.oneOf([ 'left', 'right' ]),
+		author: PropTypes.string.isRequired,
+		alignment: PropTypes.oneOf([ 'left', 'right' ]),
 		showAuthor: PropTypes.bool,
 		showArrow: PropTypes.bool,
 		onPress: PropTypes.func,
@@ -128,28 +118,19 @@ export default class ChatBubble extends Component<DefaultProps, Props, void> {
 	_root: Object;
 
 	render() {
-		const { body, creator, type, showArrow } = this.props;
+		const { author, alignment, showArrow } = this.props;
 
-		const right = type === 'right';
+		const right = alignment === 'right';
 
 		return (
 			<View style={[ right ? styles.containerRight : styles.containerLeft, this.props.style ]} ref={c => (this._root = c)}>
 				<View style={[ styles.bubble, right ? styles.bubbleRight : styles.bubbleLeft ]}>
 					{this.props.showAuthor ?
-						<AppText style={styles.author}>{creator}</AppText> :
+						<AppText style={styles.author}>{author}</AppText> :
 						null
 					}
 
 					{this.props.children}
-
-					{body ?
-						<RichText
-							selectable
-							text={body}
-							style={styles.text}
-						/> :
-						null
-					}
 				</View>
 
 				{right || !showArrow ? null :

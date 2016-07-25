@@ -3,14 +3,16 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
+import AppText from '../Core/AppText';
 import ChatBubble from './ChatBubble';
-import ChatAvatar from './ChatAvatar';
 import ChatTimestamp from './ChatTimestamp';
+import ChatAvatar from './ChatAvatar';
 import ChatText from './ChatText';
-import ChatLikeButtonContainer from '../../containers/ChatLikeButtonContainer';
+import DiscussionActionLikeContainer from '../../containers/DiscussionActionLikeContainer';
 import ChatActionSheetContainer from '../../containers/ChatActionSheetContainer';
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
-import type { Text, TextRel } from '../../../../lib/schemaTypes';
+import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
+import Colors from '../../../Colors';
 
 const {
 	StyleSheet,
@@ -34,37 +36,33 @@ const styles = StyleSheet.create({
 	timestampLeft: {
 		marginLeft: 52,
 	},
-	timestampRight: {
-		alignSelf: 'flex-end',
-	},
 	chatReceived: {
-		paddingRight: 52,
-	},
-	chatSent: {
-		marginHorizontal: 8,
-		paddingLeft: 44,
+		paddingRight: 8,
 	},
 	hidden: {
 		opacity: 0.3,
 	},
-	like: {
-		position: 'absolute',
-		top: 0,
-		width: 52,
+	title: {
+		color: Colors.darkGrey,
+		fontSize: 16,
+		fontWeight: 'bold',
+		marginTop: 4,
+		marginHorizontal: 12,
+	},
+	separator: {
+		marginHorizontal: 12,
+		borderTopWidth: StyleSheet.hairlineWidth,
+		borderTopColor: Colors.separator,
+	},
+	footer: {
+		flexDirection: 'row',
 		alignItems: 'center',
-	},
-	likeReceived: {
-		right: 0,
-	},
-	likeSent: {
-		left: -8,
-	},
+	}
 });
 
 type Props = {
-	text: Text;
-	textrel: ?TextRel;
-	previousText: ?Text;
+	thread: Thread;
+	threadrel: ?ThreadRel;
 	showTimestamp?: boolean;
 	user: string;
 	quoteMessage: Function;
@@ -77,19 +75,15 @@ type State = {
 	actionSheetVisible: boolean;
 }
 
-export default class ChatItem extends Component<void, Props, State> {
+export default class ChatDiscussionItem extends Component<void, Props, State> {
 	static propTypes = {
-		text: PropTypes.shape({
+		thread: PropTypes.shape({
 			body: PropTypes.string.isRequired,
 			creator: PropTypes.string.isRequired,
 			createTime: PropTypes.number.isRequired,
 			meta: PropTypes.object,
 		}).isRequired,
-		textrel: PropTypes.object,
-		previousText: PropTypes.shape({
-			creator: PropTypes.string,
-			createTime: PropTypes.number,
-		}),
+		threadrel: PropTypes.object,
 		showTimestamp: PropTypes.bool,
 		user: PropTypes.string.isRequired,
 		quoteMessage: PropTypes.func.isRequired,
@@ -120,61 +114,54 @@ export default class ChatItem extends Component<void, Props, State> {
 
 	render() {
 		const {
-			text,
-			previousText,
+			thread,
+			threadrel,
 			user,
 			showTimestamp,
 		} = this.props;
 
-		const hidden = text.tags && text.tags.indexOf(TAG_POST_HIDDEN) > -1;
-		const received = text.creator !== user;
-
-		let showAuthor = received;
-
-		if (previousText) {
-			if (received) {
-				showAuthor = text.creator !== previousText.creator;
-			}
-		}
+		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
 
 		return (
 			<View {...this.props} style={[ styles.container, this.props.style ]}>
-				<View style={[ styles.chat, received ? styles.received : null, hidden ? styles.hidden : null ]}>
-					{received && showAuthor ?
-						<ChatAvatar user={text.creator} onNavigate={this.props.onNavigate} /> :
-						null
-					}
+				<View style={[ styles.chat, styles.received, hidden ? styles.hidden : null ]}>
+					<ChatAvatar user={thread.creator} onNavigate={this.props.onNavigate} />
 
-					<View style={received ? styles.chatReceived : styles.chatSent}>
+					<View style={styles.chatReceived}>
 						<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
 							<ChatBubble
-								author={text.creator}
-								alignment={received ? 'left' : 'right'}
-								showAuthor={showAuthor}
-								showArrow={received ? showAuthor : true}
+								showAuthor
+								showArrow
+								alignment='left'
+								author={thread.creator}
 							>
-								{text.meta && text.meta.photo ?
+								<AppText style={styles.title}>{thread.name}</AppText>
+								{thread.meta && thread.meta.photo ?
 									null :
-									<ChatText body={text.body} meta={text.meta} />
+									<ChatText body={thread.body} meta={thread.meta} />
 								}
+
+								<View style={styles.separator} />
+
+								<View style={styles.footer}>
+									<DiscussionActionLikeContainer
+										thread={thread}
+										threadrel={threadrel}
+										user={user}
+									/>
+								</View>
 							</ChatBubble>
 						</TouchableOpacity>
-
-						<ChatLikeButtonContainer
-							style={[ styles.like, received ? styles.likeReceived : styles.likeSent ]}
-							text={this.props.text}
-							textrel={this.props.textrel}
-						/>
 					</View>
 				</View>
 
 				{showTimestamp ?
-					<ChatTimestamp style={received ? styles.timestampLeft : styles.timestampRight} time={text.createTime} /> :
+					<ChatTimestamp style={styles.timestampLeft} time={thread.createTime} /> :
 					null
 				}
 
 				<ChatActionSheetContainer
-					text={text}
+					text={thread}
 					user={user}
 					quoteMessage={this.props.quoteMessage}
 					replyToMessage={this.props.replyToMessage}

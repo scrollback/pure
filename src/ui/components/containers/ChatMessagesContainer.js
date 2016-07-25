@@ -8,21 +8,18 @@ import createUserContainer from '../../../modules/store/createUserContainer';
 import ChatMessages from '../views/Chat/ChatMessages';
 import {
 	TYPE_TEXT,
-	TYPE_THREAD,
 	TAG_POST_HIDDEN,
 	TAG_USER_ADMIN,
 } from '../../../lib/Constants';
 import type {
 	Text,
-	Thread,
 	TextRel,
-	ThreadRel,
 	User,
 } from '../../../lib/schemaTypes';
 
 type TextData = Array<{ text: Text; textrel: TextRel; type?: 'loading' }>
 
-export const transformTexts = (texts: TextData, thread: ?Thread, threadrel: ?ThreadRel): any => {
+export const transformTexts = (texts: TextData): any => {
 	const data = [];
 
 	for (let l = texts.length - 1, i = l; i >= 0; i--) {
@@ -41,24 +38,6 @@ export const transformTexts = (texts: TextData, thread: ?Thread, threadrel: ?Thr
 		}
 	}
 
-	if (thread && thread.type === TYPE_THREAD) {
-		const first = data[data.length - 1];
-
-		if (first && first.text && first.text.type === TYPE_TEXT) {
-			data[data.length - 1] = {
-				text: first.text,
-				textrel: first.textrel,
-				previousText: thread,
-				isLast: false,
-			};
-		}
-
-		data.push({
-			text: thread,
-			textrel: threadrel,
-		});
-	}
-
 	return data;
 };
 
@@ -74,33 +53,19 @@ function transformFunction(props) {
 	const {
 		data,
 		me,
-		thread,
-		threadrel,
 	} = props;
 
-	if (data && me && thread) {
+	if (data && me) {
 		return {
 			...props,
-			data: transformTexts(filterHidden(data, me), thread, threadrel),
+			data: transformTexts(filterHidden(data, me)),
 		};
 	}
 	return props;
 }
 
-function mapSubscriptionToProps({ user, thread }) {
+function mapSubscriptionToProps({ user }) {
 	return {
-		thread: {
-			key: {
-				type: 'entity',
-				id: thread,
-			},
-		},
-		threadrel: {
-			key: {
-				type: 'entity',
-				id: `${user}_${thread}`,
-			},
-		},
 		me: {
 			key: {
 				type: 'entity',

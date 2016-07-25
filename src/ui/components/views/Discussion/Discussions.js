@@ -108,6 +108,7 @@ export default class Discussions extends Component<void, Props, State> {
 					key={thread.id}
 					thread={thread}
 					threadrel={threadrel}
+					user={this.props.user}
 					onNavigate={this.props.onNavigate}
 					style={[ styles.item, isGrid ? styles.card : null ]}
 				/>

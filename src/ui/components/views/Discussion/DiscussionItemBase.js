@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import DiscussionActionSheetContainer from '../../containers/DiscussionActionSheetContainer';
-import DiscussionActionsContainer from '../../containers/DiscussionActionsContainer';
+import DiscussionActions from './DiscussionActions';
 import DiscussionSummary from './DiscussionSummary';
 import DiscussionAuthor from './DiscussionAuthor';
 import CardTitle from '../Card/CardTitle';
@@ -60,6 +60,7 @@ const styles = StyleSheet.create({
 type Props = {
 	thread: Thread;
 	threadrel: ?ThreadRel;
+	user: string;
 	onNavigate: Function;
 }
 
@@ -67,7 +68,7 @@ type State = {
 	actionSheetVisible: boolean
 }
 
-export default class DiscussionItem extends Component<void, Props, State> {
+export default class DiscussionItemBase extends Component<void, Props, State> {
 	static propTypes = {
 		thread: PropTypes.shape({
 			id: PropTypes.string.isRequired,
@@ -77,6 +78,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 			parents: PropTypes.arrayOf(PropTypes.string).isRequired,
 		}).isRequired,
 		threadrel: PropTypes.object,
+		user: PropTypes.string.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
 
@@ -119,6 +121,7 @@ export default class DiscussionItem extends Component<void, Props, State> {
 		const {
 			thread,
 			threadrel,
+			user,
 			onNavigate,
 		} = this.props;
 
@@ -155,9 +158,10 @@ export default class DiscussionItem extends Component<void, Props, State> {
 							text={thread.body}
 							meta={thread.meta}
 						/>
-						<DiscussionActionsContainer
+						<DiscussionActions
 							thread={thread}
 							threadrel={threadrel}
+							user={user}
 							onNavigate={onNavigate}
 						/>
 					</View>

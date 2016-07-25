@@ -3,7 +3,7 @@
 import flowRight from 'lodash/flowRight';
 import createContainer from '../../../modules/store/createContainer';
 import createUserContainer from '../../../modules/store/createUserContainer';
-import DiscussionActions from '../views/Discussion/DiscussionActions';
+import DiscussionActionLike from '../views/Discussion/DiscussionActionLike';
 import {
 	likeThread,
 	unlikeThread,
@@ -17,4 +17,4 @@ const mapDispatchToProps = dispatch => ({
 export default flowRight(
 	createUserContainer(),
 	createContainer(null, mapDispatchToProps),
-)(DiscussionActions);
+)(DiscussionActionLike);
