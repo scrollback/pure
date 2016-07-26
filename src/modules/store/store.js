@@ -1,9 +1,9 @@
 /* @flow */
 
-import { bus, cache } from '../../core-client';
+import { cache } from '../../core-client';
 import SimpleStore from './SimpleStore';
+import middlewares from '../../ui/middlewares/middlewares';
 import type {
-	Action,
 	SubscriptionOptions,
 } from './SimpleStoreTypes';
 
@@ -114,14 +114,8 @@ const store = new SimpleStore({
 	watch,
 });
 
-const middleware = (action: Action): void => {
-	switch (action.type) {
-	case 'CHANGE':
-		bus.emit('change', action.payload);
-		break;
-	}
-};
-
-store.addMiddleware(middleware);
+middlewares.forEach(middleware => {
+	store.addMiddleware(middleware);
+});
 
 export default store;
