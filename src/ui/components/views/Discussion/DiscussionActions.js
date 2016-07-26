@@ -5,9 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import DiscussionActionLikeContainer from '../../containers/DiscussionActionLikeContainer';
 import DiscussionActionItem from './DiscussionActionItem';
-import Share from '../../../modules/Share';
-import { config } from '../../../../core-client';
-import { convertRouteToURL } from '../../../../lib/Route';
 import type { Thread, ThreadRel } from '../../../../lib/schemaTypes';
 
 const {
@@ -27,6 +24,7 @@ type Props = {
 	thread: Thread;
 	threadrel: ?ThreadRel;
 	user: string;
+	shareLink: Function;
 	onNavigate: Function;
 	style?: any;
 }
@@ -44,6 +42,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 			roles: PropTypes.arrayOf(PropTypes.number),
 		}),
 		user: PropTypes.string.isRequired,
+		shareLink: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		style: View.propTypes.style,
 	};
@@ -68,16 +67,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 	};
 
 	_handleShare = () => {
-		const { thread } = this.props;
-
-		Share.shareItem('Share discussion', config.server.protocol + '//' + config.server.host + convertRouteToURL({
-			name: 'chat',
-			props: {
-				room: thread.parents[0],
-				thread: thread.id,
-				title: thread.name,
-			},
-		}));
+		this.props.shareLink(this.props.thread);
 	};
 
 	render() {

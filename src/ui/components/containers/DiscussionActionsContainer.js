@@ -1,7 +1,7 @@
 /* @flow */
 
 import createContainer from '../../../modules/store/createContainer';
-import ShareButton from '../views/Appbar/ShareButton';
+import DiscussionActions from '../views/Discussion/DiscussionActions';
 
 const getThreadRoute = thread => ({
 	name: 'chat',
@@ -24,15 +24,4 @@ const mapDispatchToProps = dispatch => ({
 	},
 });
 
-const mapSubscriptionToProps = ({ thread }) => {
-	return {
-		thread: {
-			key: {
-				type: 'entity',
-				id: thread,
-			},
-		},
-	};
-};
-
-export default createContainer(mapSubscriptionToProps, mapDispatchToProps)(ShareButton);
+export default createContainer(null, mapDispatchToProps)(DiscussionActions);

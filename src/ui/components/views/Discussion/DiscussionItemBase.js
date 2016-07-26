@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import DiscussionActionSheetContainer from '../../containers/DiscussionActionSheetContainer';
-import DiscussionActions from './DiscussionActions';
+import DiscussionActions from '../../containers/DiscussionActionsContainer';
 import DiscussionSummary from './DiscussionSummary';
 import DiscussionAuthor from './DiscussionAuthor';
 import CardTitle from '../Card/CardTitle';

@@ -4,15 +4,16 @@ import React, { Component, PropTypes } from 'react';
 import shallowCompare from 'react-addons-shallow-compare';
 import AppbarTouchable from './AppbarTouchable';
 import AppbarIcon from './AppbarIcon';
-import Share from '../../../modules/Share';
 
 type Props = {
-	url: string;
+	shareLink: Function;
+	thread: any;
 }
 
 export default class ShareButton extends Component<void, Props, void> {
 	static propTypes = {
-		url: PropTypes.string,
+		shareLink: PropTypes.func.isRequired,
+		thread: PropTypes.object.isRequired,
 	};
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -20,11 +21,7 @@ export default class ShareButton extends Component<void, Props, void> {
 	}
 
 	_handlePress = () => {
-		const { url } = this.props;
-
-		if (url) {
-			Share.shareItem('Share discussion', url);
-		}
+		this.props.shareLink(this.props.thread);
 	};
 
 	render() {

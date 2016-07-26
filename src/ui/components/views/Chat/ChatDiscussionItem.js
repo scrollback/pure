@@ -4,7 +4,6 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
-import { ShareDialog } from 'react-native-fbsdk';
 import AppText from '../Core/AppText';
 import ChatBubble from './ChatBubble';
 import ChatTimestamp from './ChatTimestamp';
@@ -15,8 +14,6 @@ import DiscussionActionSheetContainer from '../../containers/DiscussionActionShe
 import { TAG_POST_HIDDEN } from '../../../../lib/Constants';
 import type { Room, Thread, ThreadRel } from '../../../../lib/schemaTypes';
 import Colors from '../../../Colors';
-import { config } from '../../../../core-client';
-import { convertRouteToURL } from '../../../../lib/Route';
 
 const {
 	StyleSheet,
@@ -92,6 +89,9 @@ type Props = {
 	showTimestamp?: boolean;
 	user: string;
 	style?: any;
+	shareOnFacebook: Function;
+	shareOnTwitter: Function;
+	shareOnWhatsApp: Function;
 	onNavigate: Function;
 };
 
@@ -103,7 +103,7 @@ type State = {
 export default class ChatDiscussionItem extends Component<void, Props, State> {
 	static propTypes = {
 		room: PropTypes.shape({
-			name: PropTypes.string.isRequired
+			name: PropTypes.string.isRequired,
 		}).isRequired,
 		thread: PropTypes.shape({
 			body: PropTypes.string.isRequired,
@@ -115,6 +115,9 @@ export default class ChatDiscussionItem extends Component<void, Props, State> {
 		showTimestamp: PropTypes.bool,
 		user: PropTypes.string.isRequired,
 		style: View.propTypes.style,
+		shareOnFacebook: PropTypes.func.isRequired,
+		shareOnTwitter: PropTypes.func.isRequired,
+		shareOnWhatsApp: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
 
@@ -139,55 +142,16 @@ export default class ChatDiscussionItem extends Component<void, Props, State> {
 		}
 	}
 
-	_getURL = () => {
-		const { thread } = this.props;
-
-		return config.server.protocol + '//' + config.server.host + convertRouteToURL({
-			name: 'chat',
-			props: {
-				room: thread.parents[0],
-				thread: thread.id,
-				title: thread.name,
-			},
-		});
-	}
-
 	_handleFacebookPress = async () => {
-		const { thread } = this.props;
-		const contentUrl = this._getURL();
-		const shareLinkContent = {
-			contentType: 'link',
-			contentUrl,
-			...(thread.meta && thread.meta.photo ? {
-				imageURL: thread.meta.photo.thumbnail_url,
-			} : {
-				contentDescription: thread.body,
-			}),
-		};
-
-		const canShow = await ShareDialog.canShow(shareLinkContent);
-
-		if (canShow) {
-			await ShareDialog.show(shareLinkContent);
-		} else {
-			Linking.openURL(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
-		}
+		this.props.shareOnFacebook(this.props.thread);
 	}
 
 	_handleTwitterPress = () => {
-		const { room } = this.props;
-		const hashtags = room && room.name && room.name.indexOf(' ') === -1 ? room.name : '';
-		const contentUrl = this._getURL();
-		const shareText = 'Saw this on my Belong neighborhood group. Worth checking out.';
-
-		Linking.openURL(`http://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(contentUrl)}&hashtags=${encodeURIComponent(hashtags)}&via=belongchat`);
+		this.props.shareOnTwitter(this.props.thread, this.props.room);
 	}
 
 	_handleWhatsAppPress = () => {
-		const contentUrl = this._getURL();
-		const shareText = `Saw this on my Belong neighborhood group. You should check it out.\n${contentUrl}`;
-
-		Linking.openURL(`whatsapp://send?text=${encodeURIComponent(shareText)}`);
+		this.props.shareOnWhatsApp(this.props.thread);
 	}
 
 	_handleShowMenu = () => {

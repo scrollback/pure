@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import template from 'lodash/template';
 import Card from './Card';
-import Share from '../../../modules/Share';
 import type { Room, User } from '../../../../lib/schemaTypes';
 
 const {
@@ -44,6 +43,7 @@ type Props = {
 		url: ?string;
 		type: 'share' | 'view';
 	};
+	shareContent: Function;
 	style?: any;
 }
 
@@ -60,6 +60,7 @@ export default class CTACard extends Component<void, Props, State> {
 			url: PropTypes.string,
 			type: PropTypes.oneOf([ 'share', 'view' ]),
 		}),
+		shareContent: PropTypes.func.isRequired,
 		style: Card.propTypes.style,
 	};
 
@@ -123,7 +124,7 @@ export default class CTACard extends Component<void, Props, State> {
 						});
 						observer.complete();
 					},
-					e => observer.error(e)
+					e => observer.error(e),
 				);
 		});
 	}
@@ -173,7 +174,7 @@ export default class CTACard extends Component<void, Props, State> {
 
 		if (data && data.content) {
 			try {
-				Share.shareItem(data.title ? template(data.title)({ room, user }) : 'Share…', template(data.content)({ room, user }));
+				this.props.shareContent(data.title ? template(data.title)({ room, user }) : 'Share…', template(data.content)({ room, user }));
 			} catch (e) {
 				// ignore
 			}
