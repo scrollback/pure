@@ -9,13 +9,13 @@ import store from '../../../modules/store/store';
 
 const mapDispatchToProps = dispatch => ({
 	startThread: data => {
-		const changes = startThread(data);
+		const action = startThread(data);
 
-		dispatch(changes);
+		dispatch(action);
 
 		return store.observe({
 			type: 'entity',
-			id: Object.keys(changes.entities)[0],
+			id: Object.keys(action.payload.entities)[0],
 			source: 'StartDiscussionContainer',
 		});
 	},

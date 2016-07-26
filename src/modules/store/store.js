@@ -2,7 +2,10 @@
 
 import { bus, cache } from '../../core-client';
 import SimpleStore from './SimpleStore';
-import type { SubscriptionOptions } from './SimpleStoreTypes';
+import type {
+	Action,
+	SubscriptionOptions,
+} from './SimpleStoreTypes';
 
 const LOADING = Object.freeze({ type: 'loading' });
 const LOADING_ITEMS = Object.freeze([ LOADING ]);
@@ -107,11 +110,18 @@ const watch = (options: SubscriptionOptions, callback: Function) => {
 	}
 };
 
-const put = (payload: Object): void => bus.emit('change', payload);
-
 const store = new SimpleStore({
 	watch,
-	put,
 });
+
+const middleware = (action: Action): void => {
+	switch (action.type) {
+	case 'CHANGE':
+		bus.emit('change', action.payload);
+		break;
+	}
+};
+
+store.addMiddleware(middleware);
 
 export default store;

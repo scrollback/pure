@@ -241,9 +241,10 @@ test('should pass dispatch', t => {
 	const ButtonComponent = ({ ping }) => <button onClick={ping} />; // eslint-disable-line react/prop-types
 	const store = new SimpleStore({
 		watch: () => null,
-		put: action => {
-			t.is(action, TEST_ACTION);
-		},
+	});
+
+	store.addMiddleware(action => {
+		t.is(action, TEST_ACTION);
 	});
 
 	const Container = createContainer(
@@ -274,7 +275,12 @@ test('should pass dispatch and data', t => {
 				remove: () => (callback = null),
 			};
 		},
-		put: action => action.type === 'CLICK' ? callback(action.payload.label) : null,
+	});
+
+	store.addMiddleware(action => {
+		if (action.type === 'CLICK') {
+			callback(action.payload.label);
+		}
 	});
 
 	const Container = createContainer(

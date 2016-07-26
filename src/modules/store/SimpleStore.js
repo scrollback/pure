@@ -2,12 +2,14 @@
 
 import type {
 	Cache,
+	Action,
 	SubscriptionOptions,
 	EventSubscription,
 } from './SimpleStoreTypes';
 
 export default class SimpleStore {
 	_cache: Cache;
+	_middlewares: Array<Function> = [];
 	_listeners: { [key: string]: Array<Function> } = {};
 
 	constructor(cache: Cache) {
@@ -19,23 +21,19 @@ export default class SimpleStore {
 			throw new Error('Cache must have a "watch" method');
 		}
 
-		if (typeof cache.put !== 'function') {
-			throw new Error('Cache must have a "put" method');
-		}
-
 		this._cache = cache;
 	}
 
 	observe(options: SubscriptionOptions): Observable {
 		return new Observable(observer => {
-			this._dispatch('subscribe', options);
+			this._trigger('subscribe', options);
 
 			const unwatch = this._cache.watch(options, data => {
 				observer.next(data);
 			});
 
 			return () => {
-				this._dispatch('unsubscribe', options);
+				this._trigger('unsubscribe', options);
 
 				if (unwatch) {
 					unwatch();
@@ -44,8 +42,14 @@ export default class SimpleStore {
 		});
 	}
 
-	put(payload: Object): void {
-		this._cache.put(payload);
+	dispatch(action: Action): void {
+		this._middlewares.forEach(middleware => {
+			middleware(action);
+		});
+	}
+
+	addMiddleware(middleware: Function): void {
+		this._middlewares.push(middleware);
 	}
 
 	on(event: string, cb: Function): EventSubscription {
@@ -79,7 +83,7 @@ export default class SimpleStore {
 		};
 	}
 
-	_dispatch(event: string, payload?: any) {
+	_trigger(event: string, payload?: any) {
 		const listeners = this._listeners[event];
 
 		if (listeners) {

@@ -16,11 +16,25 @@ const {
 
 
 function saveSessionList(list) {
-	store.put({ state: { sessionList: list } });
+	store.dispatch({
+		type: 'CHANGE',
+		payload: {
+			state: {
+				sessionList: list
+			}
+		}
+	});
 }
 
 function removeSessionList() {
-	store.put({ state: { sessionList: null } });
+	store.dispatch({
+		type: 'CHANGE',
+		payload: {
+			state: {
+				sessionList: null
+			}
+		}
+	});
 }
 
 /*

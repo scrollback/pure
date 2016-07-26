@@ -9,9 +9,13 @@ import type {
 	SubscriptionPropsMap,
 	DispatchPropsMap,
 } from './createContainerTypes';
+import type {
+	Action,
+} from './SimpleStoreTypes';
 
-type MapSubscriptionToProps = SubscriptionPropsMap | (props: any) => SubscriptionPropsMap;
-type MapDispatchToProps = (dispatch: Function) => DispatchPropsMap;
+type Dispatch = (action: Action) => void
+type MapSubscriptionToProps = SubscriptionPropsMap | (props: any) => SubscriptionPropsMap
+type MapDispatchToProps = (dispatch: Dispatch) => DispatchPropsMap
 
 type State = {
 	[key: string]: any;
@@ -32,7 +36,7 @@ export default function(mapSubscriptionToProps?: ?MapSubscriptionToProps, mapDis
 				} = this.context;
 
 				if (mapDispatchToProps) {
-					this._actions = mapDispatchToProps(store.put.bind(store));
+					this._actions = mapDispatchToProps(store.dispatch.bind(store));
 				}
 
 				if (mapSubscriptionToProps) {
