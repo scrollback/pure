@@ -1,11 +1,16 @@
 /* @flow */
 
+import {
+	Linking,
+} from 'react-native';
+import { ShareDialog } from 'react-native-fbsdk';
+import Share from '../modules/Share';
 import { convertRouteToURL } from '../../lib/Route';
 import { config } from '../../core-client';
 import type { Route } from '../../lib/RouteTypes';
 
 type Action = {
-	type: 'SHARE_FACEBOOK' | 'SHARE_TWITTER';
+	type: 'SHARE_LINK' | 'SHARE_FACEBOOK' | 'SHARE_TWITTER' | 'SHARE_WHATSAPP';
 	payload: {
 		title: string;
 		route?: Route;
@@ -16,10 +21,30 @@ type Action = {
 	}
 }
 
-export default function(action: Action) {
+export default async function(action: Action) {
 	switch (action.type) {
+	case 'SHARE_LINK': {
+		const { title, route, url, text } = action.payload;
+
+		const parts = [];
+
+		if (text) {
+			parts.push(text);
+		}
+
+		if (url) {
+			parts.push(url);
+		} else if (route) {
+			parts.push(config.server.protocol + '//' + config.server.host + convertRouteToURL(route));
+		}
+
+		const shareText = parts.join('\n');
+
+		Share.shareItem(title, shareText);
+		break;
+	}
 	case 'SHARE_FACEBOOK': {
-		const { url, route } = action.payload;
+		const { image, text, url, route } = action.payload;
 
 		let contentUrl;
 
@@ -31,7 +56,23 @@ export default function(action: Action) {
 			contentUrl = config.server.protocol + '//' + config.server.host;
 		}
 
-		window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+		const contentDescription = text;
+		const imageURL = image;
+
+		const shareLinkContent = {
+			contentType: 'link',
+			contentUrl,
+			contentDescription,
+			imageURL,
+		};
+
+		const canShow = await ShareDialog.canShow(shareLinkContent);
+
+		if (canShow) {
+			await ShareDialog.show(shareLinkContent);
+		} else {
+			Linking.openURL(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+		}
 		break;
 	}
 	case 'SHARE_TWITTER': {
@@ -55,7 +96,7 @@ export default function(action: Action) {
 
 		link += 'via=belongchat';
 
-		window.open(link);
+		Linking.openURL(link);
 		break;
 	}
 	case 'SHARE_WHATSAPP': {
@@ -75,7 +116,7 @@ export default function(action: Action) {
 
 		const shareText = parts.join('\n');
 
-		window.open(`whatsapp://send?text=${encodeURIComponent(shareText)}`);
+		Linking.openURL(`whatsapp://send?text=${encodeURIComponent(shareText)}`);
 		break;
 	}
 	}
