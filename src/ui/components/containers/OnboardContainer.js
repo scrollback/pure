@@ -17,7 +17,6 @@ import {
 } from '../../../modules/store/actions';
 import { ERRORS } from '../../../lib/Constants';
 import type { User } from '../../../lib/schemaTypes';
-import { bus } from '../../../core-client';
 
 type Props = {
 	user: ?string;
@@ -356,7 +355,7 @@ const mapDispatchToProps = dispatch => ({
 	clearSignUpError: pendingUser => dispatch(clearSignUpError(pendingUser)),
 	signIn: (provider, auth) => dispatch(signIn(provider, auth)),
 	cancelSignUp: () => {
-		bus.emit('signout');
+		dispatch({ type: 'SIGNOUT' });
 		dispatch(cancelSignUp());
 	},
 	signUp: (id: string, name: string, pendingUser) => {
