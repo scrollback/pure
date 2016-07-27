@@ -13,6 +13,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import chat.belong.hello.AppState;
+
+
 public class NotificationHandler {
 
     private static final int NOTIFICATION_ID = 0;
@@ -29,10 +32,6 @@ public class NotificationHandler {
     }
 
     public static void handleNotification(Context context, Bundle bundle) {
-        if (!GCMPreferences.isNotificationsEnabled(context)) {
-            Log.d(TAG, "Notifications are disabled");
-            return;
-        }
 
         JSONObject schema = GCMPreferences.getSchema(context);
 
@@ -48,18 +47,38 @@ public class NotificationHandler {
             Log.e(TAG, "Failed to parse notification", e);
         }
 
+        if (AppState.isForeground()) {
+            Log.d(TAG, "App is in forground. Not showing notification.");
+            return;
+        }
+
+        if (!GCMPreferences.isNotificationsEnabled(context)) {
+            Log.d(TAG, "Notifications are disabled");
+            return;
+        }
+
         try {
             JSONArray notifications = GCMPreferences.getCurrentNotifications(context);
+            JSONArray unreadNotifications = new JSONArray();
 
-            if (notifications.length() == 0) {
+            for (int i = 0; i < notifications.length(); i++) {
+                JSONObject notification = notifications.getJSONObject(i);
+
+                if (notification.has("readTime")) {
+                    continue;
+                }
+
+                unreadNotifications.put(notification);
+            }
+
+            if (unreadNotifications.length() == 0) {
                 Log.d(TAG, "No active notifications");
                 return;
             }
 
-            showNotifications(context, notifications);
+            showNotifications(context, unreadNotifications);
         } catch (Exception e) {
             Log.e(TAG, "Failed to show notification", e);
         }
     }
 }
-

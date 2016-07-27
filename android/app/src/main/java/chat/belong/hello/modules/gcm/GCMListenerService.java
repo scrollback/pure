@@ -5,8 +5,6 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 
-import chat.belong.hello.AppState;
-
 
 public class GCMListenerService extends GcmListenerService {
 
@@ -17,10 +15,6 @@ public class GCMListenerService extends GcmListenerService {
 
         Log.d(TAG, "Got notification: " + data);
 
-        if (AppState.isForeground()) {
-            Log.d(TAG, "App is in forground. Not showing notification.");
-        } else {
-            NotificationHandler.handleNotification(this, data);
-        }
+        NotificationHandler.handleNotification(this, data);
     }
 }
