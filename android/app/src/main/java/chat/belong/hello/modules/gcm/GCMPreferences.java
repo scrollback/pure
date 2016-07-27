@@ -225,8 +225,8 @@ public class GCMPreferences {
 
     public static class Subscription {
 
-        final SharedPreferences mSharedPreferences;
-        final SharedPreferences.OnSharedPreferenceChangeListener listener;
+        final private SharedPreferences mSharedPreferences;
+        final private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
         Subscription(SharedPreferences sharedPreferences, final Runnable runnable) {
             mSharedPreferences = sharedPreferences;

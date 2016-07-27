@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import RichText from '../Core/RichText';
 import Embed from '../Embed/Embed';
-import { parseURLs } from '../../../../lib/URL';
 import Colors from '../../../Colors';
 
 const {
@@ -54,35 +53,35 @@ export default class ChatAvatar extends Component<void, Props, void> {
 
 	render() {
 		const { meta, body } = this.props;
-		const links = body ? parseURLs(body, 1) : null;
 
-		if (meta && meta.photo) {
-			const { photo } = meta;
+		if (meta) {
+			if (meta.photo) {
+				const { photo } = meta;
 
-			return (
-				<Embed
-					url={photo.url}
-					data={photo}
-					showTitle={false}
-					thumbnailStyle={styles.container}
-					openOnPress={false}
-				/>
-			);
-		} else if (links && links.length) {
-			return (
-				<View style={styles.container}>
+				return (
 					<Embed
-						url={links[0]}
-						style={[ styles.embed, styles.embedWithText ]}
-						thumbnailStyle={styles.embedThumbnail}
+						data={photo}
+						showTitle={false}
+						thumbnailStyle={styles.container}
+						openOnPress={false}
 					/>
-					<RichText
-						selectable
-						text={body}
-						style={styles.text}
-					/>
-				</View>
-			);
+				);
+			} else if (meta.oembed) {
+				return (
+					<View style={styles.container}>
+						<Embed
+							data={meta.oembed}
+							style={[ styles.embed, styles.embedWithText ]}
+							thumbnailStyle={styles.embedThumbnail}
+						/>
+						<RichText
+							selectable
+							text={body}
+							style={styles.text}
+						/>
+					</View>
+				);
+			}
 		}
 
 		return (

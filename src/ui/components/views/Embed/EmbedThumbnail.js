@@ -5,7 +5,7 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import Icon from '../Core/Icon';
 import Colors from '../../../Colors';
-import type { Embed } from '../../../../modules/oembed/oEmbedTypes';
+import type { Embed } from '../../../../modules/url-preview/oEmbedTypes';
 
 const {
 	StyleSheet,
