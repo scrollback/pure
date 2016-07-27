@@ -2,6 +2,7 @@
 
 export type Embed = {
 	type: 'photo' | 'video' | 'link' | 'rich';
+	url?: string;
 	title?: string;
 	description?: string;
 	author_name?: string;

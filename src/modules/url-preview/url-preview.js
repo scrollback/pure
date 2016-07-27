@@ -25,13 +25,6 @@ async function addOEmbed(id, item, links) {
 				}
 			});
 
-			if (!preview.description) {
-				const parts = [];
-				if (preview.provider_name) parts.push('on', preview.provider_name);
-				if (preview.author_name) parts.push('by', preview.author_name);
-				preview.description = parts.join(' ');
-			}
-
 			winston.debug('New change:', entity);
 			bus.emit('change', {
 				entities: {
@@ -49,14 +42,13 @@ bus.on('postchange', change => {
 	if (!change.entities) return;
 
 	Object.keys(change.entities).forEach((id) => {
-		let links = [];
 		const item = change.entities[id];
 		if (item.createTime !== item.updateTime) return;
-		if (item.type === TYPE_TEXT) links = parseURLs(item.body, 1);
-		if (item.type === TYPE_THREAD) {
-			links = parseURLs(item.name);
-			if (!links.length) links = parseURLs(item.body, 1);
+		if (item.type === TYPE_TEXT || item.type === TYPE_THREAD) {
+			const links = parseURLs(item.body);
+			if (links.length) {
+				addOEmbed(id, item, links);
+			}
 		}
-		if (links.length) addOEmbed(id, item, links);
 	});
 });
