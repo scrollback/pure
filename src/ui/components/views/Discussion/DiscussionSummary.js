@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import CardSummary from '../Card/CardSummary';
 import Embed from '../Embed/Embed';
-import { parseURLs } from '../../../../lib/URL';
 
 const {
 	StyleSheet,
@@ -50,8 +49,6 @@ export default class DiscussionSummary extends Component {
 
 		const trimmedText = text.trim();
 
-		const links = parseURLs(trimmedText, 1);
-
 		let cover, hideSummary;
 
 		if (meta && meta.photo) {
@@ -67,10 +64,10 @@ export default class DiscussionSummary extends Component {
 			);
 
 			hideSummary = true;
-		} else if (links.length) {
+		} else if (meta.oembed) {
 			cover = (
 				<Embed
-					url={links[0]}
+					data={meta.oembed}
 					thumbnailStyle={styles.image}
 					showTitle={false}
 					showSummary={false}

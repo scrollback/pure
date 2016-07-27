@@ -6,8 +6,7 @@ import shallowCompare from 'react-addons-shallow-compare';
 import EmbedThumbnail from './EmbedThumbnail';
 import EmbedTitle from './EmbedTitle';
 import EmbedSummary from './EmbedSummary';
-import oEmbed from '../../../../modules/oembed/oEmbed';
-import type { Embed as EmbedData } from '../../../../modules/oembed/oEmbedTypes';
+import type { Embed as EmbedData } from '../../../../modules/url-preview/oEmbedTypes';
 
 const {
 	Linking,
@@ -21,7 +20,7 @@ type DefaultProps = {
 
 type Props = {
 	url?: string;
-	data?: EmbedData;
+	data: EmbedData;
 	showThumbnail?: boolean;
 	showTitle?: boolean;
 	showSummary?: boolean;
@@ -32,11 +31,7 @@ type Props = {
 	summaryStyle?: any;
 }
 
-type State = {
-	embed: ?EmbedData;
-}
-
-export default class Embed extends Component<DefaultProps, Props, State> {
+export default class Embed extends Component<DefaultProps, Props, void> {
 	static propTypes = {
 		data: PropTypes.object,
 		url: PropTypes.string.isRequired,
@@ -54,27 +49,9 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 		openOnPress: true,
 	};
 
-	state: State = {
-		embed: null,
-	};
-
-	componentWillMount() {
-		this._fetchData();
-	}
-
-	componentDidMount() {
-		this._mounted = true;
-	}
-
-	shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
+	shouldComponentUpdate(nextProps: Props, nextState: void): boolean {
 		return shallowCompare(this, nextProps, nextState);
 	}
-
-	componentWillUnmount() {
-		this._mounted = false;
-	}
-
-	_mounted: boolean;
 
 	_handlePress = () => {
 		if (typeof this.props.url === 'string') {
@@ -82,34 +59,10 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 		}
 	};
 
-	_fetchData = () => {
-		if (this.props.data) {
-			this.setState({
-				embed: this.props.data,
-			});
-		} else if (this.props.url) {
-			this._fetchEmbedData(this.props.url);
-		}
-	};
-
-	_fetchEmbedData = async (url: string) => {
-		try {
-			const embed = await oEmbed(url);
-
-			if (this._mounted) {
-				this.setState({
-					embed,
-				});
-			}
-		} catch (e) {
-			// Ignore
-		}
-	};
-
 	render() {
-		const { embed } = this.state;
+		const { data } = this.props;
 
-		if (typeof embed === 'object' && embed !== null) {
+		if (typeof data === 'object' && data !== null) {
 			const {
 				showThumbnail,
 				showTitle,
@@ -122,33 +75,33 @@ export default class Embed extends Component<DefaultProps, Props, State> {
 
 			const items = [];
 
-			if (showThumbnail !== false && embed.thumbnail_url) {
+			if (showThumbnail !== false && data.thumbnail_url) {
 				items.push(
 					<EmbedThumbnail
 						key='thumbnail'
-						embed={embed}
+						embed={data}
 						style={thumbnailStyle}
-					/>
+					/>,
 				);
 			}
 
-			if (showTitle !== false && embed.title) {
+			if (showTitle !== false && data.title) {
 				items.push(
 					<EmbedTitle
 						key='title'
-						title={embed.title}
+						title={data.title}
 						style={titleStyle}
-					/>
+					/>,
 				);
 			}
 
-			if (showSummary !== false && embed.description) {
+			if (showSummary !== false && data.description) {
 				items.push(
 					<EmbedSummary
 						key='summary'
-						summary={embed.description}
+						summary={data.description}
 						style={summaryStyle}
-					/>
+					/>,
 				);
 			}
 

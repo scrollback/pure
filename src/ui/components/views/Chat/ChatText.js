@@ -5,7 +5,6 @@ import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import RichText from '../Core/RichText';
 import Embed from '../Embed/Embed';
-import { parseURLs } from '../../../../lib/URL';
 import Colors from '../../../Colors';
 
 const {
@@ -54,7 +53,6 @@ export default class ChatAvatar extends Component<void, Props, void> {
 
 	render() {
 		const { meta, body } = this.props;
-		const links = body ? parseURLs(body, 1) : null;
 
 		if (meta && meta.photo) {
 			const { photo } = meta;
@@ -68,11 +66,11 @@ export default class ChatAvatar extends Component<void, Props, void> {
 					openOnPress={false}
 				/>
 			);
-		} else if (links && links.length) {
+		} else if (meta.oembed) {
 			return (
 				<View style={styles.container}>
 					<Embed
-						url={links[0]}
+						data={meta.oembed}
 						style={[ styles.embed, styles.embedWithText ]}
 						thumbnailStyle={styles.embedThumbnail}
 					/>
