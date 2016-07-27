@@ -8,7 +8,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Date;
 import java.util.UUID;
 
 public class GCMPreferences {
@@ -167,7 +166,7 @@ public class GCMPreferences {
             for (int i = 0; i < currentNotifications.length(); i++) {
                 JSONObject note = currentNotifications.getJSONObject(i);
 
-                if (note.get("id") == id) {
+                if (note.get("id").equals(id)) {
                     continue;
                 }
 
@@ -193,7 +192,7 @@ public class GCMPreferences {
                     continue;
                 }
 
-                notification.put("readTime", new Date().getTime());
+                notification.put("readTime", System.currentTimeMillis());
             }
 
             SharedPreferences.Editor editor = getEditor(context);

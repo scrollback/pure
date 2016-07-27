@@ -8,6 +8,7 @@ const TITLE_TEMPLATE = '{{#roomNames.1}}{{#roomNames.0}}{{roomNames.0}}, {{roomN
 
 GCM.markCurrentNotificationsAsRead();
 GCM.configureSchema({
+	event: 'number',
 	count: 'number',
 	data: {
 		body: 'string',
@@ -16,7 +17,7 @@ GCM.configureSchema({
 		title: 'string',
 	},
 	createTime: 'number',
-	score: 'number',
+	group: 'string',
 });
 GCM.configureNotification({
 	style: 'inbox',

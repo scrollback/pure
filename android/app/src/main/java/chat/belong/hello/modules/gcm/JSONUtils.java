@@ -40,7 +40,16 @@ public class JSONUtils {
                         json.put(key, bundle.getString(key));
                         break;
                     case TYPE_NUMBER:
-                        json.put(key, bundle.getDouble(key));
+                        Object value = bundle.get(key);
+                        if (value instanceof String) {
+                            try {
+                                json.put(key, Double.parseDouble((String) value));
+                            } catch (NumberFormatException ex) {
+                                // do nothing
+                            }
+                        } else {
+                            json.put(key, key);
+                        }
                         break;
                     case TYPE_BOOLEAN:
                         json.put(key, bundle.getBoolean(key));
@@ -135,11 +144,13 @@ public class JSONUtils {
             } else if (value instanceof String) {
                 array.pushString((String) value);
             } else if (value instanceof Integer) {
-                array.pushInt((Integer) value);
-            } else if (value instanceof Double) {
-                array.pushDouble((Double) value);
+                array.pushInt((int) value);
+            } else if (value instanceof Long) {
+                array.pushDouble((double) (long) value);
+            } else if (value instanceof Double || value instanceof Float) {
+                array.pushDouble((float) value);
             } else if (value instanceof Boolean) {
-                array.pushBoolean((Boolean) value);
+                array.pushBoolean((boolean) value);
             } else {
                 array.pushNull();
             }
@@ -163,11 +174,13 @@ public class JSONUtils {
             } else if (value instanceof String) {
                 map.putString(key, (String) value);
             } else if (value instanceof Integer) {
-                map.putInt(key, (Integer) value);
-            } else if (value instanceof Double) {
-                map.putDouble(key, (Double) value);
+                map.putInt(key, (int) value);
+            } else if (value instanceof Long) {
+                map.putDouble(key, (double) (long) value);
+            } else if (value instanceof Double || value instanceof Float) {
+                map.putDouble(key, (double) value);
             } else if (value instanceof Boolean) {
-                map.putBoolean(key, (Boolean) value);
+                map.putBoolean(key, (boolean) value);
             } else {
                 map.putNull(key);
             }

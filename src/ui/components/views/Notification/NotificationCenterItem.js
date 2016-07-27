@@ -119,7 +119,6 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 			dismissTime: PropTypes.number,
 			event: PropTypes.number.isRequired,
 			createTime: PropTypes.number,
-			updateTime: PropTypes.number,
 			group: PropTypes.string.isRequired,
 			readTime: PropTypes.number,
 			score: PropTypes.number,
@@ -373,7 +372,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 								/>
 								<Time
 									type='long'
-									time={note.updateTime}
+									time={note.createTime}
 									style={styles.timestamp}
 								/>
 							</View>
