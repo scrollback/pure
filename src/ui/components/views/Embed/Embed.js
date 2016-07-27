@@ -19,7 +19,6 @@ type DefaultProps = {
 }
 
 type Props = {
-	url?: string;
 	data: EmbedData;
 	showThumbnail?: boolean;
 	showTitle?: boolean;
@@ -33,8 +32,7 @@ type Props = {
 
 export default class Embed extends Component<DefaultProps, Props, void> {
 	static propTypes = {
-		data: PropTypes.object,
-		url: PropTypes.string.isRequired,
+		data: PropTypes.object.isRequired,
 		showThumbnail: PropTypes.bool,
 		showTitle: PropTypes.bool,
 		showSummary: PropTypes.bool,
@@ -54,8 +52,8 @@ export default class Embed extends Component<DefaultProps, Props, void> {
 	}
 
 	_handlePress = () => {
-		if (typeof this.props.url === 'string') {
-			Linking.openURL(this.props.url);
+		if (typeof this.props.data.url === 'string') {
+			Linking.openURL(this.props.data.url);
 		}
 	};
 

@@ -54,33 +54,34 @@ export default class ChatAvatar extends Component<void, Props, void> {
 	render() {
 		const { meta, body } = this.props;
 
-		if (meta && meta.photo) {
-			const { photo } = meta;
+		if (meta) {
+			if (meta.photo) {
+				const { photo } = meta;
 
-			return (
-				<Embed
-					url={photo.url}
-					data={photo}
-					showTitle={false}
-					thumbnailStyle={styles.container}
-					openOnPress={false}
-				/>
-			);
-		} else if (meta.oembed) {
-			return (
-				<View style={styles.container}>
+				return (
 					<Embed
-						data={meta.oembed}
-						style={[ styles.embed, styles.embedWithText ]}
-						thumbnailStyle={styles.embedThumbnail}
+						data={photo}
+						showTitle={false}
+						thumbnailStyle={styles.container}
+						openOnPress={false}
 					/>
-					<RichText
-						selectable
-						text={body}
-						style={styles.text}
-					/>
-				</View>
-			);
+				);
+			} else if (meta.oembed) {
+				return (
+					<View style={styles.container}>
+						<Embed
+							data={meta.oembed}
+							style={[ styles.embed, styles.embedWithText ]}
+							thumbnailStyle={styles.embedThumbnail}
+						/>
+						<RichText
+							selectable
+							text={body}
+							style={styles.text}
+						/>
+					</View>
+				);
+			}
 		}
 
 		return (

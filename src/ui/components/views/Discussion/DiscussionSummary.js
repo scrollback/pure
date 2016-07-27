@@ -51,28 +51,29 @@ export default class DiscussionSummary extends Component {
 
 		let cover, hideSummary;
 
-		if (meta && meta.photo) {
-			cover = (
-				<Embed
-					url={meta.photo.url}
-					data={meta.photo}
-					thumbnailStyle={styles.image}
-					showTitle={false}
-					showSummary={false}
-					openOnPress={false}
-				/>
-			);
+		if (meta) {
+			if (meta.photo) {
+				cover = (
+					<Embed
+						data={meta.photo}
+						thumbnailStyle={styles.image}
+						showTitle={false}
+						showSummary={false}
+						openOnPress={false}
+					/>
+				);
 
-			hideSummary = true;
-		} else if (meta.oembed) {
-			cover = (
-				<Embed
-					data={meta.oembed}
-					thumbnailStyle={styles.image}
-					showTitle={false}
-					showSummary={false}
-				/>
-			);
+				hideSummary = true;
+			} else if (meta.oembed) {
+				cover = (
+					<Embed
+						data={meta.oembed}
+						thumbnailStyle={styles.image}
+						showTitle={false}
+						showSummary={false}
+					/>
+				);
+			}
 		}
 
 		return (
