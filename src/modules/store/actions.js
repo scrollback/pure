@@ -1,6 +1,5 @@
 /* @flow */
 
-import type { User } from '../../lib/schemaTypes';
 import UserModel from '../../models/user';
 import ThreadModel from '../../models/thread';
 import TextModel from '../../models/text';
@@ -16,11 +15,13 @@ import {
 	ROLE_UPVOTE,
 	ROLE_FOLLOWER,
 } from '../../lib/Constants';
+import type { User } from '../../lib/schemaTypes';
+import type { Action } from '../../modules/store/SimpleStoreTypes';
 
 /*
  * User related actions
  */
-export const initializeSession = (session: string): Object => ({
+export const initializeSession = (session: string): Action => ({
 	type: 'CHANGE',
 	payload: {
 		auth: {
@@ -29,7 +30,7 @@ export const initializeSession = (session: string): Object => ({
 	}
 });
 
-export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; } | { code: string; }): Object => ({
+export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; } | { code: string; }): Action => ({
 	type: 'CHANGE',
 	payload: {
 		auth: {
@@ -38,7 +39,7 @@ export const signIn = (provider: string, auth: { accessToken: string; } | { idTo
 	},
 });
 
-export const signUp = (user: User): Object => ({
+export const signUp = (user: User): Action => ({
 	type: 'CHANGE',
 	payload: {
 		auth: {
@@ -47,7 +48,7 @@ export const signUp = (user: User): Object => ({
 	},
 });
 
-export const clearSignUpError = (signup: Object): Object => ({
+export const clearSignUpError = (signup: Object): Action => ({
 	type: 'CHANGE',
 	payload: {
 		state: {
@@ -59,7 +60,7 @@ export const clearSignUpError = (signup: Object): Object => ({
 	},
 });
 
-export const cancelSignUp = (): Object => ({
+export const cancelSignUp = (): Action => ({
 	type: 'CHANGE',
 	payload: {
 		state: {
@@ -68,7 +69,7 @@ export const cancelSignUp = (): Object => ({
 	},
 });
 
-export const signOut = (): Object => ({
+export const signOut = (): Action => ({
 	type: 'CHANGE',
 	payload: {
 		state: {
@@ -79,7 +80,7 @@ export const signOut = (): Object => ({
 	},
 });
 
-export const saveUser = (user: User): Object => ({
+export const saveUser = (user: User): Action => ({
 	type: 'CHANGE',
 	payload: {
 		entities: {
@@ -88,7 +89,7 @@ export const saveUser = (user: User): Object => ({
 	},
 });
 
-export const addPlace = (user: string, type: string, place: Object): Object => ({
+export const addPlace = (user: string, type: string, place: Object): Action => ({
 	type: 'CHANGE',
 	payload: {
 		entities: {
@@ -105,7 +106,7 @@ export const addPlace = (user: string, type: string, place: Object): Object => (
 	},
 });
 
-export const removePlace = (user: string, type: string): Object => ({
+export const removePlace = (user: string, type: string): Action => ({
 	type: 'CHANGE',
 	payload: {
 		entities: {
@@ -122,12 +123,12 @@ export const removePlace = (user: string, type: string): Object => ({
 	},
 });
 
-export const banUser = (): Object => ({
-
+export const banUser = (): Action => ({
+	type: 'NOOP'
 });
 
-export const unbanUser = (): Object => ({
-
+export const unbanUser = (): Action => ({
+	type: 'NOOP'
 });
 
 
@@ -136,7 +137,7 @@ export const unbanUser = (): Object => ({
  */
 export const sendMessage = (
 	data: { id?: string; body: string; meta?: ?Object; room: string; thread: string; user: string; }
-): Object => {
+): Action => {
 	const id = data.id || uuid.v4();
 
 	return {
@@ -166,7 +167,7 @@ export const sendMessage = (
 
 export const startThread = (
 	data: { id?: string; name: string; body: string; meta?: ?Object; room: string; user: string; }
-): Object => {
+): Action => {
 	const id = data.id || uuid.v4();
 
 	return {
@@ -194,7 +195,7 @@ export const startThread = (
 	};
 };
 
-export function hideText(text: string, tags: Array<number> = []): Object {
+export function hideText(text: string, tags: Array<number> = []): Action {
 	if (tags.indexOf(TAG_POST_HIDDEN) === -1) {
 		return {
 			type: 'CHANGE',
@@ -208,10 +209,10 @@ export function hideText(text: string, tags: Array<number> = []): Object {
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
-export function unhideText(text: string, tags: Array<number> = []): Object {
+export function unhideText(text: string, tags: Array<number> = []): Action {
 	if (tags.indexOf(TAG_POST_HIDDEN) > -1) {
 		return {
 			type: 'CHANGE',
@@ -228,10 +229,10 @@ export function unhideText(text: string, tags: Array<number> = []): Object {
 		};
 	}
 
-	return {};
+	return { type: 'NOOP' };
 }
 
-export function likeText(text: string, user: string, roles: Array<number>): Object {
+export function likeText(text: string, user: string, roles: Array<number>): Action {
 	if (roles.indexOf(ROLE_UPVOTE) === -1) {
 		const id = `${user}_${text}`;
 		const textrel = new TextRelModel({
@@ -250,10 +251,10 @@ export function likeText(text: string, user: string, roles: Array<number>): Obje
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
-export const unlikeText = (text: string, user: string, roles: Array<number>): Object => {
+export const unlikeText = (text: string, user: string, roles: Array<number>): Action => {
 	if (roles.indexOf(ROLE_UPVOTE) > -1) {
 		const id = `${user}_${text}`;
 		const textrel = new TextRelModel({
@@ -272,10 +273,10 @@ export const unlikeText = (text: string, user: string, roles: Array<number>): Ob
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 };
 
-export function hideThread(thread: string, tags: Array<number> = []): Object {
+export function hideThread(thread: string, tags: Array<number> = []): Action {
 	if (tags.indexOf(TAG_POST_HIDDEN) === -1) {
 		return {
 			type: 'CHANGE',
@@ -289,10 +290,10 @@ export function hideThread(thread: string, tags: Array<number> = []): Object {
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
-export function unhideThread(thread: string, tags: Array<number> = []): Object {
+export function unhideThread(thread: string, tags: Array<number> = []): Action {
 	if (tags.indexOf(TAG_POST_HIDDEN) > -1) {
 		return {
 			type: 'CHANGE',
@@ -308,10 +309,10 @@ export function unhideThread(thread: string, tags: Array<number> = []): Object {
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
-export function likeThread(thread: string, user: string, roles: Array<number> = []): Object {
+export function likeThread(thread: string, user: string, roles: Array<number> = []): Action {
 	if (roles.indexOf(ROLE_UPVOTE) === -1) {
 		const id = `${user}_${thread}`;
 		const threadrel = new ThreadRelModel({
@@ -330,10 +331,10 @@ export function likeThread(thread: string, user: string, roles: Array<number> = 
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
-export function unlikeThread(thread: string, user: string, roles: Array<number> = []): Object {
+export function unlikeThread(thread: string, user: string, roles: Array<number> = []): Action {
 	if (roles.indexOf(ROLE_UPVOTE) > -1) {
 		const id = `${user}_${thread}`;
 		const threadrel = new ThreadRelModel({
@@ -352,25 +353,32 @@ export function unlikeThread(thread: string, user: string, roles: Array<number> 
 			},
 		};
 	}
-	return {};
+	return { type: 'NOOP' };
 }
 
 /*
  * Notification related actions
  */
-export const dismissAllNotes = (): Object => ({
-
+export const markAllNotesAsRead = (): Action => ({
+	type: 'MARK_ALL_NOTES_AS_READ',
 });
 
-export const dismissNote = (): Object => ({
+export const dismissAllNotes = (): Action => ({
+	type: 'DISMISS_ALL_NOTES',
+});
 
+export const dismissNote = (id: string): Action => ({
+	type: 'DISMISS_NOTE',
+	payload: {
+		id,
+	},
 });
 
 /*
  * Presence related actions
  */
 
-export const setPresence = (id: string, status: 'online' | 'offline'): Object => ({
+export const setPresence = (id: string, status: 'online' | 'offline'): Action => ({
 	type: 'CHANGE',
 	payload: {
 		entities: {
@@ -385,7 +393,7 @@ export const setPresence = (id: string, status: 'online' | 'offline'): Object =>
 export const setItemPresence = (
 	presence: { item: string; user: string; roles: Array<number>; create?: boolean },
 	type: 'room' | 'thread', status: 'online' | 'offline'
-): Object => {
+): Action => {
 	const rel = {
 		...presence,
 		presence: status === 'online' ? PRESENCE_FOREGROUND : PRESENCE_NONE,
@@ -417,5 +425,5 @@ export const setItemPresence = (
 		};
 	}
 
-	return {};
+	return { type: 'NOOP' };
 };

@@ -9,7 +9,7 @@ import store from '../../../modules/store/store';
 
 const mapDispatchToProps = dispatch => ({
 	startThread: data => {
-		const action = startThread(data);
+		const action: any = startThread(data);
 
 		dispatch(action);
 

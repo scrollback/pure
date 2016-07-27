@@ -1,44 +1,76 @@
 /* @flow */
 
-import flowRight from 'lodash/flowRight';
-import createContainer from '../../../modules/store/createContainer';
-import createUserContainer from '../../../modules/store/createUserContainer';
-import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
+import React, { Component } from 'react';
+import { DeviceEventEmitter } from 'react-native';
+import GCM from '../../modules/GCM';
 import NotificationCenter from '../views/Notification/NotificationCenter';
-import { dismissNote } from '../../../modules/store/actions';
+import store from '../../../modules/store/store';
+import {
+	markAllNotesAsRead,
+	dismissAllNotes,
+	dismissNote,
+} from '../../../modules/store/actions';
+import type { Note } from '../../../lib/schemaTypes';
 
-const transformFunction = props => {
-	return {
-		...props,
-		data: [],
+type Props = {
+	onNavigate: Function;
+}
+
+type State = {
+	data: Array<Note | { type: 'loading' }>
+}
+
+export default class NotificationCenterContainer extends Component<void, Props, State> {
+
+	state: State = {
+		data: [ { type: 'loading' } ],
 	};
-};
 
-const mapDispatchToProps = dispatch => ({
-	dismissNote: id => dispatch(dismissNote(id)),
-});
+	componentDidMount() {
+		this._updateData();
 
-const mapSubscriptionToProps = ({ user }) => ({
-	data: {
-		key: {
-			slice: {
-				type: 'note',
-				filter: {
-					user,
-				},
-				order: 'updateTime',
-			},
-			range: {
-				start: Infinity,
-				before: 100,
-				after: 0,
-			},
-		},
-	},
-});
+		this._subscription = DeviceEventEmitter.addListener('GCMDataUpdate', () => {
+			this._updateData();
+		});
+	}
 
-export default flowRight(
-	createUserContainer(),
-	createContainer(mapSubscriptionToProps, mapDispatchToProps),
-	createTransformPropsContainer(transformFunction)
-)(NotificationCenter);
+	componentWillUnmount() {
+		this._subscription.remove();
+	}
+
+	_subscription: any;
+
+	_dismissNote = (id: string) => {
+		store.dispatch(dismissNote(id));
+	}
+
+	_dismissAllNotes = () => {
+		store.dispatch(dismissAllNotes());
+	}
+
+	_markAllNotesAsRead = () => {
+		store.dispatch(markAllNotesAsRead());
+	}
+
+	_updateData = async () => {
+		const data = await GCM.getCurrentNotifications();
+
+		if (data) {
+			this.setState({
+				data: data.filter(note => !note.readTime),
+			});
+		}
+	};
+
+	render() {
+		return (
+			<NotificationCenter
+				{...this.props}
+				data={this.state.data}
+				dismissNote={this._dismissNote}
+				dismissAllNotes={this._dismissAllNotes}
+				markAllNotesAsRead={this._markAllNotesAsRead}
+			/>
+		);
+	}
+}

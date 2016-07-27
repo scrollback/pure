@@ -1,18 +1,22 @@
 package chat.belong.hello.modules.gcm;
 
 import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 
-public class GCMModule extends ReactContextBaseJavaModule {
+public class GCMModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+
+    private GCMPreferences.Subscription subscription;
 
     public GCMModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -92,6 +96,26 @@ public class GCMModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
+    public void deleteNotification(final String id, final Promise promise) {
+        try {
+            GCMPreferences.deleteNotification(getReactApplicationContext(), id);
+            promise.resolve(null);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void markCurrentNotificationsAsRead(final Promise promise) {
+        try {
+            GCMPreferences.markCurrentNotificationsAsRead(getReactApplicationContext());
+            promise.resolve(null);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
     public void clearCurrentNotifications() {
         GCMPreferences.clearCurrentNotifications(getReactApplicationContext());
     }
@@ -100,5 +124,30 @@ public class GCMModule extends ReactContextBaseJavaModule {
     public void getRegistrationToken(final Promise promise) {
         String token = GCMPreferences.getRegistrationToken(getReactApplicationContext());
         promise.resolve(token);
+    }
+
+    @Override
+    public void onHostResume() {
+        subscription = GCMPreferences.subscribe(getReactApplicationContext(), new Runnable() {
+            @Override
+            public void run() {
+                getReactApplicationContext()
+                        .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
+                        .emit("GCMDataUpdate", null);
+
+            }
+        });
+    }
+
+    @Override
+    public void onHostPause() {
+        if (subscription != null) {
+            subscription.remove();
+            subscription = null;
+        }
+    }
+
+    @Override
+    public void onHostDestroy() {
     }
 }

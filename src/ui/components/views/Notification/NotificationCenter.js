@@ -15,7 +15,7 @@ const {
 type Props = {
 	dismissNote: Function;
 	onNavigate: Function;
-	data: Array<Note | { type: 'loading' } | { type: 'failed' }>;
+	data: Array<Note | { type: 'loading' }>;
 }
 
 type State = {

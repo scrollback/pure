@@ -6,7 +6,7 @@ import Colors from '../../ui/Colors';
 
 const TITLE_TEMPLATE = '{{#roomNames.1}}{{#roomNames.0}}{{roomNames.0}}, {{roomNames.1}} and others{{/roomNames.0}}{{/roomNames.1}}{{^roomNames.1}}New activity in {{#roomNames.0}}{{roomNames.0}}{{/roomNames.0}}{{^roomNames.0}}Belong{{/roomNames.0}}{{/roomNames.1}}';
 
-GCM.clearCurrentNotifications();
+GCM.markCurrentNotificationsAsRead();
 GCM.configureSchema({
 	count: 'number',
 	data: {

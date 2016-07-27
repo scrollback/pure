@@ -1,56 +1,50 @@
 /* @flow */
 
-import flowRight from 'lodash/flowRight';
-import createContainer from '../../../modules/store/createContainer';
-import createUserContainer from '../../../modules/store/createUserContainer';
-import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
+import React, { Component } from 'react';
+import { DeviceEventEmitter } from 'react-native';
+import GCM from '../../modules/GCM';
 import NotificationBadge from '../views/Notification/NotificationBadge';
 
-const transformNotesToCount = (/* data */) => {
-	// TODO: handle notifications properly
-	// if (data && data.length) {
-	// 	if (data.length === 1 && data[0] && data[0].type === 'loading') {
-	// 		return 0;
-	// 	} else {
-	// 		return data.length;
-	// 	}
-	// } else {
-	// 	return 0;
-	// }
-	return 0;
-};
+type State = {
+	count: number;
+}
 
-const transformFunction = props => {
-	if (props.data) {
-		return {
-			...props,
-			count: transformNotesToCount(props.data),
-		};
+export default class NotificationBadgeContainer extends Component<void, any, State> {
+
+	state: State = {
+		count: 0,
+	};
+
+	componentDidMount() {
+		this._updateData();
+
+		this._subscription = DeviceEventEmitter.addListener('GCMDataUpdate', () => {
+			this._updateData();
+		});
 	}
-	return props;
-};
 
-const mapSubscriptionToProps = ({ user }) => ({
-	data: {
-		key: {
-			slice: {
-				type: 'note',
-				filter: {
-					user,
-				},
-				order: 'updateTime',
-			},
-			range: {
-				start: Infinity,
-				before: 100,
-				after: 0,
-			},
-		},
-	},
-});
+	componentWillUnmount() {
+		this._subscription.remove();
+	}
 
-export default flowRight(
-	createUserContainer(),
-	createContainer(mapSubscriptionToProps),
-	createTransformPropsContainer(transformFunction),
-)(NotificationBadge);
+	_subscription: any;
+
+	_updateData = async () => {
+		const data = await GCM.getCurrentNotifications();
+
+		if (data) {
+			this.setState({
+				count: data.filter(note => !note.readTime).length,
+			});
+		}
+	};
+
+	render() {
+		return (
+			<NotificationBadge
+				{...this.props}
+				count={this.state.count}
+			/>
+		);
+	}
+}

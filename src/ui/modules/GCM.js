@@ -32,6 +32,8 @@ export default class GCM {
 	static disableNotifications: () => void;
 	static isNotificationsEnabled: () => Promise<boolean>;
 	static getCurrentNotifications: () => Promise<Array<Object>>;
+	static markCurrentNotificationsAsRead: () => Promise<void>;
+	static deleteNotification: (id: string) => Promise<void>;
 	static clearCurrentNotifications: () => void;
 	static getRegistrationToken: () => Promise<string>;
 }
