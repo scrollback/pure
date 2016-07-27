@@ -57,7 +57,7 @@ export default class NotificationCenterContainer extends Component<void, Props, 
 
 		if (data) {
 			this.setState({
-				data: data.filter(note => !note.readTime),
+				data,
 			});
 		}
 	};

@@ -34,7 +34,7 @@ export default class NotificationBadgeContainer extends Component<void, any, Sta
 
 		if (data) {
 			this.setState({
-				count: data.filter(note => !note.readTime).length,
+				count: data.length,
 			});
 		}
 	};
