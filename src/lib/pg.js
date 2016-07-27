@@ -264,11 +264,11 @@ function rollback(error, client, done) {
 }
 
 export const write = function (connStr, queries, cb) {
-	if (!queries || !queries.length) { return cb(null, []); }
-	
+	if (!queries || !queries.length) { if (cb) return cb(null, []); }
+
 	const start = Date.now();
 
-	logger.log('PgWrite starting ', queries);
+	logger.info('PgWrite starting ', queries);
 	pg.connect(connStr, (error, client, done) => {
 		if (error) {
 			logger.error('Unable to connect to ' + connStr, error, queries);
@@ -287,7 +287,7 @@ export const write = function (connStr, queries, cb) {
 		function callback(err, results) {
 
 			delete runningQueries[id];
-			cb(err, results);
+			if (cb) cb(err, results);
 			done();
 		}
 
@@ -301,7 +301,7 @@ export const write = function (connStr, queries, cb) {
 				if (i < queries.length) {
 					const qv = paramize(queries[i]);
 
-					logger.log('Querying', qv);
+					logger.debug('Querying', qv);
 					client.query(qv.q, qv.v, (queryErr, result) => {
 						results[i] = result;
 						if (queryErr) {

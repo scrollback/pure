@@ -12,11 +12,11 @@ const conf = config.email;
 const readSync = promisify(pg.read.bind(pg, config.connStr));
 const template = handlebars.compile(fs.readFileSync(__dirname + '/../../../templates/' + config.app_id + '.invite.hbs', 'utf-8').toString());
 let perUserLog;
-
 const initMailSending = (invitee, inviterLocalityName, inviterName) => {
 	const emailBody = template({
+		link: '&referrer=utm_source%3DBelongInvite%26utm_medium%3DEmail%26utm_term%3D'+ encodeURIComponent(inviterName) + '%26utm_content%3D'+encodeURIComponent(invitee.contact.email)+'%26utm_campaign%3D'+Date.now(),
 		referrer: inviterName,
-		inviterLocalityName,
+		inviterLocalityName
 	});
 	const inlinedTemplate = juice(emailBody);
 	send(conf.from, invitee.contact.email, `Introducing Belong: Referred by ${inviterName}`, inlinedTemplate, e => {

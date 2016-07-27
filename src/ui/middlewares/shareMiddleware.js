@@ -1,11 +1,10 @@
 /* @flow */
 
-import { convertRouteToURL } from '../../lib/Route';
-import { config } from '../../core-client';
+import getShortURLFromRoute from './helpers/getShortURLFromRoute';
 import type { Route } from '../../lib/RouteTypes';
 
 type Action = {
-	type: 'SHARE_FACEBOOK' | 'SHARE_TWITTER';
+	type: 'SHARE_LINK' | 'SHARE_FACEBOOK' | 'SHARE_TWITTER' | 'SHARE_WHATSAPP';
 	payload: {
 		title: string;
 		route?: Route;
@@ -16,7 +15,7 @@ type Action = {
 	}
 }
 
-export default function(action: Action) {
+export default async function(action: Action) {
 	switch (action.type) {
 	case 'SHARE_FACEBOOK': {
 		const { url, route } = action.payload;
@@ -24,14 +23,14 @@ export default function(action: Action) {
 		let contentUrl;
 
 		if (route) {
-			contentUrl = config.server.protocol + '//' + config.server.host + convertRouteToURL(route);
+			contentUrl = await getShortURLFromRoute(route, 'facebook');
 		} else if (url) {
 			contentUrl = url;
-		} else {
-			contentUrl = config.server.protocol + '//' + config.server.host;
 		}
 
-		window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+		if (contentUrl) {
+			window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+		}
 		break;
 	}
 	case 'SHARE_TWITTER': {
@@ -46,7 +45,8 @@ export default function(action: Action) {
 		if (url) {
 			link += `url=${encodeURIComponent(url)}&`;
 		} else if (route) {
-			link += `url=${encodeURIComponent(config.server.protocol + '//' + config.server.host + convertRouteToURL(route))}&`;
+			const shortUrl = await getShortURLFromRoute(route, 'twitter');
+			link += `url=${encodeURIComponent(shortUrl)}&`;
 		}
 
 		if (hashtags) {
@@ -70,7 +70,8 @@ export default function(action: Action) {
 		if (url) {
 			parts.push(url);
 		} else if (route) {
-			parts.push(config.server.protocol + '//' + config.server.host + convertRouteToURL(route));
+			const shortUrl = await getShortURLFromRoute(route, 'whatsapp');
+			parts.push(shortUrl);
 		}
 
 		const shareText = parts.join('\n');

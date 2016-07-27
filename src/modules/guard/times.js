@@ -31,9 +31,19 @@ async function validateTime(changes, next) {
 
 		if (result) {
 			entity.createTime = result.createTime;
+			const newRoles = entity.roles && entity.roles.length > 0 && entity.roles.filter(role => {
+				return !result.roles.includes(role);
+			}) || [];
+			const removedRoles = result.roles && result.roles.length > 0 && result.roles.filter(role => {
+				return !entity.roles.includes(role);
+			}) || [];
+			const rolesChanged = newRoles.concat(removedRoles);
+			console.log('times module: ', entity, result, rolesChanged);
 			// if only counts changed, retain the old updateTime
-			// if counts.children changed, don't retain the old updateTime
-			if (Object.keys(entity).length === 1 && (entity.counts && !('children' in entity.counts))) {
+			// if counts.children changed or new role added, don't retain the old updateTime
+			if (Object.keys(entity).length === 1 &&
+			(entity.counts && !('children' in entity.counts)) ||
+			(rolesChanged && rolesChanged.length === 0)) {
 				entity.updateTime = result.updateTime;
 				if (entity.createTime === entity.updateTime) {
 					// ensure we don't make createTime equal to updateTime

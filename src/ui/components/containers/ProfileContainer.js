@@ -4,7 +4,6 @@ import flowRight from 'lodash/flowRight';
 import createContainer from '../../../modules/store/createContainer';
 import createTransformPropsContainer from '../../../modules/store/createTransformPropsContainer';
 import Profile from '../views/Profile/Profile';
-import { bus } from '../../../core-client';
 import {
 	ROLE_FOLLOWER,
 	ROLE_HOME,
@@ -83,8 +82,8 @@ const transformFunction = props => {
 	return props;
 };
 
-const mapDispatchToProps = () => ({
-	signOut: () => bus.emit('signout'),
+const mapDispatchToProps = dispatch => ({
+	signOut: () => dispatch({ type: 'SIGNOUT' }),
 });
 
 const mapSubscriptionToProps = ({ user }) => ({

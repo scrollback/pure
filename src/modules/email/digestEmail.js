@@ -35,7 +35,7 @@ const fields = [
 		'threads.parents[1]=roomrels.item',
 		'roomrels.item=rooms.id',
 		'threads.counts IS NOT NULL',
-		'threads.createtime >= extract(epoch from now()-interval \'7 days\')*1000',
+		'threads.createtime >= extract(epoch from now()-interval \'1 days\')*1000',
 		'(users.params-> \'email\'->>\'frequency\' = \'daily\' OR (users.params->\'email\') is null)',
 		'roles @> \'{3}\''
 	],
@@ -67,12 +67,18 @@ export function initMailSending (userRel: Object) {
 	mailIds.forEach((mailId) => {
 		counter1.inc();
 		const emailAdd = mailId.slice(7),
-			emailHtml = template({
-				token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
-				domain: config.server.protocol + '//' + config.server.host + ':' + config.server.port,
-				rooms: rels,
-			}),
-			emailSub = getSubject(rels);
+		emailSub = getSubject(rels),
+		date = Date.now();
+		const templateObj = {
+			token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
+			domain: config.server.protocol + '//' + config.server.host,
+			link : '?utm_source=DailyDigest&utm_medium=Email&utm_term='+ encodeURIComponent(emailAdd) + '&utm_content=' + encodeURIComponent(emailSub) + '&utm_campaign=' + date,
+			rooms: rels,
+			email: emailAdd,
+			sub: emailSub,
+			date
+		};
+		const	emailHtml = template(templateObj);
 		log.info('Digest email to: ', emailAdd);
 
 		send(conf.from, emailAdd, emailSub, emailHtml, (e) => {
@@ -108,7 +114,7 @@ function sendDigestEmail () {
 	}
 
 	//Do not send digest email multiple times in the same day
-	//This to prevent if server restarts multiple times in single hour. (cron job)
+	// This to prevent if server restarts multiple times in single hour. (cron job)
 	if ( today === lastEmailSentDay	) {
 		log.info('Digest email has been sent today. Last email sent time is: ', new Date((parseInt(lastEmailSent, 10))));
 		return;

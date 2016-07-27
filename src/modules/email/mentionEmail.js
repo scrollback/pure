@@ -30,12 +30,14 @@ function initMailSending (userRel) {
 		mailIds = user.identities.filter((el) => {
 			return /mailto:/.test(el);
 		});
+
 	mailIds.forEach((mailId) => {
 		counter.inc();
 		const emailAdd = mailId.slice(7);
 		const emailHtml = template({
 				token: jwt.sign({ email: emailAdd }, conf.secret, { expiresIn: '5 days' }),
-				domain: conf.domain,
+				domain: config.server.protocol + '//' + config.server.host,
+				link : '&utm_content=' + encodeURIComponent(emailAdd) + '&utm_campaign=' + Date.now(),
 				rooms: rels,
 			}),
 			emailSub = `You h've been mentioned`;

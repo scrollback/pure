@@ -69,7 +69,7 @@ export const cancelSignUp = (): Action => ({
 	},
 });
 
-export const signOut = (): Action => ({
+export const resetSession = (): Object => ({
 	type: 'CHANGE',
 	payload: {
 		state: {

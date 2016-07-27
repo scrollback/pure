@@ -5,8 +5,7 @@ import {
 } from 'react-native';
 import { ShareDialog } from 'react-native-fbsdk';
 import Share from '../modules/Share';
-import { convertRouteToURL } from '../../lib/Route';
-import { config } from '../../core-client';
+import getShortURLFromRoute from './helpers/getShortURLFromRoute';
 import type { Route } from '../../lib/RouteTypes';
 
 type Action = {
@@ -26,7 +25,7 @@ export default async function(action: Action) {
 	case 'SHARE_LINK': {
 		const { title, route, url, text } = action.payload;
 
-		const parts = [];
+		const parts: Array<string> = [];
 
 		if (text) {
 			parts.push(text);
@@ -35,7 +34,8 @@ export default async function(action: Action) {
 		if (url) {
 			parts.push(url);
 		} else if (route) {
-			parts.push(config.server.protocol + '//' + config.server.host + convertRouteToURL(route));
+			const shortUrl = await getShortURLFromRoute(route, 'social');
+			parts.push(shortUrl);
 		}
 
 		const shareText = parts.join('\n');
@@ -49,29 +49,29 @@ export default async function(action: Action) {
 		let contentUrl;
 
 		if (route) {
-			contentUrl = config.server.protocol + '//' + config.server.host + convertRouteToURL(route);
+			contentUrl = await getShortURLFromRoute(route, 'facebook');
 		} else if (url) {
 			contentUrl = url;
-		} else {
-			contentUrl = config.server.protocol + '//' + config.server.host;
 		}
 
-		const contentDescription = text;
-		const imageURL = image;
+		if (contentUrl) {
+			const contentDescription = text;
+			const imageURL = image;
 
-		const shareLinkContent = {
-			contentType: 'link',
-			contentUrl,
-			contentDescription,
-			imageURL,
-		};
+			const shareLinkContent = {
+				contentType: 'link',
+				contentUrl,
+				contentDescription,
+				imageURL,
+			};
 
-		const canShow = await ShareDialog.canShow(shareLinkContent);
+			const canShow = await ShareDialog.canShow(shareLinkContent);
 
-		if (canShow) {
-			await ShareDialog.show(shareLinkContent);
-		} else {
-			Linking.openURL(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+			if (canShow) {
+				await ShareDialog.show(shareLinkContent);
+			} else {
+				Linking.openURL(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(contentUrl)}`);
+			}
 		}
 		break;
 	}
@@ -87,7 +87,8 @@ export default async function(action: Action) {
 		if (url) {
 			link += `url=${encodeURIComponent(url)}&`;
 		} else if (route) {
-			link += `url=${encodeURIComponent(config.server.protocol + '//' + config.server.host + convertRouteToURL(route))}&`;
+			const shortUrl = await getShortURLFromRoute(route, 'twitter');
+			link += `url=${encodeURIComponent(shortUrl)}&`;
 		}
 
 		if (hashtags) {
@@ -111,7 +112,8 @@ export default async function(action: Action) {
 		if (url) {
 			parts.push(url);
 		} else if (route) {
-			parts.push(config.server.protocol + '//' + config.server.host + convertRouteToURL(route));
+			const shortUrl = await getShortURLFromRoute(route, 'whatsapp');
+			parts.push(shortUrl);
 		}
 
 		const shareText = parts.join('\n');

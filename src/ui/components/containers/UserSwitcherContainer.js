@@ -3,7 +3,6 @@
 import React, { PropTypes, Component } from 'react';
 import createContainer from '../../../modules/store/createContainer';
 import UserSwitcher from '../views/UserSwitcher';
-import { bus } from '../../../core-client';
 import { initializeSession } from '../../../modules/store/actions';
 
 type Props = {
@@ -59,7 +58,7 @@ const mapSubscriptionToProps = {
 
 const mapDispatchToProps = dispatch => ({
 	switchUser: (user, item) => {
-		bus.emit('signout');
+		dispatch({ type: 'SIGNOUT' });
 
 		if (item && user === item.user) {
 			return;

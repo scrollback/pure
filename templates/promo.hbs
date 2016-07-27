@@ -30,10 +30,20 @@
         <p class="body">
             {{#if thread.meta.photo}}
                 <img src="{{thread.meta.photo.url}}" alt="{{thread.meta.photo.name}}" />
+            {{else}}
+                {{#if thread.meta.oembed}}
+                    <div class = 'oembed'>
+                        <div class='thumbnail-container'>
+                            <img class='thumbnail' src="{{thread.meta.oembed.thumbnail_url}}" alt="{{thread.meta.oembed.title}}: {{thread.meta.oembed.description}}" />
+                        </div>
+                        <div class='title-description'>
+                            <div class = 'title'>{{thread.meta.oembed.title}}</div>
+                            <div class = 'description'>{{thread.meta.oembed.description}}</div>
+                        </div>
+                    </div>
+                {{/if}}
+                <div> {{thread.body}} </div>
             {{/if}}
-            {{#unless thread.meta.photo}}
-                {{thread.body}}
-            {{/unless}}
         </p>
         <div class="metadata">
             <div class="roomname">
@@ -73,10 +83,20 @@
                 <div class="body">
                     {{#if this.meta.photo}}
                         <img src="{{this.meta.photo.thumbnail_url}}" alt="{{this.meta.photo.title}}" />
+                    {{else}}
+                        {{#if this.meta.oembed}}
+                            <div class = 'oembed'>
+                                <div class='thumbnail-container'>
+                                    <img class='thumbnail' src="{{this.meta.oembed.thumbnail_url}}" alt="{{this.meta.oembed.title}}: {{this.meta.oembed.description}}" />
+                                </div>
+                                <div class='title-description'>
+                                    <div class = 'title'>{{this.meta.oembed.title}}</div>
+                                    <div class = 'description'>{{this.meta.oembed.description}}</div>
+                                </div>
+                            </div>
+                        {{/if}}
+                        <div> {{this.body}} </div>
                     {{/if}}
-                    {{#unless this.meta.photo}}
-                        {{this.body}}
-                    {{/unless}}
                 </div>
                 <!-- {{#if this.counts.upvote}}
                     <div class="icon">

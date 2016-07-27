@@ -69,19 +69,26 @@ bus.on('http/init', app => {
 		let image = `${this.request.origin}/s/assets/preview-thumbnail.png`;
 
 		if (thread) {
-			if(thread.counts.children < 10 || !thread.counts.children) thread.showAll = true;
-			else thread.more = thread.counts.children-10;
+			if (thread.counts.children < 10 || !thread.counts.children) thread.showAll = true;
+			else thread.more = thread.counts.children - 10;
 			const queryTexts = yield queryEntityAsync({
 				type: 'text',
-					filter: {
-						parents_first: thread.id
-					},
-					order: 'createTime',
-				}, [-Infinity, Infinity]);
-			response.texts = queryTexts && queryTexts.arr ? queryTexts.arr.slice(0,10) : [];
-			if(thread.meta && thread.meta.photo) {
+				filter: {
+					parents_first: thread.id
+				},
+				order: 'createTime',
+			}, [ -Infinity, Infinity ]);
+
+			response.texts = queryTexts && queryTexts.arr ? queryTexts.arr.slice(0, 10) : [];
+			if (thread.meta && thread.meta.photo) {
 				image = thread.meta.photo.thumbnail_url;
-				description = thread.counts && thread.counts.follower ?  thread.counts.follower + 'people talking' : '';
+				description = thread.counts && thread.counts.follower ? thread.counts.follower + 'people talking' : '';
+			} else if (thread.meta && thread.meta.oembed) {
+				const oEmbed = thread.meta.oembed;
+				image = oEmbed.thumbnail_url;
+				if (oEmbed.description) {
+					description += '. ' + oEmbed.description;
+				}
 			}
 			response.thread = thread;
 			response.user = {

@@ -5,7 +5,7 @@ import uid from '../../lib/uid-server';
 import notify from '../../lib/dispatch';
 import packer from '../../lib/packer';
 import * as Constants from '../../lib/Constants';
-// import util from 'util';
+
 const sockets = {}, bus = core.bus;
 
 function sendError(socket, code, reason, event) {
@@ -19,7 +19,7 @@ function sendError(socket, code, reason, event) {
 	}));
 }
 
-function handleGetPolicy(socket, message, resourceId, err) {
+function handleActions(type, socket, message, resourceId, err) {
 	message.response = message.response || {};
 	message.response.id = message.id;
 	if (err) {
@@ -31,7 +31,7 @@ function handleGetPolicy(socket, message, resourceId, err) {
 		socket.send(encoded);
 	} else {
 		const toSend = {
-				type: 's3/getPolicy',
+				type,
 				message: message.response,
 			}, encoded = packer.encode(toSend);
 		socket.send(encoded);
@@ -135,13 +135,10 @@ bus.on('http/init', app => {
 
 			message.source = 'socket';
 
-			switch (frame.type) {
-			case 'change':
+			if (frame.type === 'change') {
 				bus.emit('change', message, handleChange.bind(null, socket, message, resourceId));
-				break;
-			case 's3/getPolicy':
-				bus.emit('s3/getPolicy', message, handleGetPolicy.bind(null, socket, message, resourceId));
-				break;
+			} else if (frame.type) {
+				bus.emit(frame.type, message, handleActions.bind(null, frame.type, socket, message, resourceId));
 			}
 		});
 	});

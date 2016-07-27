@@ -129,6 +129,7 @@ DROP TABLE IF EXISTS urls;
 DROP TABLE IF EXISTS articles;
 DROP TABLE IF EXISTS feeds;
 DROP TABLE IF EXISTS postednews;
+DROP TABLE IF EXISTS preview_cache;
 
 CREATE TABLE urls (
 	shorturl text PRIMARY KEY,
@@ -156,6 +157,13 @@ CREATE TABLE postednews (
 	roomid text NOT NULL,
 	roomname text NOT NULL,
 	createtime bigint NOT NULL
+);
+
+CREATE TABLE preview_cache (
+		url text,
+		preview jsonb,
+		expiry timestamp,
+		PRIMARY KEY("url")
 );
 
 INSERT INTO jobs VALUES (1), (2), (3);

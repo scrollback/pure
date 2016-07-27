@@ -33,6 +33,7 @@ function relFromUserRel(rel) {
 function buildMailObj(userRel) {
 	const rel = relFromUserRel(userRel),
 		thread = {
+			encodeURIComponent: '?utm_source=Belongmention&utm_medium=Email&utm_term=' + encodeURIComponent(rel.threadTitle),
 			id: rel.threadId,
 			title: rel.threadTitle,
 			score: rel.score,
