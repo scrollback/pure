@@ -105,7 +105,7 @@ async function sendStanza(changes, entity) {
 			count: 1,
 			score: 30,
 			data: {
-				body: entity.body,
+				body: entity.meta && entity.meta.photo ? '📷 [photo]' : entity.body,
 				creator: entity.creator,
 				id: entity.id,
 				room: {

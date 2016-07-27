@@ -1,18 +1,22 @@
 /* @flow */
 
 import React, { Component, PropTypes } from 'react';
-import ReactNative from 'react-native';
+import {
+	ListView,
+	RecyclerViewBackedScrollView,
+} from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import NotificationCenterItem from './NotificationCenterItem';
 import PageEmpty from '../Page/PageEmpty';
 import PageLoading from '../Page/PageLoading';
-import type { Note } from '../../../../lib/schemaTypes';
+import type { Note as NoteBase } from '../../../../lib/schemaTypes';
 
-const {
-	ListView,
-} = ReactNative;
+type Note = NoteBase & {
+	id: string;
+}
 
 type Props = {
+	loadMore: Function;
 	dismissNote: Function;
 	onNavigate: Function;
 	data: Array<Note | { type: 'loading' }>;
@@ -24,6 +28,7 @@ type State = {
 
 export default class NotificationCenter extends Component<void, Props, State> {
 	static propTypes = {
+		loadMore: PropTypes.func.isRequired,
 		dismissNote: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -31,19 +36,20 @@ export default class NotificationCenter extends Component<void, Props, State> {
 
 	state: State = {
 		dataSource: new ListView.DataSource({
-			rowHasChanged: (r1, r2) => r1 !== r2,
+			sectionHeaderHasChanged: (s1, s2) => s1 !== s2,
+			rowHasChanged: (row1, row2) => row1 !== row2,
 		}),
 	};
 
 	componentWillMount() {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(this.props.data),
+			dataSource: this.state.dataSource.cloneWithRowsAndSections({ notes: this.props.data }),
 		});
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
 		this.setState({
-			dataSource: this.state.dataSource.cloneWithRows(nextProps.data),
+			dataSource: this.state.dataSource.cloneWithRowsAndSections({ notes: nextProps.data }),
 		});
 	}
 
@@ -51,14 +57,20 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_renderRow = (note: Note) => (
-		<NotificationCenterItem
-			key={`${note.user}_${note.event}_${note.group}`}
-			note={note}
-			onNavigate={this.props.onNavigate}
-			dismissNote={this.props.dismissNote}
-		/>
-	);
+	_renderRow = (note: Note) => {
+		return (
+			<NotificationCenterItem
+				key={note.id}
+				note={note}
+				onNavigate={this.props.onNavigate}
+				onDismiss={() => this.props.dismissNote(note.id)}
+			/>
+		);
+	};
+
+	_renderScrollComponent = (props: any) => {
+		return <RecyclerViewBackedScrollView {...props} />;
+	};
 
 	render() {
 		const { data } = this.props;
@@ -70,8 +82,14 @@ export default class NotificationCenter extends Component<void, Props, State> {
 		} else {
 			return (
 				<ListView
-					dataSource={this.state.dataSource}
+					removeClippedSubviews
+					keyboardShouldPersistTaps={false}
+					initialListSize={10}
+					pageSize={10}
 					renderRow={this._renderRow}
+					renderScrollComponent={this._renderScrollComponent}
+					onEndReached={this.props.loadMore}
+					dataSource={this.state.dataSource}
 				/>
 			);
 		}

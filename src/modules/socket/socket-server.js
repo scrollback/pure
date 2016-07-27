@@ -124,7 +124,7 @@ bus.on('http/init', app => {
 			(message.auth = message.auth || {}).resource = resourceId;
 			if (frame.type === 'change' && message.entities) {
 				for (const id in message.entities) {
-					if (typeof message.entities[id].presence === 'number') {
+					if (message.entities[id] && typeof message.entities[id].presence === 'number') {
 						message.entities[id].resources = message.entities[id].resources || {};
 						message.entities[id].resources[resourceId] = message.entities[id].presence;
 

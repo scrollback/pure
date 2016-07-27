@@ -30,7 +30,7 @@ GCM.configureNotification({
 		title: `{{#single}}{{items.0.data.title}}{{/single}}{{^single}}${TITLE_TEMPLATE}{{/single}}`,
 		body: '<b>{{items.0.data.creator}}</b>: {{items.0.data.body}}',
 		picture: '{{#single}}{{{items.0.data.picture}}}{{/single}}',
-		link: '{{{items.0.data.link}}}',
+		link: '{{#single}}{{{items.0.data.link}}}{{/single}}{{^single}}/p/notes{{/single}}',
 		style: {
 			title: TITLE_TEMPLATE,
 			line: '<b>{{item.data.creator}}</b>: {{item.data.body}}',
