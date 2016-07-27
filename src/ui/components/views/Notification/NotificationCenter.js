@@ -16,7 +16,6 @@ type Note = NoteBase & {
 }
 
 type Props = {
-	loadMore: Function;
 	dismissNote: Function;
 	onNavigate: Function;
 	data: Array<Note | { type: 'loading' }>;
@@ -28,7 +27,6 @@ type State = {
 
 export default class NotificationCenter extends Component<void, Props, State> {
 	static propTypes = {
-		loadMore: PropTypes.func.isRequired,
 		dismissNote: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -88,7 +86,6 @@ export default class NotificationCenter extends Component<void, Props, State> {
 					pageSize={10}
 					renderRow={this._renderRow}
 					renderScrollComponent={this._renderScrollComponent}
-					onEndReached={this.props.loadMore}
 					dataSource={this.state.dataSource}
 				/>
 			);
