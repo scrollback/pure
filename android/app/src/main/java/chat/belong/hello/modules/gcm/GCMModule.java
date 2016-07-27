@@ -1,5 +1,7 @@
 package chat.belong.hello.modules.gcm;
 
+import android.content.SharedPreferences;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.LifecycleEventListener;
 import com.facebook.react.bridge.Promise;
@@ -16,10 +18,12 @@ import org.json.JSONObject;
 
 public class GCMModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
 
-    private GCMPreferences.Subscription subscription;
+    private SharedPreferences.OnSharedPreferenceChangeListener listener;
 
     public GCMModule(ReactApplicationContext reactContext) {
         super(reactContext);
+
+        reactContext.addLifecycleEventListener(this);
     }
 
     @Override
@@ -128,22 +132,22 @@ public class GCMModule extends ReactContextBaseJavaModule implements LifecycleEv
 
     @Override
     public void onHostResume() {
-        subscription = GCMPreferences.subscribe(getReactApplicationContext(), new Runnable() {
+        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
-            public void run() {
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 getReactApplicationContext()
                         .getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                        .emit("GCMDataUpdate", null);
-
+                        .emit("GCMDataUpdate", key);
             }
-        });
+        };
+
+        GCMPreferences.addListener(getReactApplicationContext(), listener);
     }
 
     @Override
     public void onHostPause() {
-        if (subscription != null) {
-            subscription.remove();
-            subscription = null;
+        if (listener != null) {
+            GCMPreferences.removeListener(getReactApplicationContext(), listener);
         }
     }
 
