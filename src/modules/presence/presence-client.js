@@ -1,6 +1,6 @@
 /* @flow */
 
-import { bus, cache } from '../../core-client';
+import { cache } from '../../core-client';
 import store from '../store/store';
 import { setPresence, setItemPresence } from '../store/actions';
 import { ROLE_VISITOR } from '../../lib/Constants';
@@ -39,9 +39,9 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 
 		global.requestIdleCallback(() => {
 			if (result) {
-				bus.emit('change', setItemPresence(result, type, status));
+				store.dispatch(setItemPresence(result, type, status));
 			} else {
-				bus.emit('change', setItemPresence({
+				store.dispatch(setItemPresence({
 					item,
 					user,
 					roles: [ ROLE_VISITOR ],
@@ -54,7 +54,7 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 
 store.observe({ type: 'state', path: 'user', source: 'presence' }).forEach(id => {
 	if (id) {
-		bus.emit('change', setPresence(id, 'online'));
+		store.dispatch(setPresence(id, 'online'));
 	}
 });
 
