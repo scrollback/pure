@@ -141,7 +141,7 @@ export default class SignIn extends Component<void, Props, State> {
 			]);
 
 			if (result.isCancelled) {
-				this._showFailureMessage();
+				this._onSignInFailure(PROVIDER_FACEBOOK);
 			} else {
 				const { grantedPermissions } = result;
 
@@ -162,6 +162,7 @@ export default class SignIn extends Component<void, Props, State> {
 				}
 			}
 		} catch (e) {
+			this._showFailureMessage();
 			this._onSignInFailure(PROVIDER_FACEBOOK);
 		}
 	};

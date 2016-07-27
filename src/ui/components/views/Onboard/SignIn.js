@@ -152,7 +152,7 @@ class SignIn extends Component<void, Props, State> {
 			const result = await FBLoginManager.logIn();
 
 			if (result.isCancelled) {
-				this._showFailureMessage();
+				this._onSignInFailure(PROVIDER_FACEBOOK);
 			} else {
 				const {
 					code,
@@ -165,6 +165,7 @@ class SignIn extends Component<void, Props, State> {
 				}
 			}
 		} catch (e) {
+			this._showFailureMessage();
 			this._onSignInFailure(PROVIDER_FACEBOOK);
 		}
 	};
