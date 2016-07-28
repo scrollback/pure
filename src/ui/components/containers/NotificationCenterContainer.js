@@ -1,13 +1,11 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { DeviceEventEmitter } from 'react-native';
+import { DeviceEventEmitter, InteractionManager } from 'react-native';
 import GCM from '../../modules/GCM';
 import NotificationCenter from '../views/Notification/NotificationCenter';
 import store from '../../../modules/store/store';
 import {
-	markAllNotesAsRead,
-	dismissAllNotes,
 	dismissNote,
 } from '../../../modules/store/actions';
 import type { Note } from '../../../lib/schemaTypes';
@@ -27,29 +25,31 @@ export default class NotificationCenterContainer extends Component<void, Props, 
 	};
 
 	componentDidMount() {
-		this._updateData();
-
-		this._subscription = DeviceEventEmitter.addListener('GCMDataUpdate', () => {
+		this._handle = InteractionManager.runAfterInteractions(() => {
 			this._updateData();
+			this._subscription = DeviceEventEmitter.addListener('GCMDataUpdate', this._updateData.bind(this));
 		});
 	}
 
 	componentWillUnmount() {
-		this._subscription.remove();
+		if (this._subscription) {
+			this._subscription.remove();
+		}
+		this._handle.cancel();
 	}
 
 	_subscription: any;
+	_handle: any;
 
 	_dismissNote = (id: string) => {
+		this.setState({
+			data: this.state.data.filter(note => {
+				/* $FlowFixMe */
+				return note.id !== id;
+			}),
+		});
+
 		store.dispatch(dismissNote(id));
-	}
-
-	_dismissAllNotes = () => {
-		store.dispatch(dismissAllNotes());
-	}
-
-	_markAllNotesAsRead = () => {
-		store.dispatch(markAllNotesAsRead());
 	}
 
 	_updateData = async () => {
@@ -57,7 +57,7 @@ export default class NotificationCenterContainer extends Component<void, Props, 
 
 		if (data) {
 			this.setState({
-				data,
+				data: data.slice(0).reverse(),
 			});
 		}
 	};
@@ -68,8 +68,6 @@ export default class NotificationCenterContainer extends Component<void, Props, 
 				{...this.props}
 				data={this.state.data}
 				dismissNote={this._dismissNote}
-				dismissAllNotes={this._dismissAllNotes}
-				markAllNotesAsRead={this._markAllNotesAsRead}
 			/>
 		);
 	}
