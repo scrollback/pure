@@ -12,9 +12,9 @@ export default async function getShortURLFromRoute(route: Route, medium: string)
 	const utm = 'utm_source=android_app&utm_medium=' + medium;
 
 	if (url.includes('?')) {
-		url += '?' + utm;
-	} else {
 		url += '&' + utm;
+	} else {
+		url += '?' + utm;
 	}
 
 	try {
