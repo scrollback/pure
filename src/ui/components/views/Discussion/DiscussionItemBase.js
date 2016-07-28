@@ -131,7 +131,7 @@ export default class DiscussionItemBase extends Component<void, Props, State> {
 		}
 
 		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
-		const unread = threadrel && threadrel.presenceTime && thread.updateTime ? thread.updateTime > threadrel.presenceTime : true;
+		const unread = threadrel && threadrel.presenceTime && thread.updateTime ? thread.updateTime > threadrel.presenceTime : false;
 
 		return (
 			<View {...this.props}>
