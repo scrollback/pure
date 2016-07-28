@@ -10,26 +10,7 @@ const mapDispatchToProps = dispatch => ({
 	dismissAllNotes: notes => dispatch(dismissAllNotes(notes)),
 });
 
-const mapSubscriptionToProps = ({ user }) => ({
-	notes: {
-		key: {
-			slice: {
-				type: 'note',
-				filter: {
-					user,
-				},
-				order: 'updateTime',
-			},
-			range: {
-				start: Infinity,
-				before: 20,
-				after: 0,
-			},
-		},
-	},
-});
-
 export default flowRight(
 	createUserContainer(),
-	createContainer(mapSubscriptionToProps, mapDispatchToProps),
+	createContainer(null, mapDispatchToProps),
 )(NotificationClearIcon);
