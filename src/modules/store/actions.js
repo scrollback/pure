@@ -23,61 +23,49 @@ import type { Action } from '../../modules/store/SimpleStoreTypes';
  * User related actions
  */
 export const initializeSession = (session: string): Action => ({
-	type: 'CHANGE',
+	type: 'AUTH',
 	payload: {
-		auth: {
-			session,
-		},
+		session,
 	}
 });
 
 export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; } | { code: string; }): Action => ({
-	type: 'CHANGE',
+	type: 'AUTH',
 	payload: {
-		auth: {
-			[provider]: auth,
-		},
+		[provider]: auth,
 	},
 });
 
 export const signUp = (user: User): Action => ({
-	type: 'CHANGE',
+	type: 'AUTH',
 	payload: {
-		auth: {
-			signup: new UserModel({ ...user, presence: PRESENCE_FOREGROUND }),
-		},
+		signup: new UserModel({ ...user, presence: PRESENCE_FOREGROUND }),
 	},
 });
 
 export const clearSignUpError = (signup: Object): Action => ({
-	type: 'CHANGE',
+	type: 'SET_STATE',
 	payload: {
-		state: {
-			signup: {
-				...signup,
-				error: null,
-			},
+		signup: {
+			...signup,
+			error: null,
 		},
 	},
 });
 
 export const cancelSignUp = (): Action => ({
-	type: 'CHANGE',
+	type: 'SET_STATE',
 	payload: {
-		state: {
-			signup: null,
-		},
+		signup: null,
 	},
 });
 
 export const resetSession = (): Object => ({
-	type: 'CHANGE',
+	type: 'SET_STATE',
 	payload: {
-		state: {
-			session: null,
-			user: null,
-			initialURL: null,
-		},
+		session: null,
+		user: null,
+		initialURL: null,
 	},
 });
 

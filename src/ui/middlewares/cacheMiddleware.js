@@ -8,5 +8,15 @@ export default function(action: Action) {
 	case 'CHANGE':
 		bus.emit('change', action.payload);
 		break;
+	case 'AUTH':
+		bus.emit('change', {
+			auth: action.payload,
+		});
+		break;
+	case 'SET_STATE':
+		bus.emit('change', {
+			state: action.payload,
+		});
+		break;
 	}
 }
