@@ -2,6 +2,7 @@
 
 import createContainer from '../../../modules/store/createContainer';
 import DiscussionActions from '../views/Discussion/DiscussionActions';
+import { shareThread } from '../../../modules/store/actions';
 
 const getThreadRoute = thread => ({
 	name: 'chat',
@@ -13,7 +14,7 @@ const getThreadRoute = thread => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	shareLink: thread => {
+	shareLink: (user, thread) => {
 		dispatch({
 			type: 'SHARE_LINK',
 			payload: {
@@ -21,6 +22,7 @@ const mapDispatchToProps = dispatch => ({
 				route: getThreadRoute(thread),
 			},
 		});
+		dispatch(shareThread(thread.id, user, thread.roles));
 	},
 });
 

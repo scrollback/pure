@@ -4,6 +4,7 @@ import flowRight from 'lodash/flowRight';
 import createContainer from '../../../modules/store/createContainer';
 import createUserContainer from '../../../modules/store/createUserContainer';
 import ChatDiscussionItem from '../views/Chat/ChatDiscussionItem';
+import { shareThread } from '../../../modules/store/actions';
 
 const getThreadRoute = thread => {
 	return {
@@ -17,7 +18,7 @@ const getThreadRoute = thread => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	shareOnFacebook: thread => {
+	shareOnFacebook: (user, thread) => {
 		const route = getThreadRoute(thread);
 
 		dispatch({
@@ -31,8 +32,9 @@ const mapDispatchToProps = dispatch => ({
 				}),
 			},
 		});
+		dispatch(shareThread(thread.id, user, thread.roles));
 	},
-	shareOnTwitter: (thread, room) => {
+	shareOnTwitter: (user, thread, room) => {
 		const text = 'Saw this on my Belong neighborhood group. Worth checking out.';
 		const hashtags = room && room.name && room.name.indexOf(' ') === -1 ? [ room.name ] : null;
 		const route = getThreadRoute(thread);
@@ -45,8 +47,9 @@ const mapDispatchToProps = dispatch => ({
 				hashtags,
 			},
 		});
+		dispatch(shareThread(thread.id, user, thread.roles));
 	},
-	shareOnWhatsApp: thread => {
+	shareOnWhatsApp: (user, thread) => {
 		const text = 'Saw this on my Belong neighborhood group. You should check it out.';
 		const route = getThreadRoute(thread);
 
@@ -57,6 +60,7 @@ const mapDispatchToProps = dispatch => ({
 				route,
 			},
 		});
+		dispatch(shareThread(thread.id, user, thread.roles));
 	},
 });
 

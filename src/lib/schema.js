@@ -22,6 +22,7 @@ ROLES[Constants.ROLE_MUTE] = 'mute';
 ROLES[Constants.ROLE_WORK] = 'work';
 ROLES[Constants.ROLE_HOMETOWN] = 'hometown';
 ROLES[Constants.ROLE_FLAG] = 'flag';
+ROLES[Constants.ROLE_SHARE] = 'share';
 
 TABLES[Constants.TYPE_ITEM] = 'items';
 TABLES[Constants.TYPE_ROOM] = 'rooms';

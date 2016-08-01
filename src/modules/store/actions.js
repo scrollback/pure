@@ -14,6 +14,7 @@ import {
 	TAG_POST_HIDDEN,
 	ROLE_UPVOTE,
 	ROLE_FOLLOWER,
+	ROLE_SHARE,
 } from '../../lib/Constants';
 import type { User } from '../../lib/schemaTypes';
 import type { Action } from '../../modules/store/SimpleStoreTypes';
@@ -340,6 +341,28 @@ export function unlikeThread(thread: string, user: string, roles: Array<number> 
 		const threadrel = new ThreadRelModel({
 			id,
 			roles: roles.filter(role => role !== ROLE_UPVOTE),
+			item: thread,
+			user,
+		});
+
+		return {
+			type: 'CHANGE',
+			payload: {
+				entities: {
+					[id]: threadrel,
+				},
+			},
+		};
+	}
+	return { type: 'NOOP' };
+}
+
+export function shareThread(thread: string, user: string, roles: Array<number> = []): Action {
+	if (roles.indexOf(ROLE_SHARE) === -1) {
+		const id = `${user}_${thread}`;
+		const threadrel = new ThreadRelModel({
+			id,
+			roles: roles.concat(ROLE_SHARE),
 			item: thread,
 			user,
 		});

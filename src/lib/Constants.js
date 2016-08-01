@@ -30,6 +30,7 @@ export const ROLE_MUTE = 33;
 export const ROLE_HOME = 41;
 export const ROLE_WORK = 42;
 export const ROLE_HOMETOWN = 43;
+export const ROLE_SHARE = 45;
 
 export const STATUS_NONE = 0;
 export const STATUS_BG = 1;

@@ -36,6 +36,8 @@ export default class DiscussionActions extends Component<void, Props, void> {
 			creator: PropTypes.string.isRequired,
 			counts: PropTypes.shape({
 				children: PropTypes.number,
+				upvote: PropTypes.number,
+				share: PropTypes.number,
 			}),
 		}).isRequired,
 		threadrel: PropTypes.shape({
@@ -67,7 +69,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 	};
 
 	_handleShare = () => {
-		this.props.shareLink(this.props.thread);
+		this.props.shareLink(this.props.user, this.props.thread);
 	};
 
 	render() {
@@ -88,7 +90,7 @@ export default class DiscussionActions extends Component<void, Props, void> {
 					onPress={this._handleReply}
 				/>
 				<DiscussionActionItem
-					label='Share'
+					label={`Share ${thread.counts && thread.counts.share ? '(' + thread.counts.share + ')' : ''}`}
 					icon='share'
 					onPress={this._handleShare}
 				/>
