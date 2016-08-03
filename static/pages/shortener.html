@@ -34,29 +34,29 @@
             border-bottom: 1px solid #64b;
             box-shadow: 0 1px 0 0 #64b;
         }
-        
+
         input::-webkit-input-placeholder {
             font-weight: 600;
             font-size: 15px;
             color: #9e9e9e;
         }
-         
+
         input:-moz-placeholder { /* Firefox 18- */
             font-weight: 600;
-            font-size: 15px; 
+            font-size: 15px;
             color: #9e9e9e;
         }
-         
+
         input::-moz-placeholder {  /* Firefox 19+ */
             font-weight: 600;
-            font-size: 15px; 
-            color: #9e9e9e; 
+            font-size: 15px;
+            color: #9e9e9e;
         }
-         
-        input:-ms-input-placeholder {  
+
+        input:-ms-input-placeholder {
             font-weight: 600;
-            font-size: 15px; 
-            color: #9e9e9e; 
+            font-size: 15px;
+            color: #9e9e9e;
         }
 
         input[type=submit] {
@@ -81,27 +81,27 @@
 
     <body>
     	<div class="container">
-            
+
             <div class="row">
                 <div class="col l10 offset-l1 m12 s12">
                     <div class="card-panel">
                         <h4 class="center header-text">Bel.ng url shortener</h4>
-                        <form id="shortURLForm">
+                        <form id="short-url-form">
                             <div class="row">
                                 <div class="input-field col l9 s12">
-                                    <input type="text" name="url" id="id_url" 
+                                    <input type="text" name="url" id="url-input"
                                            placeholder="ENTER URL: MUST START WITH 'https://bel.ng/'">
-                                    </input>  
+                                    </input>
                                 </div>
                                 <span class="col l3" style="margin-top: 12px">
                                     <input type="submit" value="get short url" id="id_short_url_btn"></input>
                                 </span>
                             </div>
-                        </form>              
+                        </form>
                     </div>
 
                     <div id="show-short-url">
-                        
+
                     </div>
                 </div>
             </div>
@@ -110,28 +110,25 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.6/js/materialize.min.js"></script>
     <script type="text/javascript">
-    	
-    	var form = document.getElementById("shortURLForm");
+    	var form = document.getElementById("short-url-form");
         form.addEventListener("submit", function(event) {
             event.preventDefault();
             var divNode = document.getElementById("show-short-url");
             divNode.textContent = "Loading...";
-            var longURL = document.getElementById('id_url').value;
-            var request = new XMLHttpRequest();
             divNode.className = "card-panel center";
+            var longURL = document.getElementById('url-input').value;
+            var request = new XMLHttpRequest();
             request.onload = function() {
                 if (this.status === 200) {
-                    divNode.textContent = "https://bel.ng/" + this.response;
-                } else if(this.status === 500) {
-                    divNode.textContent = "Not a valid 'https://bel.ng/' url";
+                    divNode.textContent = this.response;
                 } else {
-                    throw new Error(this.statusText)
+                    divNode.textContent = this.statusText;
                 }
             };
             request.onerror = function() {
-                throw new Error('XMLHttpRequest Error: ' + this.statusText);
+                divNode.textContent = this.statusText;
             };
-            request.open('GET', '/x/shorten-url?longurl=' + encodeURIComponent(longURL), true);
+            request.open('GET', '/x/url-shortener/shorten?url=' + encodeURIComponent(longURL), true);
             request.send();
         });
 

@@ -1,6 +1,6 @@
 /* @flow */
 
-import shortenURL from '../../../modules/urlShortener/shortenURL';
+import shortenURL from '../../../modules/url-shortener/shortenURL';
 import { convertRouteToURL } from '../../../lib/Route';
 import { config } from '../../../core-client';
 import type { Route } from '../../../lib/RouteTypes';

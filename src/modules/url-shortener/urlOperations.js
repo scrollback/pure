@@ -7,6 +7,9 @@ import winston from 'winston';
 import { bus, config } from '../../core-server';
 import * as pg from '../../lib/pg';
 import promisify from '../../lib/promisify';
+import isNativeURL from './isNativeURL';
+import isShortURL from './isShortURL';
+import extractPath from './extractPath';
 
 /*
 	IMPLEMENTATION DETAILS:
@@ -31,19 +34,7 @@ const chars = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'
 const doReadQuery = promisify(pg.read.bind(pg, config.connStr));
 const doWriteQuery = promisify(pg.write.bind(pg, config.connStr));
 
-const { host } = config.server;
-
-const isNativeURL = (longURL: string): boolean => {
-	return longURL.indexOf('http://' + host) > -1 || longURL.indexOf('https://' + host) > -1;
-};
-
-const isShortURL = (shortURL: string): boolean => {
-	return /^[A-Za-z0-9\-_]{6,7}$/.test(shortURL);
-};
-
-const getPathFromURL = (longURL: string): string => {
-	return longURL.replace(/https?:\/\/[^\/]+/, '');
-};
+const { protocol, host } = config.server;
 
 const makeURLSafeHash = (pathFromLongURL: string): string => {
 	const md5Hash = crypto.createHash('md5').update(pathFromLongURL).digest('base64');
@@ -65,7 +56,7 @@ const insertLongURL = (shortURL: string, longURL: string): Promise<Array<{rowCou
 };
 
 export const getShortURL = (longURL: string): Promise<string> => {
-	const pathFromLongURL = getPathFromURL(longURL);
+	const pathFromLongURL = extractPath(longURL);
 	const shortURL = makeURLSafeHash(pathFromLongURL);
 
 	// check if the url is a valid 'https://bel.ng/' url.
@@ -73,7 +64,7 @@ export const getShortURL = (longURL: string): Promise<string> => {
 		throw new Error('The url is not a bel.ng url');
 	}
 
-	if (pathFromLongURL === '/') {
+	if (pathFromLongURL === '') {
 		return Promise.resolve('');
 	} else {
 		// Try inserting long URL and its hash as the short URL.
@@ -122,9 +113,10 @@ export const getShortURL = (longURL: string): Promise<string> => {
 };
 
 export const getLongURL = (shortURL: string): Promise<string> => {
+	const path = extractPath(shortURL);
 	return doReadQuery({
-		$: 'SELECT * FROM urls WHERE shorturl = &{shortURL}',
-		shortURL
+		$: 'SELECT * FROM urls WHERE shorturl = &{path}',
+		path
 	})
 	.then((result) => {
 		if (result.length > 0) {
@@ -145,7 +137,7 @@ export const getLongURL = (shortURL: string): Promise<string> => {
 				console.error(`something went wrong while getting the short URL, ${error}`);
 			});
 
-		getLongURL('28XYe8')
+		getLongURL('http://bel.ng/28XYe8')
 			.then((result) => {
 				console.log(result);
 			})
@@ -172,6 +164,35 @@ bus.on('http/init', app => {
 		yield *next;
 	});
 
+	app.use(route.get('/x/url-shortener/expand', function *() {
+		const query = this.request.query;
+		if (query && query.url) {
+			try {
+				const path = yield getLongURL(query.url);
+				this.body = protocol + '//' + host + '/' + path;
+			} catch (e) {
+				this.throw(500, e.message);
+			}
+		} else {
+			this.throw(400, 'Short URL was not provided !!');
+		}
+	}));
+
+	app.use(route.get('/x/url-shortener/shorten', function *() {
+		const query = this.request.query;
+		if (query && query.url) {
+			try {
+				const path = yield getShortURL(query.url);
+				this.body = protocol + '//' + host + '/' + path;
+			} catch (e) {
+				this.throw(500, e.message);
+			}
+		} else {
+			this.throw(400, 'Long URL was not provided !!');
+		}
+	}));
+
+	// TODO: remove temporary code
 	app.use(route.get('/x/shorten-url', function *() {
 		const query = this.request.query;
 		if (query && query.longurl) {

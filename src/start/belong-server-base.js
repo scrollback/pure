@@ -1,3 +1,5 @@
+/* @flow */
+
 // Log unhandled promise rejections
 import '../lib/node-unhandled-rejection';
 
@@ -31,7 +33,7 @@ import '../modules/postgres/postgres';
 import '../modules/image-upload/image-upload';
 import '../modules/query-compatability/query-compatability';
 import '../modules/email/unsubscribe';
-import '../modules/urlShortener/urlOperations';
+import '../modules/url-shortener/urlOperations';
 import '../modules/contacts/contacts';
 import '../modules/avatar/avatar';
 import '../modules/client/client';
