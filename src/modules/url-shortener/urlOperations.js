@@ -56,13 +56,13 @@ const insertLongURL = (shortURL: string, longURL: string): Promise<Array<{rowCou
 };
 
 export const getShortURL = (longURL: string): Promise<string> => {
+
+	if (!isNativeURL(longURL, host)) {
+		throw new Error(`The URL is not a valid ${host} url`);
+	}
+
 	const pathFromLongURL = extractPath(longURL);
 	const shortURL = makeURLSafeHash(pathFromLongURL);
-
-	// check if the url is a valid 'https://bel.ng/' url.
-	if (!isNativeURL(longURL)) {
-		throw new Error('The url is not a bel.ng url');
-	}
 
 	if (pathFromLongURL === '') {
 		return Promise.resolve('');
