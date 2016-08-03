@@ -6,7 +6,11 @@ const { protocol, host } = config.server;
 
 export default async function expandURL(url: string) {
 	const response = await fetch(protocol + '//' + host + '/x/url-shortener/expand?url=' + encodeURIComponent(url));
-	const path = await response.text();
+	const responseText = await response.text();
 
-	return path;
+	if (response.ok) {
+		return responseText;
+	} else {
+		throw new Error(responseText);
+	}
 }
