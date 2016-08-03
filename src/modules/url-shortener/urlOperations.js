@@ -191,18 +191,4 @@ bus.on('http/init', app => {
 			this.throw(400, 'Long URL was not provided !!');
 		}
 	}));
-
-	// TODO: remove temporary code
-	app.use(route.get('/x/shorten-url', function *() {
-		const query = this.request.query;
-		if (query && query.longurl) {
-			try {
-				this.body = yield getShortURL(query.longurl);
-			} catch (e) {
-				this.throw(500, e.message);
-			}
-		} else {
-			this.throw(400, 'Long URL was not provided !!');
-		}
-	}));
 });
