@@ -29,15 +29,20 @@ const styles = StyleSheet.create({
 	},
 	chat: {
 		flexDirection: 'column',
+		alignItems: 'flex-end',
+		marginLeft: 16,
+		marginRight: 8,
+	},
+	received: {
 		alignItems: 'flex-start',
 		marginLeft: 44,
-		marginRight: 4,
+		marginRight: 16,
 	},
-	timestampLeft: {
+	timestampSent: {
+		alignSelf: 'flex-end',
+	},
+	timestampReceived: {
 		marginLeft: 52,
-	},
-	chatReceived: {
-		paddingRight: 8,
 	},
 	hidden: {
 		opacity: 0.3,
@@ -175,62 +180,64 @@ export default class ChatDiscussionItem extends Component<void, Props, State> {
 		} = this.props;
 
 		const hidden = thread.tags && thread.tags.indexOf(TAG_POST_HIDDEN) > -1;
+		const received = thread.creator !== user;
 
 		return (
 			<View {...this.props} style={[ styles.container, this.props.style ]}>
-				<View style={[ styles.chat, hidden ? styles.hidden : null ]}>
-					<ChatAvatar user={thread.creator} onNavigate={this.props.onNavigate} />
+				<View style={[ styles.chat, received ? styles.received : null, hidden ? styles.hidden : null ]}>
+					{received ?
+						<ChatAvatar user={thread.creator} onNavigate={this.props.onNavigate} /> :
+						null
+					}
 
-					<View style={styles.chatReceived}>
-						<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
-							<ChatBubble
-								showAuthor
-								showArrow
-								alignment='left'
-								author={thread.creator}
-							>
-								<AppText style={styles.title}>{thread.name}</AppText>
-								<ChatText body={thread.body} meta={thread.meta} />
+					<TouchableOpacity activeOpacity={0.5} onPress={this._handleShowMenu}>
+						<ChatBubble
+							showAuthor
+							showArrow
+							alignment={received ? 'left' : 'right'}
+							author={thread.creator}
+						>
+							<AppText style={styles.title}>{thread.name}</AppText>
+							<ChatText body={thread.body} meta={thread.meta} />
 
-								<View style={styles.separator} />
+							<View style={styles.separator} />
 
-								<View style={styles.footer}>
-									<DiscussionActionLikeContainer
-										thread={thread}
-										threadrel={threadrel}
-										user={user}
-									/>
-									<View style={styles.sharebuttons}>
-										<AppText style={styles.label}>Share</AppText>
-										<TouchableOpacity onPress={this._handleFacebookPress}>
-											<EvilIcons
-												name='sc-facebook'
-												style={styles.icon}
-												size={28}
-											/>
-										</TouchableOpacity>
-										<TouchableOpacity onPress={this._handleTwitterPress}>
-											<EvilIcons
-												name='sc-twitter'
-												style={styles.icon}
-												size={28}
-											/>
-										</TouchableOpacity>
-										{this.state.canShareToWhatsApp ?
-											<TouchableOpacity onPress={this._handleWhatsAppPress}>
-												<Image source={require('../../../../../assets/whatsapp-icon.png')} style={styles.image} />
-											</TouchableOpacity> :
-											null
-										}
-									</View>
+							<View style={styles.footer}>
+								<DiscussionActionLikeContainer
+									thread={thread}
+									threadrel={threadrel}
+									user={user}
+								/>
+								<View style={styles.sharebuttons}>
+									<AppText style={styles.label}>Share</AppText>
+									<TouchableOpacity onPress={this._handleFacebookPress}>
+										<EvilIcons
+											name='sc-facebook'
+											style={styles.icon}
+											size={28}
+										/>
+									</TouchableOpacity>
+									<TouchableOpacity onPress={this._handleTwitterPress}>
+										<EvilIcons
+											name='sc-twitter'
+											style={styles.icon}
+											size={28}
+										/>
+									</TouchableOpacity>
+									{this.state.canShareToWhatsApp ?
+										<TouchableOpacity onPress={this._handleWhatsAppPress}>
+											<Image source={require('../../../../../assets/whatsapp-icon.png')} style={styles.image} />
+										</TouchableOpacity> :
+										null
+									}
 								</View>
-							</ChatBubble>
-						</TouchableOpacity>
-					</View>
+							</View>
+						</ChatBubble>
+					</TouchableOpacity>
 				</View>
 
 				{showTimestamp ?
-					<ChatTimestamp style={styles.timestampLeft} time={thread.createTime} /> :
+					<ChatTimestamp style={[ received ? styles.timestampReceived : styles.timestampSent ]} time={thread.createTime} /> :
 					null
 				}
 
