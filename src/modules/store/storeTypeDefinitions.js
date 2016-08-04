@@ -39,7 +39,6 @@ export type Store = {
 }
 
 export type EnhancedStore = Store & {
-	on: (event: string, callback: Function) => { remove: Function };
 	get: QueryGetter;
 	observe: QueryObserver;
 }

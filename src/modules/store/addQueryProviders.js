@@ -13,7 +13,6 @@ export default function addQueryProvider(...providers: Array<QueryProvider>) {
 		/* eslint-disable no-use-before-define */
 		const store = createStore(reducer, preloadedState, enhancer);
 		const subscriptions = [];
-		const allListeners = {};
 
 		let providerAPI = {
 			get: getPath,
@@ -49,7 +48,6 @@ export default function addQueryProvider(...providers: Array<QueryProvider>) {
 
 		function observePath(options: any): any {
 			return new Observable(observer => {
-				trigger('subscribe', options);
 				if (options.type === 'state') {
 					const callback = data => observer.next(data);
 					const listener = { path: options.path, callback };
@@ -64,60 +62,17 @@ export default function addQueryProvider(...providers: Array<QueryProvider>) {
 						if (index > -1) {
 							subscriptions.splice(index, 1);
 						}
-						trigger('unsubscribe', options);
 					};
 				} else {
 					observer.error(new Error('Invalid subscription'));
 				}
-				return () => {
-					trigger('unsubscribe', options);
-				};
+				return () => {};
 			});
-		}
-
-		function on(event: string, cb: Function) {
-			let listeners;
-
-			if (allListeners[event]) {
-				listeners = allListeners[event];
-			} else {
-				listeners = allListeners[event] = [];
-			}
-
-			listeners.push(cb);
-
-			return {
-				remove() {
-					let index;
-
-					for (let i = 0, l = listeners.length; i < l; i++) {
-						if (listeners[i] !== cb) {
-							continue;
-						}
-
-						index = i;
-						break;
-					}
-
-					if (typeof index === 'number') {
-						listeners.splice(index, 0);
-					}
-				}
-			};
-		}
-
-		function trigger(event: string, payload?: any) {
-			const listeners = allListeners[event];
-
-			if (listeners) {
-				listeners.forEach(cb => cb(payload));
-			}
 		}
 
 		return {
 			...store,
 			...providerAPI,
-			on,
 			dispatch,
 		};
 	};
