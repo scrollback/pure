@@ -1,7 +1,7 @@
 /* @flow */
 
 export function isValidURL(link: string): boolean {
-	return /^((https?|ftp):\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(#[-a-z\d_]*)?$/i.test(link);
+	return /^((ftp|https?:\/\/)?(\S+\.\S+)+)$/i.test(link);
 }
 
 export function isValidMail(link: string): boolean {
@@ -13,9 +13,10 @@ export function isValidTel(link: string): boolean {
 }
 
 export function buildLink(link: string): ?string {
-	if (isValidURL(link)) {
-		// a normal link
-		return /^(https?|ftp):\/\//.test(link) ? link : 'http://' + link;
+
+	if (isValidTel(link)) {
+		// a phone number
+		return /^tel:/.test(link) ? link : 'tel:' + link;
 	}
 
 	if (isValidMail(link)) {
@@ -23,9 +24,9 @@ export function buildLink(link: string): ?string {
 		return /^mailto:/.test(link) ? link : 'mailto:' + link;
 	}
 
-	if (isValidTel(link)) {
-		// a phone number
-		return /^tel:/.test(link) ? link : 'tel:' + link;
+	if (isValidURL(link)) {
+		// a normal link
+		return /^(https?|ftp):\/\//.test(link) ? link : 'http://' + link;
 	}
 
 	return null;
