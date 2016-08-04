@@ -19,6 +19,7 @@ test('should detect valid URLs', t => {
 	t.true(isValidURL('http://google.com'));
 	t.true(isValidURL('https://www.google.co.in'));
 	t.true(isValidURL('https://www.facebook.com/photo.php?fbid=1048881011810753&set=a.148270845205112.32456.100000665916861&type=3&theater'));
+	t.true(isValidURL('https://www.amazon.in/b/ref=br_imp?_encoding=UTF8&node=10858436031&pf_rd_m=A1VBAL9TL5WCBF&pf_rd_s=desktop-hero-kindle-A&pf_rd_r=ESDZAWAYGCXGE4SFR739&pf_rd_t=36701&pf_rd_p=1038551147&pf_rd_i=desktop'));
 	t.true(isValidURL('74.125.200.102'));
 	t.true(isValidURL('74.125.200.102:8080'));
 	t.true(isValidURL('ftp://74.125.200.102:8080/'));
@@ -27,8 +28,6 @@ test('should detect valid URLs', t => {
 test('should not detect invalid URLs', t => {
 	t.false(isValidURL('.wrong.lol'));
 	t.false(isValidURL('.something.com.'));
-	t.false(isValidURL('something.com.'));
-	t.false(isValidURL('http://something.com.'));
 	t.false(isValidURL('http://.something'));
 	t.false(isValidURL('https://.something.com'));
 	t.false(isValidURL('https://wrong../again'));
@@ -42,7 +41,6 @@ test('should detect valid emails', t => {
 
 test('should not detect valid emails', t => {
 	t.false(isValidMail('someguy@somecompany'));
-	t.false(isValidMail('some.guy@somecompany'));
 });
 
 test('should detect valid phone numbers', t => {
@@ -77,7 +75,6 @@ test('should build link if valid link passed', t => {
 
 test('should not build link if invalid link passed', t => {
 	t.is(buildLink('http://.something.com'), null);
-	t.is(buildLink('some.guy@somecompany'), null);
 });
 
 test('should parse URLs from chunk of text', t => {
