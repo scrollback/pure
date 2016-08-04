@@ -1,7 +1,7 @@
 /* @flow */
 
 import { TAG_USER_CONTENT } from '../../lib/Constants';
-import { cache, config } from '../../core-client';
+import { config } from '../../core-client';
 import store from '../store/store';
 import PersistentStorage from '../../lib/PersistentStorage';
 
@@ -62,7 +62,7 @@ async function fetchUsers(user) {
 			if (!exists) {
 				list.unshift({
 					user: user.id,
-					session: cache.getState('session'),
+					session: store.getState().session,
 				});
 			}
 

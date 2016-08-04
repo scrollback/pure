@@ -31,7 +31,7 @@ async function getRelationAndSetPresence(slice: Object, status: 'online' | 'offl
 		return;
 	}
 
-	const user = cache.getState('user');
+	const user = store.getState().user;
 	const item = getItemFromFilter(slice.filter);
 
 	if (item) {

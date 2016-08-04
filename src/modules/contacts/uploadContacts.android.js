@@ -1,6 +1,7 @@
 /* @flow */
 
-import { config, cache } from '../../core-client';
+import { config } from '../../core-client';
+import store from '../store/store';
 import Contacts from '../../ui/modules/Contacts';
 
 const {
@@ -10,7 +11,7 @@ const {
 const endpoint = `${protocol}//${host}/x/contacts`;
 
 export default function uploadContacts() {
-	const session = cache.getState('session');
+	const { session } = store.getState();
 
 	if (session) {
 		Contacts.sendContacts(endpoint, {
