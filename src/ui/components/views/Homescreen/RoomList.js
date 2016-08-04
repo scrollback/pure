@@ -62,7 +62,7 @@ export default class Rooms extends Component<void, Props, State> {
 
 	_handleSelectLocality = (room: Room) => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'room',
 				props: {

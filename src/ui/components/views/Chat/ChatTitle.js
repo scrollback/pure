@@ -54,7 +54,7 @@ export default class ChatTitle extends Component<void, Props, void> {
 
 		if (thread && thread.id) {
 			this.props.onNavigate({
-				type: 'push',
+				type: 'PUSH_ROUTE',
 				payload: {
 					name: 'details',
 					props: {

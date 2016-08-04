@@ -106,7 +106,7 @@ export default class DiscussionItemBase extends Component<void, Props, State> {
 		const { thread } = this.props;
 
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'chat',
 				props: {

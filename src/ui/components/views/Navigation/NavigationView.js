@@ -47,7 +47,7 @@ export default class NavigationView extends Component<void, Props, void> {
 
 	_handleNavigateBack = () => {
 		this.props.onNavigate({
-			type: 'pop',
+			type: 'POP_ROUTE',
 		});
 	};
 

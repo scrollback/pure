@@ -37,7 +37,7 @@ export default class StartDiscussionButton extends Component<void, Props, void> 
 
 	_handlePress = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'compose',
 				props: {

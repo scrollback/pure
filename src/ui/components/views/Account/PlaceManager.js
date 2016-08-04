@@ -65,7 +65,7 @@ export default class PlaceManager extends Component<void, Props, void> {
 
 	_handlePress = (type: string) => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'addplace',
 				props: {

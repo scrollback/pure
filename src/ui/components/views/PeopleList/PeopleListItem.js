@@ -74,7 +74,7 @@ export default class PeopleListItem extends Component<void, Props, void> {
 		const { user } = this.props;
 
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'profile',
 				props: {

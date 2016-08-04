@@ -124,7 +124,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 
 		if (button.type) {
 			this.props.onNavigate({
-				type: 'push',
+				type: 'PUSH_ROUTE',
 				payload: {
 					name: 'addplace',
 					props: {
@@ -134,7 +134,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 			});
 		} else {
 			this.props.onNavigate({
-				type: 'push',
+				type: 'PUSH_ROUTE',
 				payload: {
 					name: 'places',
 				},
@@ -144,7 +144,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 
 	_handleGoToAccount = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'account',
 			},
@@ -153,7 +153,7 @@ export default class RoomsFooter extends Component<void, Props, State> {
 
 	_handleReportIssue = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'room',
 				props: {

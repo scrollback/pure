@@ -36,7 +36,7 @@ export default class ChatAvatar extends Component<void, Props, void> {
 
 	_goToProfile = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'profile',
 				props: {

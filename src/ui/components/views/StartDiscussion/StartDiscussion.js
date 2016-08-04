@@ -327,7 +327,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 
 	_handleGoBack = () => {
 		this.props.onNavigate({
-			type: 'pop',
+			type: 'POP_ROUTE',
 		});
 	};
 

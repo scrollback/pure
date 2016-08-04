@@ -3,10 +3,12 @@
 import { Linking } from 'react-native';
 import { takeLatest } from 'redux-saga';
 import { put } from 'redux-saga/effects';
+import { v4 } from 'node-uuid';
+import { convertURLToState } from '../../lib/Route';
 import isShortURL from '../../modules/url-shortener/isShortURL';
 import expandURL from '../../modules/url-shortener/expandURL';
 
-export default function *historySaga(): Generator<Array<Generator<any, any, any>>, void, void> {
+export default function *navigationSaga(): Generator<Array<Generator<any, any, any>>, void, void> {
 	yield* takeLatest('INITIALIZE_STATE', function *() {
 		let initialURL;
 		try {
@@ -21,5 +23,19 @@ export default function *historySaga(): Generator<Array<Generator<any, any, any>
 			type: 'SET_INITIAL_URL',
 			payload: initialURL,
 		});
+		if (initialURL) {
+			const navigationState = convertURLToState(initialURL);
+			yield put({
+				type: 'SET_NAVIGATION',
+				payload: {
+					...navigationState,
+					routes: navigationState.routes.map(route => ({ ...route, key: v4() })),
+				},
+			});
+		} else {
+			yield put({
+				type: 'SET_NAVIGATION',
+			});
+		}
 	});
 }

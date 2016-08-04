@@ -68,7 +68,7 @@ export default class DiscussionAuthor extends Component<void, Props, void> {
 		const { thread } = this.props;
 
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'profile',
 				props: {

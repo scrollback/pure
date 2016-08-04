@@ -1,15 +1,13 @@
 /* @flow */
 
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
 import ReactNative from 'react-native';
-import shallowCompare from 'react-addons-shallow-compare';
-import NavigationRoot from './Navigation/NavigationRoot';
+import NavigationRootContainer from '../containers/NavigationRootContainer';
 import NavigationScene from './Navigation/NavigationScene';
 import NavigationView from './Navigation/NavigationView';
 import UserSwitcherContainer from '../containers/UserSwitcherContainer';
 import ModalHost from './Core/ModalHost';
 import routeMapper from '../../routeMapper';
-import { convertRouteToState, convertURLToState } from '../../../lib/Route';
 
 const {
 	StyleSheet,
@@ -26,20 +24,7 @@ const styles = StyleSheet.create({
 	},
 });
 
-const PERSISTANCE_KEY = process.env.NODE_ENV !== 'production' ? 'FLAT_PERSISTENCE_0' : null;
-
-type Props = {
-	initialURL: ?string
-};
-
-export default class Home extends Component<void, Props, void> {
-	static propTypes = {
-		initialURL: PropTypes.string,
-	};
-
-	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
-		return shallowCompare(this, nextProps, nextState);
-	}
+export default class Home extends Component<void, any, void> {
 
 	_handleBackPress = () => {
 		if (ModalHost.isOpen()) {
@@ -71,18 +56,11 @@ export default class Home extends Component<void, Props, void> {
 	};
 
 	render() {
-		const { initialURL } = this.props;
-		const initialState = initialURL ? convertURLToState(initialURL) : convertRouteToState({ name: 'home' });
-
-		console.log(initialURL);
-
 		return (
 			<View style={styles.container}>
 				<UserSwitcherContainer />
 				<View style={styles.inner}>
-					<NavigationRoot
-						initialState={initialState}
-						persistenceKey={initialURL ? null : PERSISTANCE_KEY}
+					<NavigationRootContainer
 						renderNavigator={this._renderNavigator}
 					/>
 				</View>

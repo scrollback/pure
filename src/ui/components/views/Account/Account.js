@@ -122,7 +122,7 @@ export default class Account extends Component<void, Props, State> {
 
 	_handleManagePlaces = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'places',
 			},

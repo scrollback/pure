@@ -24,7 +24,7 @@ export default class RoomListForModeration extends Component<void, Props, void> 
 
 	_handleSelectLocality = (room: Room) => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'room',
 				props: {

@@ -24,7 +24,7 @@ export default class AccountButton extends Component<void, Props, void> {
 
 	_handlePress = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'account',
 			},

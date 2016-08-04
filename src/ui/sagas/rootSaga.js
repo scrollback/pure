@@ -2,8 +2,8 @@
 
 import cacheSaga from './cacheSaga';
 import ctaSaga from './ctaSaga';
-import historySaga from './historySaga';
 import locationSaga from './locationSaga';
+import navigationSaga from './navigationSaga';
 import notesSaga from './notesSaga';
 import openLinkSaga from './openLinkSaga';
 import shareSaga from './shareSaga';
@@ -13,8 +13,8 @@ export default function *rootSaga(): Generator<Array<Generator<any, any, any>>, 
 	yield [
 		cacheSaga(),
 		ctaSaga(),
-		historySaga(),
 		locationSaga(),
+		navigationSaga(),
 		notesSaga(),
 		openLinkSaga(),
 		shareSaga(),

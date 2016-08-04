@@ -56,7 +56,7 @@ export default class PlaceManagerSelector extends Component<void, Props, void> {
 
 	_handleGoBack = () => {
 		this.props.onNavigate({
-			type: 'pop',
+			type: 'POP_ROUTE',
 		});
 	};
 

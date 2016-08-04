@@ -6,7 +6,7 @@ import SignIn from './SignIn';
 import UserDetails from './UserDetails';
 import PlacesDetails from './PlacesDetails';
 import GetStarted from './GetStarted';
-import HomeContainer from '../../containers/HomeContainer';
+import Home from '../Home';
 
 type Props = {
 	page: 'PAGE_SIGN_IN' | 'PAGE_USER_DETAILS' | 'PAGE_PLACES' | 'PAGE_GET_STARTED' | 'PAGE_HOME' | 'PAGE_LOADING';
@@ -34,7 +34,7 @@ export default class Onboard extends Component<void, Props, void> {
 		case 'PAGE_GET_STARTED':
 			return <GetStarted {...props} />;
 		case 'PAGE_HOME':
-			return <HomeContainer {...props} />;
+			return <Home {...props} />;
 		default:
 			return null;
 		}

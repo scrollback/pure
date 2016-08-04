@@ -169,13 +169,13 @@ export default class Profile extends Component<void, Props, void> {
 
 	_handleGoBack = () => {
 		this.props.onNavigate({
-			type: 'pop',
+			type: 'POP_ROUTE',
 		});
 	};
 
 	_goToAccount = () => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'account',
 			},
@@ -184,7 +184,7 @@ export default class Profile extends Component<void, Props, void> {
 
 	_goToPlaces = (type: string) => {
 		this.props.onNavigate({
-			type: 'push',
+			type: 'PUSH_ROUTE',
 			payload: {
 				name: 'addplace',
 				props: {
