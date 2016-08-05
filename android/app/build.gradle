@@ -76,16 +76,17 @@ def enableSeparateBuildPerCPUArchitecture = true
  */
 def enableProguardInReleaseBuilds = true
 
-def getConfigField(name) {
+def getConfig() {
     def slurper = new JsonSlurper()
-    def config = slurper.parse(file('../../config/client.json'))
+    def config = slurper.parse(file('../../config/client-defaults.json'))
+    def custom = slurper.parse(file('../../config/client.json'))
 
-    if (config[name]) {
-        return config[name]
-    } else {
-        return slurper.parse(file('../../config/client-defaults.json'))[name]
-    }
+    custom.each { key, value -> config.put(key, value) }
+
+    return config
 }
+
+def config = getConfig();
 
 buildscript {
     repositories {
@@ -124,9 +125,9 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
 
-        resValue "string", "app_name", getConfigField("app_name")
-        resValue "string", "app_host", getConfigField("server").host
-        resValue "string", "app_protocol", getConfigField("server").protocol
+        resValue "string", "app_name", config.app_name
+        resValue "string", "app_host", config.server.host
+        resValue "string", "app_protocol", config.server.protocol
     }
 
     splits {
@@ -152,6 +153,17 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
+        }
+    }
+
+    productFlavors {
+        prod {
+        }
+
+        dev {
+            applicationIdSuffix ".dev"
+
+            resValue "string", "app_name", config.dev.app_name
         }
     }
 

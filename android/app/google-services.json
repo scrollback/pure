@@ -1,7 +1,9 @@
 {
   "project_info": {
     "project_number": "949615022713",
-    "project_id": "heyneighbor-1020"
+    "firebase_url": "https://heyneighbor-1020.firebaseio.com",
+    "project_id": "heyneighbor-1020",
+    "storage_bucket": "heyneighbor-1020.appspot.com"
   },
   "client": [
     {
@@ -45,6 +47,10 @@
           }
         },
         {
+          "client_id": "949615022713-19jipq3fa6ic7giegbrul29sdcphcn35.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
           "client_id": "949615022713-4154bsegombo0ult565an68349ftbfg7.apps.googleusercontent.com",
           "client_type": 3
         },
@@ -53,7 +59,11 @@
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAg8ZgL5Nt8YD3mWkpWldB9fZp5ZPpsFbE"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
@@ -62,13 +72,13 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "949615022713-4154bsegombo0ult565an68349ftbfg7.apps.googleusercontent.com",
+              "client_id": "949615022713-19jipq3fa6ic7giegbrul29sdcphcn35.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         },
         "ads_service": {
-          "status": 1
+          "status": 2
         }
       }
     }

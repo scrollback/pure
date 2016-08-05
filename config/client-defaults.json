@@ -16,5 +16,9 @@
 
 	"google": {
 		"login_url": "/r/google/login"
+	},
+
+	"dev": {
+		"app_name": "Belong (Dev)"
 	}
 }
