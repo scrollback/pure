@@ -20,19 +20,19 @@ const styles = StyleSheet.create({
 });
 
 type Options = {
-	element: ?React.Element;
+	element: ?React.Element<*>;
 	onRequestClose: Function;
 }
 
 type State = {
 	stack: Array<{
-		instance: React.Component;
+		instance: React.Component<*, *, *>;
 		options: Options;
 	}>;
 }
 
 export default class ModalHost extends Component<void, any, State> {
-	static renderModal(instance: React.Component, options: Options): Promise<void> {
+	static renderModal(instance: React.Component<*, *, *>, options: Options): Promise<void> {
 		return new Promise((resolve, reject) => {
 			if (ModalHost._pushChild) {
 				ModalHost._pushChild(instance, options, resolve);
@@ -42,7 +42,7 @@ export default class ModalHost extends Component<void, any, State> {
 		});
 	}
 
-	static removeModal(instance: React.Component): Promise<void> {
+	static removeModal(instance: React.Component<*, *, *>): Promise<void> {
 		return new Promise((resolve, reject) => {
 			if (ModalHost._removeChild) {
 				ModalHost._removeChild(instance, resolve);
@@ -52,14 +52,14 @@ export default class ModalHost extends Component<void, any, State> {
 		});
 	}
 
-	static isModalRendered(instance: React.Component): boolean {
+	static isModalRendered(instance: React.Component<*, *, *>): boolean {
 		if (ModalHost._isChildRendered) {
 			return ModalHost._isChildRendered(instance);
 		}
 		return false;
 	}
 
-	static remove(instance: React.Component): Promise<void> {
+	static remove(instance: React.Component<*, *, *>): Promise<void> {
 		return new Promise((resolve, reject) => {
 			if (ModalHost._removeChild) {
 				ModalHost._removeChild(instance, resolve);
@@ -113,19 +113,19 @@ export default class ModalHost extends Component<void, any, State> {
 		ModalHost._isOpen = null;
 	}
 
-	_pushChild = (instance: React.Component, options: Options, cb: Function) => {
+	_pushChild = (instance: React.Component<*, *, *>, options: Options, cb: Function) => {
 		this.setState({
 			stack: [ ...this.state.stack, { instance, options } ],
 		}, cb);
 	};
 
-	_removeChild = (instance: React.Component, cb: Function) => {
+	_removeChild = (instance: React.Component<*, *, *>, cb: Function) => {
 		this.setState({
 			stack: this.state.stack.filter(op => op.instance !== instance),
 		}, cb);
 	};
 
-	_isChildRendered = (instance: React.Component) => {
+	_isChildRendered = (instance: React.Component<*, *, *>) => {
 		const { stack } = this.state;
 		for (let i = 0, l = stack.length; i < l; i++) {
 			if (stack[i].instance === instance) {
@@ -147,7 +147,7 @@ export default class ModalHost extends Component<void, any, State> {
 		return this.state.stack.length > 0;
 	};
 
-	render(): ?React.Element {
+	render(): ?React.Element<*> {
 		const { stack } = this.state;
 
 		if (stack.length === 0) {

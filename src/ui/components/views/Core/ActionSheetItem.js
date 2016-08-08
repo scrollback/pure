@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
 type Props = {
 	onPress: Function;
 	onRequestClose?: Function;
-	children?: React.Element;
+	children?: React.Element<*>;
 }
 
 export default class ActionSheetItem extends Component<void, Props, void> {

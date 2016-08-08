@@ -130,7 +130,7 @@ export default class Banner extends Component<DefaultProps, Props, State> {
 		});
 	};
 
-	render(): ?React.Element {
+	render(): ?React.Element<*> {
 		if (!this.state.text) {
 			return null;
 		}

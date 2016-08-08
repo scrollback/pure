@@ -147,7 +147,7 @@ class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithFacebook = async (): Promise => {
+	_signInWithFacebook = async (): Promise<void> => {
 		try {
 			const result = await FBLoginManager.logIn();
 
@@ -170,7 +170,7 @@ class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithGoogle = async (): Promise => {
+	_signInWithGoogle = async (): Promise<void> => {
 		try {
 			const result = await GoogleSignIn.signIn();
 

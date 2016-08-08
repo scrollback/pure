@@ -34,7 +34,7 @@ export type QueryProvider = (api: QueryProviderAPI) => QueryProviderAPI;
 export type Store = {
 	dispatch: Dispatch;
 	getState: () => State;
-	replaceReducer: (reducer: Reducer) => void;
+	replaceReducer: (reducer: Reducer<*, *>) => void;
 	subscribe: (listener: Function) => Function;
 }
 
@@ -43,6 +43,6 @@ export type EnhancedStore = Store & {
 	observe: QueryObserver;
 }
 
-export type StoreCreator = (reducer: Reducer, preloadedState?: State, enhancer?: Function) => Store
+export type StoreCreator = (reducer: Reducer<*, *>, preloadedState?: State, enhancer?: Function) => Store
 
 export type StoreEnhancer = (next: StoreCreator) => StoreCreator

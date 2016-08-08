@@ -9,7 +9,7 @@ import { subscribe, getIIDInfo } from './subscribeTopics';
 let client;
 const sessionAndtokens = {}, log = new Logger(__filename);
 
-export function getTokenFromSession(session) {
+export function getTokenFromSession(session: ?string) {
 	if (!session) {
 		log.info('no session found');
 		return { error: 'NO_TOKEN_AND_SESSION' };
@@ -45,7 +45,7 @@ function sendDownstreamMessage (upStanza, type, cb) {
 	client.send(stnza);
 	if (cb) cb();
 }
-export function updateUser(u, cb) {
+export function updateUser(u: Object, cb?: Function) {
 	if (!u.data.sessionId && !u.data.token) {
 		// console.log('no data token and session found to update user');
 		return;
@@ -152,7 +152,7 @@ function handleStanza(stanza) {
 	}
 }
 
-export default function(c) {
+export default function(c: Object) {
 	client = c;
 	client.on('stanza', handleStanza);
 }

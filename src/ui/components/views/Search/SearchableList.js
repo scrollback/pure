@@ -30,11 +30,11 @@ type SearchResults = Array<any> | '@@blankslate' | '@@loading' | '@@failed';
 type Props = {
 	autoFocus?: boolean;
 	getResults: (filter: string) => any;
-	renderRow: (data: any) => React.Element;
+	renderRow: (data: any) => React.Element<*>;
 	renderHeader?: ?(filter: string, data: any) => ?Element;
 	renderFooter?: ?(filter: string, data: any) => ?Element;
-	renderBlankslate?: ?() => ?React.Element;
-	onCancel?: ?(data: any) => React.Element;
+	renderBlankslate?: ?() => ?React.Element<*>;
+	onCancel?: ?(data: any) => React.Element<*>;
 	searchHint: string;
 	style?: any;
 }

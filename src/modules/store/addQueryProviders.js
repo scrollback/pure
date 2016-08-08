@@ -9,7 +9,7 @@ import type {
 } from './storeTypeDefinitions';
 
 export default function addQueryProvider(...providers: Array<QueryProvider>) {
-	return (createStore: StoreCreator) => (reducer: Reducer, preloadedState: State, enhancer: Function) => {
+	return (createStore: StoreCreator) => (reducer: Reducer<State, Action>, preloadedState: State, enhancer: Function) => {
 		/* eslint-disable no-use-before-define */
 		const store = createStore(reducer, preloadedState, enhancer);
 		const subscriptions = [];

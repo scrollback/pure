@@ -8,7 +8,7 @@ type Props = {
 	onPress?: ?Function;
 	borderless?: boolean;
 	pressColor?: string;
-	children?: React.Element;
+	children?: React.Element<*>;
 	style?: any;
 }
 

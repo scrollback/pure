@@ -273,7 +273,6 @@ export default class ChatInput extends Component<void, Props, State> {
 						user={this.props.user}
 						thread={this.props.thread}
 						prefix={this.state.query}
-						style={styles.suggestions}
 						onSelect={this._handleSuggestionSelect}
 					/> : null
 				}

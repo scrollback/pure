@@ -82,7 +82,7 @@ type Props = {
 	showAuthor?: boolean;
 	showArrow?: boolean;
 	onPress?: Function;
-	children?: React.Element;
+	children?: React.Element<*>;
 	style?: any;
 }
 

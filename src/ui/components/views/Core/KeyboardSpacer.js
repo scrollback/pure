@@ -6,7 +6,6 @@ import shallowCompare from 'react-addons-shallow-compare';
 
 const {
 	Animated,
-	View,
 	Keyboard,
 } = ReactNative;
 
@@ -68,7 +67,7 @@ export default class KeyboardSpacer extends Component<Props, Props, State> {
 		}).start();
 	};
 
-	render(): React.Element {
+	render() {
 		return <Animated.View style={{ height: this.state.keyboardHeightAnim }} />;
 	}
 }

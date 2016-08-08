@@ -50,14 +50,14 @@ export function createNote(
 		user = item.creator;
 		creator = rel.user;
 		picture = `${server}/s/assets/notification-heart.png`;
-		title = likes > 1 ? `${creator} and ${likes - 1} more` : `New like from ${creator} in ${room.name}`;
+		title = likes > 1 ? `${creator} and ${likes - 1} more` : `New like from ${creator}${room.name ? ' in ' + room.name : ''}`;
 		body = `liked '${body}'`;
 	} else {
 		event = NOTE_MENTION;
 		user = rel.user;
 		creator = item.creator;
 		picture = `${server}/i/picture?user=${creator}&size=${128}`;
-		title = `New mention in ${room.name}`;
+		title = `New mention${room.name ? ' in ' + room.name : ''}`;
 	}
 
 	const link = server + convertRouteToURL({

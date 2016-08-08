@@ -8,7 +8,7 @@ export default function buildS3AvatarURL(userName: string, size: number = 24): s
 		- In case the size exceeds 960, return 960.
 	*/
 	const length = avatarSizes.length;
-	let sizeToReturn;
+	let sizeToReturn = size;
 	if (size > avatarSizes[length - 1]) {
 		sizeToReturn = avatarSizes[length - 1];
 	} else {

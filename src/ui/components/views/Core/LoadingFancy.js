@@ -43,7 +43,7 @@ export default class LoadingFancy extends Component<void, Props, void> {
 	render() {
 		return (
 			<View style={[ styles.container, this.props.style ]}>
-				<Loading size='small' style={styles.loading} />
+				<Loading size='small' />
 			</View>
 		);
 	}

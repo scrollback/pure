@@ -45,7 +45,9 @@ const normalizePlaces = results => {
 	for (let i = 0, l = results.length; i < l; i++) {
 		const item = results[i];
 
-		map[item.name] = item;
+		if (item.name) {
+			map[item.name] = item;
+		}
 	}
 
 	const roles = {

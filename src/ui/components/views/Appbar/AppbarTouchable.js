@@ -12,7 +12,7 @@ const {
 type Props = {
 	type?: 'primary' | 'secondary';
 	onPress: Function;
-	children?: React.Element;
+	children?: React.Element<*>;
 }
 
 export default class AppbarTouchable extends Component<void, Props, void> {

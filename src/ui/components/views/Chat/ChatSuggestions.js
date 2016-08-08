@@ -23,6 +23,10 @@ const styles = StyleSheet.create({
 		],
 	},
 
+	container: {
+		height: 160,
+	},
+
 	item: {
 		backgroundColor: Colors.white,
 		borderColor: Colors.separator,
@@ -101,7 +105,7 @@ export default class ChatSuggestions extends Component<void, Props, void> {
 		return (
 			<ScrollView
 				{...this.props}
-				style={[ data.length > 4 ? { height: 160 } : null, styles.inverted, this.props.style ]}
+				style={[ data.length > 4 ? styles.container : null, styles.inverted, this.props.style ]}
 				keyboardShouldPersistTaps
 			>
 				{data.map(this._renderUser)}

@@ -85,11 +85,7 @@ export default class DiscussionAuthor extends Component<void, Props, void> {
 
 		return (
 			<View {...this.props} style={[ styles.author, this.props.style ]}>
-				<TouchableOpacity
-					activeOpacity={0.5}
-					onPress={this._goToProfile}
-					style={styles.avatar}
-				>
+				<TouchableOpacity activeOpacity={0.5} onPress={this._goToProfile}>
 					<AvatarRound
 						size={24}
 						user={thread.creator}

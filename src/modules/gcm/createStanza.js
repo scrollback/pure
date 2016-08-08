@@ -8,7 +8,7 @@ import {
 import type { Note } from '../../lib/schemaTypes';
 
 export default function createStanza(id: string, note: Note) {
-	let topic;
+	let topic = 'global';
 
 	if (note.type === TYPE_THREAD && note.data.room) {
 		topic = 'room-' + note.data.room.id;

@@ -3,7 +3,7 @@
 import React, { Component, PropTypes, Children } from 'react';
 
 type Props = {
-	children: React.Element;
+	children: React.Element<*>;
 }
 
 export default class Container extends Component<void, Props, void> {

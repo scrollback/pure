@@ -134,7 +134,7 @@ export default class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithFacebook = async (): Promise => {
+	_signInWithFacebook = async (): Promise<void> => {
 		try {
 			const result = await LoginManager.logInWithReadPermissions([
 				PERMISSION_PUBLIC_PROFILE, PERMISSION_EMAIL,
@@ -167,7 +167,7 @@ export default class SignIn extends Component<void, Props, State> {
 		}
 	};
 
-	_signInWithGoogle = async (): Promise => {
+	_signInWithGoogle = async (): Promise<void> => {
 		try {
 			const result = await GoogleSignIn.signIn();
 

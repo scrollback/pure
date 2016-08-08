@@ -10,7 +10,7 @@ import React, { Component, Children, PropTypes } from 'react';
 import type { EnhancedStore } from './storeTypeDefinitions';
 
 type Props = {
-	children?: React.Element;
+	children?: React.Element<*>;
 	store: EnhancedStore;
 }
 

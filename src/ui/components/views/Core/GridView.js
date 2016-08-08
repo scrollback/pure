@@ -27,8 +27,8 @@ type Props = {
 	gridSpacing: number;
 	gridItemStyle?: any;
 	itemStyle?: any;
-	renderRow: (rowData: any, sectionID: number, rowID: number, highlightRow: boolean, isGrid: boolean) => ?React.Element;
-	renderScrollComponent?: (props: any) => ?React.Element;
+	renderRow: (rowData: any, sectionID: number, rowID: number, highlightRow: boolean, isGrid: boolean) => ?React.Element<*>;
+	renderScrollComponent?: (props: any) => ?React.Element<*>;
 	contentContainerStyle?: any;
 	style?: any;
 }

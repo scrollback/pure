@@ -65,9 +65,9 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 		});
 	};
 
-	_getUsersFromTexts = (thread: ?Thread, texts: Array<Text>) => {
+	_getUsersFromTexts = (thread: ?Thread, texts: Array<Text>): Array<?Text> => {
 		return texts.map(text => {
-			return text.creator || null;
+			return text && text.creator ? text.creator : null;
 		})
 		.concat(thread && thread.creator ? thread.creator : null)
 		.filter((value, index, self) => {
@@ -87,7 +87,7 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 			const users = this._getUsersFromTexts(this.props.thread, this.props.texts)
 				.filter(id => {
 					return typeof id === 'string' && id && id !== this.props.user && id.indexOf(prefix.substring(1)) === 0;
-				}).map(id => {
+				}).map((id: any) => {
 					return {
 						id: (id: string),
 					};

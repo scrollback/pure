@@ -48,8 +48,8 @@ declare class Observable<T> {
     forEach(onNext: (value: T) => void): Promise<any>;
 
     // Converts items to an Observable
-    static of(...items: Array<any>): Observable;
+    static of(...items: Array<T>): Observable<T>;
 
     // Converts an observable or iterable to an Observable
-    static from(observable: Observable): Observable;
+    static from(observable: Observable<T>): Observable<T>;
 }

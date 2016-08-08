@@ -148,7 +148,7 @@ export default class NotificationCenterItem extends Component<void, Props, void>
 		const { data, event, count } = note;
 		const { room, thread } = data;
 
-		const summary: Array<React.Element | string> = [];
+		const summary: Array<React.Element<*> | string> = [];
 
 		switch (event) {
 		case NOTE_UPVOTE: {

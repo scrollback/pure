@@ -60,11 +60,7 @@ export default class RichText extends Component<void, Props, void> {
 			);
 		} else {
 			return (
-				<AppText
-					{...this.props}
-					style={[ styles.text, this.props.style ]}
-					ref={c => (this._root = c)}
-				>
+				<AppText {...this.props} ref={c => (this._root = c)}>
 					{textWithEmoji.split('\n').map((text, index, arr) => {
 						return ([
 							text.split(' ').map((inner, i) => {

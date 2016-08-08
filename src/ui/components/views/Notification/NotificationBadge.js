@@ -9,7 +9,6 @@ import Colors from '../../../Colors';
 const {
 	StyleSheet,
 	Animated,
-	View,
 } = ReactNative;
 
 const styles = StyleSheet.create({
@@ -95,7 +94,7 @@ export default class NotificationBadge extends Component<void, Props, State> {
 		}).start();
 	};
 
-	render(): ?React.Element {
+	render(): ?React.Element<*> {
 		const { count } = this.props;
 
 		if (!count) {

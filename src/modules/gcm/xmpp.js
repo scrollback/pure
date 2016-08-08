@@ -41,7 +41,7 @@ function onError(e) {
 	log.error('error: ', e);
 }
 
-export function connect (cb) {
+export function connect (cb: Function) {
 	log.info('connecting.....');
 	try {
 		client = new Client(options);

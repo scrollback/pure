@@ -51,7 +51,7 @@ export default function(route: Route): RouteDescription {
 		};
 	case 'profile':
 		return {
-			title: `${route.props ? route.props.user : 'someone'}'s profile`,
+			title: `${route.props && route.props.user ? route.props.user : 'someone'}'s profile`,
 			component: ProfileContainer,
 			type: 'modal',
 		};

@@ -14,7 +14,7 @@ const {
 type Props = {
 	borderless?: boolean;
 	pressColor?: string;
-	children?: React.Element
+	children?: React.Element<*>;
 }
 
 export default class TouchFeedback extends Component<void, Props, void> {

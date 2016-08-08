@@ -385,8 +385,9 @@ export default class StartDiscussion extends Component<void, Props, State> {
 			return;
 		}
 
-		let meta, id,
-			body = this.state.body;
+		let meta, id;
+
+		const { body } = this.state;
 
 		const { upload, photo } = this.state;
 
@@ -406,7 +407,6 @@ export default class StartDiscussion extends Component<void, Props, State> {
 					type: 'photo',
 				},
 			};
-			body = body || `${name}: ${upload.url}`;
 		}
 
 		this.setState({
@@ -567,7 +567,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 						borderless
 						onPress={this._handleUploadImage}
 					>
-						<View style={styles.uploadButton}>
+						<View>
 							<Icon
 								name='image'
 								style={[ styles.uploadButtonIcon, this.state.photo ? styles.uploadButtonIconActive : null ]}

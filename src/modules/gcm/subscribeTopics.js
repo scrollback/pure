@@ -7,6 +7,7 @@ import Logger from '../../lib/logger';
 import values from 'lodash/values';
 import request from 'request';
 import { getTokenFromSession, updateUser } from './handleUpstreamMessage';
+
 const authKey = 'key=' + config.gcm.apiKey, log = new Logger(__filename);
 const options = {
 	url: 'https://iid.googleapis.com/iid/v1:batchAdd',
@@ -18,7 +19,7 @@ const options = {
 	body: {},
 };
 
-export function getIIDInfo(iid: String, cb: Function) {
+export function getIIDInfo(iid: string, cb: Function) {
 	request({
 		url: `https://iid.googleapis.com/iid/info/${iid}?details=true`,
 		method: 'GET',
@@ -147,7 +148,7 @@ export function subscribe (userRel: Object) {
 	}
 	if (!gcm) {
 		log.debug('No gcm found for user retrying from saved token...');
-		const data = getTokenFromSession();
+		const data = getTokenFromSession(null);
 		if (data.error) log.info(data.error);
 		updateUser({ data }, (error) => {
 			// console.log("dta: ", data);

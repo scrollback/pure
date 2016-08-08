@@ -9,7 +9,7 @@ type Props = {
 	visible: boolean;
 	animationType: 'fade' | 'none';
 	onRequestClose: Function;
-	children?: React.Element;
+	children?: React.Element<*>;
 }
 
 type State = {
