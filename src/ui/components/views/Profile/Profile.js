@@ -302,7 +302,7 @@ export default class Profile extends Component<void, Props, void> {
 								/>
 							);
 						})}
-						{own ? (
+						{own && user.identities.length ? (
 							<ProfileField
 								header='Email address (Private)'
 								value={user.identities[user.identities.length - 1].slice(7)}
