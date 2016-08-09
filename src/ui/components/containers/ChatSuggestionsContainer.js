@@ -33,11 +33,11 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 	};
 
 	componentWillMount() {
-		this._handlePrefixChange(this.props.prefix);
+		this._updateData(this.props);
 	}
 
 	componentWillReceiveProps(nextProps: Props) {
-		this._handlePrefixChange(nextProps.prefix);
+		this._updateData(nextProps);
 	}
 
 	shouldComponentUpdate(nextProps: Props, nextState: any): boolean {
@@ -75,7 +75,7 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 		});
 	};
 
-	_handlePrefixChange = (prefix: string) => {
+	_updateData = ({ prefix, user, thread, texts }: Props) => {
 		if (this._subscription) {
 			this._subscription.unsubscribe();
 			this._subscription = null;
@@ -84,9 +84,9 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 			this.setState({
 				prefix,
 			});
-			const users = this._getUsersFromTexts(this.props.thread, this.props.texts)
+			const users = this._getUsersFromTexts(thread, texts)
 				.filter(id => {
-					return typeof id === 'string' && id && id !== this.props.user && id.indexOf(prefix.substring(1)) === 0;
+					return typeof id === 'string' && id && id !== user && id.indexOf(prefix.substring(1)) === 0;
 				}).map((id: any) => {
 					return {
 						id: (id: string),
@@ -102,15 +102,15 @@ class ChatSuggestionsContainerInner extends Component<void, Props, State> {
 							const currentIds = [];
 							const items = users
 								.concat(result)
-								.filter((item: any) => item.type !== 'loading' && item.id !== this.props.user);
+								.filter((item: any) => item.type !== 'loading' && item.id !== user);
 
-							items.forEach(user => {
-								currentIds.push(user.id);
+							items.forEach(u => {
+								currentIds.push(u.id);
 							});
 
 							this.setState({
-								data: items.filter((user, index) => {
-									return currentIds.indexOf(user.id) === index;
+								data: items.filter((u, i) => {
+									return currentIds.indexOf(u.id) === i;
 								}),
 							});
 						}
