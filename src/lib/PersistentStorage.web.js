@@ -1,51 +1,30 @@
 /* @flow */
 
-export default class PersistentStorage {
-	_id: string;
+function getInstance(id: string) {
 
-	constructor(id: string) {
-		this._id = id;
-	}
+	const getKeyWithPrefix = (key: string) => {
+		return `persistent_storage:${id}:${key}`;
+	};
 
-	setItem(key: string, data: any): Promise<void> {
-		return new Promise((resolve, reject) => {
-			try {
-				localStorage.setItem(this._getKeyWithPrefix(key), JSON.stringify(data));
-				resolve();
-			} catch (e) {
-				reject(e);
+	return {
+		async setItem(key: string, data: any): Promise<void> {
+			localStorage.setItem(getKeyWithPrefix(key), JSON.stringify(data));
+		},
+
+		async getItem(key: string): Promise<any> {
+			const data = localStorage.getItem(getKeyWithPrefix(key));
+
+			if (typeof data === 'string') {
+				return JSON.parse(data);
+			} else {
+				return null;
 			}
-		});
-	}
+		},
 
-	getItem(key: string): Promise<any> {
-		return new Promise((resolve, reject) => {
-			try {
-				const data = localStorage.getItem(this._getKeyWithPrefix(key));
-
-				if (typeof data === 'string') {
-					resolve(JSON.parse(data));
-				} else {
-					resolve(null);
-				}
-			} catch (e) {
-				reject(e);
-			}
-		});
-	}
-
-	removeItem(key: string): Promise<void> {
-		return new Promise((resolve, reject) => {
-			try {
-				localStorage.removeItem(this._getKeyWithPrefix(key));
-				resolve();
-			} catch (e) {
-				reject(e);
-			}
-		});
-	}
-
-	_getKeyWithPrefix(key: string): string {
-		return `persistent_storage:${this._id}:${key}`;
-	}
+		async removeItem(key: string): Promise<void> {
+			localStorage.removeItem(getKeyWithPrefix(key));
+		},
+	};
 }
+
+export default { getInstance };

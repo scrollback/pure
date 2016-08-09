@@ -30,7 +30,7 @@ function *restoreNavgationSaga(): Generator<Array<Generator<any, any, any>>, voi
 		if (initialURL) {
 			navigationState = convertURLToState(initialURL);
 		} else if (PERSISTANCE_KEY) {
-			const storage = new PersistentStorage(PERSISTANCE_KEY);
+			const storage = PersistentStorage.getInstance(PERSISTANCE_KEY);
 			navigationState = yield storage.getItem('navigation');
 		}
 		if (navigationState) {
@@ -52,7 +52,7 @@ function *restoreNavgationSaga(): Generator<Array<Generator<any, any, any>>, voi
 function *persistNavgationSaga(): Generator<Array<Generator<any, any, any>>, void, void> {
 	yield* takeLatest([ 'PUSH_ROUTE', 'POP_ROUTE', 'SET_NAVIGATION' ], function *() {
 		if (PERSISTANCE_KEY) {
-			const storage = new PersistentStorage(PERSISTANCE_KEY);
+			const storage = PersistentStorage.getInstance(PERSISTANCE_KEY);
 			const navigationState = yield select(state => state.navigation);
 			yield storage.setItem('navigation', navigationState);
 		}

@@ -3,7 +3,7 @@
 import store from '../../modules/store/store';
 import PersistentStorage from '../../lib/PersistentStorage';
 
-const sessionStorage = new PersistentStorage('session');
+const sessionStorage = PersistentStorage.getInstance('session');
 
 async function saveAndInitializeSession() {
 	let session = null;

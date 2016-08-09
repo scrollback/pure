@@ -6,26 +6,26 @@ const {
 	AsyncStorage,
 } = ReactNative;
 
-export default class PersistentStorage {
-	_id: string;
 
-	constructor(id: string) {
-		this._id = id;
-	}
+function getInstance(id: string) {
 
-	setItem(key: string, data: any): Promise<void> {
-		return AsyncStorage.setItem(this._getKeyWithPrefix(key), JSON.stringify(data));
-	}
+	const getKeyWithPrefix = (key: string) => {
+		return `persistent_storage:${id}:${key}`;
+	};
 
-	getItem(key: string): Promise<any> {
-		return AsyncStorage.getItem(this._getKeyWithPrefix(key)).then(JSON.parse);
-	}
+	return {
+		setItem(key: string, data: any): Promise<void> {
+			return AsyncStorage.setItem(getKeyWithPrefix(key), JSON.stringify(data));
+		},
 
-	removeItem(key: string): Promise<void> {
-		return AsyncStorage.removeItem(this._getKeyWithPrefix(key));
-	}
+		getItem(key: string): Promise<any> {
+			return AsyncStorage.getItem(getKeyWithPrefix(key)).then(JSON.parse);
+		},
 
-	_getKeyWithPrefix(key: string): string {
-		return `persistent_storage:${this._id}:${key}`;
-	}
+		removeItem(key: string): Promise<void> {
+			return AsyncStorage.removeItem(getKeyWithPrefix(key));
+		},
+	};
 }
+
+export default { getInstance };

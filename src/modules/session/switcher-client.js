@@ -5,7 +5,7 @@ import { config } from '../../core-client';
 import store from '../store/store';
 import PersistentStorage from '../../lib/PersistentStorage';
 
-const sessionListStorage = new PersistentStorage('sessionList');
+const sessionListStorage = PersistentStorage.getInstance('sessionList');
 
 const {
 	server: {

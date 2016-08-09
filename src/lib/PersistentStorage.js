@@ -1,22 +1,21 @@
 /* @flow */
 
-export default class PersistentStorage {
-	_id: string;
-	_data: { [key: string]: any } = {};
+function getInstance(id: string) { // eslint-disable-line no-unused-vars
+	const store = {};
 
-	constructor(id: string) {
-		this._id = id;
-	}
+	return {
+		async setItem(key: string, data: any): Promise<void> {
+			store[key] = data;
+		},
 
-	async setItem(key: string, data: any): Promise<void> {
-		this._data[key] = data;
-	}
+		async getItem(key: string): Promise<any> {
+			return store[key];
+		},
 
-	async getItem(key: string): Promise<any> {
-		return this._data[key];
-	}
-
-	async removeItem(key: string): Promise<void> {
-		delete this._data[key];
-	}
+		async removeItem(key: string): Promise<void> {
+			delete store[key];
+		},
+	};
 }
+
+export default { getInstance };
