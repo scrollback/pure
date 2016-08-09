@@ -158,12 +158,18 @@ android {
 
     productFlavors {
         prod {
+            manifestPlaceholders = [
+                GEO_API_KEY: "AIzaSyCtacAKOwsEbCZrZEkXeQfqWmIB-McRl0Y"
+            ]
         }
 
         dev {
             applicationIdSuffix ".dev"
 
             resValue "string", "app_name", config.dev.app_name
+            manifestPlaceholders = [
+                GEO_API_KEY: "AIzaSyB09hPH7I2boNq-Jyg5aoWImQ_PboEvOMs"
+            ]
         }
     }
 
