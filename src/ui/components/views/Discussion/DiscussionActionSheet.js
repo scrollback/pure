@@ -111,7 +111,7 @@ export default class DiscussionActionSheet extends Component<void, Props, void> 
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
-		if (!(thread && thread.body && thread.name)) {
+		if (!(thread && typeof thread.body === 'string' && typeof thread.name === 'string')) {
 			return null;
 		}
 

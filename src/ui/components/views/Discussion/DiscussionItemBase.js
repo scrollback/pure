@@ -126,7 +126,7 @@ export default class DiscussionItemBase extends Component<void, Props, State> {
 		} = this.props;
 
 		// FIXME: temporary check to avoid crash
-		if (!(thread && thread.body && thread.name)) {
+		if (!(thread && typeof thread.body === 'string' && typeof thread.name === 'string')) {
 			return null;
 		}
 
