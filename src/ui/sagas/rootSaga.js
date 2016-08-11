@@ -2,6 +2,7 @@
 
 import cacheSaga from './cacheSaga';
 import ctaSaga from './ctaSaga';
+import installTrackerSaga from './installTrackerSaga';
 import locationSaga from './locationSaga';
 import navigationSaga from './navigationSaga';
 import notesSaga from './notesSaga';
@@ -13,6 +14,7 @@ export default function *rootSaga(): Generator<Array<Generator<any, any, any>>, 
 	yield [
 		cacheSaga(),
 		ctaSaga(),
+		installTrackerSaga(),
 		locationSaga(),
 		navigationSaga(),
 		notesSaga(),
