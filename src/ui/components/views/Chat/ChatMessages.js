@@ -48,7 +48,7 @@ type DataItem = {
 type Props = {
 	data: Array<DataItem>;
 	thread: Thread;
-	threadrel: ThreadRel;
+	threadrel: ?ThreadRel;
 	room: Room;
 	user: string;
 	loadMore: (count: number) => void;
@@ -65,7 +65,7 @@ export default class ChatMessages extends Component<void, Props, State> {
 	static propTypes = {
 		data: PropTypes.arrayOf(PropTypes.object).isRequired,
 		thread: PropTypes.object.isRequired,
-		threadrel: PropTypes.object.isRequired,
+		threadrel: PropTypes.object,
 		room: PropTypes.object.isRequired,
 		user: PropTypes.string.isRequired,
 		loadMore: PropTypes.func.isRequired,

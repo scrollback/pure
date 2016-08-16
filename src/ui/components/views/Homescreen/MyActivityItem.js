@@ -47,12 +47,12 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default class RoomItem extends Component<void, any, any> {
+export default class MyActivityItem extends Component<void, *, void> {
 	static propTypes = {
 		room: PropTypes.shape({
-			id: PropTypes.string.isRequired,
+			id: PropTypes.string,
 			name: PropTypes.string,
-		}),
+		}).isRequired,
 		style: Card.propTypes.style,
 	};
 
@@ -84,11 +84,14 @@ export default class RoomItem extends Component<void, any, any> {
 
 		return (
 			<Card style={style}>
-				<View style={styles.header}>
-					<AppText style={styles.label}>{activityText}</AppText>
-					<AppText style={styles.dot}>●</AppText>
-					<AppText style={styles.title}>{room.name} </AppText>
-				</View>
+				{room ?
+					<View style={styles.header}>
+						<AppText style={styles.label}>{activityText}</AppText>
+						<AppText style={styles.dot}>●</AppText>
+						<AppText style={styles.title}>{room.name} </AppText>
+					</View> :
+					null
+				}
 				<DiscussionItemBase {...rest} style={styles.item} />
 			</Card>
 		);
