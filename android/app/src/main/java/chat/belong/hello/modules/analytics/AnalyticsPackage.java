@@ -15,7 +15,7 @@ public class AnalyticsPackage implements ReactPackage {
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
         return Arrays.<NativeModule>asList(
-                new AnswersInstallTrackerModule(reactContext)
+                new InstallTrackerModule(reactContext)
         );
     }
 

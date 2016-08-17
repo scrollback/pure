@@ -93,7 +93,7 @@ function send(data) {
 	}));
 }
 
-const props = [ 'queries', 'entities', 'auth' ];
+const props = [ 'queries', 'entities', 'auth', 'events' ];
 
 bus.on('postchange', changes => {
 	if (changes.source === 'server') return;

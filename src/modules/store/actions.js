@@ -37,10 +37,8 @@ export const signIn = (provider: string, auth: { accessToken: string; } | { idTo
 });
 
 export const signUp = (user: User): Action => ({
-	type: 'AUTH',
-	payload: {
-		signup: new UserModel({ ...user, presence: PRESENCE_FOREGROUND }),
-	},
+	type: 'SIGNUP',
+	payload: user,
 });
 
 export const clearSignUpError = (signup: Object): Action => ({

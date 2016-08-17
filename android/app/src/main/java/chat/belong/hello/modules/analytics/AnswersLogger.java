@@ -5,7 +5,7 @@ import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.Map;
 
-public class Trackers {
+public class AnswersLogger {
 
     public static final String UTM_CAMPAIGN = "utm_campaign";
     public static final String UTM_SOURCE = "utm_source";

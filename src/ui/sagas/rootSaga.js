@@ -1,5 +1,6 @@
 /* @flow */
 
+import analyticsSaga from './analyticsSaga';
 import cacheSaga from './cacheSaga';
 import ctaSaga from './ctaSaga';
 import installTrackerSaga from './installTrackerSaga';
@@ -12,6 +13,7 @@ import signoutSaga from './signoutSaga';
 
 export default function *rootSaga(): Generator<Array<Generator<any, any, any>>, void, void> {
 	yield [
+		analyticsSaga(),
 		cacheSaga(),
 		ctaSaga(),
 		installTrackerSaga(),

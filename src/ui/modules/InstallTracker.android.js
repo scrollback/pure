@@ -1,5 +1,5 @@
 import { NativeModules } from 'react-native';
 
-const { AnswersInstallTrackerModule } = NativeModules;
+const { InstallTrackerModule } = NativeModules;
 
-export default AnswersInstallTrackerModule;
+export default InstallTrackerModule;

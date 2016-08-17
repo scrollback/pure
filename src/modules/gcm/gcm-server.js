@@ -47,6 +47,7 @@ async function sendStanza(changes, entity) {
 			props: {
 				room: entity && entity.parents[0],
 				thread: entity && entity.id,
+				source: 'notification',
 			},
 		});
 
@@ -95,6 +96,7 @@ async function sendStanza(changes, entity) {
 			props: {
 				room: entity && entity.parents[1],
 				thread: entity && entity.parents[0],
+				source: 'notification',
 			},
 		});
 

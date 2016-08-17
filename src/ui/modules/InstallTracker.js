@@ -1,7 +1,7 @@
 /* @flow */
 
 export default class InstallTracker {
-	static getReferrer: () => Promise<string>;
+	static getAndroidID: () => Promise<string>;
 	static getCampaignName: () => Promise<string>;
 	static getCampaignSource: () => Promise<string>;
 	static getCampaignMedium: () => Promise<string>;

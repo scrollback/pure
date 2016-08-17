@@ -4,7 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import chat.belong.hello.modules.analytics.AnswersInstallTracker;
+import chat.belong.hello.modules.analytics.InstallTracker;
 
 public class InstallReferrerReceiver extends BroadcastReceiver {
 
@@ -14,7 +14,7 @@ public class InstallReferrerReceiver extends BroadcastReceiver {
             final String referrer = intent.getStringExtra("referrer");
 
             if (referrer != null && referrer.length() != 0) {
-                AnswersInstallTracker.getInstance(context).setReferrer(referrer);
+                InstallTracker.getInstance(context).setReferrer(referrer);
             }
         }
     }

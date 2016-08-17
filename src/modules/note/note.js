@@ -65,6 +65,7 @@ export function createNote(
 		props: {
 			room: room.id,
 			thread: thread.id,
+			source: 'notification',
 		},
 	});
 
