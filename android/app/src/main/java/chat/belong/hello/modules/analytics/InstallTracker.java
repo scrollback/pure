@@ -13,7 +13,6 @@ public class InstallTracker {
 
     private static final String PREFERENCES_FILE = "google_play_install_receiver";
     private static final String PROPERTY_INSTALL_REFERRER = "install_referrer";
-    private static final String PROPERTY_INSTALL_ID = "install_id";
 
     private static final String ERROR_NO_REFERRER = "No install referrer found";
     private static final String ERROR_NO_SUCH_PARAM = "No such parameter found";
@@ -68,7 +67,6 @@ public class InstallTracker {
         SharedPreferences.Editor e = mContext.getSharedPreferences(PREFERENCES_FILE, Context.MODE_PRIVATE).edit();
 
         e.putString(PROPERTY_INSTALL_REFERRER, referrer);
-        e.putString(PROPERTY_INSTALL_ID, referrer);
         e.apply();
 
         // Log installation
