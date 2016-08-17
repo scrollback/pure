@@ -1,12 +1,10 @@
 /* @flow */
 
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { TabViewAnimated, TabViewPage, TabBarTop } from 'react-native-tab-view';
 import DiscussionsContainer from '../../containers/DiscussionsContainer';
 import StartDiscussionButton from '../StartDiscussion/StartDiscussionButton';
-import AppText from '../Core/AppText';
-import Colors from '../../../Colors';
+import TabView from '../Core/TabView';
 
 const styles = StyleSheet.create({
 	outer: {
@@ -16,88 +14,45 @@ const styles = StyleSheet.create({
 		flex: 1,
 		elevation: 4,
 	},
-	tabbar: {
-		backgroundColor: Colors.primary,
-	},
-	tablabel: {
-		fontSize: 13,
-		color: Colors.white,
-		margin: 8,
-	},
-	indicator: {
-		backgroundColor: Colors.accent,
-	},
 });
 
 type Route = {
-	title: string;
 	key: string;
 }
 
-type NavigationState = {
-	index: number;
-	routes: Array<Route>;
+type Scene = {
+	route: Route;
 }
 
-type State = {
-	navigation: NavigationState;
-}
+const routes = [
+	{ key: 'createTime', title: 'Latest' },
+	{ key: 'score', title: 'Popular' },
+];
 
-export default class Roomscreen extends Component<void, any, State> {
-	state: State = {
-		navigation: {
-			index: 0,
-			routes: [
-				{ key: 'createTime', title: 'Latest' },
-				{ key: 'score', title: 'Popular' },
-			],
-		},
-	};
+export default class Roomscreen extends Component<void, *, void> {
 
-	_handleChangeTab = (index: number) => {
-		this.setState({
-			navigation: { ...this.state.navigation, index },
-		});
-	};
+	static propTypes = {
+		room: PropTypes.string.isRequired,
+		onNavigate: PropTypes.func.isRequired,
+	}
 
-	_renderLabel = ({ route }: { route: Route }) => {
-		return <AppText style={styles.tablabel}>{route.title.toUpperCase()}</AppText>;
-	};
-
-	_renderHeader = (props: any) => {
-		return (
-			<TabBarTop
-				{...props}
-				renderLabel={this._renderLabel}
-				indicatorStyle={styles.indicator}
-				style={styles.tabbar}
-			/>
-		);
-	};
-
-	_renderScene = ({ route }: { route: Route }) => {
+	_renderScene = (scene: Scene) => {
 		return (
 			<DiscussionsContainer
 				{...this.props}
-				sortBy={route.key}
+				sortBy={scene.route.key}
 				style={styles.container}
 			/>
 		);
 	};
 
-	_renderTabView = (props: any) => {
-		return <TabViewPage {...props} renderScene={this._renderScene} />;
-	};
-
 	render() {
 		return (
 			<View style={styles.outer}>
-				<TabViewAnimated
-					style={[ this.props.style, styles.container ]}
-					navigationState={this.state.navigation}
-					renderScene={this._renderTabView}
-					renderHeader={this._renderHeader}
-					onRequestChangeTab={this._handleChangeTab}
+				<TabView
+					{...this.props}
+					renderScene={this._renderScene}
+					routes={routes}
 				/>
 
 				<StartDiscussionButton

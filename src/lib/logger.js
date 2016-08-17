@@ -1,10 +1,11 @@
 import winston from 'winston';
 import fs from 'fs';
 import util from 'util';
+
 winston.setLevels(winston.config.npm.levels);
 winston.addColors(winston.config.npm.colors);
 
-export default class Logger{
+export default class Logger {
 	dir: Array<string>;
 	transports: Array<Object>;
 	newLogDir: any;
@@ -13,7 +14,7 @@ export default class Logger{
 	constructor(path: any, file: string) {
 		this.dir = path.split('/');
 		this.checkForDir();
-		this.logFileName = file ? 'userlogs/' + file : this.buildFileName();
+		this.logFileName = file ? 'files/' + file : this.buildFileName();
 		this.transports = [ new winston.transports.Console({ colorize: true, level: 'debug' }),
 		new (winston.transports.File)({
 			filename: this.newLogDir + '/' + this.logFileName + '.log',
@@ -37,7 +38,7 @@ export default class Logger{
 	checkForDir() {
 		const logsDir = __dirname + '/../../logs/';
 
-		this.newLogDir = logsDir + this.dir[this.dir.length-2];
+		this.newLogDir = logsDir + this.dir[this.dir.length - 2];
 
 		if (!fs.existsSync(logsDir)) {
 			fs.mkdirSync(logsDir);
@@ -45,8 +46,8 @@ export default class Logger{
 		if (!fs.existsSync(this.newLogDir)) {
 			fs.mkdirSync(this.newLogDir);
 		}
-		if (!fs.existsSync(this.newLogDir + '/userlogs')) {
-			fs.mkdirSync(this.newLogDir + '/userlogs');
+		if (!fs.existsSync(this.newLogDir + '/files')) {
+			fs.mkdirSync(this.newLogDir + '/files');
 		}
 	}
 

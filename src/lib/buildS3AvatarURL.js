@@ -19,5 +19,5 @@ export default function buildS3AvatarURL(userName: string, size: number = 24): s
 			}
 		}
 	}
-	return `https://s.bel.ng/a/${userName}/${sizeToReturn}.jpeg`;
+	return `https://s.bel.ng/a/${userName}/${sizeToReturn}.jpg`;
 }
