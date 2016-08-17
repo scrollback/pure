@@ -97,6 +97,7 @@
     "react-addons-test-utils": "~15.2.1",
     "react-native-fabric": "^0.3.0",
     "react-native-mock": "^0.2.5",
+    "redux-logger": "^2.6.1",
     "secure-random": "^1.1.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.1.0-beta.20",

@@ -11,6 +11,13 @@ import type { EnhancedStore } from './storeTypeDefinitions';
 const sagaMiddleware = createSagaMiddleware();
 const middlewares = [ sagaMiddleware ];
 
+if (process.env.NODE_ENV !== 'production') {
+	const createLogger = require('redux-logger');
+
+	const logger = createLogger({ collapsed: true });
+	middlewares.push(logger);
+}
+
 const store: any = createStore(rootReducer, compose(
 	applyMiddleware(...middlewares),
 	addQueryProviders(cacheQueryProvider),
