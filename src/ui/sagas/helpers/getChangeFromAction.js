@@ -28,6 +28,6 @@ export default function(action: Action) {
 			events: [ (action.payload: any) ],
 		};
 	default:
-		return {};
+		return null;
 	}
 }
