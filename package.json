@@ -45,7 +45,7 @@
     "react-native": "^0.30.0",
     "react-native-fbsdk": "^0.3.0",
     "react-native-image-chooser": "^1.0.3",
-    "react-native-tab-view": "0.0.18",
+    "react-native-tab-view": "0.0.23",
     "react-native-vector-icons": "^2.0.3",
     "redux": "^3.5.2",
     "redux-saga": "^0.11.0",
