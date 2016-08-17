@@ -21,7 +21,7 @@ async function saveAndInitializeSession() {
 
 	if (session) {
 		store.dispatch({
-			type: 'AUTH',
+			type: 'AUTHORIZE',
 			payload: {
 				session,
 			},

@@ -23,14 +23,14 @@ import type { Action } from '../../modules/store/storeTypeDefinitions';
  * User related actions
  */
 export const initializeSession = (session: string): Action => ({
-	type: 'AUTH',
+	type: 'AUTHORIZE',
 	payload: {
 		session,
 	}
 });
 
 export const signIn = (provider: string, auth: { accessToken: string; } | { idToken: string; } | { code: string; }): Action => ({
-	type: 'AUTH',
+	type: 'AUTHORIZE',
 	payload: {
 		[provider]: auth,
 	},

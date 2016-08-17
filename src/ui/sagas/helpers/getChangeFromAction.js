@@ -9,7 +9,7 @@ export default function(action: Action) {
 	switch (action.type) {
 	case 'CHANGE':
 		return action.payload;
-	case 'AUTH':
+	case 'AUTHORIZE':
 		return {
 			auth: action.payload,
 		};
