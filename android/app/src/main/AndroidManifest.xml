@@ -116,7 +116,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="8dc06f7822a3f1a064649ce8131351faef752b39" />
+            android:value="${FABRIC_API_KEY}" />
     </application>
 
 </manifest>

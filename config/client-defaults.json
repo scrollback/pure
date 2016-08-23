@@ -11,14 +11,26 @@
 	},
 
 	"facebook": {
-		"login_url": "/r/facebook/login"
+		"login_url": "/r/facebook/login",
+		"app_id": "1691558224435512"
 	},
 
 	"google": {
-		"login_url": "/r/google/login"
+		"login_url": "/r/google/login",
+		"server_client_id":  "949615022713-430dq6ctus4qc54chti27nlgpbt70je8.apps.googleusercontent.com",
+		"geo_api_key":  "AIzaSyCtacAKOwsEbCZrZEkXeQfqWmIB-McRl0Y"
+	},
+
+	"fabric": {
+		"api_key": "8dc06f7822a3f1a064649ce8131351faef752b39"
 	},
 
 	"dev": {
-		"app_name": "Belong (Dev)"
+		"app_name": "Belong (Dev)",
+
+		"google": {
+			"server_client_id": "1036580994918-4mohu6b2ihrsvbras7db0hgquuob4h6s.apps.googleusercontent.com",
+			"geo_api_key":  "AIzaSyA5iHO9b1wmb7lzwAwtgaAM8AAnWGNbtEU"
+		}
 	}
 }

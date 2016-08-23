@@ -100,7 +100,7 @@
     "redux-logger": "^2.6.1",
     "secure-random": "^1.1.1",
     "url-loader": "^0.5.7",
-    "webpack": "^2.1.0-beta.20",
+    "webpack": "^2.1.0-beta.21",
     "xmlhttprequest": "^1.8.0"
   },
   "scripts": {

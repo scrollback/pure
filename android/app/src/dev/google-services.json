@@ -1,46 +1,19 @@
 {
   "project_info": {
-    "project_number": "166286224597",
-    "project_id": "belong-test"
+    "project_number": "1036580994918",
+    "project_id": "belong-dev-141212"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:166286224597:android:163beb67d77062ce",
+        "mobilesdk_app_id": "1:1036580994918:android:b04644528fae5cd1",
         "android_client_info": {
           "package_name": "chat.belong.hello.dev"
         }
       },
       "oauth_client": [
         {
-          "client_id": "166286224597-oastqh89ii86emlrvk2v10k3ea6368f2.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 1
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:166286224597:android:b04644528fae5cd1",
-        "android_client_info": {
-          "package_name": "chat.belong.hello.dev"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "166286224597-1fjgcd04sidk45jhrpq2pn7jdk4df5sg.apps.googleusercontent.com",
+          "client_id": "1036580994918-mu6jv7ki4ejbijlqil6mpvgeqksmjluk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "chat.belong.hello.dev",
@@ -48,11 +21,15 @@
           }
         },
         {
-          "client_id": "166286224597-oastqh89ii86emlrvk2v10k3ea6368f2.apps.googleusercontent.com",
+          "client_id": "1036580994918-4mohu6b2ihrsvbras7db0hgquuob4h6s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
-      "api_key": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5iHO9b1wmb7lzwAwtgaAM8AAnWGNbtEU"
+        }
+      ],
       "services": {
         "analytics_service": {
           "status": 1
