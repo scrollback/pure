@@ -18,7 +18,7 @@ const getThreadRoute = thread => {
 };
 
 const mapDispatchToProps = dispatch => ({
-	shareOnFacebook: (user, thread) => {
+	shareOnFacebook: (user, thread, roles) => {
 		const route = getThreadRoute(thread);
 
 		dispatch({
@@ -32,9 +32,9 @@ const mapDispatchToProps = dispatch => ({
 				}),
 			},
 		});
-		dispatch(shareThread(thread.id, user, thread.roles));
+		dispatch(shareThread(thread.id, user, roles));
 	},
-	shareOnTwitter: (user, thread, room) => {
+	shareOnTwitter: (user, thread, roles, room) => {
 		const text = 'Saw this on my Belong neighborhood group. Worth checking out.';
 		const hashtags = room && room.name && room.name.indexOf(' ') === -1 ? [ room.name ] : null;
 		const route = getThreadRoute(thread);
@@ -47,9 +47,9 @@ const mapDispatchToProps = dispatch => ({
 				hashtags,
 			},
 		});
-		dispatch(shareThread(thread.id, user, thread.roles));
+		dispatch(shareThread(thread.id, user, roles));
 	},
-	shareOnWhatsApp: (user, thread) => {
+	shareOnWhatsApp: (user, thread, roles) => {
 		const text = 'Saw this on my Belong neighborhood group. You should check it out.';
 		const route = getThreadRoute(thread);
 
@@ -60,7 +60,7 @@ const mapDispatchToProps = dispatch => ({
 				route,
 			},
 		});
-		dispatch(shareThread(thread.id, user, thread.roles));
+		dispatch(shareThread(thread.id, user, roles));
 	},
 });
 

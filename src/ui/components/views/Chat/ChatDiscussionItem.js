@@ -148,15 +148,28 @@ export default class ChatDiscussionItem extends Component<void, Props, State> {
 	}
 
 	_handleFacebookPress = async () => {
-		this.props.shareOnFacebook(this.props.user, this.props.thread);
+		this.props.shareOnFacebook(
+			this.props.user,
+			this.props.thread,
+			this.props.threadrel && this.props.threadrel.roles,
+		);
 	}
 
 	_handleTwitterPress = () => {
-		this.props.shareOnTwitter(this.props.user, this.props.thread, this.props.room);
+		this.props.shareOnTwitter(
+			this.props.user,
+			this.props.thread,
+			this.props.threadrel && this.props.threadrel.roles,
+			this.props.room,
+		);
 	}
 
 	_handleWhatsAppPress = () => {
-		this.props.shareOnWhatsApp(this.props.user, this.props.thread);
+		this.props.shareOnWhatsApp(
+			this.props.user,
+			this.props.thread,
+			this.props.threadrel && this.props.threadrel.roles,
+		);
 	}
 
 	_handleShowMenu = () => {
