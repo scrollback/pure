@@ -145,15 +145,26 @@ function getRoomSpecificNews (): Promise<Array<RoomSpecificNews>> {
 		- Remove the news that were already posted.
 	*/
 	return performReadQuery({
-		$: `SELECT roomArticles.id AS roomid, roomArticles.name AS roomname, roomArticles.rawjson AS rawjson, roomArticles.url AS url FROM (
-				SELECT * FROM rooms JOIN LATERAL (
-					SELECT * FROM articles
-		   			WHERE articles.terms @@ plainto_tsquery(rooms.name) AND NOT rooms.tags @> &{noNewsRoom}
-		   			ORDER  BY articles.rawjson->>'published' DESC NULLS LAST LIMIT  1
-				) article ON TRUE
+		$: `SELECT roomArticles.id AS roomid, roomArticles.name AS roomname,
+				roomArticles.rawjson AS rawjson, roomArticles.url AS url
+			FROM (
+			    SELECT * FROM rooms JOIN LATERAL (
+			        SELECT * FROM articles
+			        WHERE articles.terms @@ plainto_tsquery(rooms.name) AND NOT rooms.tags @> '{24}'
+			        ORDER  BY articles.rawjson->>'published' DESC NULLS LAST LIMIT  1
+			    ) article ON TRUE
 			) as roomArticles LEFT OUTER JOIN postednews
 			ON roomArticles.id::text = postednews.roomid AND roomArticles.url = postednews.url
-			WHERE postednews.url IS NULL`,
+			WHERE postednews.url IS NULL AND
+			roomid::uuid IN (
+			    SELECT id FROM (
+			        SELECT rooms.id, rooms.updatetime, MAX(postednews.createtime) AS lastposttime
+			        FROM rooms, postednews
+			        WHERE rooms.id = postednews.roomid::uuid
+			        GROUP BY rooms.id
+			    ) AS groupedrooms
+			        WHERE groupedrooms.updatetime > groupedrooms.lastposttime
+			)`,
 		noNewsRoom: `{${TAG_ROOM_NO_NEWS}}`
 	});
 }
