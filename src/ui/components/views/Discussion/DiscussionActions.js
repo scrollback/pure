@@ -69,7 +69,11 @@ export default class DiscussionActions extends Component<void, Props, void> {
 	};
 
 	_handleShare = () => {
-		this.props.shareLink(this.props.user, this.props.thread);
+		this.props.shareLink(
+			this.props.user,
+			this.props.thread,
+			this.props.threadrel && this.props.threadrel.roles,
+		);
 	};
 
 	render() {

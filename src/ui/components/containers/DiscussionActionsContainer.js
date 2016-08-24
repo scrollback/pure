@@ -14,7 +14,7 @@ const getThreadRoute = thread => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	shareLink: (user, thread) => {
+	shareLink: (user, thread, roles) => {
 		dispatch({
 			type: 'SHARE_LINK',
 			payload: {
@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
 				route: getThreadRoute(thread),
 			},
 		});
-		dispatch(shareThread(thread.id, user, thread.roles));
+		dispatch(shareThread(thread.id, user, roles));
 	},
 });
 
