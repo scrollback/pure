@@ -47,7 +47,11 @@ function sendMessage(data) {
 		type: 'SOCKET_SEND',
 		payload,
 	});
-	client.send(message);
+	try {
+		client.send(message);
+	} catch (e) {
+		// ignore
+	}
 }
 
 client.on('open', () => store.dispatch({ type: 'SOCKET_ONLINE' }));

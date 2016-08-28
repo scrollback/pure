@@ -26,7 +26,6 @@ function createConnection(url: string): SocketConnection {
 
 	let	backOff = 1;
 	let state: 'open' | 'closed' = 'closed';
-	let queue = [];
 	let client;
 
 	function createClient() {
@@ -45,8 +44,6 @@ function createConnection(url: string): SocketConnection {
 		state = 'open';
 		backOff = 1;
 		listeners.open.forEach(listener => listener());
-		queue.forEach(data => client.send(data));
-		queue = [];
 	}
 
 	function handleClose() {
@@ -69,7 +66,7 @@ function createConnection(url: string): SocketConnection {
 	return {
 		send: (data: string) => {
 			if (state === 'closed') {
-				queue.push(state);
+				throw new Error('Socket connection is closed');
 			} else {
 				client.send(data);
 			}
