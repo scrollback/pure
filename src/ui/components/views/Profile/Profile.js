@@ -4,10 +4,10 @@ import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
 import ProfileField from './ProfileField';
+import ProfileAvatar from './ProfileAvatar';
 import AppText from '../Core/AppText';
 import AppbarTouchable from '../Appbar/AppbarTouchable';
 import AppbarIcon from '../Appbar/AppbarIcon';
-import AvatarRound from '../Avatar/AvatarRound';
 import PageLoading from '../Page/PageLoading';
 import PageEmpty from '../Page/PageEmpty';
 import ProfileEditButtonContainer from '../../containers/ProfileEditButtonContainer';
@@ -116,11 +116,6 @@ const styles = StyleSheet.create({
 		textAlign: 'center',
 		opacity: 0.7,
 	},
-
-	avatar: {
-		margin: 8,
-		elevation: 2,
-	},
 });
 
 type Props = {
@@ -129,6 +124,7 @@ type Props = {
 	places: {
 		[type: number]: Array<string>;
 	};
+	saveUser: Function;
 	onNavigate: Function;
 }
 
@@ -160,6 +156,7 @@ export default class Profile extends Component<void, Props, void> {
 			}),
 		]),
 		places: PropTypes.any.isRequired,
+		saveUser: PropTypes.func.isRequired,
 		onNavigate: PropTypes.func.isRequired,
 	};
 
@@ -199,6 +196,7 @@ export default class Profile extends Component<void, Props, void> {
 			currentUser,
 			user,
 			places,
+			saveUser,
 			onNavigate,
 		} = this.props;
 
@@ -231,10 +229,10 @@ export default class Profile extends Component<void, Props, void> {
 						<View style={styles.tint} />
 						<View>
 							<View style={styles.avatarContainer}>
-								<AvatarRound
-									style={styles.avatar}
-									user={user.id}
-									size={160}
+								<ProfileAvatar
+									saveUser={saveUser}
+									currentUser={currentUser}
+									user={user}
 								/>
 								<View style={styles.info}>
 									<AppText style={styles.id}>{user.id}</AppText>

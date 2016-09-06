@@ -38,7 +38,8 @@ export type User = Entity & {
 		email?: {
 			notifications?: boolean;
 			frequency?: 'daily' | 'never';
-		}
+		};
+		pictures?: Array<string>;
 	};
 	presence?: number;
 	presenceTime?: number;

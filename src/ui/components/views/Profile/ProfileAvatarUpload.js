@@ -3,8 +3,7 @@
 import React, { Component, PropTypes } from 'react';
 import ReactNative from 'react-native';
 import shallowCompare from 'react-addons-shallow-compare';
-import CloseButton from '../Core/CloseButton';
-import ImageUploadButton from './ImageUploadButton';
+import ImageUploadButton from '../ImageUpload/ImageUploadButton';
 import Colors from '../../../Colors';
 
 const {
@@ -15,38 +14,30 @@ const {
 
 const styles = StyleSheet.create({
 	container: {
-		position: 'absolute',
-		right: 0,
-		bottom: 0,
-	},
-
-	thumbnailContainer: {
-		elevation: 4,
 		margin: 8,
-		borderWidth: StyleSheet.hairlineWidth,
-		borderColor: Colors.separator,
+		elevation: 2,
+		borderRadius: 80,
 	},
 
-	thumbnailStyle: {
-		alignItems: 'flex-end',
-		justifyContent: 'flex-end',
+	avatar: {
+		height: 160,
+		width: 160,
+		borderRadius: 80,
+	},
+
+	button: {
+		position: 'absolute',
+		left: 44,
+		top: 44,
 	},
 
 	iconIdle: {
 		color: Colors.white,
-		marginRight: 13,
-		marginLeft: 19,
 	},
 
 	iconError: {
 		marginTop: 14,
 		marginBottom: 18,
-	},
-
-	closeButton: {
-		position: 'absolute',
-		top: -8,
-		left: -8,
 	},
 });
 
@@ -65,7 +56,7 @@ type Props = {
 	style?: any;
 }
 
-export default class ImageUploadChat extends Component {
+export default class ProfileAvatarUpload extends Component<void, Props, void> {
 	static propTypes = {
 		photo: PropTypes.shape({
 			name: PropTypes.string.isRequired,
@@ -104,28 +95,22 @@ export default class ImageUploadChat extends Component {
 	render() {
 		const {
 			uri,
-			height,
-			width,
 		} = this.props.photo;
 
 		return (
-			<View {...this.props} style={[ styles.container, this.props.style ]}>
-				<View style={styles.thumbnailContainer}>
-					<Image source={{ uri, height: (height / width) * 160, width: 160 }} style={styles.thumbnailStyle}>
-						<ImageUploadButton
-							onPress={this._handlePress}
-							status={this.props.status}
-							idleIcon='send'
-							closeIcon='close'
-							doneIcon='done'
-							errorIcon='warning'
-							idleIconStyle={styles.iconIdle}
-							errorIconStyle={styles.iconError}
-						/>
-					</Image>
-				</View>
-
-				<CloseButton onPress={this._handleClose} style={styles.closeButton} />
+			<View style={styles.container}>
+				<Image source={{ uri }} style={styles.avatar} />
+				<ImageUploadButton
+					onPress={this._handlePress}
+					status={this.props.status}
+					idleIcon='file-upload'
+					closeIcon='close'
+					doneIcon='done'
+					errorIcon='warning'
+					idleIconStyle={styles.iconIdle}
+					errorIconStyle={styles.iconError}
+					style={styles.button}
+				/>
 			</View>
 		);
 	}

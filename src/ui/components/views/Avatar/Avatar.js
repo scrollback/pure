@@ -23,7 +23,13 @@ export default class Avatar extends Component<void, Props, void> {
 
 	render() {
 		if (this.props.uri) {
-			return <Image {...this.props} source={{ uri: this.props.uri }} />;
+			return (
+				<Image
+					{...this.props}
+					key={this.props.uri}
+					source={{ uri: this.props.uri }}
+				/>
+			);
 		} else {
 			return null;
 		}

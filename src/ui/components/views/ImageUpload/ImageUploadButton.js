@@ -28,6 +28,18 @@ const styles = StyleSheet.create({
 		borderRadius: 32,
 	},
 
+	icon: {
+		color: Colors.white,
+		margin: 16,
+	},
+
+	loading: {
+		position: 'absolute',
+		left: 10,
+		top: 10,
+	},
+
+	/* eslint-disable react-native/no-unused-styles */
 	idleIconContainer: {
 		backgroundColor: Colors.accent,
 	},
@@ -42,17 +54,6 @@ const styles = StyleSheet.create({
 
 	errorIconContainer: {
 		backgroundColor: Colors.error,
-	},
-
-	icon: {
-		color: Colors.white,
-		margin: 16,
-	},
-
-	loading: {
-		position: 'absolute',
-		left: 10,
-		top: 10,
 	},
 });
 
