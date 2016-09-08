@@ -1,7 +1,7 @@
 /* @flow */
 
+import { Share } from 'react-native';
 import { takeLatest } from 'redux-saga';
-import Share from '../modules/Share';
 import getShortURLFromRoute from './helpers/getShortURLFromRoute';
 
 export default function *shareLinkSaga(): Generator<Array<Generator<any, any, any>>, void, void> {
@@ -21,8 +21,8 @@ export default function *shareLinkSaga(): Generator<Array<Generator<any, any, an
 			parts.push(shortUrl || '');
 		}
 
-		const shareText = parts.join('\n');
+		const message = parts.join('\n');
 
-		Share.shareItem(title, shareText);
+		Share.share({ message }, { dialogTitle: title });
 	});
 }
