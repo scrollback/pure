@@ -67,7 +67,7 @@ bus.on('change', (changes, next) => {
 		) {
 			if (!entity.id) entity.id = entity.user + '_' + entity.item;
 			promises.push(getEntityAsync(entity.id).then(result => {
-				let rolesToInc = [], upvote, user;
+				let rolesToInc = [], upvote, user, presenceChanged;
 				const rolesToDec = [], newArr = [];
 
 				// console.log("result: ", result);
@@ -84,12 +84,17 @@ bus.on('change', (changes, next) => {
 							rolesToDec.push(role);
 						}
 					});
-
-					if (rolesToInc.length === 0 && rolesToDec.length === 0) {
+					if (entity.hasOwnProperty('presence') && result.presence !== entity.presence) {
+						presenceChanged = true;
+					}
+					if (rolesToInc.length === 0 && rolesToDec.length === 0 && !presenceChanged) {
 						return null;
 					}
 				} else {
 					rolesToInc = entity.roles;
+					if (entity.hasOwnProperty('presence')) {
+						presenceChanged = true;
+					}
 				}
 
 				const item = changes.entities[entity.item] || {};
@@ -114,23 +119,34 @@ bus.on('change', (changes, next) => {
 				}
 				item.counts = item.counts || {};
 
-				rolesToInc.forEach((role) => {
-					if (role === Constants.ROLE_UPVOTE) {
-						upvote = 1;
-					}
-					if (ROLES[role]) {
-						item.counts[ROLES[role]] = [ 1, '$add' ];
-					}
-				});
+				if (rolesToInc.length > 0) {
+					rolesToInc.forEach((role) => {
+						if (role === Constants.ROLE_UPVOTE) {
+							upvote = 1;
+						}
+						if (ROLES[role]) {
+							item.counts[ROLES[role]] = [ 1, '$add' ];
+						}
+					});
+				}
 
-				rolesToDec.forEach((role) => {
-					if (role === Constants.ROLE_UPVOTE) {
-						upvote = -1;
+				if (rolesToDec.length > 0) {
+					rolesToDec.forEach((role) => {
+						if (role === Constants.ROLE_UPVOTE) {
+							upvote = -1;
+						}
+						if (ROLES[role]) {
+							item.counts[ROLES[role]] = [ -1, '$add' ];
+						}
+					});
+				}
+				if (presenceChanged) {
+					if (entity.presence === Constants.STATUS_FG) {
+						item.counts.online = [ 1, '$add' ];
+					} else {
+						item.counts.online = [ -1, '$add' ];
 					}
-					if (ROLES[role]) {
-						item.counts[ROLES[role]] = [ -1, '$add' ];
-					}
-				});
+				}
 				// console.log("count module: ", item)
 				changes.entities[entity.item] = item;
 				if (upvote) {

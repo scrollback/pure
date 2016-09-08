@@ -27,7 +27,10 @@ public class InstallTrackerModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void getAndroidID(Promise promise) {
         try {
-            promise.resolve(Settings.Secure.ANDROID_ID);
+            String androidID = Settings.Secure.getString(
+                    getReactApplicationContext().getContentResolver(),
+                    Settings.Secure.ANDROID_ID);
+            promise.resolve(androidID);
         } catch (NoSuchPropertyException e) {
             promise.reject(e);
         }

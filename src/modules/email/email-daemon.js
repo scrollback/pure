@@ -7,6 +7,7 @@ import sendInvitationEmail from './invitationEmail';
 import sendWelcomeEmail from './welcomeEmail';
 import sendMentionEmail from './mentionEmail';
 import sendDigestEmail from './digestEmail';
+import './sendEngagementReport';
 import {
 	JOB_EMAIL_WELCOME,
 	JOB_EMAIL_DIGEST,

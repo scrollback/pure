@@ -1,0 +1,28 @@
+<p>Engagement metrics for threads created in the last 3 hours:</p>
+
+<table border="1" cellpadding="2" style="font-family: sans-serif; border: 1px solid #999; border-collapse: collapse;">
+	<thead style="text-align: left; background: #eee;">
+		<th>Time</th>
+		<th>Author</th>
+		<th>Room</th>
+		<th>Title</th>
+		<th>Opens</th>
+		<th>Likes</th>
+		<th>Replies</th>
+		<th>People</th>
+	</thead>
+	<tbody>
+		{{#each rows}}
+		<tr>
+			<td>{{this.createtime}}</td>
+			<td>{{this.creator}}</td>
+			<td>{{this.room}}</td>
+			<td><a style="text-decoration: none" href="https://bel.ng/{{this.roomid}}/{{this.threadid}}">{{this.title}}</a></td>
+			<td align="right">{{this.counts.visitor}}</td>
+			<td align="right">{{this.counts.upvote}}</td>
+			<td align="right">{{this.counts.children}}</td>
+			<td align="right">{{this.counts.follower}}</td>
+		</tr>
+		{{/each}}
+	</tbody>
+</table>
