@@ -94,7 +94,7 @@
     "mockery": "^1.7.0",
     "node-fetch": "^1.6.0",
     "nyc": "^8.1.0",
-    "quik": "^0.6.0",
+    "quik": "^0.7.1",
     "react-addons-test-utils": "~15.2.1",
     "react-native-fabric": "^0.3.0",
     "react-native-mock": "^0.2.6",
