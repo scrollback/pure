@@ -79,11 +79,9 @@ export default class ProfileAvatar extends Component<void, Props, State> {
 			user,
 		} = this.props;
 
-		const params = user && user.params ? { ...user.params } : {};
-
-		params.lastPictureUpdateTime = Date.now();
-
 		setTimeout(() => {
+			const params = user && user.params ? { ...user.params } : {};
+			params.lastPictureUpdateTime = Date.now();
 			this.props.saveUser({ ...this.props.user, params });
 			this._handleUploadClose();
 		}, 500);
