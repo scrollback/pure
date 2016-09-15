@@ -142,7 +142,7 @@ const FACEBOOK_SHARE_CHECKED_KEY = 'start_discussion_facebook_share_checked';
 
 type Upload = {
 	url: ?string;
-	thumbnail: ?string;
+	thumbnails: ?Array<string>;
 }
 
 type ShareContent = {
@@ -409,7 +409,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 					url: upload.url,
 					thumbnail_height: Math.min(480, width) * aspectRatio,
 					thumbnail_width: Math.min(480, width),
-					thumbnail_url: upload.thumbnail,
+					thumbnail_url: upload.thumbnails ? upload.thumbnails.find(url => /240\.[a-z]+/i.test(url)) : null,
 					type: 'photo',
 				},
 			};

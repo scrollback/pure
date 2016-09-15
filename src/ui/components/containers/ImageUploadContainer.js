@@ -5,7 +5,7 @@ import ImageUploadHelper from '../../../modules/image-upload/ImageUploadHelper';
 
 type UploadResult = {
 	url: ?string;
-	thumbnail: ?string;
+	thumbnails: ?Array<string>;
 }
 
 type Props = {

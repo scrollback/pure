@@ -122,7 +122,9 @@ export function getResponse(policyReq) {
 
 	let key = keyPrefix,
 		original = `https://${config.s3.uploadBucket}/`,
-		thumbnail = `https://${config.s3.generateBucket}/${keyPrefix}`;
+		sizes;
+
+	const thumbnailHost = `https://${config.s3.generateBucket}/${keyPrefix}`;
 
 	if (/\s{2,}/.test(filename)) {
 		throw new Error('S3 does not support filenames with multiple spaces');
@@ -132,21 +134,21 @@ export function getResponse(policyReq) {
 
 	switch (policyReq.uploadType) {
 	case 'avatar':
+		sizes = [ 16, 24, 32, 48, 64, 72, 96, 128, 256, 320, 480, 512, 960 ];
 		key += 'avatar.' + ext;
 		original += key;
-		thumbnail += '256.jpg';
 		break;
 	case 'content':
+		sizes = [ 120, 240, 320, 480, 640, 960 ];
 		key += 'content.' + ext;
 		original += key;
-		thumbnail += '320.jpg';
 		break;
 	}
 
 	return {
 		request_url: requestUrl,
 		original,
-		thumbnail,
+		thumbnails: sizes.map(size => thumbnailHost + size + '.jpg'),
 		policy: {
 			key,
 			acl: config.s3.acl,

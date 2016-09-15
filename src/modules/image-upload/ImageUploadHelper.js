@@ -16,7 +16,7 @@ type UploadOptions = {
 type UploadParams = {
 	request_url: string;
 	original: string;
-	thumbnail: string;
+	thumbnails: Array<string>;
 	policy: {
 		key: string;
 		acl: string;
@@ -31,7 +31,7 @@ type UploadParams = {
 
 type UploadResult = {
 	url: ?string;
-	thumbnail: ?string;
+	thumbnails: ?Array<string>;
 }
 
 export default class ImageUploadHelper {
@@ -148,7 +148,7 @@ export default class ImageUploadHelper {
 		const {
 			request_url,
 			original,
-			thumbnail,
+			thumbnails,
 			policy,
 		} = uploadParams;
 
@@ -159,14 +159,15 @@ export default class ImageUploadHelper {
 		await this._sendRequest(request_url, formData);
 
 		if (generateThumb) {
-			if (thumbnail) {
-				await this._pollThumbnail(thumbnail);
+			if (thumbnails) {
+				await this._pollThumbnail(thumbnails[0]);
+				await this._pollThumbnail(thumbnails[thumbnails.length - 1]);
 			}
 		}
 
 		return {
 			url: original,
-			thumbnail,
+			thumbnails,
 		};
 	}
 }
