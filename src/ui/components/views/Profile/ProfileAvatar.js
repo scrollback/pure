@@ -74,7 +74,7 @@ export default class ProfileAvatar extends Component<void, Props, State> {
 		return shallowCompare(this, nextProps, nextState);
 	}
 
-	_handleUploadFinish = () => {
+	_handleUploadSuccess = () => {
 		const {
 			user,
 		} = this.props;
@@ -121,11 +121,11 @@ export default class ProfileAvatar extends Component<void, Props, State> {
 					<ImageUploadContainer
 						component={ProfileAvatarUpload}
 						photo={this.state.photo}
+						successDelay={15000/* FIXME: wait since we don't know when thumbnails are generated */}
 						onUploadClose={this._handleUploadClose}
-						onUploadFinish={this._handleUploadFinish}
+						onUploadSuccess={this._handleUploadSuccess}
 						uploadOptions={{
 							uploadType: 'avatar',
-							generateThumb: true,
 						}}
 						autoStart
 					/> : (

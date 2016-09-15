@@ -11,9 +11,10 @@ type UploadResult = {
 type Props = {
 	photo: any;
 	component: ReactClass<*>;
+	successDelay?: number;
 	autoStart?: boolean;
 	onUploadClose?: Function;
-	onUploadFinish?: (result: UploadResult) => void;
+	onUploadSuccess?: (result: UploadResult) => void;
 	onUploadError?: (e: Error) => void;
 	uploadOptions: any;
 }
@@ -27,9 +28,10 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 	static propTypes = {
 		photo: PropTypes.any.isRequired,
 		component: PropTypes.any.isRequired,
+		successDelay: PropTypes.number,
 		autoStart: PropTypes.bool,
 		onUploadClose: PropTypes.func,
-		onUploadFinish: PropTypes.func,
+		onUploadSuccess: PropTypes.func,
 		onUploadError: PropTypes.func,
 		uploadOptions: PropTypes.object.isRequired,
 	};
@@ -50,7 +52,7 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 	}
 
 	_startUpload = async () => {
-		const { photo } = this.props;
+		const { photo, successDelay } = this.props;
 		const filename = photo.name ? photo.name.replace(/\s+/g, ' ') : 'image';
 		const upload = ImageUploadHelper.create({ ...this.props.uploadOptions, filename });
 
@@ -67,8 +69,12 @@ export default class ImageUploadContainer extends Component<void, Props, State> 
 				type: 'image/' + (ext === 'jpg' ? 'jpeg' : ext),
 			});
 
-			if (this.props.onUploadFinish) {
-				this.props.onUploadFinish(result);
+			if (successDelay) {
+				await new Promise(resolve => setTimeout(resolve, successDelay));
+			}
+
+			if (this.props.onUploadSuccess) {
+				this.props.onUploadSuccess(result);
 			}
 
 			this.setState({

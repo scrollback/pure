@@ -143,7 +143,7 @@ export default class ChatInput extends Component<void, Props, State> {
 		}
 	};
 
-	_handleUploadFinish = (result: { url: ?string; thumbnails: ?Array<string>; }) => {
+	_handleUploadSuccess = (result: { url: ?string; thumbnails: ?Array<string>; }) => {
 		const {
 			room,
 			thread,
@@ -317,7 +317,7 @@ export default class ChatInput extends Component<void, Props, State> {
 						component={ImageUploadChat}
 						photo={this.state.photo}
 						onUploadClose={this._handleUploadClose}
-						onUploadFinish={this._handleUploadFinish}
+						onUploadSuccess={this._handleUploadSuccess}
 						onUploadError={this._handleUploadError}
 						uploadOptions={{
 							uploadType: 'content',

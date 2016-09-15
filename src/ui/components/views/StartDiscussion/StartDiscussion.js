@@ -479,7 +479,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 		}
 	};
 
-	_handleUploadFinish = (upload: Upload) => {
+	_handleUploadSuccess = (upload: Upload) => {
 		this.setState({
 			nextId: v4(),
 			upload,
@@ -532,7 +532,7 @@ export default class StartDiscussion extends Component<void, Props, State> {
 							component={ImageUploadDiscussion}
 							photo={this.state.photo}
 							onUploadClose={this._handleUploadClose}
-							onUploadFinish={this._handleUploadFinish}
+							onUploadSuccess={this._handleUploadSuccess}
 							onUploadError={this._handleUploadError}
 							uploadOptions={{
 								uploadType: 'content',
