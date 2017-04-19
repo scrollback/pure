@@ -126,6 +126,22 @@ CREATE TABLE urls (
 	longurl text NOT NULL
 );
 
+DROP TABLE IF EXISTS articles;
+DROP TABLE IF EXISTS feeds;
+
+CREATE TEMP TABLE articles (
+	url text UNIQUE,
+	rawxml xml NOT NULL,
+	terms tsvector
+);
+
+CREATE TABLE feeds (
+	url text UNIQUE,
+	mtbu float(24) NOT NULL,
+	lastrequesttime bigint,
+	lastupdatetime bigint
+);
+
 INSERT INTO jobs VALUES (1), (2), (3);
 CREATE EXTENSION plv8;
 
